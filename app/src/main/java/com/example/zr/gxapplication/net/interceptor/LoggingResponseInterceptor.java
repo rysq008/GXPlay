@@ -1,5 +1,7 @@
 package com.example.zr.gxapplication.net.interceptor;
 
+import com.example.zr.gxapplication.utils.LogUtils;
+import com.example.zr.gxapplication.utils.ResponseBodyUtil;
 import com.shandianshua.base.utils.LogUtils;
 import com.shandianshua.totoro.utils.net.ResponseBodyUtil;
 import com.squareup.okhttp.Interceptor;
@@ -7,6 +9,10 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * author: zhoulei date: 15/11/23.

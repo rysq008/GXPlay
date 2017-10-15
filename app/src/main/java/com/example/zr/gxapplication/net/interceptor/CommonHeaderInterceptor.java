@@ -2,6 +2,7 @@ package com.example.zr.gxapplication.net.interceptor;
 
 import android.content.Context;
 
+import com.example.zr.gxapplication.utils.NetUtils;
 import com.google.gson.internal.LinkedHashTreeMap;
 import com.shandianshua.base.config.GlobalConfig;
 import com.shandianshua.base.utils.AppUtils;
@@ -21,6 +22,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * author: zhoulei date: 15/11/23.

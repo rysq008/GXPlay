@@ -9,25 +9,11 @@
 
 
     <color name="white">#FFffffff</color>
-    <color name="gh_shenhui_color">#333333</color>
-    <color name="gh_qianhui_color">#999999</color>
     <color name="red">#fe6564</color>
     <color name="light_blue">#52adfd</color>
 
     <!--灰色透明-->
-    <color name="transparent">#00000000</color>
-    <color name="transparent_50">#50000000</color>
-    <color name="transparent_80">#80000000</color>
 
     <!--白色透明-->
-    <color name="transparent_while">#33ffffff</color>
 
-    <color name="gh_yellow_color">#ffb400</color>
-    <color name="green">#41ba55</color>
-    <color name="line">#ebebeb</color>
-    <color name="prise_red">#fe6564</color>
-    <color name="text_gray">#666666</color>
-    <color name="fffff">#f3f3f3</color>
-
-    <color name="share">#63c5b5</color>
 </resources>

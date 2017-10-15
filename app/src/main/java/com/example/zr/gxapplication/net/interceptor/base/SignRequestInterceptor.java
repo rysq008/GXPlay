@@ -1,12 +1,11 @@
 package com.example.zr.gxapplication.net.interceptor.base;
 
-import com.shandianshua.totoro.utils.net.SignUtils;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import java.io.IOException;
+
+import okhttp3.Headers;
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * author: zhou date: 2015/12/21.
