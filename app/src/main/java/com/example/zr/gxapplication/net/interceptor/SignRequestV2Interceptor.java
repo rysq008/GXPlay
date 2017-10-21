@@ -1,6 +1,7 @@
 package com.example.zr.gxapplication.net.interceptor;
 
 import com.example.zr.gxapplication.net.interceptor.base.SignRequestInterceptor;
+import com.example.zr.gxapplication.utils.SignUtils;
 import com.shandianshua.totoro.data.net.interceptor.base.SignRequestInterceptor;
 import com.shandianshua.totoro.utils.net.SignUtils;
 import com.squareup.okhttp.Interceptor;
