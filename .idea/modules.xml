@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GXApplication.iml" filepath="$PROJECT_DIR$/GXApplication.iml" />
+      <module fileurl="file://F:\workplace\GXPlay\GXApplication.iml" filepath="F:\workplace\GXPlay\GXApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/GXPlay.iml" filepath="$PROJECT_DIR$/.idea/GXPlay.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

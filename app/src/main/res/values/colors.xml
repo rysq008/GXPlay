@@ -5,8 +5,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-
-
+    <color name="selectedColor">#FF5722</color>
+    <color name="defaultColor">#616161</color>
+    <color name="colorOrange">#FFFF5722</color>
+    <color name="colorOrangeDepth">#f2453d</color>
 
     <color name="white">#FFffffff</color>
     <color name="red">#fe6564</color>

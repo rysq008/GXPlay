@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">GXApplication</string>
+
+    <!-- withdraw fragment -->
+    <string name="make_money">试玩</string>
+    <string name="invite">邀请</string>
+    <string name="agent">特工</string>
+    <string name="mine">我的</string>
+
 </resources>

@@ -4,4 +4,5 @@
     <dimen name="DIMEN_20DP">20dp</dimen>
     <dimen name="DIMEN_30DP">30dp</dimen>
     <dimen name="DIMEN_33DP">33dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
 </resources>

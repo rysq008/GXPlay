@@ -23,4 +23,8 @@
 
         -->
     </style>
+
+    <style name="reloadable_frame_layout">
+        <item name="emptyImage">@mipmap/ic_launcher</item>
+    </style>
 </resources>

@@ -1,0 +1,196 @@
+package com.game.helper.activitys;
+
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.Gravity;
+import android.view.View;
+
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.game.helper.R;
+import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.fragments.HomePagerFragment;
+import com.game.helper.present.HomeFragmentPresent;
+import com.game.helper.views.widget.CustomBadgeItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import cn.droidlover.xdroidmvp.mvp.XFragment;
+
+public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
+
+    @BindView(R.id.fragmentViewpager)
+    ViewPager fragmentsViewPager;
+    @BindView(R.id.bottom_bar)
+    BottomNavigationBar bottomBar;
+
+
+    private List<Fragment> radioFragmentList = new ArrayList<>();
+
+    private boolean isFirst = false;
+
+    CustomBadgeItem numberBadgeItem;
+
+    private BottomNavigationItem getTabItemBuilder(int drawableRes, int stringRes) {
+        final BottomNavigationItem bottomNavigationItem =
+                new BottomNavigationItem(drawableRes, stringRes).setActiveColor(getResources().getColor(R.color.selectedColor))
+                        .setInActiveColor(getResources().getColor(R.color.defaultColor));
+        if (drawableRes == R.mipmap.ic_launcher) {
+            numberBadgeItem = new CustomBadgeItem();
+            bottomNavigationItem.setBadgeItem(numberBadgeItem);
+        }
+        return bottomNavigationItem;
+    }
+
+    public void onSwitchFragment(SwitchFragmentEvent event) {
+        switch (event) {
+            case MAKE_MONEY:
+                fragmentsViewPager.setCurrentItem(0);
+                break;
+            case AGENT:
+                fragmentsViewPager.setCurrentItem(1);
+                break;
+            case INCOME:
+                fragmentsViewPager.setCurrentItem(2);
+                break;
+            case INVITE:
+                fragmentsViewPager.setCurrentItem(3);
+                break;
+        }
+    }
+
+    private void initBottomNavigationBar() {
+        int pos = bottomBar.getCurrentSelectedPosition();
+        bottomBar.clearAll();
+        numberBadgeItem = null;
+        bottomBar.setMode(BottomNavigationBar.MODE_FIXED);
+        bottomBar
+                .addItem(getTabItemBuilder(R.mipmap.ic_launcher, R.string.app_name));
+        bottomBar
+                .addItem(getTabItemBuilder(R.drawable.gh_redcolor_oval_shape, R.string.app_name));
+        bottomBar
+                .addItem(getTabItemBuilder(R.drawable.gh_redcolor_oval_shape, R.string.app_name));
+        bottomBar
+                .addItem(getTabItemBuilder(R.drawable.gh_redcolor_oval_shape, R.string.app_name));
+
+        bottomBar.initialise();
+
+        bottomBar.setVisibility(View.VISIBLE);
+
+        bottomBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position) {
+                fragmentsViewPager.setCurrentItem(position);
+            }
+
+            @Override
+            public void onTabUnselected(int position) {
+
+            }
+
+            @Override
+            public void onTabReselected(int position) {
+
+            }
+        });
+        bottomBar.selectTab(pos > 0 ? pos : 0);
+        long n = 0;
+        numberBadgeItem.setBorderColor(Color.TRANSPARENT)// Badge的Border颜色
+                .setBackgroundColor(Color.TRANSPARENT);// Badge背景颜色
+//        if (null != agentTaskCollect)
+        {
+            n = 9;
+            if (n > 0) {
+                numberBadgeItem.setBorderWidth(0)// Badge的Border(边界)宽度
+                        .setBorderColor(getResources().getColor(R.color.colorOrangeDepth))// Badge的Border颜色
+                        .setBackgroundColor(getResources().getColor(R.color.colorOrangeDepth))// Badge背景颜色
+                        .setGravity(Gravity.RIGHT | Gravity.TOP)// 位置，默认右上角
+                        .setText(String.valueOf(n));// 显示的文本
+            }
+        }
+        numberBadgeItem.setPoint(n == 0);
+        numberBadgeItem.refreshDrawable();
+
+    }
+
+    private void initView() {
+        initBottomNavigationBar();
+        radioFragmentList.clear();
+        radioFragmentList.add(HomePagerFragment.newInstance());
+//        radioFragmentList.add(HomePagerFragment.newInstance());
+//        radioFragmentList.add(HomePagerFragment.newInstance());
+//        radioFragmentList.add(HomePagerFragment.newInstance());
+
+        fragmentsViewPager.setOffscreenPageLimit(3);
+        fragmentsViewPager.setAdapter(
+                new SwitchFragmentsAdapter(getSupportFragmentManager()));
+        fragmentsViewPager.addOnPageChangeListener(this);
+
+        if (isFirst) {
+            bottomBar.selectTab(0);
+            fragmentsViewPager.setCurrentItem(0);
+            isFirst = false;
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        bottomBar.selectTab(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void initData(Bundle savedInstanceState) {
+        initView();
+    }
+
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    public Object newP() {
+        return null;
+    }
+
+    public class SwitchFragmentsAdapter extends FragmentStatePagerAdapter {
+        public SwitchFragmentsAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return radioFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return radioFragmentList.size();
+        }
+
+    }
+
+    public enum SwitchFragmentEvent {
+        MAKE_MONEY,
+        AGENT,
+        INCOME,
+        INVITE,
+        MINE;
+    }
+}
