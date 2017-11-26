@@ -5,6 +5,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.game.helper.R;
+import com.game.helper.multipleitem.MultiItemAdapter;
+import com.game.helper.multipleitem.MultiItemPresenter;
 import com.game.helper.present.HomeFragmentPresent;
 
 import butterknife.BindView;
@@ -16,10 +18,18 @@ import zlc.season.practicalrecyclerview.PracticalRecyclerView;
  * Created by wanglei on 2016/12/31.
  */
 
-public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPresent> {
+public abstract class HomeBasePagerFragmentOrgianl extends XBaseFragment<HomeFragmentPresent> {
 
     @BindView(R.id.contentLayout)
     PracticalRecyclerView contentLayout;//content
+    RecyclerView recyclerView_banner;//banner
+    RecyclerView recyclerView_zt;//专题
+    RecyclerView recyclerView_rm;//热门
+    RecyclerView recyclerView_tj;//推荐
+
+    private MultiItemAdapter mAdapter;
+    private MultiItemPresenter mPresenter;
+
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -33,19 +43,22 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         contentLayout.setRefreshListener(new PracticalRecyclerView.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                contentLayout.setLoadMoreViewEnabled(false);
-                contentLayout.setNoMoreViewEnabled(false);
                 getP().loadData();
             }
         });
         contentLayout.setLoadMoreListener(new PracticalRecyclerView.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                contentLayout.setLoadMoreViewEnabled(true);
-                contentLayout.setNoMoreViewEnabled(true);
                 getP().loadMoreData();
             }
         });
+
+        contentLayout.setAutoLoadEnable(false);
+
+    }
+
+    public PracticalRecyclerView getContentLayout() {
+        return contentLayout;
     }
 
     public abstract AbstractAdapter getAdapter();
@@ -64,9 +77,5 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
     @Override
     public HomeFragmentPresent newP() {
         return new HomeFragmentPresent();
-    }
-
-    public PracticalRecyclerView getContentLayout() {
-        return contentLayout;
     }
 }

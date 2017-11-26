@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<zlc.season.practicalrecyclerview.PracticalRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<zlc.season.practicalrecyclerview.PracticalRecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/contentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:empty_layout="@layout/default_empty_layout"
-    app:error_layout="@layout/default_error_layout"
+    app:error_layout="@layout/view_error_state"
     app:load_more_failed_layout="@layout/default_load_more_failed_layout"
     app:load_more_layout="@layout/default_load_more_layout"
-    app:loading_layout="@layout/default_loading_layout"
+    app:loading_layout="@layout/view_loading"
     app:no_more_layout="@layout/default_no_more_layout">
 
     <TextView

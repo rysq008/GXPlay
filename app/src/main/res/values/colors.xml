@@ -18,4 +18,7 @@
 
     <!--白色透明-->
 
+
+    <color name="text_secondary">#87000000</color>
+
 </resources>

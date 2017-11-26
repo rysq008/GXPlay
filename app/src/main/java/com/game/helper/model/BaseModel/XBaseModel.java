@@ -16,6 +16,10 @@ public class XBaseModel implements IModel, ItemType, Serializable {
         return total_page > current_page;
     }
 
+    public int nextPageNum(){
+        return current_page++;
+    }
+
     public boolean isError() {
         return error;
     }

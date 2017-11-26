@@ -1,6 +1,5 @@
 package com.game.helper.present;
 
-import com.game.helper.event.BusProvider;
 import com.game.helper.fragments.BaseFragment.HomeBasePagerFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -18,6 +17,7 @@ import com.game.helper.views.widget.Header;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.mvp.XPresent;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
@@ -27,6 +27,7 @@ import zlc.season.practicalrecyclerview.ItemType;
 
 public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
     protected static final int PAGE_SIZE = 10;
+    protected XBaseModel mXBaseModel;
 
     public void loadData() {
         Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner();
@@ -34,23 +35,6 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
         Flowable<HttpResultModel<SpecialResults>> fs = DataService.getHomeSpecial(new BaseRequestBody(1));
         Flowable<HttpResultModel<HotResults>> fh = DataService.getHomeHot(new BaseRequestBody(1));
         Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(1, -1, -1));
-
-//        RxLoadingUtils.subscribeWithDialog(getV().getContext(),fh, getV().bindToLifecycle(), new Consumer<HttpResultModel<HotResults>>() {
-//            @Override
-//            public void accept(HttpResultModel<HotResults> specialResultsHttpResultModel) throws Exception {
-//                     getV().getAdapter().clear();
-//                     getV().getAdapter().addHeader(new Header());
-//                List<ItemType> list  = new ArrayList<>();
-//                list.add(specialResultsHttpResultModel.data);
-//                     getV().getAdapter().addAll(list);
-//
-//            }
-//        }, new Consumer<NetError>() {
-//            @Override
-//            public void accept(NetError netError) throws Exception {
-//                getV().getAdapter().showError();
-//            }
-//        });
 
         Flowable<HomeAllResultsData> fa = Flowable.zip(fb, fn, fs, fh, fr, new Function5<HttpResultModel<BannerResults>, HttpResultModel<NoticeResults>, HttpResultModel<SpecialResults>, HttpResultModel<HotResults>, HttpResultModel<RecommendResults>, HomeAllResultsData>() {
             @Override
@@ -71,40 +55,68 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
                 if (recommendResults.data == null) {
                     Flowable.error(new NetError("fetch recommendResults failed", NetError.NoDataError));
                 }
+                mXBaseModel = recommendResults;
                 return new HomeAllResultsData(bannerResults.data, noticeResults.data, specialResults.data, hotResults.data, recommendResults.data);
+
             }
         });
 
         RxLoadingUtils.subscribeWithDialog(getV().getContext(), fa, getV().<HomeAllResultsData>bindToLifecycle(), new Consumer<HomeAllResultsData>() {
             @Override
             public void accept(HomeAllResultsData homeAllResultsData) throws Exception {
-
-//                getV().getAdapter(homeAllResultsData.bannerResults.getClass()).clear();
-//                getV().getAdapter(homeAllResultsData.bannerResults.getClass()).addAll(homeAllResultsData.bannerResults.getData());
-//                getV().getAdapter(homeAllResultsData.noticeResults.getClass()).addAll(homeAllResultsData.noticeResults.getData());
-//                getV().getAdapter(homeAllResultsData.specialResults.getClass()).addAll(homeAllResultsData.specialResults.getData());
-//                getV().getAdapter(homeAllResultsData.hotResults.getClass()).addAll(homeAllResultsData.hotResults.getData());
-//                getV().getAdapter(homeAllResultsData.recommendResults.getClass()).addAll(homeAllResultsData.recommendResults.getData());
-
                 getV().getAdapter().clear();
+                getV().getAdapter().clearData();
+                getV().getAdapter().clearFooter();
                 List<ItemType> list = new ArrayList<>();
                 getV().getAdapter().addHeader(new Header(homeAllResultsData.bannerResults));
                 list.add(homeAllResultsData.noticeResults);
                 list.add(homeAllResultsData.specialResults);
                 list.add(homeAllResultsData.hotResults);
-                list.addAll(homeAllResultsData.recommendResults.list);
+                list.addAll(homeAllResultsData.recommendResults.list.subList(0, 2));
                 getV().getAdapter().addAll(list);
+
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-//                getV().getAdapter().clear();
-//                getV().getAdapter().clearData();
                 getV().getAdapter().showError();
-//                getV().getAdapter(BannerResults.class).clear();
-//                getV().getAdapter(BannerResults.class).showError();
             }
         });
+    }
+
+    public void loadMoreData() {
+        if (Kits.Empty.check(mXBaseModel)) {
+            getV().getAdapter().showError();
+        } else {
+            if (mXBaseModel.hasNextPage()) {
+                Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(mXBaseModel.nextPageNum(), 0, 0));
+
+                RxLoadingUtils.subscribeWithDialog(getV().getContext(), fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+                    @Override
+                    public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
+                        getV().getAdapter().clear();
+                        List<ItemType> list = new ArrayList<>();
+                        list.addAll(recommendResultsHttpResultModel.data.list);
+                        getV().getAdapter().addAll(list);
+                    }
+                }, new Consumer<NetError>() {
+                    @Override
+                    public void accept(NetError netError) throws Exception {
+                        getV().getAdapter().loadMoreFailed();
+                    }
+                });
+            } else {
+                getV().getContentLayout().setLoadMoreViewEnabled(false);
+                getV().getContentLayout().setNoMoreViewEnabled(true);
+                List<ItemType> list = new ArrayList<>();
+                getV().getAdapter().addAll(list);
+
+//                getV().getAdapter().loadMoreFailed();
+//                getV().getAdapter().manualLoadMore();
+//                getV().getContentLayout().setLoadMoreViewEnabled(false);
+//                getV().getContentLayout().setNoMoreViewEnabled(false);
+            }
+        }
     }
 
 

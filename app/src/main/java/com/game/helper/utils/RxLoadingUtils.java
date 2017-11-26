@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.util.Log;
 
 import com.game.helper.GameMarketApplication;
-import com.game.helper.adapters.HomeItemAdapter;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
 import com.game.helper.views.ReloadableFrameLayout;
@@ -170,12 +169,12 @@ public class RxLoadingUtils {
                                 @Override
                                 public void onCancel(DialogInterface dialog) {
                                     dispose();
-                                                            BusProvider.getBus().post(new MsgEvent<String>(0,0,"qqq"));
-                                    TotoroToast.makeText(GameMarketApplication.getContext(),"onCancel",1).show();
+                                    BusProvider.getBus().post(new MsgEvent<String>(0, 0, "qqq"));
+                                    TotoroToast.makeText(GameMarketApplication.getContext(), "onCancel", 1).show();
                                 }
                             });
                         }
-                        TotoroToast.makeText(GameMarketApplication.getContext(),"onStart",1).show();
+                        TotoroToast.makeText(GameMarketApplication.getContext(), "onStart", 1).show();
                     }
 
                     @Override
@@ -187,7 +186,7 @@ public class RxLoadingUtils {
                                 e.printStackTrace();
                             }
                         }
-                        TotoroToast.makeText(GameMarketApplication.getContext(),"onSuccess",1).show();
+                        TotoroToast.makeText(GameMarketApplication.getContext(), "onSuccess", 1).show();
                     }
 
                     @Override
@@ -199,6 +198,7 @@ public class RxLoadingUtils {
                                 e.printStackTrace();
                             }
                         }
+                        BusProvider.getBus().post(error);
 //                        if (toastErrorMeg) {
 //                            //show Toast Tips
 //                        }
@@ -208,7 +208,7 @@ public class RxLoadingUtils {
                                 progressDialog.dismiss();
                             }
                         });
-                        TotoroToast.makeText(GameMarketApplication.getContext(),"onFail",1).show();
+                        TotoroToast.makeText(GameMarketApplication.getContext(), "onFail", 1).show();
                     }
 
                     @Override
@@ -227,7 +227,7 @@ public class RxLoadingUtils {
                                 progressDialog.dismiss();
                             }
                         });
-                        TotoroToast.makeText(GameMarketApplication.getContext(),"onComplete",1).show();
+                        TotoroToast.makeText(GameMarketApplication.getContext(), "onComplete", 1).show();
                     }
                 });
     }
@@ -257,8 +257,8 @@ public class RxLoadingUtils {
     }
 
     public static <T extends IModel> void subscribeWithDialog(Context context, Flowable<T> Flowable, FlowableTransformer transformer,
-                                                              final Consumer<T> onNext, final Consumer<NetError> onError,final Action onComplete) {
-        subscribeWithDialog(getDefaultProgressDialog(context), Flowable, transformer, onNext, onError, onComplete,true);
+                                                              final Consumer<T> onNext, final Consumer<NetError> onError, final Action onComplete) {
+        subscribeWithDialog(getDefaultProgressDialog(context), Flowable, transformer, onNext, onError, onComplete, true);
     }
 
     public static <T extends IModel> void subscribeWithDialog(Context context, Flowable<T> Flowable, FlowableTransformer transformer,
