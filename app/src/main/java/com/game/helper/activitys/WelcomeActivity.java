@@ -34,6 +34,7 @@ public class WelcomeActivity extends XBaseActivity {
                             .data(new Bundle())
                             .launch();
                 }
+                WelcomeActivity.this.finish();
             }
         };
         countDownTimer.start();

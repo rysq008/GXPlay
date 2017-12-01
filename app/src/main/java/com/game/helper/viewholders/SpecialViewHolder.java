@@ -11,14 +11,12 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.model.SpecialResults;
-import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
-import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.imageloader.LoadCallback;
 import zlc.season.practicalrecyclerview.AbstractViewHolder;
 

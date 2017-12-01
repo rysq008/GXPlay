@@ -27,7 +27,7 @@ public class BannerViewHolder extends AbstractViewHolder<BannerResults> {
 //
 //    private Context mContext;
 //
-//    public BannerViewHolder(ViewGroup parent) {
+//    public BannerView(ViewGroup parent) {
 //        super(parent, R.layout.activity_notice_item_layout);
 //        ButterKnife.bind(this, itemView);
 //        mContext = parent.getContext();

@@ -138,20 +138,13 @@ public class RxLoadingUtils {
     }
 
     public static <T extends IModel> void subscribeWithDialog(final ProgressDialog progressDialog,
-                                                              Flowable<T> Flowable, FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
+                                                              final Flowable<T> Flowable, FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
                                                               final Action onComplete, final boolean isCancel/*toastErrorMeg*/) {
         /*bindDialog(progressDialog, Flowable, false)*/
         Flowable
                 .compose(XApi.<T>getApiTransformer())
                 .compose(XApi.<T>getScheduler())
                 .compose(transformer)
-//                .doFinally(new Action() {
-//                    @Override
-//                    public void run() throws Exception {
-//                        BusProvider.getBus().post(new MsgEvent<String>(0,0,"qqq"));
-//                        TotoroToast.makeText(GameMarketApplication.getContext(),"onFinally",1).show();
-//                    }
-//                })
                 .subscribe(new ApiSubscriber<T>() {
                     @Override
                     protected void onStart() {
@@ -163,18 +156,18 @@ public class RxLoadingUtils {
                             }
                         });
 
-                        if (!isCancel) {
+                        if (isCancel) {
                             progressDialog.setCancelable(true);
                             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                 @Override
                                 public void onCancel(DialogInterface dialog) {
                                     dispose();
-                                    BusProvider.getBus().post(new MsgEvent<String>(0, 0, "qqq"));
-                                    TotoroToast.makeText(GameMarketApplication.getContext(), "onCancel", 1).show();
+                                    BusProvider.getBus().post(new MsgEvent<String>("cancel_request"));
+                                    TotoroToast.makeText(GameMarketApplication.getContext(), "cancel_request", 1).show();
                                 }
                             });
                         }
-                        TotoroToast.makeText(GameMarketApplication.getContext(), "onStart", 1).show();
+//                        TotoroToast.makeText(GameMarketApplication.getContext(), "onStart", 1).show();
                     }
 
                     @Override
@@ -186,7 +179,7 @@ public class RxLoadingUtils {
                                 e.printStackTrace();
                             }
                         }
-                        TotoroToast.makeText(GameMarketApplication.getContext(), "onSuccess", 1).show();
+//                        TotoroToast.makeText(GameMarketApplication.getContext(), "onSuccess", 1).show();
                     }
 
                     @Override
@@ -208,7 +201,7 @@ public class RxLoadingUtils {
                                 progressDialog.dismiss();
                             }
                         });
-                        TotoroToast.makeText(GameMarketApplication.getContext(), "onFail", 1).show();
+//                        TotoroToast.makeText(GameMarketApplication.getContext(), "onFail", 1).show();
                     }
 
                     @Override
@@ -227,7 +220,7 @@ public class RxLoadingUtils {
                                 progressDialog.dismiss();
                             }
                         });
-                        TotoroToast.makeText(GameMarketApplication.getContext(), "onComplete", 1).show();
+//                        TotoroToast.makeText(GameMarketApplication.getContext(), "onComplete", 1).show();
                     }
                 });
     }

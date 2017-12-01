@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
     <color name="selectedColor">#FF5722</color>
     <color name="defaultColor">#616161</color>
     <color name="colorOrange">#FFFF5722</color>
     <color name="colorOrangeDepth">#f2453d</color>
 
-    <color name="white">#FFffffff</color>
     <color name="red">#fe6564</color>
     <color name="light_blue">#52adfd</color>
 
@@ -21,4 +15,72 @@
 
     <color name="text_secondary">#87000000</color>
 
+    <color name="color_cecece">#cecece</color>
+    <color name="app_color">#00adff</color>
+    <color name="color_dfdfdd">#dfdfdd</color>
+    <color name="color_999">#999</color>
+    <color name="color_666">#666</color>
+    <color name="color_333">#333</color>
+    <color name="index_color_gray_b8b8b8">#b8b8b8</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="orange">#ff911b</color>
+    <color name="orange_dark_e45800">#e45800</color>
+    <color name="color_55000000">#55000000</color>
+    <color name="background">#292929</color>
+    <color name="color_b2b2b2">#b2b2b2</color>
+    <color name="background_green_00b874">#00b874</color>
+    <color name="background_red_f46262">#f46262</color>
+    <color name="background_gray_b6bac3">#b6bac3</color>
+    <color name="background_gray_f4f5f7">#f4f5f7</color>
+
+    <color name="background_edittext_gray">#4d4c5f</color>
+    <color name="link_gray_b2b2b2">#c2b2b2</color>
+    <color name="color_1cbf9b">#1cbf9b</color>
+    <color name="color_e0e0e0">#e0e0e0</color>
+    <color name="color_585858">#585858</color>
+    <color name="color_55ffb029">#55ffb029</color>
+    <color name="color_ffd17e">#ffd17e</color>
+    <color name="color_f1f0f6">#f1f0f6</color>
+    <color name="color_49a5ff">#49a5ff</color>
+    <color name="background_popup_window_7d8085">#7d8085</color>
+    <color name="background_popup_window_select_565f64">#565f64</color>
+    <color name="link_gray">#4dededed</color>
+    <color name="trans_black">#77000000</color>
+    <color name="color_FEFAF1">#FEFAF1</color>
+    <color name="color_F4F5F9">#F4F5F9</color>
+
+    <color name="background_light">#554d4c5f</color>
+    <color name="background_button_orange">#99ffb029</color>
+    <color name="background_button_orange_sign">#55ffb029</color>
+    <color name="background_button_orange_normal">#fe853c</color>
+    <color name="background_button_red">#cc0000</color>
+    <color name="background_button_red_normal">#55cc0000</color>
+    <color name="background_button_green_normal">#21bd44</color>
+    <color name="background_button_green">#9024bd49</color>
+    <color name="color_F4F4F4">#F4F4F4</color>
+
+    <color name="color_transparent">#00000000</color>
+    <color name="color_00aeff">#00aeff</color>
+    <color name="color_fbfbfb">#fbfbfb</color>
+
+    <color name="colorPrimary">#00AEFF</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FE4430</color>
+
+    <color name="float_transparent">#00000000</color>
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhiteDark">#F6F7FB</color>
+    <color name="colorWhiteTrans">#f2f2f2</color>
+
+    <color name="colorBlack">#333</color>
+
+    <color name="colorShadow">#999</color>
+    <color name="colorShadowDark">#666</color>
+    <color name="colorHint">#cecece</color>
+    <color name="colorHistoryItem">#f5f5f5</color>
+
+    <color name="colorDivider">@color/colorWhiteTrans</color>
+    <color name="colorBackground">@color/colorWhiteDark</color>
 </resources>

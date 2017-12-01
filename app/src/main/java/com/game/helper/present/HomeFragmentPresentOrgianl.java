@@ -25,7 +25,7 @@
 //import io.reactivex.functions.Function5;
 //import zlc.season.practicalrecyclerview.ItemType;
 //
-//public class HomeFragmentPresentOrgianl extends XPresent<HomeBasePagerFragment> {
+//public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
 //    protected static final int PAGE_SIZE = 10;
 //    protected XBaseModel mXBaseModel;
 //
@@ -56,7 +56,7 @@
 //                    Flowable.error(new NetError("fetch recommendResults failed", NetError.NoDataError));
 //                }
 //                mXBaseModel = recommendResults;
-//                return         new HomeAllResultsData(bannerResults.data, noticeResults.data, specialResults.data, hotResults.data, recommendResults.data);
+//                return new HomeAllResultsData(bannerResults.data, noticeResults.data, specialResults.data, hotResults.data, recommendResults.data);
 //
 //            }
 //        });
@@ -64,38 +64,33 @@
 //        RxLoadingUtils.subscribeWithDialog(getV().getContext(), fa, getV().<HomeAllResultsData>bindToLifecycle(), new Consumer<HomeAllResultsData>() {
 //            @Override
 //            public void accept(HomeAllResultsData homeAllResultsData) throws Exception {
-//
-////                getV().getAdapter(homeAllResultsData.bannerResults.getClass()).clear();
-////                getV().getAdapter(homeAllResultsData.bannerResults.getClass()).addAll(homeAllResultsData.bannerResults.getData());
-////                getV().getAdapter(homeAllResultsData.noticeResults.getClass()).addAll(homeAllResultsData.noticeResults.getData());
-////                getV().getAdapter(homeAllResultsData.specialResults.getClass()).addAll(homeAllResultsData.specialResults.getData());
-////                getV().getAdapter(homeAllResultsData.hotResults.getClass()).addAll(homeAllResultsData.hotResults.getData());
-////                getV().getAdapter(homeAllResultsData.recommendResults.getClass()).addAll(homeAllResultsData.recommendResults.getData());
-//
 //                getV().getAdapter().clear();
 //                getV().getAdapter().clearData();
+//                getV().getAdapter().clearFooter();
 //                List<ItemType> list = new ArrayList<>();
 //                getV().getAdapter().addHeader(new Header(homeAllResultsData.bannerResults));
 //                list.add(homeAllResultsData.noticeResults);
 //                list.add(homeAllResultsData.specialResults);
 //                list.add(homeAllResultsData.hotResults);
-//                list.addAll(homeAllResultsData.recommendResults.list);
+//                list.addAll(homeAllResultsData.recommendResults.list.subList(0, 2));
 //                getV().getAdapter().addAll(list);
+//
 //            }
 //        }, new Consumer<NetError>() {
 //            @Override
 //            public void accept(NetError netError) throws Exception {
-////                getV().getAdapter().clear();
 //                getV().getAdapter().showError();
 //            }
 //        });
 //    }
 //
+//    static boolean t = false;
 //    public void loadMoreData() {
 //        if (Kits.Empty.check(mXBaseModel)) {
 //            getV().getAdapter().showError();
 //        } else {
-//            if (!mXBaseModel.hasNextPage()) {
+//            if (mXBaseModel.hasNextPage()||t) {
+//                t = false;
 //                Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(mXBaseModel.nextPageNum(), 0, 0));
 //
 //                RxLoadingUtils.subscribeWithDialog(getV().getContext(), fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
@@ -109,15 +104,22 @@
 //                }, new Consumer<NetError>() {
 //                    @Override
 //                    public void accept(NetError netError) throws Exception {
-//                        getV().getContentLayout().setLoadMoreFailedViewEnabled(true);
+//                        getV().getAdapter().loadMoreFailed();
 //                    }
 //                });
 //            } else {
-//                getV().getContentLayout().setLoadMoreViewEnabled(false);
-//                getV().getContentLayout().setNoMoreViewEnabled(true);
+////                getV().getAdapter().clear();
+////                getV().getContentLayout().setLoadMoreViewEnabled(false);
+////                getV().getContentLayout().setNoMoreViewEnabled(true);
+//                List<ItemType> list = new ArrayList<>();
+//                getV().getAdapter().addAll(list);
+//
+////                getV().getAdapter().loadMoreFailed();
+////                getV().getAdapter().manualLoadMore();
+////                getV().getContentLayout().setLoadMoreViewEnabled(false);
+////                getV().getContentLayout().setNoMoreViewEnabled(false);
 //            }
 //        }
-//
 //    }
 //
 //

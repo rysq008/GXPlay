@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="@color/white"
+    android:layout_height="@dimen/game_list_item_height"
+    android:background="@color/colorWhite"
+
     android:orientation="vertical">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -13,6 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:background="@mipmap/ic_launcher"
+        android:scaleType="fitXY"
         app:riv_corner_radius="6dip" />
 
     <TextView
@@ -20,19 +23,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/recommend_item_icon_iv"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/recommend_item_icon_iv"
         android:layout_toRightOf="@+id/recommend_item_icon_iv"
-        android:text="游戏名称" />
+        android:gravity="center_vertical"
+
+        android:text="游戏名称"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_small" />
 
     <TextView
         android:id="@+id/recommend_item_discount_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/recommend_item_name_tv"
-        android:layout_marginLeft="23dp"
-        android:layout_marginStart="23dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:layout_toEndOf="@+id/recommend_item_name_tv"
         android:layout_toRightOf="@+id/recommend_item_name_tv"
         android:text="4.7折"
@@ -61,21 +68,28 @@
         android:id="@+id/recommend_item_desc_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/recommend_item_icon_iv"
         android:layout_alignLeft="@+id/recommend_item_type_tv"
+        android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/recommend_item_type_tv"
-        android:text="游戏描述" />
+        android:layout_below="@+id/recommend_item_type_tv"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/recommend_item_launch_iv"
+        android:layout_toStartOf="@+id/recommend_item_launch_iv"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="游戏描述游戏描述游戏描述游戏描述游戏描述游戏描述游戏描述" />
 
-    <Button
-        android:id="@+id/recommend_item_launch_btn"
-        android:layout_width="100dp"
+    <ImageView
+        android:id="@+id/recommend_item_launch_iv"
+        android:layout_width="90dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/recommend_item_size_tv"
-        android:layout_alignBottom="@+id/recommend_item_size_tv"
-        android:layout_marginLeft="33dp"
-        android:layout_marginStart="33dp"
-        android:layout_toEndOf="@+id/recommend_item_size_tv"
-        android:layout_toRightOf="@+id/recommend_item_size_tv"
-        android:text="安装" />
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:src="@mipmap/bg_game_list_item_install" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tabbar_divider_height"
+        android:background="@color/colorDivider" />
 </RelativeLayout>

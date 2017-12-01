@@ -32,14 +32,14 @@
 //    public AbstractAdapter getAdapter() {
 //        if (mAdapter == null) {
 //            mAdapter = new HomeItemAdapter();
-//            BusProvider.getBus().register(HomeItemAdapter.class).subscribe(new Consumer<HomeItemAdapter>() {
+//            BusProvider.getBus().receive(HomeItemAdapter.class).subscribe(new Consumer<HomeItemAdapter>() {
 //                @Override
 //                public void accept(HomeItemAdapter homeItemAdapter) throws Exception {
 //                    mAdapter.clear();
 //                    TotoroToast.makeText(getContext(),"onRegister",1).show();
 //                }
 //            });
-//        BusProvider.getBus().register(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
+//        BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
 //            @Override
 //            public void accept(MsgEvent msgEvent) throws Exception {
 //                if(msgEvent.getRequestCode() == 0){

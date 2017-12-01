@@ -1,17 +1,22 @@
 package com.game.helper.views.widget;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import cn.droidlover.xdroidmvp.net.NetError;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.functions.Consumer;
 
 
@@ -19,6 +24,35 @@ public class StateView extends LinearLayout {
 
     @BindView(R.id.tv_msg)
     TextView tvMsg;
+
+    /**
+     * 定义错误类型为了处理网络retry
+     */
+    public static final int REFRESH = 0;//刷新
+    public static final int LOADMORE = 1;//加载更多
+
+    private int loadDataType = Integer.MAX_VALUE;//当前数据错误属于哪个加载类型
+    private int curPage = Integer.MAX_VALUE;//当前数据错误性情属于哪个加载页面
+    XRecyclerView.OnRefreshAndLoadMoreListener onRefreshAndLoadMoreListener;
+
+    public void setCustomClickListener(StateViewClickListener clickListener) {//不设置刷新监听时自定义错误处理事件
+        this.viewClickListener = clickListener;
+    }
+
+    StateViewClickListener viewClickListener;
+
+    public XRecyclerView.OnRefreshAndLoadMoreListener getOnRefreshAndLoadMoreListener() {
+        return onRefreshAndLoadMoreListener;
+    }
+
+    public void setLoadDataType(int loadDataType, int curPage) {
+        this.loadDataType = loadDataType;
+        this.curPage = curPage;
+    }
+
+    public void setOnRefreshAndLoadMoreListener(XRecyclerView.OnRefreshAndLoadMoreListener onRefreshAndLoadMoreListener) {
+        this.onRefreshAndLoadMoreListener = onRefreshAndLoadMoreListener;
+    }
 
     public StateView(Context context) {
         super(context);
@@ -39,12 +73,44 @@ public class StateView extends LinearLayout {
         inflate(context, R.layout.common_view_state, this);
         KnifeKit.bind(this);
         tvMsg = findViewById(R.id.tv_msg);
-        BusProvider.getBus().register(NetError.class).subscribe(new Consumer<NetError>() {
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != onRefreshAndLoadMoreListener) {
+                    if (loadDataType == REFRESH) {
+                        onRefreshAndLoadMoreListener.onRefresh();
+                    } else if (loadDataType == LOADMORE) {
+                        onRefreshAndLoadMoreListener.onLoadMore(curPage);
+                    }
+                } else {
+                    if (null != viewClickListener) {
+                        viewClickListener.doAction();
+                    }
+                }
+            }
+        });
+
+        BusProvider.getBus().receive(NetError.class).subscribe(new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
                 showError(netError);
             }
         });
+        BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
+            @Override
+            public void accept(MsgEvent msgEvent) throws Exception {
+                if (msgEvent.getData().equals(ConnectivityManager.TYPE_MOBILE) || msgEvent.getData().equals(ConnectivityManager.TYPE_WIFI)) {
+                    performClick();
+                }
+            }
+        }/*new Consumer<Integer>() {
+            @Override
+            public void accept(Integer integer) throws Exception {
+                if(integer == ConnectivityManager.TYPE_MOBILE||integer==ConnectivityManager.TYPE_WIFI){
+                    performClick();
+                }
+            }
+        }*/);
     }
 
     public void setMsg(String msg) {
@@ -59,29 +125,33 @@ public class StateView extends LinearLayout {
         if (error != null) {
             switch (error.getType()) {
                 case NetError.ParseError:
-                    setMsg("数据解析异常:".concat(error.getMessage()));
+                    setMsg("数据解析异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
                     break;
 
                 case NetError.AuthError:
-                    setMsg("身份验证异常:".concat(error.getMessage()));
+                    setMsg("身份验证异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
                     break;
 
                 case NetError.BusinessError:
-                    setMsg("业务异常:".concat(error.getMessage()));
+                    setMsg("业务异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
                     break;
 
                 case NetError.NoConnectError:
-                    setMsg("网络无连接:".concat(error.getMessage()));
+                    setMsg("网络无连接:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
                     break;
 
                 case NetError.NoDataError:
-                    setMsg("数据为空:".concat(error.getMessage()));
+                    setMsg("数据为空:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
                     break;
 
                 case NetError.OtherError:
-                    setMsg("其他异常:".concat(error.getMessage()));
+                    setMsg("其他异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
                     break;
             }
         }
+    }
+
+    public interface StateViewClickListener {
+        public void doAction();
     }
 }

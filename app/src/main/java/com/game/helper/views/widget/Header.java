@@ -30,7 +30,7 @@ public class Header implements SectionItem {
 
     @Override
     public View createView(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.common_banner_layout, parent, false);
         ButterKnife.bind(this, view);
         return view;
     }

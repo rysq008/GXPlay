@@ -13,15 +13,16 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.fragments.GamePagerFragment;
+import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
-import com.game.helper.present.HomeFragmentPresent;
+import com.game.helper.fragments.MinePagerFragment;
 import com.game.helper.views.widget.CustomBadgeItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.mvp.XFragment;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
 
@@ -39,9 +40,9 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
     private BottomNavigationItem getTabItemBuilder(int drawableRes, int stringRes) {
         final BottomNavigationItem bottomNavigationItem =
-                new BottomNavigationItem(drawableRes, stringRes).setActiveColor(getResources().getColor(R.color.selectedColor))
+                new BottomNavigationItem(drawableRes, stringRes).setActiveColor(getResources().getColor(R.color.app_color))
                         .setInActiveColor(getResources().getColor(R.color.defaultColor));
-        if (drawableRes == R.mipmap.ic_launcher) {
+        if (drawableRes == R.mipmap.tabbar_home_selected) {
             numberBadgeItem = new CustomBadgeItem();
             bottomNavigationItem.setBadgeItem(numberBadgeItem);
         }
@@ -50,16 +51,16 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
     public void onSwitchFragment(SwitchFragmentEvent event) {
         switch (event) {
-            case MAKE_MONEY:
+            case HOME:
                 fragmentsViewPager.setCurrentItem(0);
                 break;
-            case AGENT:
+            case GAME:
                 fragmentsViewPager.setCurrentItem(1);
                 break;
-            case INCOME:
+            case GENERALIZE:
                 fragmentsViewPager.setCurrentItem(2);
                 break;
-            case INVITE:
+            case MINE:
                 fragmentsViewPager.setCurrentItem(3);
                 break;
         }
@@ -71,13 +72,13 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         numberBadgeItem = null;
         bottomBar.setMode(BottomNavigationBar.MODE_FIXED);
         bottomBar
-                .addItem(getTabItemBuilder(R.mipmap.ic_launcher, R.string.app_name));
+                .addItem(getTabItemBuilder(R.mipmap.tabbar_home_selected, R.string.home_tab_index));
         bottomBar
-                .addItem(getTabItemBuilder(R.drawable.gh_redcolor_oval_shape, R.string.app_name));
+                .addItem(getTabItemBuilder(R.mipmap.tabbar_game_selected, R.string.home_tab_game));
         bottomBar
-                .addItem(getTabItemBuilder(R.drawable.gh_redcolor_oval_shape, R.string.app_name));
+                .addItem(getTabItemBuilder(R.mipmap.tabbar_extension_selected, R.string.home_tab_extension));
         bottomBar
-                .addItem(getTabItemBuilder(R.drawable.gh_redcolor_oval_shape, R.string.app_name));
+                .addItem(getTabItemBuilder(R.mipmap.tabbar_mine_selected, R.string.home_tab_mine));
 
         bottomBar.initialise();
 
@@ -123,9 +124,9 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         initBottomNavigationBar();
         radioFragmentList.clear();
         radioFragmentList.add(HomePagerFragment.newInstance());
-//        radioFragmentList.add(HomePagerFragment.newInstance());
-//        radioFragmentList.add(HomePagerFragment.newInstance());
-//        radioFragmentList.add(HomePagerFragment.newInstance());
+        radioFragmentList.add(GamePagerFragment.newInstance());
+        radioFragmentList.add(GeneralizePagerFragment.newInstance());
+        radioFragmentList.add(MinePagerFragment.newInstance());
 
         fragmentsViewPager.setOffscreenPageLimit(3);
         fragmentsViewPager.setAdapter(
@@ -187,10 +188,9 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     }
 
     public enum SwitchFragmentEvent {
-        MAKE_MONEY,
-        AGENT,
-        INCOME,
-        INVITE,
-        MINE;
+        HOME,
+        GAME,
+        GENERALIZE,
+        MINE,
     }
 }

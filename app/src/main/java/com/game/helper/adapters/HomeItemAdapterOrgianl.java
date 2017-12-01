@@ -24,7 +24,7 @@ public class HomeItemAdapterOrgianl extends AbstractAdapter<ItemType, AbstractVi
     @Override
     protected AbstractViewHolder onNewCreateViewHolder(ViewGroup parent, int viewType) {
 /*        if (viewType == RxConstant.HomeModeType.Banner_Model_Type) {
-            return new BannerViewHolder(parent);
+            return new BannerView(parent);
         } else */
         if (viewType == RxConstant.HomeModeType.Notice_Model_Type) {
             return new NoticeViewHolder(parent);
@@ -40,8 +40,8 @@ public class HomeItemAdapterOrgianl extends AbstractAdapter<ItemType, AbstractVi
 
     @Override
     protected void onNewBindViewHolder(AbstractViewHolder holder, int position) {
-/*        if (holder instanceof BannerViewHolder) {
-            ((BannerViewHolder) holder).setData((BannerResults) get(position));
+/*        if (holder instanceof BannerView) {
+            ((BannerView) holder).setData((BannerResults) get(position));
         } else*/
         if (holder instanceof NoticeViewHolder) {
             ((NoticeViewHolder) holder).setData((NoticeResults) get(position));

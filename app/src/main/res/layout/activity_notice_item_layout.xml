@@ -1,19 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="@dimen/home_notice_height"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/activity_notice_item_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="just a test !" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginBottom="@dimen/tabbar_divider_height"
+        android:background="@color/colorWhite"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
 
-    <ViewFlipper
-        android:id="@+id/activity_notice_item_vflipper"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        <TextView
+            android:id="@+id/activity_notice_item_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/ic_home_notice"
+            android:drawablePadding="5dp"
+            android:text="王者荣耀比赛季"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_size_medium" />
+
+        <ViewFlipper
+            android:id="@+id/activity_notice_item_vflipper"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/tabbar_divider_height"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/tabbar_divider_height"
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10">
+
+            <ImageView
+                android:layout_width="@dimen/home_notice_icon_height"
+                android:layout_height="@dimen/home_notice_icon_height"
+                android:scaleType="fitXY"
+                android:src="@mipmap/debug_vip_icon_1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:drawableRight="@mipmap/ic_vip_arrow_right"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="VIP通道"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="无需等待 直接进入"
+                    android:textColor="@color/colorShadow"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/tabbar_divider_height"
+            android:layout_weight="1"
+            android:background="@color/colorWhite"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10">
+
+            <ImageView
+                android:layout_width="@dimen/home_notice_icon_height"
+                android:layout_height="@dimen/home_notice_icon_height"
+                android:scaleType="fitXY"
+                android:src="@mipmap/debug_vip_icon_2" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:drawableRight="@mipmap/ic_vip_arrow_right"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="推广赚钱"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="邀请好友赚现金"
+                    android:textColor="@color/colorShadow"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

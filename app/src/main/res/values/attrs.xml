@@ -1,41 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CollapseLayout_LayoutParams">
-        <attr name="clScaleX" format="float"/>
-        <attr name="clScaleY" format="float"/>
-        <attr name="clScale" format="float"/>
-        <attr name="clWidth" format="dimension"/>
-        <attr name="clHeight" format="dimension"/>
-        <attr name="clMarginLeft" format="dimension"/>
-        <attr name="clMarginRight" format="dimension"/>
-        <attr name="clMarginTop" format="dimension"/>
-        <attr name="clMarginBottom" format="dimension"/>
-        <attr name="clAlpha" format="float"/>
-        <attr name="clScrim" format="reference|color"/>
-        <attr name="clBackgroundAlpha" format="float"/>
-        <attr name="clTextColor" format="color"/>
+        <attr name="clScaleX" format="float" />
+        <attr name="clScaleY" format="float" />
+        <attr name="clScale" format="float" />
+        <attr name="clWidth" format="dimension" />
+        <attr name="clHeight" format="dimension" />
+        <attr name="clMarginLeft" format="dimension" />
+        <attr name="clMarginRight" format="dimension" />
+        <attr name="clMarginTop" format="dimension" />
+        <attr name="clMarginBottom" format="dimension" />
+        <attr name="clAlpha" format="float" />
+        <attr name="clScrim" format="reference|color" />
+        <attr name="clBackgroundAlpha" format="float" />
+        <attr name="clTextColor" format="color" />
         <attr name="clMode">
-            <flag name="center" value="0"/>
-            <flag name="out" value="1"/>
-            <flag name="none" value="2"/>
+            <flag name="center" value="0" />
+            <flag name="out" value="1" />
+            <flag name="none" value="2" />
         </attr>
-        <attr name="clInterpolator" format="reference"/>
-        <attr name="clScaleXInterpolator" format="reference"/>
-        <attr name="clScaleYInterpolator" format="reference"/>
+        <attr name="clInterpolator" format="reference" />
+        <attr name="clScaleXInterpolator" format="reference" />
+        <attr name="clScaleYInterpolator" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="CollapseBarRelativeLayout">
-        <attr name="clBarHeight" format="dimension"/>
-        <attr name="clStatusBarScrim" format="reference|color"/>
-        <attr name="clAnimDuration" format="integer"/>
-        <attr name="clCollapseThreshold" format="float"/>
-        <attr name="clExpandThreshold" format="float"/>
+        <attr name="clBarHeight" format="dimension" />
+        <attr name="clStatusBarScrim" format="reference|color" />
+        <attr name="clAnimDuration" format="integer" />
+        <attr name="clCollapseThreshold" format="float" />
+        <attr name="clExpandThreshold" format="float" />
     </declare-styleable>
 
     <declare-styleable name="ReloadableFrameLayout">
-        <attr name="reloadImage" format="reference"/>
-        <attr name="reloadText" format="string"/>
-        <attr name="emptyImage" format="reference"/>
-        <attr name="emptyText" format="string"/>
+        <attr name="reloadImage" format="reference" />
+        <attr name="reloadText" format="string" />
+        <attr name="emptyImage" format="reference" />
+        <attr name="emptyText" format="string" />
+    </declare-styleable>
+
+    <!--tabbar-->
+    <declare-styleable name="TabItemView">
+        <attr name="tabview_text" format="string|reference"></attr>
+        <attr name="tabview_text_size" format="dimension"></attr>
+        <attr name="tabview_text_color_normal" format="color|reference"></attr>
+        <attr name="tabview_text_color_selected" format="color|reference"></attr>
+        <attr name="tabview_bg_color_selected" format="color|reference"></attr>
+        <attr name="tabview_icon_normal" format="reference"></attr>
+        <attr name="tabview_icon_selected" format="reference"></attr>
+        <attr name="tabview_divider_height" format="dimension"></attr>
+        <attr name="tabview_text_visible" format="integer" />
+    </declare-styleable>
+
+    <!-- debug_bannernner-->
+    <declare-styleable name="SlidingIndicator">
+        <attr name="indicator_drawable" format="reference" />
+        <attr name="indicator_margin" format="reference|dimension" />
+    </declare-styleable>
+
+    <!--MzBanner-->
+    <declare-styleable name="MZBannerView">
+        <attr name="open_mz_mode" format="boolean" />
+        <attr name="canLoop" format="boolean" />
+        <attr name="indicatorPaddingLeft" format="dimension" />
+        <attr name="indicatorPaddingRight" format="dimension" />
+        <attr name="indicatorAlign">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SlidingTabStrip">
+        <attr name="select_indictor_color" format="color" />
+        <attr name="normal_indictor_color" format="color" />
+        <attr name="indictor_height" format="dimension" />
+        <attr name="border_height" format="dimension" />
+        <attr name="strip_radius" format="dimension" />
+        <attr name="strip_margin" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CommonSearchView">
+        <attr name="left_iv_res" format="reference" />
+        <attr name="cen_et_res" format="reference|string" />
+        <attr name="right_tv_res" format="reference|string" />
     </declare-styleable>
 </resources>

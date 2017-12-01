@@ -1,8 +1,7 @@
 package com.game.helper.viewholders;
 
-import android.content.Context;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.game.helper.R;
@@ -35,19 +34,16 @@ public class RecommendViewHolder extends AbstractViewHolder<RecommendResults.Rec
     TextView sizeTv;
     @BindView(R.id.recommend_item_desc_tv)
     TextView descTv;
-    @BindView(R.id.recommend_item_launch_btn)
-    Button launchBtn;
-
-    private Context mContext;
+    @BindView(R.id.recommend_item_launch_iv)
+    ImageView launchIv;
 
     public RecommendViewHolder(ViewGroup parent) {
         super(parent, R.layout.activity_recommend_item_layout);
         ButterKnife.bind(this, itemView);
-        mContext = parent.getContext();
     }
 
 
-    @OnClick(R.id.recommend_item_launch_btn)
+    @OnClick(R.id.recommend_item_launch_iv)
     public void onClick() {
     }
 

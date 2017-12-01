@@ -7,4 +7,81 @@
     <string name="agent">特工</string>
     <string name="mine">我的</string>
 
+    <string name="home_str">首页</string>
+    <string name="game_str">游戏</string>
+    <string name="extension_str">推广</string>
+    <string name="me_str">我的</string>
+    <string name="load_str">加载中</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="beginners_must_read">自动折扣步骤 (新手必读)</string>
+    <string name="details_str">详情</string>
+    <string name="package_str">礼包</string>
+    <string name="community_str">社区</string>
+    <string name="game_introduction">游戏介绍</string>
+    <string name="game_explain">TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏TNT是一款游戏......</string>
+
+
+    <!--tab-->
+    <string name="home_tab_index">主页</string>
+    <string name="home_tab_game">游戏</string>
+    <string name="home_tab_extension">推广</string>
+    <string name="home_tab_mine">我的</string>
+
+    <!--common-->
+    <string name="common_game_search_hint">游戏和话题</string>
+    <string name="common_home_search_hint">输入手游名称查询</string>
+    <string name="common_theme_game">主题游戏</string>
+    <string name="common_hot_recommend">热门推荐</string>
+    <string name="common_more">更多</string>
+    <string name="common_bottom_hint">已经到底了</string>
+    <string name="common_member_text">会员权益</string>
+    <string name="common_edit_user_info">编辑个人信息</string>
+    <string name="common_wallet_text">钱包余额</string>
+    <string name="common_wallet_recharge">给钱包充值</string>
+    <string name="common_download_waiting">别点啦，正在下载</string>
+    <string name="common_download_success">下完啦</string>
+    <string name="common_share_hint">每日分享送**金币</string>
+    <string name="common_discount_hint">自动折扣步骤（新手必读）</string>
+    <string name="common_discount_putong">普通折扣</string>
+    <string name="common_discount_member">会员折扣</string>
+
+    <!--我的-->
+    <string name="mine_tab_game">我的游戏</string>
+    <string name="mine_tab_gift">我的礼包</string>
+    <string name="mine_tab_order">我的订单</string>
+    <string name="mine_tab_vip">VIP服务</string>
+    <string name="mine_name_0">邀请记录</string>
+    <string name="mine_name_1">推广收益</string>
+    <string name="mine_name_2">我的客服</string>
+    <string name="mine_name_3">我的反馈</string>
+    <string name="mine_name_4">我的设置</string>
+
+    <!--推广-->
+    <string name="extension_rank">排行榜</string>
+    <string name="extension_mall">商城</string>
+    <string name="extension_activity">活动</string>
+    <!--收益第一栏-->
+    <string name="extension_item_tittle_profit">推广收益</string>
+    <string name="extension_item_total_profit">总收益</string>
+    <string name="extension_item_can_cash">可提现金额</string>
+    <string name="extension_item_wait_cash">待提现金额</string>
+    <!--收益第二栏-->
+    <string name="extension_item_tittle_shareact">分享活动，赚钱到手软</string>
+    <string name="extension_item_share_profit">分享收益</string>
+    <string name="extension_item_share_discount">分享超低折扣</string>
+    <!--收益第三栏-->
+    <string name="extension_item_tittle_task">做任务，赚取积分，兑换金币</string>
+    <string name="extension_item_share_weico">分享微博</string>
+    <string name="extension_item_share_wechat">分享微信</string>
+
+    <!--game details-->
+    <string name="game_detail_tittle">游戏详情</string>
+    <string name="game_detail_recycler">回收专区</string>
+    <!--game recycler-->
+    <string name="game_recycle">什么是回收专区</string>
+    <string name="game_recycle_des">在本区下载的游戏，不想玩时k可由G9游戏高价保底回收游戏账户，充值金额仅按照回收比例返回现金或者G9游戏币（充值方法：直接游戏内充值。原价充值，现金回收）</string>
+    <string name="game_recycle_process_tittle">游戏规则和步骤</string>
+    <string name="game_recycle_process_hint">注意：先申请回收资格，通过后才能充值且回收！</string>
+    
 </resources>

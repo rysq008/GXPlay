@@ -24,7 +24,6 @@ public class RxBusImpl implements IBus {
 
     @Override
     public void register(Object object) {
-
     }
 
     @Override
@@ -51,7 +50,7 @@ public class RxBusImpl implements IBus {
         bus.onNext(obj);
     }
 
-    public <T> Flowable<T> register(Class<T> clz) {
+    public <T> Flowable<T> receive(Class<T> clz) {
         return bus.ofType(clz);
     }
 

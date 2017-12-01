@@ -4,5 +4,135 @@
     <dimen name="DIMEN_20DP">20dp</dimen>
     <dimen name="DIMEN_30DP">30dp</dimen>
     <dimen name="DIMEN_33DP">33dp</dimen>
+
+    <dimen name="fixed_height_bottom_padding">5dp</dimen>
+    <dimen name="margin_0.5">0.5dp</dimen>
+    <dimen name="margin_3">3dp</dimen>
+    <dimen name="margin_5">5dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="margin_12">12dp</dimen>
+    <dimen name="margin_15">15dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="margin_30">30dp</dimen>
+    <dimen name="margin_45">45dp</dimen>
+    <dimen name="margin_50">50dp</dimen>
+    <dimen name="margin_51">51dp</dimen>
+    <dimen name="margin_54">54dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
+    <dimen name="margin_60">60dp</dimen>
+    <dimen name="margin_80">80dp</dimen>
+    <dimen name="margin_93">93dp</dimen>
+    <dimen name="margin_63">63dp</dimen>
+    <dimen name="margin_300">300dp</dimen>
+    <dimen name="margin_200">200dp</dimen>
+    <dimen name="margin_280">280dp</dimen>
+    <dimen name="margin_60.5">60.5dp</dimen>
+    <!--字体大小-->
+    <dimen name="size_20sp">20sp</dimen>
+    <dimen name="size_18sp">18sp</dimen>
+    <dimen name="size_17sp">17sp</dimen>
+    <dimen name="size_16sp">16sp</dimen>
+    <dimen name="size_15sp">15sp</dimen>
+    <dimen name="size_13sp">13sp</dimen>
+    <dimen name="size_12sp">12sp</dimen>
+    <dimen name="size_11sp">11sp</dimen>
+    <dimen name="size_10sp">10sp</dimen>
+    <!--控件的一般大小-->
+    <dimen name="simple_text_layout_h">@dimen/margin_60</dimen>
+    <dimen name="enter_text_layout_h">@dimen/margin_50</dimen>
+
+
+    <dimen name="space_big">10dip</dimen>
+    <dimen name="space_big_half">5.25dip</dimen>
+    <dimen name="space_micro">1.5dip</dimen>
+    <dimen name="space_mini">3.0dip</dimen>
+    <dimen name="space_nano">0.75dip</dimen>
+    <dimen name="space_normal">6.0dip</dimen>
+    <dimen name="space_small">4.0dip</dimen>
+    <dimen name="space_xbig">14.5dip</dimen>
+    <dimen name="space_xbig_two">29dip</dimen>
+    <dimen name="space_xbig_half">7.25dip</dimen>
+    <dimen name="space_xxbig">19.5dip</dimen>
+    <dimen name="space_xxbig_half">9.75dip</dimen>
+    <dimen name="space_xxxbig">27.0dip</dimen>
+    <dimen name="space_xxxbig_half">13.5dip</dimen>
+    <dimen name="space_xxxxbig">39.0dip</dimen>
+
+    <!--common dp-->
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
     <dimen name="dp_15">15dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_40">40dp</dimen>
+
+    <!--text-->
+    <dimen name="text_size_tiny">10.0sp</dimen>
+    <dimen name="text_size_small">12.0sp</dimen>
+    <dimen name="text_size_medium">14.0sp</dimen>
+    <dimen name="text_size_large">15.0sp</dimen>
+    <dimen name="text_size_xlarge">17.0sp</dimen>
+    <dimen name="text_size_xxlarge">20.0sp</dimen>
+    <dimen name="text_size_xxxlarge">25.0sp</dimen>
+
+    <!--banner-->
+    <dimen name="banner_indicator_margin">5.0dip</dimen>
+    <dimen name="banner_height">170.0dp</dimen>
+    <dimen name="navagation_bar_height">35dp</dimen>
+
+    <!--actionbar-->
+    <dimen name="action_bar_height">50dp</dimen>
+
+    <!--底部tab-->
+    <dimen name="tabbar_container_height">49dp</dimen>
+    <dimen name="tabbar_heigt">50dp</dimen>
+    <dimen name="tabbar_divider_height">1px</dimen>
+
+    <!--fragment tittlebar-->
+    <dimen name="tittle_bar_height">37dp</dimen>
+    <dimen name="tittle_bar_text_size">@dimen/text_size_medium</dimen>
+    <dimen name="tittle_bar_icon_size">@dimen/text_size_medium</dimen>
+    <dimen name="tittle_bar_search_width">275dp</dimen>
+
+    <!--wode-->
+    <dimen name="mine_icon_size">20dp</dimen>
+    <dimen name="mine_icon_avatar">60dp</dimen>
+    <dimen name="mine_info_height">150dp</dimen>
+    <dimen name="mine_tab_height">170dp</dimen>
+    <dimen name="mine_tab_topmargin">110dp</dimen>
+    <dimen name="mine_tab_icon_size">40dp</dimen>
+    <dimen name="mine_list_item_size">50dp</dimen>
+    <dimen name="mine_list_item_icon">20dp</dimen>
+
+    <!--zhuye-->
+    <dimen name="home_head_height">45dp</dimen>
+    <dimen name="home_head_icon_height">25dp</dimen>
+    <dimen name="home_notice_height">140dp</dimen>
+    <dimen name="home_notice_icon_height">50dp</dimen>
+    <dimen name="home_game_height">220dp</dimen>
+    <dimen name="home_hot_hothorizatol_recyclerview_height">80dp</dimen>
+    <dimen name="home_hot_hothorizatol_icon_height">55dp</dimen>
+    <!--mzbanner最中间imageview距离父容器边界的距离-->
+    <dimen name="home_mzbanner_margin">40dp</dimen>
+
+    <!--youxi-->
+    <dimen name="game_list_item_height">93dp</dimen>
+    <dimen name="game_list_item_padding">10dp</dimen>
+    <dimen name="game_list_item_icon_height">63dp</dimen>
+
+    <!--extension-->
+    <dimen name="extension_banner_height">160dp</dimen>
+    <dimen name="extension_tab_height">90dp</dimen>
+    <dimen name="extension_tab_margintop">130dp</dimen>
+    <dimen name="extension_tab_item_width">70dp</dimen>
+    <dimen name="extension_tab_profit_blank_height">70dp</dimen>
+    <dimen name="extension_list_item_height">50dp</dimen>
+    <dimen name="extension_list_item_icon_height">20dp</dimen>
+    <dimen name="extension_list_item_price_width">90dp</dimen>
+
+    <!--game detail-->
+    <dimen name="game_detail_fragment_img_height">200dp</dimen>
+    <dimen name="game_detail_fragment_img_width">150dp</dimen>
+    <dimen name="game_detail_fragment_icon_avatar">40dp</dimen>
 </resources>

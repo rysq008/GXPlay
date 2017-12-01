@@ -1,37 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/contentLayout"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include
+    <com.game.helper.views.BannerView
         android:id="@+id/home_banner_layout"
-        layout="@layout/header_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include
+    <com.game.helper.views.NoticeView
         android:id="@+id/home_notice_layout"
-        layout="@layout/activity_notice_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include
+    <com.game.helper.views.SpecialView
         android:id="@+id/home_special_layout"
-        layout="@layout/activity_special_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include
+    <com.game.helper.views.HotView
         android:id="@+id/home_hot_layout"
-        layout="@layout/activity_hot_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <include
+    <com.game.helper.views.RecommendView
         android:id="@+id/home_recommond_layout"
-        layout="@layout/activity_recommend_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-</LinearLayout>
+</FrameLayout>

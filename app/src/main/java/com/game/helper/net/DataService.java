@@ -2,6 +2,8 @@ package com.game.helper.net;
 
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.ClassicalResults;
+import com.game.helper.model.CommonResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.RecommendResults;
@@ -34,4 +36,11 @@ public class DataService {
         return Api.CreateApiService().getApiRecommendData(requestBody);
     }
 
+    public static Flowable<HttpResultModel<ClassicalResults>> getGameClassical() {
+        return Api.CreateApiService().getApiClassicalData();
+    }
+
+    public static Flowable<HttpResultModel<CommonResults>> getGameCommon() {
+        return Api.CreateApiService().getApiCommonData();
+    }
 }

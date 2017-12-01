@@ -27,4 +27,47 @@
     <style name="reloadable_frame_layout">
         <item name="emptyImage">@mipmap/ic_launcher</item>
     </style>
+
+    <style name="ProgressBar_Mini" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:maxHeight">5dip</item>
+        <item name="android:minHeight">5dip</item>
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:indeterminateDrawable">
+            @android:drawable/progress_indeterminate_horizontal
+        </item>
+        <item name="android:progressDrawable">@drawable/progress_drawable</item>
+    </style>
+
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">@dimen/size_16sp</item>
+    </style>
+
+    <style name="ganme_info_img">
+        <item name="android:layout_width">130dp</item>
+        <item name="android:layout_height">174dp</item>
+    </style>
+
+
+    <style name="Gamebox.Theme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@style/Gamebox.Animation.Activity</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="Gamebox.Theme.NoActionBar" parent="@style/Gamebox.Theme">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Gamebox.Animation.Activity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/activity_open_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/activity_open_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
+    </style>
 </resources>

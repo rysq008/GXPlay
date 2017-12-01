@@ -84,7 +84,7 @@ public class HotViewHolder extends AbstractViewHolder<HotResults> {
         }
 
         class HViewHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.hot_item_tv)
+            @BindView(R.id.hot_item_tv_discount)
             TextView discount;
             @BindView(R.id.hot_item_iv)
             RoundedImageView riv;

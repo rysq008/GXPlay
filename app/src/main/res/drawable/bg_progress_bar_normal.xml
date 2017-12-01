@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        用作progress bar 的背景图 用scale
+        不可以直接用shape 不然会造成一个满进度的状态
+    -->
+    <!--background-->
+    <item android:id="@android:id/background"
+        android:drawable="@drawable/bg_progress_bar_background"/>
+
+    <!--progress-->
+    <item android:id="@android:id/progress">
+        <scale
+            android:scaleWidth="100%"
+            android:drawable="@drawable/bg_gradient_radius_hoop_primary"/>
+    </item>
+
+    <!--secondary-->
+    <item android:id="@android:id/secondaryProgress">
+        <scale
+            android:scaleWidth="100%"
+            android:drawable="@drawable/bg_gradient_radius_gray"/>
+    </item>
+
+</layer-list>
