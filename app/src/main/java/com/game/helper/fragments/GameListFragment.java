@@ -96,6 +96,7 @@ public class GameListFragment extends XBaseFragment {
     }
 
     public void showError(NetError error) {
+        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         xRecyclerContentLayout.refreshState(false);
         xRecyclerContentLayout.showError();
     }
@@ -107,20 +108,19 @@ public class GameListFragment extends XBaseFragment {
             mAdapter.setData(model);
         }
         xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
-
+        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         if (mAdapter.getItemCount() < 1) {
             xRecyclerContentLayout.showEmpty();
             return;
         } else {
             xRecyclerContentLayout.showContent();
-            xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
             return;
         }
     }
 
     public void loadGmaeAdapterData(int page, int class_type_id, int type_id) {
         Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(page, class_type_id, type_id));
-        RxLoadingUtils.subscribeWithDialog(getContext(), fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
             @Override
             public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
@@ -133,7 +133,6 @@ public class GameListFragment extends XBaseFragment {
                 showError(netError);
             }
         });
-
     }
 
     public static GameListFragment newInstance(int classical_type, int common_type) {

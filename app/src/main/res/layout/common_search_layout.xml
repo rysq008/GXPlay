@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/common_search_view_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/home_head_height"
     android:background="@color/colorPrimary"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/DIMEN_20DP"
     android:paddingRight="@dimen/DIMEN_20DP">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/common_search_left_iv"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:src="@mipmap/ic_default_avatar"
-        app:riv_corner_radius="@dimen/DIMEN_20DP" />
+        android:layout_height="wrap_content">
+
+        <com.game.helper.views.HeadImageView
+            android:id="@+id/common_search_left_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/common_search_back_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/ic_back_white"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 
     <EditText
@@ -30,6 +41,7 @@
         android:background="@drawable/bg_gradient_radius_hoop_white"
         android:drawableLeft="@mipmap/ic_search"
         android:drawablePadding="5dp"
+
         android:gravity="center_vertical"
         android:hint="@string/common_home_search_hint"
         android:paddingLeft="10dp"

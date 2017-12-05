@@ -76,6 +76,7 @@ public class RxLoadingUtils {
                     protected void onFail(NetError error) {
                         if (onError != null) {
                             try {
+                                BusProvider.getBus().post(error);
                                 onError.accept(error);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -186,12 +187,13 @@ public class RxLoadingUtils {
                     protected void onFail(NetError error) {
                         if (onError != null) {
                             try {
+                                BusProvider.getBus().post(error);
                                 onError.accept(error);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                        BusProvider.getBus().post(error);
+
 //                        if (toastErrorMeg) {
 //                            //show Toast Tips
 //                        }
@@ -319,6 +321,7 @@ public class RxLoadingUtils {
                     protected void onFail(NetError error) {
                         if (onError != null) {
                             try {
+                                BusProvider.getBus().post(error);
                                 onError.accept(error);
                             } catch (Exception e) {
                                 e.printStackTrace();

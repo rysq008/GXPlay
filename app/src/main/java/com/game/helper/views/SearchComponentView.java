@@ -21,8 +21,11 @@ import cn.droidlover.xdroidmvp.kit.KnifeKit;
 
 public class SearchComponentView extends LinearLayout {
 
+
+    @BindView(R.id.common_search_back_iv)
+    ImageView iv_back;
     @BindView(R.id.common_search_left_iv)
-    ImageView iv_left;
+    HeadImageView iv_left;
     @BindView(R.id.common_search_right_iv)
     ImageView iv_right;
     @BindView(R.id.common_search_center_et)
@@ -47,6 +50,7 @@ public class SearchComponentView extends LinearLayout {
 
     private void setupView(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CommonSearchView);
+        boolean is_back = typedArray.getBoolean(R.styleable.CommonSearchView_is_back, false);
         int left_res_id = typedArray.getResourceId(R.styleable.CommonSearchView_left_iv_res, RES_NONE);
         int center_res_id = typedArray.getResourceId(R.styleable.CommonSearchView_cen_et_res, RES_NONE);
         int right_res_id = typedArray.getResourceId(R.styleable.CommonSearchView_right_tv_res, RES_NONE);
@@ -54,25 +58,27 @@ public class SearchComponentView extends LinearLayout {
 
         inflate(context, R.layout.common_search_layout, this);
         KnifeKit.bind(this);
+        if (is_back) {
+            iv_back.setVisibility(VISIBLE);
+            iv_left.setVisibility(GONE);
+            if (getContext() instanceof Activity) {
+                ((Activity) getContext()).onBackPressed();
+            }
+        } else {
+            iv_left.setVisibility(VISIBLE);
+            iv_back.setVisibility(GONE);
+        }
     }
 
     public void setLeftViewOnClick(OnClickListener listener) {
         if (null != listener) {
             iv_left.setOnClickListener(listener);
-        } else {
-            if (getContext() instanceof Activity) {
-                ((Activity) getContext()).onBackPressed();
-            }
         }
     }
 
     public void setRightViewOnClick(OnClickListener listener) {
         if (null != listener) {
             iv_right.setOnClickListener(listener);
-        } else {
-            if (getContext() instanceof Activity) {
-                ((Activity) getContext()).onBackPressed();
-            }
         }
     }
 

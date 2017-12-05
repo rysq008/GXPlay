@@ -1,15 +1,17 @@
 package com.game.helper.fragments;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
+import android.view.ViewGroup;
 
 import com.game.helper.fragments.BaseFragment.GameBasePagerFragment;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import zlc.season.practicalrecyclerview.ItemType;
@@ -45,6 +47,42 @@ public class GamePagerFragment extends GameBasePagerFragment {
                 }
 
                 @Override
+                public Object instantiateItem(ViewGroup container, int position) {
+                    // TODO Auto-generated method stub
+                    if (position == 0)
+                        removeFragment(container, position);
+                    return super.instantiateItem(container, position);
+                }
+
+                private void removeFragment(ViewGroup container, int index) {
+                    FragmentManager fm = getChildFragmentManager();
+                    String tag = getFragmentTag(container.getId(), index);
+                    Fragment fragment = fm.findFragmentByTag(tag);
+                    if (fragment == null)
+                        return;
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.remove(fragment);
+                    ft.commit();
+                    ft = null;
+                    fm.executePendingTransactions();
+                }
+
+                private String getFragmentTag(int viewId, int index) {
+                    try {
+                        Class<FragmentPagerAdapter> cls = FragmentPagerAdapter.class;
+                        Class<?>[] parameterTypes = {int.class, long.class};
+                        Method method = cls.getDeclaredMethod("makeFragmentName",
+                                parameterTypes);
+                        method.setAccessible(true);
+                        String tag = (String) method.invoke(this, viewId, index);
+                        return tag;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return "";
+                    }
+                }
+
+                @Override
                 public CharSequence getPageTitle(int position) {
                     ItemType itemType = list.get(position);
                     if (itemType instanceof ClassicalResults.ClassicalItem) {
@@ -52,6 +90,11 @@ public class GamePagerFragment extends GameBasePagerFragment {
                     } else {
                         return ((CommonResults.CommonItem) itemType).name;
                     }
+                }
+
+                @Override
+                public int getItemPosition(Object object) {
+                    return POSITION_NONE;
                 }
 
                 @Override

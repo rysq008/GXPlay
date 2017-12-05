@@ -183,27 +183,18 @@
                     android:background="@color/colorWhite"
                     android:orientation="vertical">
 
-                    <LinearLayout
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dp_10">
+                        android:layout_weight="1"
+                        android:drawableLeft="@mipmap/ic_flag_round"
+                        android:drawablePadding="10dp"
+                        android:padding="10dp"
+                        android:text="@string/extension_item_tittle_shareact"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_large" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/ic_flag_round" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_weight="1"
-                            android:text="@string/extension_item_tittle_shareact"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="@dimen/text_size_large" />
-                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -211,36 +202,23 @@
                         android:background="@color/colorDivider" />
 
                     <!--item 0-->
-                    <LinearLayout
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/extension_list_item_height"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_weight="1"
+                        android:drawableLeft="@mipmap/ic_extension_list_item_2_shareprofit"
+                        android:drawablePadding="10dp"
+                        android:drawableRight="@mipmap/ic_arrow_right"
+                        android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:maxLines="1"
+                        android:text="@string/extension_item_share_profit"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_large" />
 
-                        <ImageView
-                            android:layout_width="@dimen/extension_list_item_icon_height"
-                            android:layout_height="@dimen/extension_list_item_icon_height"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@mipmap/ic_extension_list_item_2_shareprofit" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/extension_item_share_profit"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_large" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:src="@mipmap/ic_arrow_right" />
-                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -249,36 +227,24 @@
                         android:background="@color/colorDivider" />
 
                     <!--item 1-->
-                    <LinearLayout
+
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/extension_list_item_height"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:layout_weight="1"
+                        android:drawableLeft="@mipmap/ic_extension_list_item_2_sharediscount"
+                        android:drawablePadding="10dp"
+                        android:drawableRight="@mipmap/ic_arrow_right"
+                        android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:maxLines="1"
+                        android:text="@string/extension_item_share_discount"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/text_size_large" />
 
-                        <ImageView
-                            android:layout_width="@dimen/extension_list_item_icon_height"
-                            android:layout_height="@dimen/extension_list_item_icon_height"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@mipmap/ic_extension_list_item_2_sharediscount" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/extension_item_share_discount"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_large" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:src="@mipmap/ic_arrow_right" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -288,27 +254,17 @@
                     android:background="@color/colorWhite"
                     android:orientation="vertical">
 
-                    <LinearLayout
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dp_10">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/ic_flag_round" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_weight="1"
-                            android:text="@string/extension_item_tittle_profit"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="@dimen/text_size_large" />
-                    </LinearLayout>
+                        android:layout_weight="1"
+                        android:drawableLeft="@mipmap/ic_flag_round"
+                        android:drawablePadding="10dp"
+                        android:padding="@dimen/dp_10"
+                        android:text="@string/extension_item_tittle_profit"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_size_large" />
 
                     <View
                         android:layout_width="match_parent"
@@ -322,17 +278,13 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="@dimen/extension_list_item_icon_height"
-                            android:layout_height="@dimen/extension_list_item_icon_height"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@mipmap/ic_extension_list_item_3_weico" />
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_10"
+                            android:drawableLeft="@mipmap/ic_extension_list_item_3_weico"
+                            android:drawablePadding="@dimen/dp_10"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/extension_item_share_weico"
@@ -344,17 +296,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/dp_10"
                             android:layout_weight="1"
+                            android:drawablePadding="@dimen/dp_10"
+                            android:drawableRight="@mipmap/ic_arrow_right"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/common_share_hint"
                             android:textColor="@color/colorShadow"
                             android:textSize="@dimen/text_size_small" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:src="@mipmap/ic_arrow_right" />
                     </LinearLayout>
 
                     <View
@@ -370,17 +319,13 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="@dimen/extension_list_item_icon_height"
-                            android:layout_height="@dimen/extension_list_item_icon_height"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@mipmap/ic_extension_list_item_3_wechat" />
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
                             android:layout_marginRight="@dimen/dp_10"
+                            android:drawableLeft="@mipmap/ic_extension_list_item_3_wechat"
+                            android:drawablePadding="@dimen/dp_10"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/extension_item_share_wechat"
@@ -392,17 +337,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/dp_10"
                             android:layout_weight="1"
+                            android:drawablePadding="@dimen/dp_10"
+                            android:drawableRight="@mipmap/ic_arrow_right"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text="@string/common_share_hint"
                             android:textColor="@color/colorShadow"
                             android:textSize="@dimen/text_size_small" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:src="@mipmap/ic_arrow_right" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -415,84 +357,55 @@
                 android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="@dimen/extension_tab_margintop"
                 android:background="@mipmap/bg_extension_tab"
-
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_extension_rank" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:text="@string/extension_rank"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_small" />
-                </LinearLayout>
+                    android:drawablePadding="@dimen/dp_10"
+                    android:drawableTop="@mipmap/ic_extension_rank"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/dp_20"
+                    android:text="@string/extension_rank"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_small" />
 
                 <View
                     android:layout_width="@dimen/tabbar_divider_height"
                     android:layout_height="@dimen/dp_20"
                     android:background="@color/colorShadow" />
 
-                <LinearLayout
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_extension_mall" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:text="@string/extension_mall"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_small" />
-                </LinearLayout>
+                    android:drawablePadding="@dimen/dp_10"
+                    android:drawableTop="@mipmap/ic_extension_mall"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/dp_20"
+                    android:text="@string/extension_mall"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_small" />
 
                 <View
                     android:layout_width="@dimen/tabbar_divider_height"
                     android:layout_height="@dimen/dp_20"
                     android:background="@color/colorShadow" />
 
-                <LinearLayout
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_extension_activity" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/dp_10"
-                        android:text="@string/extension_activity"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_size_small" />
-                </LinearLayout>
+                    android:drawablePadding="@dimen/dp_10"
+                    android:drawableTop="@mipmap/ic_extension_activity"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/dp_20"
+                    android:text="@string/extension_activity"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_small" />
             </LinearLayout>
-
         </RelativeLayout>
     </ScrollView>
 

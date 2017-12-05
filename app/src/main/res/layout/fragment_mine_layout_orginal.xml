@@ -1,8 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
-    android:orientation="vertical">
+    android:background="@color/colorBackground">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_tab_height"
+        android:layout_alignTop="@+id/root_mine_tab"
+        android:layout_marginTop="9dp"
+        android:background="@color/colorWhite" />
+
 
     <RelativeLayout
         android:id="@+id/root_mine_info"
@@ -44,32 +51,42 @@
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/text_size_xxlarge" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_5"
                     android:background="@drawable/bg_vip_white_stroke_radius"
-                    android:drawablePadding="@dimen/dp_5"
-                    android:drawableRight="@mipmap/ic_member_vip1"
-                    android:paddingBottom="2dp"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp"
-                    android:paddingTop="2dp"
-                    android:text="@string/common_member_text"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/text_size_tiny" />
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
+                        android:drawablePadding="@dimen/dp_5"
+                        android:drawableRight="@mipmap/ic_member_vip1"
+                        android:text="@string/common_member_text"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/text_size_tiny" />
+                </LinearLayout>
             </LinearLayout>
 
-
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:drawablePadding="@dimen/dp_5"
-                android:drawableRight="@mipmap/ic_arrow_right"
-                android:text="@string/common_edit_user_info"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/text_size_small" />
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:drawableRight="@mipmap/ic_arrow_right"
+                    android:text="@string/common_edit_user_info"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
@@ -80,7 +97,7 @@
         android:layout_height="@dimen/mine_tab_height"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginRight="@dimen/dp_5"
-        android:layout_marginTop="-40dp"
+        android:layout_marginTop="@dimen/mine_tab_topmargin"
         android:background="@mipmap/bg_mine_tab"
         android:gravity="center_vertical"
         android:orientation="vertical"
@@ -206,95 +223,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_invite"
+    <include
         android:layout_width="match_parent"
-        android:layout_height="@dimen/mine_list_item_size"
-        android:background="@color/white"
-        android:drawableLeft="@mipmap/ic_mine_yaoqing"
-        android:drawablePadding="@dimen/dp_10"
-        android:drawableRight="@mipmap/ic_arrow_right"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:text="邀请记录"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/text_size_large" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_below="@id/root_mine_tab"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tabbar_divider_height"
-        android:background="@color/colorDivider" />
-
-    <TextView
-        android:id="@+id/tv_promotion_earnings"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mine_list_item_size"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:background="@color/white"
-        android:drawableLeft="@mipmap/ic_mine_tuiguang"
-        android:drawablePadding="@dimen/dp_10"
-        android:drawableRight="@mipmap/ic_arrow_right"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:text="推广收益"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/text_size_large" />
-
-    <TextView
-        android:id="@+id/tv_service"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mine_list_item_size"
-        android:background="@color/white"
-        android:drawableLeft="@mipmap/ic_mine_kefu"
-        android:drawablePadding="@dimen/dp_10"
-        android:drawableRight="@mipmap/ic_arrow_right"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:text="我的客服"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/text_size_large" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tabbar_divider_height"
-        android:background="@color/colorDivider" />
-
-    <TextView
-        android:id="@+id/tv_feedback"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mine_list_item_size"
-        android:background="@color/white"
-        android:drawableLeft="@mipmap/ic_mine_fankui"
-        android:drawablePadding="@dimen/dp_10"
-        android:drawableRight="@mipmap/ic_arrow_right"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:text="我的反馈"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/text_size_large" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/tabbar_divider_height"
-        android:background="@color/colorDivider" />
-
-    <TextView
-        android:id="@+id/tv_setting"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/mine_list_item_size"
-        android:background="@color/white"
-        android:drawableLeft="@mipmap/ic_mine_setting"
-        android:drawablePadding="@dimen/dp_10"
-        android:drawableRight="@mipmap/ic_arrow_right"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:text="我的设置"
-        android:textColor="@color/colorBlack"
-        android:textSize="@dimen/text_size_large" />
-
-</LinearLayout>
+</RelativeLayout>

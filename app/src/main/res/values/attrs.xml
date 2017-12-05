@@ -81,6 +81,7 @@
     </declare-styleable>
 
     <declare-styleable name="CommonSearchView">
+        <attr name="is_back" format="boolean" />
         <attr name="left_iv_res" format="reference" />
         <attr name="cen_et_res" format="reference|string" />
         <attr name="right_tv_res" format="reference|string" />

@@ -7,6 +7,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.model.ClassicalResults;
@@ -50,6 +51,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     StateView errorView;
 
     List<ItemType> list = new ArrayList<ItemType>();
+    private View loadingView;
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
             errorView.setCustomClickListener(new StateView.StateViewClickListener() {
                 @Override
                 public void doAction() {
-                    xStateController.loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+                    xStateController.loadingView(loadingView);
                     getP().onInitData();
                 }
             });
@@ -73,7 +75,14 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
             ((ViewGroup) errorView.getParent()).removeView(errorView);
         }
         xStateController.errorView(errorView);
-        xStateController.loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+
+        if (loadingView == null) {
+            loadingView = View.inflate(context, R.layout.view_loading, null);
+        }
+        if (null != loadingView.getParent()) {
+            ((ViewGroup) loadingView.getParent()).removeView(loadingView);
+        }
+        xStateController.loadingView(loadingView);
 
         xStateController.showLoading();
 
@@ -84,14 +93,15 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
 
     public void showError(NetError error) {
         xStateController.showError();
+        xStateController.getLoadingView().setVisibility(View.GONE);
     }
 
     public void showData(List<ItemType> model) {
+        xStateController.getLoadingView().setVisibility(View.GONE);
         if (Kits.Empty.check(model)) {
             xStateController.showEmpty();
         } else {
             xStateController.showContent();
-            xStateController.getLoadingView().setVisibility(View.GONE);
             list.addAll(model);
             CommonNavigator commonNavigator = new CommonNavigator(context);
             commonNavigator.setAdapter(new CommonNavigatorAdapter() {
@@ -116,6 +126,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                         @Override
                         public void onClick(View view) {
                             viewPager.setCurrentItem(index);
+                            viewPager.getAdapter().notifyDataSetChanged();
                         }
                     });
                     return colorTransitionPagerTitleView;
