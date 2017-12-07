@@ -9,6 +9,9 @@ import com.facebook.stetho.Stetho;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.TotoroToast;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +38,8 @@ public class GameMarketApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         context = this;
+
+        initUmengShare();
 
         Stetho.initializeWithDefaults(this);
         SharedPreUtil.init(this);
@@ -132,6 +137,16 @@ public class GameMarketApplication extends MultiDexApplication {
                 return false;
             }
         });
+    }
+
+    private void initUmengShare() {
+        //查看log时候打开
+        Config.DEBUG = true;
+        UMShareAPI.get(this);
+        //配置各个平台的id和secret
+        PlatformConfig.setWeixin("wx1d5e45ad3dc2019a", "d33400dd7f4e358a435602e26d45e881");
+        PlatformConfig.setQQZone("1105689325", "hMJbCLDB4eiTTTSy");
+        PlatformConfig.setSinaWeibo("734669220", "4c643b2c952fd78d86902e007607e377", "https://api.weibo.com/oauth2/default.html");
     }
 
     /**
