@@ -4,6 +4,7 @@ import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
+import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.NoticeResults;
@@ -48,5 +49,9 @@ public class DataService {
 
     public static Flowable<HttpResultModel<CommonResults>> getGameCommon() {
         return Api.CreateApiService().getApiCommonData();
+    }
+
+    public static Flowable<HttpResultModel<GeneralizeResults>> getGeneralizeData(){
+        return Api.CreateApiService().getApiGeneralizeAccountData();
     }
 }

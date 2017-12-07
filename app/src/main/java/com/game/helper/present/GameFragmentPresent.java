@@ -37,7 +37,7 @@ public class GameFragmentPresent extends XPresent<GameBasePagerFragment> {
             }
         });
 
-        RxLoadingUtils.subscribeWithDialog(getV().getContext(), fa, getV().<GameAllResultsData>bindToLifecycle(), new Consumer<GameAllResultsData>() {
+        RxLoadingUtils.subscribe(fa, getV().<GameAllResultsData>bindToLifecycle(), new Consumer<GameAllResultsData>() {
             @Override
             public void accept(GameAllResultsData gameAllResultsData) throws Exception {
                 List<ItemType> list = new ArrayList<>();

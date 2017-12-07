@@ -82,7 +82,7 @@ class iWebView extends WebView {
                 return true;
             }
         });
-        synCookies(context, getUrl());
+//        synCookies(context, getUrl());
     }
 
 
