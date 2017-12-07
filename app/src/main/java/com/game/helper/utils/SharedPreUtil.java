@@ -28,8 +28,6 @@ public class SharedPreUtil {
 
     private static SharedPreferences sp;
 
-    private static SharedPreferences.Editor editor;
-
     public static void init(Context context) {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
@@ -73,7 +71,7 @@ public class SharedPreUtil {
     }
 
     public static void saveSessionId(String sissonid) {
-        editor.putString(SharedPreference_SessionId, sissonid).apply();
+        sp.edit().putString(SharedPreference_SessionId, sissonid).apply();
     }
 
     public static void clearSessionId() {
@@ -108,7 +106,7 @@ public class SharedPreUtil {
             oosw.writeObject(oosw);
 //            String objstr = DESUtil.encrypt(baos.toString()/*new String(baos.toByteArray(), "utf-8")*/, DESUtil.DEFAULT_KEY);
             String objstr = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-            editor.putString(key, objstr).commit();
+            sp.edit().putString(key, objstr).commit();
             baos.close();
             oosw.close();
         } catch (IOException e) {

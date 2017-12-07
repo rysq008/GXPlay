@@ -7,6 +7,7 @@ import android.webkit.CookieSyncManager;
 
 import com.facebook.stetho.Stetho;
 import com.game.helper.net.api.Api;
+import com.game.helper.utils.PersistentCookieStore;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.TotoroToast;
 import com.umeng.socialize.Config;
@@ -15,7 +16,6 @@ import com.umeng.socialize.UMShareAPI;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -74,7 +74,8 @@ public class GameMarketApplication extends MultiDexApplication {
             @Override
             public CookieJar configCookie() {
                 return new CookieJar() {
-                    private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+                    //                    private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
+                    private final PersistentCookieStore cookieStore = new PersistentCookieStore(context);
 
                     @Override
                     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
@@ -82,10 +83,12 @@ public class GameMarketApplication extends MultiDexApplication {
                         for (Cookie cookie : cookies) {
                             sb.append(cookie.toString());
                             sb.append(";");
-                            if (cookie.name().equals("sessionid"))
-                                SharedPreUtil.saveSessionId(cookie.value());
+                            if (cookie.name().equals("sessionid")) {
+                                SharedPreUtil.saveSessionId(sb.toString());
+                            }
+                            cookieStore.add(url, cookie);
                         }
-                        cookieStore.put(url.host(), cookies);
+//                        cookieStore.put(url.host(), cookies);
 
                         SharedPreUtil.saveObject("Cookie", cookies);
 
@@ -102,7 +105,8 @@ public class GameMarketApplication extends MultiDexApplication {
                     @Override
                     public List<Cookie> loadForRequest(HttpUrl url) {
                         //List<Cookie> cookies = SharedPreUtil.getObject("Cookie");
-                        List<Cookie> cookies = cookieStore.get(url.host());
+//                        List<Cookie> cookies = cookieStore.get(url.host());
+                        List<Cookie> cookies = cookieStore.get(url);
                         return cookies != null ? cookies : new ArrayList<Cookie>();
                     }
                 };

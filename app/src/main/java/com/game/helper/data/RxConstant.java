@@ -8,6 +8,7 @@ package com.game.helper.data;
 public final class RxConstant {
 
     public static final int Head_Image_Change_Type = 40;
+    public static final int Login_Type = 200;
 
     public static final class HomeModeType {//首页模块数据类型描述
         public static final int Banner_Model_Type = 0;

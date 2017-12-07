@@ -5,16 +5,22 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.HotResults;
+import com.game.helper.model.LoginResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 
 import io.reactivex.Flowable;
 
 public class DataService {
+
+    public static Flowable<HttpResultModel<LoginResults>> getLoginData(LoginRequestBody baseRequestBody) {
+        return Api.CreateApiService().getApiLoginData(baseRequestBody);
+    }
 
     public static Flowable<HttpResultModel<BannerResults>> getHomeBanner() {
         return Api.CreateApiService().getApiBannerData();
