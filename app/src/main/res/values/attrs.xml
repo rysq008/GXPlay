@@ -83,7 +83,10 @@
     <declare-styleable name="CommonSearchView">
         <attr name="is_back" format="boolean" />
         <attr name="left_iv_res" format="reference" />
-        <attr name="cen_et_res" format="reference|string" />
-        <attr name="right_tv_res" format="reference|string" />
+        <attr name="center_et_res" format="reference|string" />
+        <attr name="right_tv_res_img" format="reference|integer" />
+        <attr name="right_tv_res_txt" format="reference|string" />
+        <attr name="right_tv_res_color" format="reference|color" />
+        <attr name="is_search_page" format="boolean" />
     </declare-styleable>
 </resources>

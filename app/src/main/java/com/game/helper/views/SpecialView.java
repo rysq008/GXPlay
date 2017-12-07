@@ -18,6 +18,8 @@ import com.game.helper.R;
 import com.game.helper.model.SpecialResults;
 import com.leochuan.CenterScrollListener;
 import com.leochuan.CircleLayoutManager;
+import com.leochuan.GalleryLayoutManager;
+import com.leochuan.RotateLayoutManager;
 import com.leochuan.ScaleLayoutManager;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -66,11 +68,10 @@ public class SpecialView extends LinearLayout {
                 textView.setBackgroundDrawable(new BitmapDrawable(bitmap));
             }
         });
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        bannerViewPager.setLayoutManager(new ScaleLayoutManager(5));
+
+        bannerViewPager.setLayoutManager(new GalleryLayoutManager(2));
         //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
-        bannerViewPager.setHasFixedSize(true);
+//        bannerViewPager.setHasFixedSize(true);
 
         ILFactory.getLoader().loadNet(getContext(), "", null, new LoadCallback() {
             @Override

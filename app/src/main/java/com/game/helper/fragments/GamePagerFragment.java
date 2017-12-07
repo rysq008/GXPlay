@@ -71,8 +71,7 @@ public class GamePagerFragment extends GameBasePagerFragment {
                     try {
                         Class<FragmentPagerAdapter> cls = FragmentPagerAdapter.class;
                         Class<?>[] parameterTypes = {int.class, long.class};
-                        Method method = cls.getDeclaredMethod("makeFragmentName",
-                                parameterTypes);
+                        Method method = cls.getDeclaredMethod("makeFragmentName", parameterTypes);
                         method.setAccessible(true);
                         String tag = (String) method.invoke(this, viewId, index);
                         return tag;
