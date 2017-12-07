@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    tools:context="com.game.helper.fragments.MinePagerFragment">
+    <View
+        android:layout_marginTop="9dp"
+        android:background="@color/colorWhite"
+        android:layout_alignTop="@+id/root_mine_tab"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mine_tab_height"/>
+
+    <include
+        android:id="@+id/root_mine_info"
+        layout="@layout/layout_mine_info"/>
+
+    <include
+        android:id="@+id/root_mine_tab"
+        layout="@layout/layout_mine_tab"/>
+
+    <include
+        layout="@layout/layout_mine_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_below="@id/root_mine_tab"/>
+
+</RelativeLayout>

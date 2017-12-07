@@ -5,12 +5,21 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.HotResults;
+import com.game.helper.model.LoginResults;
+import com.game.helper.model.LogoutResults;
+import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.RecommendResults;
+import com.game.helper.model.RegistResults;
 import com.game.helper.model.SpecialResults;
+import com.game.helper.model.VerifyResults;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
+import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.VerifyRequestBody;
 
+import java.lang.reflect.Member;
 import java.util.Map;
 
 import io.reactivex.Flowable;
@@ -43,4 +52,19 @@ public interface ApiService {
 
     @POST("/game/get_type_list/")//普通分类列表
     Flowable<HttpResultModel<CommonResults>> getApiCommonData();
+
+    @POST("/member/register/")//注册
+    Flowable<HttpResultModel<RegistResults>> ApiRegitst(@Body RegistRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("market_num") String market_num*/);
+
+    @POST("/member/login/")//登陆
+    Flowable<HttpResultModel<LoginResults>> ApiLogin(@Body LoginRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("type") String type, @Path("channel_num") String channel_num*/);
+
+    @POST("/member/logout/")//登出
+    Flowable<HttpResultModel<LogoutResults>> ApiLogout();
+
+    @POST("/member/info/")//会员信息
+    Flowable<HttpResultModel<MemberInfoResults>> getApiMemberInfo();
+
+    @POST("/public/get_tel_verify/")//验证码
+    Flowable<HttpResultModel<VerifyResults>> getApiVerify(@Body VerifyRequestBody verifyRequestBody/*@Path("phone") String phone, @Path("usefor") String usefor*/);
 }

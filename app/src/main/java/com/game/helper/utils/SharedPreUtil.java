@@ -32,6 +32,7 @@ public class SharedPreUtil {
 
     public static void init(Context context) {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
+        editor = sp.edit();
     }
 
     public static boolean isFirstOpenApp() {

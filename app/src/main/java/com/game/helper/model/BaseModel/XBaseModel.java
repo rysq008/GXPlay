@@ -1,5 +1,7 @@
 package com.game.helper.model.BaseModel;
 
+import com.game.helper.net.StateCode;
+
 import java.io.Serializable;
 
 import cn.droidlover.xdroidmvp.net.IModel;
@@ -12,8 +14,16 @@ public class XBaseModel implements IModel, ItemType, Serializable {
     public int total_page;
     public int current_page;
 
+    public boolean isSucceful() {
+        return code.equals(StateCode.STATE_0000) ? true : false;
+    }
+
     public boolean hasNextPage() {
         return total_page > current_page;
+    }
+
+    public String getResponseMsg() {
+        return StateCode.getMessage(code);
     }
 
     public int nextPageNum(){

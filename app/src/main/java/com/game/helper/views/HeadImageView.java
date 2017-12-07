@@ -63,6 +63,10 @@ public class HeadImageView extends FrameLayout {
         });
     }
 
+    public RoundedImageView getAvatarView() {
+        return riv;
+    }
+
     @OnClick(R.id.common_head_iv)
     public void onClick() {
         TotoroToast.makeText(getContext(), " on click head view ", 0).show();

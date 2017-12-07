@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/mine_info_height"
+    android:background="@mipmap/bg_mine_info">
+
+    <ImageView
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/dp_10"
+        android:src="@mipmap/ic_message"
+        android:layout_width="@dimen/mine_icon_size"
+        android:layout_height="@dimen/mine_icon_size" />
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:orientation="horizontal"
+        android:layout_height="@dimen/mine_icon_avatar">
+        <com.game.helper.views.HeadImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="@dimen/mine_icon_avatar"
+            android:layout_height="@dimen/mine_icon_avatar" />
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="hello word!"
+                android:textSize="@dimen/text_size_xxlarge"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:background="@drawable/bg_vip_white_stroke_radius"
+                android:padding="2dp"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="@string/common_member_text"
+                    android:id="@+id/tv_vip_level"
+                    android:textColor="@color/colorWhite"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:drawableRight="@mipmap/ic_member_vip1"
+                    android:textSize="@dimen/text_size_tiny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_edit_user_info"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/common_edit_user_info"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_size_small"
+                android:drawablePadding="@dimen/dp_5"
+                android:drawableRight="@mipmap/ic_arrow_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
