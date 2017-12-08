@@ -60,7 +60,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
             }
         });
 
-        RxLoadingUtils.subscribeWithDialog(getV().getContext(), fa, getV().<HomeAllResultsData>bindToLifecycle(), new Consumer<HomeAllResultsData>() {
+        RxLoadingUtils.subscribe(fa, getV().<HomeAllResultsData>bindToLifecycle(), new Consumer<HomeAllResultsData>() {
             @Override
             public void accept(HomeAllResultsData homeAllResultsData) throws Exception {
                 List<ItemType> list = new ArrayList<>();
@@ -87,7 +87,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
 
     public void loadMoreData(int page) {
         Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(page, 0, 0));
-        RxLoadingUtils.subscribeWithDialog(getV().getContext(), fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+        RxLoadingUtils.subscribe(fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
             @Override
             public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
                 mXBaseModel = recommendResultsHttpResultModel;

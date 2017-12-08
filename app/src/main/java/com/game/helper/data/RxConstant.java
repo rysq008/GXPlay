@@ -38,6 +38,7 @@ public final class RxConstant {
         public static final int Generalize_Balance_Amount_type = 20;//总收益
         public static final int Generalize_Balance_Withdraw_type = 21;//可提现
         public static final int Generalize_Balance_Expect_type = 22;//待提现（预期）
+        public static final int Generalize_Balance_Account_Info_type = 23;//推广帐号信息
     }
 
     public static final class MineModeType {//游戏推广数据类型

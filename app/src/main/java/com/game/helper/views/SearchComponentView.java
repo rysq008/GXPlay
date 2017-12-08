@@ -96,7 +96,7 @@ public class SearchComponentView extends LinearLayout {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() == MotionEvent.ACTION_UP) {
-                        DetailFragmentsActivity.launch(getContext(), SearchFragment.newInstance());
+                        DetailFragmentsActivity.launch(getContext(), null, SearchFragment.newInstance());
                     }
                     return false;
                 }

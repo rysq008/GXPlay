@@ -1,11 +1,14 @@
 package com.game.helper.activitys;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
 import com.game.helper.activitys.BaseActivity.XDetailBaseActivity;
+
+import cn.droidlover.xdroidmvp.router.Router;
 
 public class DetailFragmentsActivity extends XDetailBaseActivity {
 
@@ -15,10 +18,8 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         boolean onKeyDown(int keyCode, KeyEvent keyEvent);
     }
 
-    public static void launch(Context context, final Fragment fra) {
-        Intent intent = new Intent();
-        intent.setClass(context, DetailFragmentsActivity.class);
-        context.startActivity(intent);
+    public static void launch(Context context, Bundle bundle, final Fragment fra) {
+        Router.newIntent((Activity) context).to(DetailFragmentsActivity.class).data(bundle).launch();
         currentFragment = fra;
     }
 

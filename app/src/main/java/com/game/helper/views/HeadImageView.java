@@ -67,6 +67,12 @@ public class HeadImageView extends FrameLayout {
         return riv;
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        BusProvider.getBus().unregister(this);
+    }
+
     @OnClick(R.id.common_head_iv)
     public void onClick() {
         TotoroToast.makeText(getContext(), " on click head view ", 0).show();

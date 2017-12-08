@@ -94,7 +94,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/textView"
+                        android:id="@+id/generalize_total_income_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
@@ -105,7 +105,7 @@
                         android:text="累计收益：520" />
 
                     <TextView
-                        android:id="@+id/textView2"
+                        android:id="@+id/generalize_expect_income_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignEnd="@+id/linearLayout3"
@@ -116,12 +116,12 @@
                         android:text="预期收益：200" />
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/generalize_income_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/linearLayout3"
-                        android:layout_alignLeft="@+id/textView2"
-                        android:layout_alignStart="@+id/textView2"
+                        android:layout_alignLeft="@+id/generalize_expect_income_tv"
+                        android:layout_alignStart="@+id/generalize_expect_income_tv"
                         android:text="推广收益：120" />
                 </RelativeLayout>
 
@@ -201,7 +201,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
                     android:background="@color/colorWhite"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
 
                     <TextView

@@ -93,6 +93,7 @@ public class BannerView extends LinearLayout {
         mBanner.setOnItemClickListener(new BGABanner.OnItemClickListener() {
             @Override
             public void onBannerItemClick(BGABanner banner, View view, Object model, int position) {
+
             }
         });
 //        mBanner.setData(Arrays.asList(R.mipmap.guide1, R.mipmap.guide2, R.mipmap.guide3, R.mipmap.guide4), null);

@@ -2,15 +2,16 @@ package com.game.helper.views.widget;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.event.BusProvider;
-import com.game.helper.event.MsgEvent;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
@@ -18,6 +19,8 @@ import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.functions.Consumer;
+
+import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
 
 public class StateView extends LinearLayout {
@@ -96,10 +99,16 @@ public class StateView extends LinearLayout {
                 showError(netError);
             }
         });
-        BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
+        BusProvider.getBus().receive(NetworkInfo.class).subscribe(new Consumer<NetworkInfo>() {
             @Override
-            public void accept(MsgEvent msgEvent) throws Exception {
-                if (msgEvent.getData().equals(ConnectivityManager.TYPE_MOBILE) || msgEvent.getData().equals(ConnectivityManager.TYPE_WIFI)) {
+            public void accept(NetworkInfo activeNetwork) throws Exception {
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                    // connected to wifi
+                    Log.e(TAG, "当前WiFi连接可用 ");
+                    performClick();
+                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                    // connected to the mobile provider's data plan
+                    Log.e(TAG, "当前移动网络连接可用 ");
                     performClick();
                 }
             }

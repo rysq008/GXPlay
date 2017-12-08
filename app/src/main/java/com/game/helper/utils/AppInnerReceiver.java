@@ -46,11 +46,11 @@ public class AppInnerReceiver extends BroadcastReceiver {
                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                         // connected to wifi
                         Log.e(TAG, "当前WiFi连接可用 ");
-                        BusProvider.getBus().post(new MsgEvent<Integer>(ConnectivityManager.TYPE_WIFI));
+                        BusProvider.getBus().post(activeNetwork);
                     } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                         // connected to the mobile provider's data plan
                         Log.e(TAG, "当前移动网络连接可用 ");
-                        BusProvider.getBus().post(new MsgEvent<Integer>(ConnectivityManager.TYPE_MOBILE));
+                        BusProvider.getBus().post(activeNetwork);
                     }
                 } else {
                     Log.e(TAG, "当前没有网络连接，请确保你已经打开网络 ");
