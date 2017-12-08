@@ -7,6 +7,16 @@ package com.game.helper.data;
 
 public final class RxConstant {
 
+    public static final String VERIFY_USER_FOR_LOGIN = "0";
+    public static final String VERIFY_USER_FOR_REGIST = "1";
+
+    /**
+     * 登陆share preference
+     * */
+    public static final String LOGIN_PREFERENCE_NAME = "login_share_preference";
+    public static final String LOGIN_PREFERENCE_KEY_STATUS = "login_preference_islogin";
+    public static final String LOGIN_PREFERENCE_KEY_USER = "login_preference_user";
+
     public static final int Head_Image_Change_Type = 40;
     public static final int Login_Type = 200;
 
@@ -33,6 +43,14 @@ public final class RxConstant {
 
     public static final class MineModeType {//游戏推广数据类型
         public static final int Mine_Balance_Wallet_type = 30;//钱包余额
+    }
+
+    public static final class AccountModeType {
+        public static final int Account_Regist_type = 50;//注册
+        public static final int Account_Login_type = 51;//登陆
+        public static final int Account_Logout_type = 52;//登出
+        public static final int Account_Member_Info_type = 53;//用户详情
+        public static final int Account_Vertify_type = 54;//验证码
     }
 
 }

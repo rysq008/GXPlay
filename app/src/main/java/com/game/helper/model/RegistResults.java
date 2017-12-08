@@ -8,7 +8,7 @@ import java.util.List;
 
 import zlc.season.practicalrecyclerview.ItemType;
 
-public class LoginResults extends XBaseModel {
+public class RegistResults extends XBaseModel {
 
 //        {
 //            "message": "成功",
@@ -23,6 +23,6 @@ public class LoginResults extends XBaseModel {
 
     @Override
     public int itemType() {
-        return RxConstant.Login_Type;
-    }
+            return RxConstant.AccountModeType.Account_Regist_type;
+        }
 }

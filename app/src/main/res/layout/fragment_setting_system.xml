@@ -1,0 +1,154 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground"
+    tools:context="com.game.helper.fragments.SettingSystemFragment">
+    <include
+        android:id="@+id/action_bar"
+        layout="@layout/layout_action_bar"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_40"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dp_15"
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="声音提醒"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_large"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@mipmap/ic_arrow_right"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dp_15"
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="清理缓存"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_large"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="14.1MB"
+                android:gravity="right"
+                android:textColor="@color/colorShadow"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@mipmap/ic_arrow_right"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dp_15"
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="常见问题"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_large"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@mipmap/ic_arrow_right"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_about_us"
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dp_15"
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="关于我们"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_large"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@mipmap/ic_arrow_right"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dp_15"
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:text="最近更新"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_large"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@mipmap/ic_arrow_right"
+                android:layout_width="@dimen/dp_10"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:text="退出登陆"
+        android:id="@+id/tv_exit_login"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/colorWhite"
+        android:gravity="center"
+        android:background="@drawable/bg_gradient_radius_hoop_primary"
+        android:layout_margin="@dimen/dp_15"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40" />
+</LinearLayout>

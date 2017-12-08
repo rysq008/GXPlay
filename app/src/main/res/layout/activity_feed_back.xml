@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackground"
+    tools:context="com.game.helper.activitys.FeedBackActivity">
+    <include
+        android:id="@+id/action_bar"
+        layout="@layout/layout_action_bar"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_10"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:background="@color/colorWhite"
+            android:padding="@dimen/dp_10"
+            android:textSize="@dimen/text_size_small"
+            android:text="@string/feedback_edit_contnet_tittle"
+            android:textColor="@color/colorShadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:padding="@dimen/dp_10"
+            android:background="@color/colorWhite">
+
+            <EditText
+                android:background="@null"
+                android:gravity="left|top"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_small"
+                android:hint="@string/feedback_edit_content_hint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        
+        <EditText
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/dp_10"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_size_small"
+            android:hint="@string/feedback_edit_phone_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:textSize="@dimen/text_size_small"
+            android:background="@color/colorWhite"
+            android:hint="@string/feedback_edit_mail_hint"
+            android:padding="@dimen/dp_10"
+            android:textColor="@color/colorBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_marginTop="@dimen/tabbar_divider_height"
+            android:background="@color/colorWhite"
+            android:paddingTop="@dimen/dp_40"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_commit"
+                android:layout_margin="@dimen/dp_10"
+                android:textSize="@dimen/text_size_large"
+                android:textColor="@color/colorWhite"
+                android:text="提交"
+                android:background="@drawable/bg_gradient_radius_hoop_primary"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

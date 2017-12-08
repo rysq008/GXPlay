@@ -7,13 +7,19 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.LoginResults;
+import com.game.helper.model.LogoutResults;
+import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.RecommendResults;
+import com.game.helper.model.RegistResults;
 import com.game.helper.model.SpecialResults;
+import com.game.helper.model.VerifyResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
+import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
 
@@ -53,5 +59,25 @@ public class DataService {
 
     public static Flowable<HttpResultModel<GeneralizeResults>> getGeneralizeData(){
         return Api.CreateApiService().getApiGeneralizeAccountData();
+    }
+
+    public static Flowable<HttpResultModel<RegistResults>> regist(RegistRequestBody requestBody) {
+        return Api.CreateApiService().ApiRegitst(requestBody);
+    }
+
+    public static Flowable<HttpResultModel<LoginResults>> login(LoginRequestBody requestBody) {
+        return Api.CreateApiService().ApiLogin(requestBody);
+    }
+
+    public static Flowable<HttpResultModel<LogoutResults>> logout() {
+        return Api.CreateApiService().ApiLogout();
+    }
+
+    public static Flowable<HttpResultModel<MemberInfoResults>> getMemberInfo() {
+        return Api.CreateApiService().getApiMemberInfo();
+    }
+
+    public static Flowable<HttpResultModel<VerifyResults>> getVerify(VerifyRequestBody verifyRequestBody) {
+        return Api.CreateApiService().getApiVerify(verifyRequestBody);
     }
 }

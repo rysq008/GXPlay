@@ -63,6 +63,10 @@ public class HeadImageView extends FrameLayout {
         });
     }
 
+    public RoundedImageView getAvatarView() {
+        return riv;
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();

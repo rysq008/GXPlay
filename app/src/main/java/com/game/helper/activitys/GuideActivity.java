@@ -58,7 +58,7 @@ public class GuideActivity extends XBaseActivity implements OnPageChangeListener
     @Override
     public void onPageSelected(int position) {
         if (position == 3) {
-            vp.getChildAt(position).setOnClickListener(new View.OnClickListener() {
+            views.get(position).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Router.newIntent(GuideActivity.this).to(MainActivity.class).launch();
@@ -97,6 +97,11 @@ public class GuideActivity extends XBaseActivity implements OnPageChangeListener
             public Object instantiateItem(ViewGroup view, int position) {
                 view.addView(views.get(position));
                 return views.get(position);
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                container.removeView(views.get(position));
             }
         };
 

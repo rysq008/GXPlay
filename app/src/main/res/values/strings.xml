@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">GXApplication</string>
+    <string name="app_version">v1.0.0</string>
+    <string name="app_phone">400-000-0000</string>
 
     <!-- withdraw fragment -->
     <string name="make_money">试玩</string>
@@ -45,6 +47,12 @@
     <string name="common_discount_hint">自动折扣步骤（新手必读）</string>
     <string name="common_discount_putong">普通折扣</string>
     <string name="common_discount_member">会员折扣</string>
+    <string name="common_setting_user_info">个人信息</string>
+    <string name="common_setting_system">设置</string>
+    <string name="common_about_us">关于我们</string>
+    <string name="common_about_version">版本发展</string>
+    <string name="common_extension_history">邀请记录</string>
+    <string name="common_extension_profit">推广收益</string>
 
     <!--我的-->
     <string name="mine_tab_game">我的游戏</string>
@@ -56,6 +64,8 @@
     <string name="mine_name_2">我的客服</string>
     <string name="mine_name_3">我的反馈</string>
     <string name="mine_name_4">我的设置</string>
+    <string name="mine_login_hint">登陆后，钱包余额、推广记录、邀请记录\n会显示在这里，方便查看</string>
+
 
     <!--推广-->
     <string name="extension_rank">排行榜</string>
@@ -83,5 +93,16 @@
     <string name="game_recycle_des">在本区下载的游戏，不想玩时k可由G9游戏高价保底回收游戏账户，充值金额仅按照回收比例返回现金或者G9游戏币（充值方法：直接游戏内充值。原价充值，现金回收）</string>
     <string name="game_recycle_process_tittle">游戏规则和步骤</string>
     <string name="game_recycle_process_hint">注意：先申请回收资格，通过后才能充值且回收！</string>
+
+    <!--反馈-->
+    <string name="feedback_tittle">意见反馈</string>
+    <string name="feedback_edit_contnet_tittle">请描述您的问题或者建议</string>
+    <string name="feedback_edit_content_hint">您的声音，我们倾听....</string>
+    <string name="feedback_edit_phone_hint">您的联系方式（选填）</string>
+    <string name="feedback_edit_mail_hint">电子邮件或者QQ（方便我们与您及时联系）</string>
+
+    <!--登陆-->
+    <string name="login_hint_without_account">请输入手机号码！</string>
+    <string name="login_hint_without_code">请输入验证码！</string>
     
 </resources>

@@ -8,21 +8,17 @@ import java.util.List;
 
 import zlc.season.practicalrecyclerview.ItemType;
 
-public class LoginResults extends XBaseModel {
+public class LogoutResults extends XBaseModel {
 
 //        {
-//            "message": "成功",
-//                "code": "0000",
-//                "data": {
-//            "phone": "18511249037",
-//                    "member_id": 15
+//            "message" : "成功",
+//                "code" : "0000",
+//                "data" : {
 //        }
 //        }
-    public String phone;
-    public String member_id;
 
     @Override
     public int itemType() {
-        return RxConstant.Login_Type;
-    }
+            return RxConstant.AccountModeType.Account_Logout_type;
+        }
 }
