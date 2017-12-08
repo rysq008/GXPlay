@@ -136,7 +136,6 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
     private void initView() {
         initBottomNavigationBar();
-        login();
         radioFragmentList.clear();
         radioFragmentList.add(HomePagerFragment.newInstance());
         radioFragmentList.add(GamePagerFragment.newInstance());
@@ -207,30 +206,5 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         GAME,
         GENERALIZE,
         MINE,
-    }
-
-    // TODO: 2017/12/7 senssion id 每回退出都失效 在打开主页每回都检测一遍是否登陆 否则模拟测试环境登陆
-    private void login(){
-        if (!Utils.hasLoginInfo(getContext())) return;
-
-        String account = Utils.getLoginInfo(getContext()).phone;
-        String code = "9870";
-        int type = LoginFragment.LOGIN_TYPE_MESSAGE;
-        Flowable<HttpResultModel<LoginResults>> fr = DataService.login(new LoginRequestBody(account,code,type+"",""));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<LoginResults>>() {
-            @Override
-            public void accept(HttpResultModel<LoginResults> loginResultsHttpResultModel) throws Exception {
-                if (loginResultsHttpResultModel.isSucceful()) {
-                    LoginUserInfo userInfo = new LoginUserInfo(
-                            loginResultsHttpResultModel.data.phone,loginResultsHttpResultModel.data.member_id);
-                    Utils.writeLoginInfo(getContext(),userInfo);
-                }else {
-                }
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-            }
-        });
     }
 }
