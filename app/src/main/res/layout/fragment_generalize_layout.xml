@@ -4,14 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -23,158 +25,105 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorWhite"
-                    android:orientation="vertical">
+                    android:layout_height="150dp"
+                    android:background="@mipmap/bg_extension_tab"
+                    android:paddingBottom="@dimen/dp_20"
+                    android:paddingTop="@dimen/dp_20">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/extension_tab_profit_blank_height" />
+                    <com.game.helper.views.HeadImageView
+                        android:id="@+id/generalize_head_iv"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="@dimen/dp_10" />
 
                     <LinearLayout
+                        android:id="@+id/linearLayout3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/dp_10">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@mipmap/ic_flag_round" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_weight="1"
-                            android:text="@string/extension_item_tittle_profit"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="@dimen/text_size_medium" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/tabbar_divider_height"
-                        android:background="@color/colorDivider" />
-
-                    <!--item 0-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/extension_list_item_height"
+                        android:layout_alignParentBottom="true"
+                        android:layout_below="@+id/generalize_head_iv"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_marginRight="@dimen/dp_5"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="@dimen/extension_list_item_icon_height"
-                            android:layout_height="@dimen/extension_list_item_icon_height"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@mipmap/ic_extension_list_item_1_totalprofit" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:drawableTop="@mipmap/ic_extension_rank"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="15dp"
+                            android:text="@string/extension_rank"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/text_size_small" />
+
+                        <View
+                            android:layout_width="@dimen/tabbar_divider_height"
+                            android:layout_height="@dimen/dp_20"
+                            android:background="@color/colorShadow" />
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/extension_item_total_profit"
+                            android:drawableTop="@mipmap/ic_extension_mall"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="15dp"
+                            android:text="@string/extension_mall"
                             android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_large" />
+                            android:textSize="@dimen/text_size_small" />
 
-                        <TextView
-                            android:layout_width="@dimen/extension_list_item_price_width"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:gravity="right"
-                            android:text="600.00元"
-                            android:textColor="@color/colorAccent" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/tabbar_divider_height"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:background="@color/colorDivider" />
-
-                    <!--item 1-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/extension_list_item_height"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/extension_list_item_icon_height"
-                            android:layout_height="@dimen/extension_list_item_icon_height"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@mipmap/ic_extension_list_item_1_cancash" />
+                        <View
+                            android:layout_width="@dimen/tabbar_divider_height"
+                            android:layout_height="@dimen/dp_20"
+                            android:background="@color/colorShadow" />
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/extension_item_can_cash"
+                            android:drawableTop="@mipmap/ic_extension_activity"
+                            android:gravity="center_horizontal"
+                            android:paddingTop="15dp"
+                            android:text="@string/extension_activity"
                             android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_large" />
-
-                        <TextView
-                            android:layout_width="@dimen/extension_list_item_price_width"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:gravity="right"
-                            android:text="200.00元"
-                            android:textColor="@color/colorAccent" />
+                            android:textSize="@dimen/text_size_small" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/tabbar_divider_height"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:background="@color/colorDivider" />
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/generalize_head_iv"
+                        android:layout_toRightOf="@+id/generalize_head_iv"
+                        android:text="累计收益：520" />
 
-                    <!--item 2-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/extension_list_item_height"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignEnd="@+id/linearLayout3"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignRight="@+id/linearLayout3"
+                        android:layout_marginEnd="18dp"
+                        android:layout_marginRight="18dp"
+                        android:text="预期收益：200" />
 
-                        <ImageView
-                            android:layout_width="@dimen/extension_list_item_icon_height"
-                            android:layout_height="@dimen/extension_list_item_icon_height"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:src="@mipmap/ic_extension_list_item_1_waitcash" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_10"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/extension_item_wait_cash"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="@dimen/text_size_large" />
-
-                        <TextView
-                            android:layout_width="@dimen/extension_list_item_price_width"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="@dimen/dp_10"
-                            android:gravity="right"
-                            android:text="400.00元"
-                            android:textColor="@color/colorAccent" />
-                    </LinearLayout>
-
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/linearLayout3"
+                        android:layout_alignLeft="@+id/textView2"
+                        android:layout_alignStart="@+id/textView2"
+                        android:text="推广收益：120" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -266,10 +215,6 @@
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/text_size_large" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/tabbar_divider_height"
-                        android:background="@color/colorDivider" />
 
                     <!--item 0-->
                     <LinearLayout
@@ -349,64 +294,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/extension_tab_height"
-                android:layout_marginLeft="@dimen/dp_5"
-                android:layout_marginRight="@dimen/dp_5"
-                android:layout_marginTop="@dimen/extension_tab_margintop"
-                android:background="@mipmap/bg_extension_tab"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawablePadding="@dimen/dp_10"
-                    android:drawableTop="@mipmap/ic_extension_rank"
-                    android:gravity="center_horizontal"
-                    android:paddingTop="@dimen/dp_20"
-                    android:text="@string/extension_rank"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/text_size_small" />
-
-                <View
-                    android:layout_width="@dimen/tabbar_divider_height"
-                    android:layout_height="@dimen/dp_20"
-                    android:background="@color/colorShadow" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawablePadding="@dimen/dp_10"
-                    android:drawableTop="@mipmap/ic_extension_mall"
-                    android:gravity="center_horizontal"
-                    android:paddingTop="@dimen/dp_20"
-                    android:text="@string/extension_mall"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/text_size_small" />
-
-                <View
-                    android:layout_width="@dimen/tabbar_divider_height"
-                    android:layout_height="@dimen/dp_20"
-                    android:background="@color/colorShadow" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawablePadding="@dimen/dp_10"
-                    android:drawableTop="@mipmap/ic_extension_activity"
-                    android:gravity="center_horizontal"
-                    android:paddingTop="@dimen/dp_20"
-                    android:text="@string/extension_activity"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/text_size_small" />
-            </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
-
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </cn.droidlover.xstatecontroller.XStateController>

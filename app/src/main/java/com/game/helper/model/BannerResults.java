@@ -27,7 +27,7 @@ public class BannerResults extends XBaseModel {
         //                    "id":1
         public boolean status;
         public String url;
-        public String img;
+        public String image;
         public String name;
         public String create_time;
         public int id;

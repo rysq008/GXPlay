@@ -23,6 +23,6 @@ public class LoginResults extends XBaseModel {
 
     @Override
     public int itemType() {
-        return RxConstant.AccountModeType.Account_Login_type;
+        return RxConstant.Login_Type;
     }
 }

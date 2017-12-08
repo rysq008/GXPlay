@@ -10,6 +10,10 @@ import cn.droidlover.xdroidmvp.net.IModel;
 public class HttpResultModel<T extends IModel> extends XBaseModel {
     public T data;
 
+    public boolean isSuccess() {
+        return code.equals("0000");
+    }
+
     @Override
     public boolean isNull() {
         return data.isNull();
@@ -17,7 +21,7 @@ public class HttpResultModel<T extends IModel> extends XBaseModel {
 
     @Override
     public boolean isAuthError() {
-        return code.equals("00006");//验证错误（）
+        return code.equals("00006");//登陆错误（验证错误）
     }
 
     @Override

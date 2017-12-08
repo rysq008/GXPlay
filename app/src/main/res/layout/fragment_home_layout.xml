@@ -22,6 +22,8 @@
             android:id="@+id/common_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible" />
+            android:visibility="visible"
+            app:center_et_res="请输入游戏名称"
+            app:right_tv_res_img="@mipmap/ic_message" />
     </RelativeLayout>
 </cn.droidlover.xstatecontroller.XStateController>

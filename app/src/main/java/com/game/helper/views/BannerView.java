@@ -9,11 +9,12 @@ import android.widget.LinearLayout;
 
 import com.game.helper.R;
 import com.game.helper.model.BannerResults;
-
-import java.util.Arrays;
+import com.game.helper.net.api.Api;
 
 import butterknife.BindView;
 import cn.bingoogolapple.bgabanner.BGABanner;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 
 /**
@@ -46,12 +47,15 @@ public class BannerView extends LinearLayout {
 
     }
 
-    public void setData(BannerResults data) {
+    public void setData(final BannerResults data) {
         mBanner.setAdapter(new BGABanner.Adapter() {
             @Override
             public void fillBannerItem(final BGABanner banner, View view, Object model, int position) {
                 final ImageView itemView = (ImageView) view;
-                itemView.setImageResource((int) model);
+                BannerResults.BannerItem item = (BannerResults.BannerItem) model;
+//                itemView.setImageResource((int) model);
+                String image = Kits.Empty.check(item.image) ? "" : item.image;
+                ILFactory.getLoader().loadNet(itemView, Api.API_PAY_OR_IMAGE_URL.concat(image), null);
 //                Glide.with(banner.getContext())
 //                        .load(model)
 ////                            .placeholder(R.mipmap.ic_launcher)
@@ -89,10 +93,10 @@ public class BannerView extends LinearLayout {
         mBanner.setOnItemClickListener(new BGABanner.OnItemClickListener() {
             @Override
             public void onBannerItemClick(BGABanner banner, View view, Object model, int position) {
-
             }
         });
-        mBanner.setData(Arrays.asList(R.mipmap.guide1, R.mipmap.guide2, R.mipmap.guide3, R.mipmap.guide4), null);
+//        mBanner.setData(Arrays.asList(R.mipmap.guide1, R.mipmap.guide2, R.mipmap.guide3, R.mipmap.guide4), null);
+        mBanner.setData(data.list, null);
     }
 
 

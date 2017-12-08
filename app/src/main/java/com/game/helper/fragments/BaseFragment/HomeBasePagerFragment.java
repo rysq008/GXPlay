@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.game.helper.R;
-import com.game.helper.event.BusProvider;
-import com.game.helper.event.MsgEvent;
 import com.game.helper.present.HomeFragmentPresent;
 import com.game.helper.views.SearchComponentView;
 import com.game.helper.views.widget.StateView;
@@ -20,7 +18,6 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import cn.droidlover.xstatecontroller.XStateController;
-import io.reactivex.functions.Consumer;
 
 /**
  * Created by wanglei on 2016/12/31.
@@ -99,6 +96,7 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
                 }
             }
         });
+
     }
 
     private void animToolBar(int flag) {
@@ -121,6 +119,7 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
 
     public void showError(NetError error) {
         xStateController.showError();
+        xStateController.getLoadingView().setVisibility(View.GONE);
     }
 
     public void showData(int cur_page, int total_page, List model) {
@@ -130,6 +129,7 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
             getAdapter().setData(model);
         }
         contentLayout.getRecyclerView().setPage(cur_page, total_page);
+        xStateController.getLoadingView().setVisibility(View.GONE);
 
         if (getAdapter().getItemCount() < 1) {
             xStateController.showEmpty();

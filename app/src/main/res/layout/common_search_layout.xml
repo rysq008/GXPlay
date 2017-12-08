@@ -8,25 +8,27 @@
     android:focusableInTouchMode="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/DIMEN_20DP"
-    android:paddingRight="@dimen/DIMEN_20DP">
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
     <RelativeLayout
+        android:id="@+id/common_search_left_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <com.game.helper.views.HeadImageView
             android:id="@+id/common_search_left_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerInParent="true" />
 
         <ImageView
             android:id="@+id/common_search_back_iv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:background="@mipmap/ic_back_white"
+            android:padding="@dimen/dp_10"
+            android:src="@mipmap/ic_back_white"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -37,11 +39,10 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_margin="@dimen/dp_10"
-        android:layout_weight="1"
+        android:layout_weight="10"
         android:background="@drawable/bg_gradient_radius_hoop_white"
         android:drawableLeft="@mipmap/ic_search"
         android:drawablePadding="5dp"
-
         android:gravity="center_vertical"
         android:hint="@string/common_home_search_hint"
         android:paddingLeft="10dp"
@@ -49,11 +50,11 @@
         android:textColorHint="@color/color_666"
         android:textSize="12sp" />
 
-    <ImageView
-        android:id="@+id/common_search_right_iv"
+    <TextView
+        android:id="@+id/common_search_right_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@mipmap/ic_message" />
+        android:gravity="center" />
 </LinearLayout>

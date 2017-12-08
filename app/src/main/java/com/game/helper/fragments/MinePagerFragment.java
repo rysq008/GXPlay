@@ -80,6 +80,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     private int[] resIcon;
     private int[] resName;
 
+    private MemberInfoResults userInfo;
+
     public static MinePagerFragment newInstance() {
         return new MinePagerFragment();
     }
@@ -301,6 +303,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
             @Override
             public void accept(HttpResultModel<MemberInfoResults> memberInfoResultsHttpResultModel) throws Exception {
                 if (memberInfoResultsHttpResultModel.isSucceful()) {
+                    userInfo = memberInfoResultsHttpResultModel.data;
                     setUserData(memberInfoResultsHttpResultModel.data);
                 } else {
                     Toast.makeText(getContext(), memberInfoResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();

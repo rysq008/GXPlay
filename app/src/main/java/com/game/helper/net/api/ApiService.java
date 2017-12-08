@@ -19,7 +19,6 @@ import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
-import java.lang.reflect.Member;
 import java.util.Map;
 
 import io.reactivex.Flowable;
@@ -31,7 +30,7 @@ import retrofit2.http.POST;
 
 public interface ApiService {
 
-    @POST("/sys/get_banner_list/")//
+    @POST("/sys/get_banner_list/")
     Flowable<HttpResultModel<BannerResults>> getApiBannerData();
 
     @POST("/sys/get_notification_list/")//首页通告
