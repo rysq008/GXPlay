@@ -28,8 +28,7 @@ public class HomePagerFragment extends HomeBasePagerFragment {
                     super.onItemClick(position, model, tag, holder);
                     switch (model.itemType()) {
                         case RxConstant.HomeModeType.Recommend_Model_Type:
-//                            DetailFragmentsActivity.launch(context, );
-
+                            DetailFragmentsActivity.launch(context,null, GameDetailFragment.newInstance());
                             break;
                     }
                 }

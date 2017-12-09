@@ -86,6 +86,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
         xStateController.showLoading();
 
         viewPager.setAdapter(getPageAdapter(list));
+        viewPager.setOffscreenPageLimit(2);
     }
 
     public abstract PagerAdapter getPageAdapter(List<ItemType> list);
@@ -125,7 +126,6 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                         @Override
                         public void onClick(View view) {
                             viewPager.setCurrentItem(index);
-                            viewPager.getAdapter().notifyDataSetChanged();
                         }
                     });
                     return colorTransitionPagerTitleView;
