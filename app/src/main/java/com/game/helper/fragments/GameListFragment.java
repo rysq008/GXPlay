@@ -114,6 +114,7 @@ public class GameListFragment extends XBaseFragment {
             return;
         } else {
             xRecyclerContentLayout.showContent();
+            xRecyclerContentLayout.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
             return;
         }
     }

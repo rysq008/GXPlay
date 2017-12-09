@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -17,26 +16,13 @@ import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.fragments.GamePagerFragment;
 import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
-import com.game.helper.fragments.LoginFragment;
 import com.game.helper.fragments.MinePagerFragment;
-import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.LoginResults;
-import com.game.helper.model.LoginUserInfo;
-import com.game.helper.net.DataService;
-import com.game.helper.net.model.LoginRequestBody;
-import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.CustomBadgeItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.net.NetError;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
-
-import static com.game.helper.GameMarketApplication.getContext;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
 
@@ -187,6 +173,11 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     public class SwitchFragmentsAdapter extends FragmentStatePagerAdapter {
         public SwitchFragmentsAdapter(FragmentManager fm) {
             super(fm);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override

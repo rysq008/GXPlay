@@ -2,6 +2,7 @@ package com.game.helper.views;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.NetworkInfo;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.TextView;

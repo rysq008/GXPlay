@@ -67,7 +67,6 @@ public class GeneralizePagerFragment extends XBaseFragment {
             stateView.setCustomClickListener(new StateView.StateViewClickListener() {
                 @Override
                 public void doAction() {
-                    xStateController.showLoading();
                     refreshData();
                 }
             });

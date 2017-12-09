@@ -100,10 +100,11 @@ public class SharedPreUtil {
     }
 
     public static void saveObject(String key, Object object) {
+        if (null == object) return;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ObjectOutputStream oosw = new ObjectOutputStream(baos);
-            oosw.writeObject(oosw);
+            oosw.writeObject(object);
 //            String objstr = DESUtil.encrypt(baos.toString()/*new String(baos.toByteArray(), "utf-8")*/, DESUtil.DEFAULT_KEY);
             String objstr = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
             sp.edit().putString(key, objstr).commit();
