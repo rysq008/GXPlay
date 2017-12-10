@@ -37,23 +37,23 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
         final Flowable<HomeAllResultsData> fa = Flowable.zip(fb, fn, fs, fh, fr, new Function5<HttpResultModel<BannerResults>, HttpResultModel<NoticeResults>, HttpResultModel<SpecialResults>, HttpResultModel<HotResults>, HttpResultModel<RecommendResults>, HomeAllResultsData>() {
             @Override
             public HomeAllResultsData apply(HttpResultModel<BannerResults> bannerResults, HttpResultModel<NoticeResults> noticeResults, HttpResultModel<SpecialResults> specialResults, HttpResultModel<HotResults> hotResults, HttpResultModel<RecommendResults> recommendResults) throws Exception {
-                if (bannerResults.data.isNull()) {
-                    Flowable.error(new NetError("fetch bannerResults failed", NetError.NoDataError));
-//                    throw new NetError("fetch invitePageQrcode failed", NetError.NoDataError);
-                }
-                if (noticeResults.data.isNull()) {
-                    Flowable.error(new NetError("fetch noticeResults failed", NetError.NoDataError));
-                }
-                if (specialResults.data.isNull()) {
-                    Flowable.error(new NetError("fetch specialResults failed", NetError.NoDataError));
-                }
-                if (hotResults.data.isNull()) {
-                    Flowable.error(new NetError("fetch hotResults failed", NetError.NoDataError));
-                }
-                if (recommendResults.data.isNull()) {
-                    Flowable.error(new NetError("fetch recommendResults failed", NetError.NoDataError));
-                }
-                mXBaseModel = recommendResults;
+//                if (bannerResults.data.isNull()) {
+//                    Flowable.error(new NetError("fetch bannerResults failed", NetError.NoDataError));
+////                    throw new NetError("fetch invitePageQrcode failed", NetError.NoDataError);
+//                }
+//                if (noticeResults.data.isNull()) {
+//                    Flowable.error(new NetError("fetch noticeResults failed", NetError.NoDataError));
+//                }
+//                if (specialResults.data.isNull()) {
+//                    Flowable.error(new NetError("fetch specialResults failed", NetError.NoDataError));
+//                }
+//                if (hotResults.data.isNull()) {
+//                    Flowable.error(new NetError("fetch hotResults failed", NetError.NoDataError));
+//                }
+//                if (recommendResults.data.isNull()) {
+//                    Flowable.error(new NetError("fetch recommendResults failed", NetError.NoDataError));
+//                }
+//                mXBaseModel = recommendResults;
                 HomeAllResultsData homeAllResultsData = new HomeAllResultsData(bannerResults.data, noticeResults.data, specialResults.data, hotResults.data, recommendResults.data);
                 return homeAllResultsData;
 

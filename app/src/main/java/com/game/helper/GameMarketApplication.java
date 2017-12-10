@@ -2,7 +2,6 @@ package com.game.helper;
 
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
@@ -10,7 +9,6 @@ import com.facebook.stetho.Stetho;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.PersistentCookieStore;
 import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.TotoroToast;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
@@ -31,7 +29,6 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.Util;
 
 public class GameMarketApplication extends MultiDexApplication {
     private static Context context;

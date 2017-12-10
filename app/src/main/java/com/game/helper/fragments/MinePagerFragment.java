@@ -3,7 +3,6 @@ package com.game.helper.fragments;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,26 +16,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.LogoutResults;
-import com.game.helper.model.MemberInfoResults;
-import com.game.helper.net.DataService;
-import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.StringUtils;
-import com.game.helper.utils.Utils;
 import com.game.helper.R;
 import com.game.helper.activitys.CommonSimpleActivity;
 import com.game.helper.activitys.FeedBackActivity;
 import com.game.helper.activitys.LoginActivity;
 import com.game.helper.activitys.SettingActivity;
+import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.MemberInfoResults;
+import com.game.helper.net.DataService;
+import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.StringUtils;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
