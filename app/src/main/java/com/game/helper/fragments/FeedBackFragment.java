@@ -1,20 +1,24 @@
-package com.game.helper.activitys;
+package com.game.helper.fragments;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import com.game.helper.R;
-import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.fragments.BaseFragment.XBaseFragment;
 
 import butterknife.BindView;
 
-public class FeedBackActivity extends XBaseActivity implements View.OnClickListener{
-    private static final String TAG = FeedBackActivity.class.getSimpleName();
+public class FeedBackFragment extends XBaseFragment implements View.OnClickListener{
+    private static final String TAG = FeedBackFragment.class.getSimpleName();
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
+
+    public static FeedBackFragment newInstance(){
+        return new FeedBackFragment();
+    }
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -23,7 +27,7 @@ public class FeedBackActivity extends XBaseActivity implements View.OnClickListe
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_feed_back;
+        return R.layout.fragment_feed_back;
     }
 
     private void initView(){
@@ -34,7 +38,7 @@ public class FeedBackActivity extends XBaseActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == mHeadBack){
-            onBackPressed();
+            getActivity().onBackPressed();
         }
     }
 

@@ -1,6 +1,5 @@
 package com.game.helper.fragments;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,10 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
-import com.game.helper.activitys.CommonSimpleActivity;
-import com.game.helper.activitys.FeedBackActivity;
-import com.game.helper.activitys.LoginActivity;
-import com.game.helper.activitys.SettingActivity;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MemberInfoResults;
@@ -113,19 +109,13 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == mRegist) {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.putExtra(LoginActivity.SHOW_WHITCH_FRAGMENT, RegistFragment.TAG);
-            startActivity(intent);
+            DetailFragmentsActivity.launch(getContext(),null,RegistFragment.newInstance());
         }
         if (v == mLogin) {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.putExtra(LoginActivity.SHOW_WHITCH_FRAGMENT, LoginFragment.TAG);
-            startActivity(intent);
+            DetailFragmentsActivity.launch(getContext(),null,LoginFragment.newInstance());
         }
         if (v == mEditUserInfo || v == mAvatar) {
-            Intent intent = new Intent(getContext(), SettingActivity.class);
-            intent.putExtra(SettingActivity.SETTING_SHOW_FRAGMENT, SettingUserFragment.TAG);
-            startActivity(intent);
+            DetailFragmentsActivity.launch(getContext(),null,SettingUserFragment.newInstance());
         }
         if (v == mMineGame) {
 
@@ -260,29 +250,26 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         public void onClick(View v) {//intent
             if (v.getTag() != null) {
                 int res = (int) v.getTag();
-                Intent intent = new Intent();
+                Fragment fra = null;
                 switch (res) {
                     case R.string.mine_name_0:
-                        intent.putExtra(CommonSimpleActivity.SHOW_WHICH_FRAGMENT, ExtensionHistoryFragment.TAG);
-                        intent.setClass(getContext(), CommonSimpleActivity.class);
+                        fra = ExtensionHistoryFragment.newInstance();
                         break;
                     case R.string.mine_name_1:
-                        intent.putExtra(CommonSimpleActivity.SHOW_WHICH_FRAGMENT, ExtensionProfitFragment.TAG);
-                        intent.setClass(getContext(), CommonSimpleActivity.class);
+                        fra = ExtensionProfitFragment.newInstance();
                         break;
                     case R.string.mine_name_2:
-                        intent.putExtra(CommonSimpleActivity.SHOW_WHICH_FRAGMENT, "");
-                        intent.setClass(getContext(), CommonSimpleActivity.class);
                         break;
                     case R.string.mine_name_3:
-                        intent.setClass(getContext(), FeedBackActivity.class);
+                        fra = FeedBackFragment.newInstance();
                         break;
                     case R.string.mine_name_4:
-                        intent.putExtra(SettingActivity.SETTING_SHOW_FRAGMENT, SettingSystemFragment.TAG);
-                        intent.setClass(getContext(), SettingActivity.class);
+                        fra = SettingSystemFragment.newInstance();
                         break;
                 }
-                startActivity(intent);
+                if (fra != null) {
+                    DetailFragmentsActivity.launch(getContext(), null, fra);
+                }
             }
         }
     }
