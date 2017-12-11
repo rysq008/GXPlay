@@ -22,4 +22,15 @@ public class Api {
         }
         return gankService;
     }
+
+    public static ApiService CreateApiPayService() {
+        if (gankService == null) {
+            synchronized (Api.class) {
+                if (gankService == null) {
+                    gankService = XApi.getInstance().getRetrofit(API_PAY_OR_IMAGE_URL, true).create(ApiService.class);
+                }
+            }
+        }
+        return gankService;
+    }
 }

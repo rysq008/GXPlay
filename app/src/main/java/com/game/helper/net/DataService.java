@@ -25,10 +25,6 @@ import io.reactivex.Flowable;
 
 public class DataService {
 
-    public static Flowable<HttpResultModel<LoginResults>> getLoginData(LoginRequestBody baseRequestBody) {
-        return Api.CreateApiService().getApiLoginData(baseRequestBody);
-    }
-
     public static Flowable<HttpResultModel<BannerResults>> getHomeBanner() {
         return Api.CreateApiService().getApiBannerData();
     }

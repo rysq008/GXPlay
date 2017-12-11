@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.recharge.RechargeFragment;
+import com.game.helper.fragments.wallet.WalletFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
@@ -48,6 +50,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     TextView mVipLevel;
     @BindView(R.id.tv_money)
     TextView mMoney;
+    @BindView(R.id.ll_wallet)
+    View mWallet;
     @BindView(R.id.ll_mine_game)
     View mMineGame;
     @BindView(R.id.ll_mine_gift)
@@ -67,6 +71,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     TextView mRegist;
     @BindView(R.id.tv_login)
     TextView mLogin;
+    @BindView(R.id.tv_recharge)
+    TextView mRecharge;
 
     //args
     private SettingListAdapter mAdapter;
@@ -117,6 +123,9 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         if (v == mEditUserInfo || v == mAvatar) {
             DetailFragmentsActivity.launch(getContext(),null,SettingUserFragment.newInstance());
         }
+        if (v == mWallet){
+            DetailFragmentsActivity.launch(getContext(),null, WalletFragment.newInstance());
+        }
         if (v == mMineGame) {
 
         }
@@ -128,6 +137,9 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         }
         if (v == mMineVip) {
 
+        }
+        if (v == mRecharge){
+            DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
         }
     }
 
@@ -145,10 +157,12 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     private void loginInit() {
         mUnLoginView.setVisibility(View.GONE);
         mLoginView.setVisibility(View.VISIBLE);
+        mWallet.setOnClickListener(this);
         mMineGame.setOnClickListener(this);
         mMineGift.setOnClickListener(this);
         mMineOrder.setOnClickListener(this);
         mMineVip.setOnClickListener(this);
+        mRecharge.setOnClickListener(this);
         initLoginData();
         initLoginView();
         getMemberInfo();
