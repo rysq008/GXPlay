@@ -100,6 +100,7 @@ public class SharedPreUtil {
     }
 
     public static void saveObject(String key, Object object) {
+        if (null == object) return;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ObjectOutputStream oosw = new ObjectOutputStream(baos);

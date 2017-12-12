@@ -4,10 +4,11 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.game.helper.net.api.Api;
-import com.game.helper.utils.PersistentCookieStore;
+import com.game.helper.utils.MainThreadPostUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.TotoroToast;
 import com.umeng.socialize.Config;
@@ -74,23 +75,27 @@ public class GameMarketApplication extends MultiDexApplication {
             @Override
             public CookieJar configCookie() {
                 return new CookieJar() {
-                    //                    private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
-                    private final PersistentCookieStore cookieStore = new PersistentCookieStore(context);
+//                    private final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
 
                     @Override
                     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                        StringBuilder sb = new StringBuilder();
+                        final StringBuilder sb = new StringBuilder();
                         for (Cookie cookie : cookies) {
                             sb.append(cookie.toString());
                             sb.append(";");
                             if (cookie.name().equals("sessionid")) {
                                 SharedPreUtil.saveSessionId(sb.toString());
+                                MainThreadPostUtils.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, Thread.currentThread().getName() + "111-->" + sb.toString(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
                             }
-                            cookieStore.add(url, cookie);
                         }
 //                        cookieStore.put(url.host(), cookies);
-
-                        SharedPreUtil.saveObject("Cookie", cookies);
+                        SharedPreUtil.saveObject(url.host(), cookies);
 
                         String cookes = cookieHeader(cookies);
                         CookieSyncManager.createInstance(getApplicationContext());
@@ -104,9 +109,8 @@ public class GameMarketApplication extends MultiDexApplication {
 
                     @Override
                     public List<Cookie> loadForRequest(HttpUrl url) {
-                        //List<Cookie> cookies = SharedPreUtil.getObject("Cookie");
+                        List<Cookie> cookies = SharedPreUtil.getObject(url.host());
 //                        List<Cookie> cookies = cookieStore.get(url.host());
-                        List<Cookie> cookies = cookieStore.get(url);
                         return cookies != null ? cookies : new ArrayList<Cookie>();
                     }
                 };
