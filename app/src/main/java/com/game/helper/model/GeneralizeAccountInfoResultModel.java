@@ -1,22 +1,23 @@
 package com.game.helper.model;
 
-import com.game.helper.data.RxConstant;
 import com.game.helper.model.BaseModel.XBaseModel;
-import com.game.helper.model.model.MemberBean;
 
-public class GeneralizeResults extends XBaseModel {
+import zlc.season.practicalrecyclerview.ItemType;
 
-    public String yue_history;// 0.00,
-    public String yujizongshouyi;// 200.00,
-    public String url;// http;////127.0.0.1;//8000/?market_id=2&market_num=10000&signature=081425df59351e65f96ea0ee1f6fe8b4,
-    public int viprenshu;// 0,
-    public String zongshouyi;// 0.00,
-    public MemberBean member;// { nick_name;// 这个昵称很好,id;// 1,icon;// },
-    public int total_promotion_number;// 4,
-    public String num;// 10000,
-    public String dongjie;// 0.00,
-    public String yue;// 0.00,
-    public int id;// 2
+public class GeneralizeAccountInfoResultModel extends XBaseModel implements ItemType{
+
+        private String yue_history;
+        private String yujizongshouyi;
+        private String url;
+        private int viprenshu;
+        private String zongshouyi;
+        private MemberBean member;
+
+        private int total_promotion_number;
+        private String num;
+        private String dongjie;
+        private String yue;
+        private int id;
 
     public String getYue_history() {
         return yue_history;
@@ -107,8 +108,39 @@ public class GeneralizeResults extends XBaseModel {
     }
 
     @Override
-    public int itemType() {
-        return RxConstant.GeneralizeModeType.Generalize_Balance_Account_Info_type;
-    }
+        public int itemType() {
+            return 0;
+        }
+
+        public static class MemberBean {
+
+            private String nick_name;
+            private String icon;
+            private int id;
+
+            public String getIcon() {
+                return icon;
+            }
+
+            public void setIcon(String icon) {
+                this.icon = icon;
+            }
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getNick_name() {
+                return nick_name;
+            }
+
+            public void setNick_name(String nick_name) {
+                this.nick_name = nick_name;
+            }
+        }
 
 }

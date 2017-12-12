@@ -4,8 +4,11 @@ import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
+import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
+import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
@@ -14,18 +17,17 @@ import com.game.helper.model.RecommendResults;
 import com.game.helper.model.RegistResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
+import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
-import java.util.Map;
-
 import io.reactivex.Flowable;
 import retrofit2.http.Body;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
 
@@ -80,4 +82,26 @@ public interface ApiService {
 
     @POST("/public/get_tel_verify/")//验证码
     Flowable<HttpResultModel<VerifyResults>> getApiVerify(@Body VerifyRequestBody verifyRequestBody/*@Path("phone") String phone, @Path("usefor") String usefor*/);
+
+    //支付
+    @POST("/G9game/paymentController.do?payment")
+    Flowable<HttpResultModel<PayResultModel>> ApiPay(@Body PayRequestBody payRequestBody);
+
+    //人脉排行榜
+    @POST("/marketing/get_friend_rank/")
+    Flowable<HttpResultModel<FriendRangeResultModel>> getFriendRank(@Body FriendRangeRequestBody payRequestBody/*@Path("page") int pageNum*/);
+
+    //推广收益排行榜
+    @POST("/marketing/get_income_rank/")
+    Flowable<HttpResultModel<FriendRangeResultModel>> getIncomeRank(@Body FriendRangeRequestBody payRequestBody/*@Path("page") int pageNum*/);
+
+    //推广收益列表
+    @POST("/marketing/get_marketing_flow_list/")
+    Flowable<HttpResultModel<IncomeResultModel>> getIncomeList(@Body FriendRangeRequestBody payRequestBody/*@Path("page") int pageNum*/);
+
+    //推广账号信息
+    @POST("/marketing/get_marketing_info/")
+    Flowable<HttpResultModel<GeneralizeAccountInfoResultModel>> getGeneralizeAccountInfo();
+
+
 }
