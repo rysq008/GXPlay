@@ -57,12 +57,14 @@
     <string name="common_recharge_choose_account">添加账号</string>
     <string name="common_recharge_add_account">账户添加</string>
     <string name="common_wallet">我的钱包</string>
+    <string name="common_coupon">我的卡券</string>
+    <string name="common_confirm_order">确认订单</string>
 
     <!--我的-->
     <string name="mine_tab_game">我的游戏</string>
     <string name="mine_tab_gift">我的礼包</string>
     <string name="mine_tab_order">我的订单</string>
-    <string name="mine_tab_vip">VIP服务</string>
+    <string name="mine_tab_vip">我的卡券</string>
     <string name="mine_name_0">邀请记录</string>
     <string name="mine_name_1">推广收益</string>
     <string name="mine_name_2">我的客服</string>
@@ -108,5 +110,12 @@
     <!--登陆-->
     <string name="login_hint_without_account">请输入手机号码！</string>
     <string name="login_hint_without_code">请输入验证码！</string>
+    <string name="login_hint_without_passwd">请输入密码！</string>
+    <string name="login_hint_without_confirm_passwd">请再次输入密码！</string>
+    <string name="login_hint_wrong_code">验证码错误！</string>
+    <string name="login_hint_wrong_notequal_passwd">前后密码不一致！</string>
 
+    <!--setting-->
+    <string name="setting_password_status_none">未设置</string>
+    <string name="setting_password_status_exist">修改</string>
 </resources>

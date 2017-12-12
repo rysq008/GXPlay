@@ -3,7 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/dp_10"
-    tools:context="com.game.helper.fragments.RegistFragment">
+    tools:context="com.game.helper.fragments.login.RegistFragment">
+    <TextView
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/text_size_xlarge"
+        android:text="注册"
+        android:textColor="@color/colorShadow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:gravity="center"
@@ -14,6 +22,8 @@
 
         <EditText
             android:id="@+id/et_account"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:background="@drawable/bg_gradient_radius_hoop_grey"
             android:padding="@dimen/dp_10"
             android:hint="输入账号"
@@ -28,10 +38,49 @@
             android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/et_password"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:padding="@dimen/dp_10"
                 android:hint="输入密码"
                 android:background="@null"
                 android:inputType="textPassword"
+                android:textSize="@dimen/text_size_small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:background="@drawable/bg_gradient_radius_hoop_grey"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_password1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:padding="@dimen/dp_10"
+                android:hint="输入密码"
+                android:background="@null"
+                android:inputType="textPassword"
+                android:textSize="@dimen/text_size_small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:background="@drawable/bg_gradient_radius_hoop_grey"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/et_verity"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:padding="@dimen/dp_10"
+                android:hint="输入验证码"
+                android:background="@null"
+                android:inputType="number"
                 android:textSize="@dimen/text_size_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -52,6 +101,8 @@
         <EditText
             android:layout_marginTop="@dimen/dp_15"
             android:id="@+id/et_invatation"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:background="@drawable/bg_gradient_radius_hoop_grey"
             android:padding="@dimen/dp_10"
             android:hint="输入邀请码（可选）"

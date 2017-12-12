@@ -12,12 +12,14 @@ import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.RegistResults;
+import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import java.util.Map;
@@ -80,4 +82,7 @@ public interface ApiService {
 
     @POST("/public/get_tel_verify/")//验证码
     Flowable<HttpResultModel<VerifyResults>> getApiVerify(@Body VerifyRequestBody verifyRequestBody/*@Path("phone") String phone, @Path("usefor") String usefor*/);
+
+    @POST("/member/reset_passwd/")//重置密码
+    Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(@Body ResetPasswdRequestBody resetPasswdRequestBody);
 }

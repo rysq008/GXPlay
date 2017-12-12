@@ -1,8 +1,7 @@
-package com.game.helper.fragments;
+package com.game.helper.fragments.login;
 
 
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -18,7 +18,6 @@ import com.game.helper.model.LoginResults;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.StateCode;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -26,13 +25,10 @@ import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.CountDownText;
 
-import java.util.ArrayList;
-import java.util.List;
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import zlc.season.practicalrecyclerview.ItemType;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +43,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     EditText mAccount;
     @BindView(R.id.et_password)
     EditText mPassWord;
-    @BindView(R.id.ll_login_message)
+    @BindView(R.id.tv_login_message)
     View mLoginMessage;
     @BindView(R.id.tv_login_password)
     View mLoginPassword;
@@ -101,13 +97,16 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
             @Override
             public void accept(HttpResultModel<LoginResults> loginResultsHttpResultModel) throws Exception {
                 if (loginResultsHttpResultModel.isSucceful()) {
-                    LoginUserInfo userInfo = new LoginUserInfo(
-                            loginResultsHttpResultModel.data.phone,loginResultsHttpResultModel.data.member_id);
+                    LoginUserInfo userInfo = new LoginUserInfo(loginResultsHttpResultModel.data);
                     Utils.writeLoginInfo(getContext(),userInfo);
                     if (mOnLoginListener != null){
                         mOnLoginListener.onLoginSuccessful(userInfo);
                     }
                     getActivity().onBackPressed();
+
+                    if (!loginResultsHttpResultModel.data.has_passwd){
+                        DetailFragmentsActivity.launch(getContext(),null,ResetPasswdFragment.newInstance());
+                    }
                 }else {
                     Toast.makeText(getContext(), loginResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }

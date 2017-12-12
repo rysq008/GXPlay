@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -17,14 +16,9 @@ import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.fragments.GamePagerFragment;
 import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
-import com.game.helper.fragments.LoginFragment;
 import com.game.helper.fragments.MinePagerFragment;
-import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.LoginResults;
+import com.game.helper.fragments.login.ResetPasswdFragment;
 import com.game.helper.model.LoginUserInfo;
-import com.game.helper.net.DataService;
-import com.game.helper.net.model.LoginRequestBody;
-import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.CustomBadgeItem;
 
@@ -32,11 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.net.NetError;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
-
-import static com.game.helper.GameMarketApplication.getContext;
+import okhttp3.internal.Util;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
 
@@ -152,6 +142,14 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             fragmentsViewPager.setCurrentItem(0);
             isFirst = false;
         }
+        if (Utils.hasLoginInfo(this)){
+            LoginUserInfo loginInfo = Utils.getLoginInfo(this);
+            if (!loginInfo.has_passwd) showSetPassWord();
+        }
+    }
+
+    private void showSetPassWord(){
+        DetailFragmentsActivity.launch(this,null, ResetPasswdFragment.newInstance());
     }
 
     @Override

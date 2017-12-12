@@ -12,6 +12,7 @@ import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.RegistResults;
+import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.net.api.Api;
@@ -19,6 +20,7 @@ import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
@@ -75,5 +77,9 @@ public class DataService {
 
     public static Flowable<HttpResultModel<VerifyResults>> getVerify(VerifyRequestBody verifyRequestBody) {
         return Api.CreateApiService().getApiVerify(verifyRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody){
+        return Api.CreateApiService().resetPassWord(resetPasswdRequestBody);
     }
 }

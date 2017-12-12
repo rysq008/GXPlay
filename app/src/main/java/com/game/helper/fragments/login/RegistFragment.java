@@ -1,4 +1,4 @@
-package com.game.helper.fragments;
+package com.game.helper.fragments.login;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,16 +9,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.LoginResults;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.RegistResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.StateCode;
-import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -42,6 +40,10 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
     EditText mAccount;
     @BindView(R.id.et_password)
     EditText mPassWord;
+    @BindView(R.id.et_password1)
+    EditText mPassWord1;
+    @BindView(R.id.et_verity)
+    EditText mVerrity;
     @BindView(R.id.et_invatation)
     EditText mInvatation;
     @BindView(R.id.tv_regist)
@@ -79,30 +81,42 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
 
     private void regist(){
         String account = mAccount.getText().toString().trim();
-        String code = mPassWord.getText().toString().trim();
+        String passWord = mPassWord.getText().toString().trim();
+        String passWord1 = mPassWord1.getText().toString().trim();
+        String code = mVerrity.getText().toString().trim();
         String marketNum = mInvatation.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)){
-            Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (StringUtils.isEmpty(code)){
-            Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_code), Toast.LENGTH_SHORT).show();
+        String errorMsg = null;
+        if (StringUtils.isEmpty(account)) errorMsg = getResources().getString(R.string.login_hint_without_account);
+        else if (StringUtils.isEmpty(passWord)) errorMsg = getResources().getString(R.string.login_hint_without_passwd);
+        else if (StringUtils.isEmpty(passWord1)) errorMsg = getResources().getString(R.string.login_hint_without_confirm_passwd);
+        else if (passWord != null && passWord1 != null && !passWord.equals(passWord1)) errorMsg = getResources().getString(R.string.login_hint_wrong_notequal_passwd);
+        else if (StringUtils.isEmpty(code)) errorMsg = getResources().getString(R.string.login_hint_without_code);
+
+        if (errorMsg != null) {
+            Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Flowable<HttpResultModel<RegistResults>> fr = DataService.regist(new RegistRequestBody(account,code,marketNum));
+        if (StringUtils.isEmpty(marketNum)){
+            marketNum = "";
+        }
+
+        Flowable<HttpResultModel<RegistResults>> fr = DataService.regist(new RegistRequestBody(account,passWord,code,marketNum));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<RegistResults>>() {
             @Override
             public void accept(HttpResultModel<RegistResults> registResultsHttpResultModel) throws Exception {
                 if (registResultsHttpResultModel.isSucceful()) {
-                    LoginUserInfo userInfo = new LoginUserInfo(
-                            registResultsHttpResultModel.data.phone,registResultsHttpResultModel.data.member_id);
+                    LoginUserInfo userInfo = new LoginUserInfo(registResultsHttpResultModel.data);
                     Utils.writeLoginInfo(getContext(),userInfo);
                     if (mOnRegistListener != null){
                         mOnRegistListener.onRegistSuccessful(userInfo);
                     }
                     getActivity().onBackPressed();
+
+//                    if (!registResultsHttpResultModel.data.has_passwd){
+//                        DetailFragmentsActivity.launch(getContext(),null,ResetPasswdFragment.newInstance());
+//                    }
                 }else {
                     Toast.makeText(getContext(), registResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -148,7 +162,7 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
         if (v == mCountDownText){
             mCountDownText.setCountDownTimer(60 * 1000,1000);
             mCountDownText.startTimer();
-//            getVerify();
+            getVerify();
         }
     }
 

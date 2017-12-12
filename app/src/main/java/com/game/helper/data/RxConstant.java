@@ -51,6 +51,7 @@ public final class RxConstant {
         public static final int Account_Logout_type = 52;//登出
         public static final int Account_Member_Info_type = 53;//用户详情
         public static final int Account_Vertify_type = 54;//验证码
+        public static final int Account_ResetPasswd_type = 55;//重置密码
     }
 
 }

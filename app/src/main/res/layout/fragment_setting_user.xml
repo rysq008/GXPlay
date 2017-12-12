@@ -244,7 +244,8 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
                 <TextView
-                    android:text="修改"
+                    android:id="@+id/tv_password_status"
+                    android:text="未设置"
                     android:gravity="right"
                     android:textColor="@color/colorShadow"
                     android:textSize="@dimen/text_size_medium"

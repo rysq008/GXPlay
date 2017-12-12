@@ -67,6 +67,8 @@ public class Utils {
      * */
     public static int getVipLevel(int level){
         switch (level){
+            case 0:
+                return R.mipmap.ic_member_vip1;
             case 1:
                 return R.mipmap.ic_member_vip1;
             case 2:
@@ -158,6 +160,16 @@ public class Utils {
             return mSharedPreferences.getBoolean(RxConstant.LOGIN_PREFERENCE_KEY_STATUS, false);
         }
         return false;
+    }
+
+    /**
+     * 更新登陆账户密码设置状态
+     * */
+    public static void updateUserPasswdStatus(Context context, boolean hasPasswd){
+        LoginUserInfo savedUser = Utils.getLoginInfo(context);
+        savedUser.has_passwd = hasPasswd;
+        Utils.clearLoginInfo(context);
+        Utils.writeLoginInfo(context,savedUser);
     }
 
     /**
