@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -31,10 +34,16 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RegistFragment extends XBaseFragment implements View.OnClickListener{
+public class RegistFragment extends XBaseFragment implements View.OnClickListener, EditInputView.OnEditInputListener{
     public static final String TAG = RegistFragment.class.getSimpleName();
 
     //ui
+    @BindView(R.id.action_bar_tittle)
+    TextView mTittle;
+    @BindView(R.id.action_bar_back)
+    View mBack;
+    @BindView(R.id.action_bar_back_iv)
+    ImageView mBackIv;
     @BindView(R.id.et_account)
     EditInputView mAccount;
     @BindView(R.id.et_password)
@@ -51,6 +60,8 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
     TextView debugHint;
     @BindView(R.id.tv_left_time)
     CountDownText mCountDownText;
+    @BindView(R.id.tv_goto_login)
+    View mGotoLogin;
 
     //args
     private onRegistListener mOnRegistListener;
@@ -65,8 +76,17 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        mTittle.setText(getResources().getString(R.string.regist_tittle));
+        mBack.setOnClickListener(this);
+        mRegist.setSelected(false);
         mRegist.setOnClickListener(this);
-        if (BuildConfig.Debug){
+        mAccount.addOnEditInputListener(this);
+        mPassWord.addOnEditInputListener(this);
+        mPassWord1.addOnEditInputListener(this);
+        mVerrity.addOnEditInputListener(this);
+        mCountDownText.setOnClickListener(this);
+        mGotoLogin.setOnClickListener(this);
+        if (BuildConfig.DEBUG){
             debugHint.setVisibility(View.VISIBLE);
             debugHint.setText("测试环境默认验证码：9870");
         }
@@ -155,8 +175,15 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
+        if (v == mBack){
+            getActivity().onBackPressed();
+        }
         if (v == mRegist){
+            if (!mRegist.isSelected()) return;
             regist();
+        }
+        if (v == mGotoLogin){
+            DetailFragmentsActivity.launch(getContext(),null,LoginFragment.newInstance());
         }
         if (v == mCountDownText){
             mCountDownText.setCountDownTimer(60 * 1000,1000);
@@ -174,6 +201,11 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
     public void onDestroy() {
         super.onDestroy();
         mCountDownText.destroy();
+    }
+
+    @Override
+    public void onTextChange(EditText content) {
+        mRegist.setSelected(content.getText()!= null && content.getText().toString().length()>0 ? true : false);
     }
 
     public interface onRegistListener{

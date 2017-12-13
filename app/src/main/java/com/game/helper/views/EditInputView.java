@@ -32,12 +32,13 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
     private ImageView mEyes;
 
     //args
-    private static final int Type_Account = 0;//账号输入模式
-    private static final int Type_Password = 1;//密码输入模式
-    private static final int Type_Code = 2;//验证码输入模式
+    public static final int Type_Account = 0;//账号输入模式
+    public static final int Type_Password = 1;//密码输入模式
+    public static final int Type_Code = 2;//验证码输入模式
 
     private boolean text_can_see = false;//内容可见
     private int type;
+    private OnEditInputListener onEditInputListener;
 
     public EditInputView(@NonNull Context context) {
         super(context);
@@ -69,6 +70,10 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
         mContent.setOnFocusChangeListener(this);
         mContent.addTextChangedListener(textWatcher);
 
+        setinputType();
+    }
+
+    private void setinputType(){
         //  设置输入模式
         switch (type) {
             case Type_Account:
@@ -113,6 +118,7 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (onEditInputListener != null) onEditInputListener.onTextChange(mContent);
             if (s.length() > 0 && mContent.isFocused()) {
                 mClear.setVisibility(VISIBLE);
             }else {
@@ -140,10 +146,31 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
         if (!hasFocus) mClear.setVisibility(GONE);
     }
 
+    public void addOnEditInputListener(OnEditInputListener onEditInputListener){
+        this.onEditInputListener = onEditInputListener;
+    }
+
+    public interface OnEditInputListener{
+        void onTextChange(EditText content);
+    }
+
     /**
     * 模拟 EditText 的 getText()
     * */
     public String getText() {
         return StringUtils.isEmpty(mContent.getText().toString()) ? "" : mContent.getText().toString();
+    }
+
+    public void setInputType(int inputType){
+        type = inputType;
+        setinputType();
+    }
+
+    public void setText(String text){
+        mContent.setText(text);
+    }
+
+    public void setHintText(String text){
+        mContent.setHint(text);
     }
 }

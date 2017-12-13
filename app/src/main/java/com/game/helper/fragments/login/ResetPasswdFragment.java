@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,10 +37,16 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ResetPasswdFragment extends XBaseFragment implements View.OnClickListener{
+public class ResetPasswdFragment extends XBaseFragment implements View.OnClickListener, EditInputView.OnEditInputListener{
     public static final String TAG = ResetPasswdFragment.class.getSimpleName();
 
     //ui
+    @BindView(R.id.action_bar_tittle)
+    TextView mTittle;
+    @BindView(R.id.action_bar_back)
+    View mBack;
+    @BindView(R.id.action_bar_back_iv)
+    ImageView mBackIv;
     @BindView(R.id.tv_debug)
     TextView debugHint;
     @BindView(R.id.et_account)
@@ -76,10 +83,17 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
     }
 
     private void initView(){
+        mTittle.setText(getResources().getString(R.string.reset_tittle));
+        mBack.setOnClickListener(this);
+        mResetPasswd.setSelected(false);
+        mAccount.addOnEditInputListener(this);
+        mPassWord.addOnEditInputListener(this);
+        mPassWord1.addOnEditInputListener(this);
+        mVerrity.addOnEditInputListener(this);
         mCountDownText.setOnClickListener(this);
         mResetPasswd.setOnClickListener(this);
         mGotoLogin.setOnClickListener(this);
-        if (BuildConfig.Debug){
+        if (BuildConfig.DEBUG){
             debugHint.setVisibility(View.VISIBLE);
             debugHint.setText("测试环境默认验证码：9870");
         }
@@ -150,6 +164,9 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        if (v == mBack){
+            getActivity().onBackPressed();
+        }
         if (v == mCountDownText){
             mCountDownText.setCountDownTimer(60 * 1000,1000);
             mCountDownText.startTimer();
@@ -159,8 +176,14 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
             DetailFragmentsActivity.launch(getContext(),null,LoginFragment.newInstance());
         }
         if (v == mResetPasswd){
+            if (!mResetPasswd.isSelected()) return;
             resetPassWord();
         }
+    }
+
+    @Override
+    public void onTextChange(EditText content) {
+        mResetPasswd.setSelected(content.getText()!= null && content.getText().toString().length()>0 ? true : false);
     }
 
     @Override

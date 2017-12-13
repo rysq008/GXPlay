@@ -19,21 +19,24 @@ android {
             keyAlias "g9"
             keyPassword "123456"
         }
+        release {
+            storeFile file('g9gameplayer.jks')
+            storePassword "123456"
+            keyAlias "g9"
+            keyPassword "123456"
+        }
     }
     buildTypes {
-        debug {
-            buildConfigField 'Boolean', 'Debug', 'true'
-        }
         release {
             buildConfigField 'Boolean', 'Debug', 'false'
 
             minifyEnabled false
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             minifyEnabled false
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,9 +45,7 @@ android {
     }
 }
 
-
 dependencies {
-    implementation 'com.android.support:support-v4:26.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -80,10 +81,8 @@ dependencies {
     //RoundedImageView libs files
     compile 'com.github.LillteZheng:ViewPagerHelper:v0.4'
     //这是一个，viewpager 的工具类，内置多种指示器，能够帮你快速完成，轮播图，app引导页，viewpager的tab指示器等等
-    compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.0'//LayoutManager常见动画
-
+    compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.0'
+    //LayoutManager常见动画
     compile 'com.github.hackware1993:MagicIndicator:1.5.0'
-//是ViewPagerIndicator、TabLayout、PagerSlidingTabStrip的最佳替代品。
-
-
+    //是ViewPagerIndicator、TabLayout、PagerSlidingTabStrip的最佳替代品。
 }

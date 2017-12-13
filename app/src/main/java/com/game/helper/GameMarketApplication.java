@@ -7,10 +7,13 @@ import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
+import com.game.helper.data.RxConstant;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.MainThreadPostUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.TotoroToast;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -33,13 +36,14 @@ import okhttp3.Response;
 
 public class GameMarketApplication extends MultiDexApplication {
     private static Context context;
-
+    public static IWXAPI api;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
 
+        initWX();
         initUmengShare();
 
         Stetho.initializeWithDefaults(this);
@@ -147,14 +151,27 @@ public class GameMarketApplication extends MultiDexApplication {
         });
     }
 
+    /**
+     * 初始化UMeng
+     */
     private void initUmengShare() {
         //查看log时候打开
         Config.DEBUG = true;
         UMShareAPI.get(this);
         //配置各个平台的id和secret
-        PlatformConfig.setWeixin("wx1d5e45ad3dc2019a", "d33400dd7f4e358a435602e26d45e881");
-        PlatformConfig.setQQZone("1105689325", "hMJbCLDB4eiTTTSy");
-        PlatformConfig.setSinaWeibo("734669220", "4c643b2c952fd78d86902e007607e377", "https://api.weibo.com/oauth2/default.html");
+        PlatformConfig.setWeixin(RxConstant.ThirdPartKey.WeixinId, RxConstant.ThirdPartKey.WeixinSecret);
+        PlatformConfig.setQQZone(RxConstant.ThirdPartKey.QQId, RxConstant.ThirdPartKey.QQKey);
+        PlatformConfig.setSinaWeibo(RxConstant.ThirdPartKey.SinaWeiboKey, RxConstant.ThirdPartKey.SinaWeiboSecret, RxConstant.ThirdPartKey.SinaWeiboRedirectUrl);
+    }
+
+    /**
+     * 初始化微信支付SDK
+     */
+    private void initWX() {
+        // 通过WXAPIFactory工厂，获取IWXAPI的实例
+        api = WXAPIFactory.createWXAPI(this, RxConstant.ThirdPartKey.WeixinId);
+        api.registerApp(RxConstant.ThirdPartKey.WeixinId);
+
     }
 
     /**

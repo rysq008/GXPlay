@@ -11,6 +11,7 @@ public class Api {
     public static final String API_PAY_OR_IMAGE_URL = "http://60.205.204.218:8080";  // 支付或者图片地址
 
     private static ApiService gankService;
+    private static ApiService PayService;
 
     public static ApiService CreateApiService() {
         if (gankService == null) {
@@ -23,14 +24,14 @@ public class Api {
         return gankService;
     }
 
-    public static ApiService CreateApiPayService() {
-        if (gankService == null) {
+    public static ApiService CreatePayOrImageApiService() {
+        if (PayService == null) {
             synchronized (Api.class) {
-                if (gankService == null) {
-                    gankService = XApi.getInstance().getRetrofit(API_PAY_OR_IMAGE_URL, true).create(ApiService.class);
+                if (PayService == null) {
+                    PayService = XApi.getInstance().getRetrofit(API_PAY_OR_IMAGE_URL, true).create(ApiService.class);
                 }
             }
         }
-        return gankService;
+        return PayService;
     }
 }

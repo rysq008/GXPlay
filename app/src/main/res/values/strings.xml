@@ -108,6 +108,11 @@
     <string name="feedback_edit_mail_hint">电子邮件或者QQ（方便我们与您及时联系）</string>
 
     <!--登陆-->
+    <string name="regist_tittle">注册</string>
+    <string name="reset_tittle">重置密码</string>
+    <string name="login_tittle">登陆</string>
+    <string name="login_hint_code">输入验证码</string>
+    <string name="login_hint_password">输入密码</string>
     <string name="login_hint_without_account">请输入手机号码！</string>
     <string name="login_hint_without_code">请输入验证码！</string>
     <string name="login_hint_without_passwd">请输入密码！</string>
