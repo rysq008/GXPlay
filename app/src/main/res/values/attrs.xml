@@ -89,4 +89,13 @@
         <attr name="right_tv_res_color" format="reference|color" />
         <attr name="is_search_page" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="EditInputView">
+        <attr name="eiv_type" >
+            <enum name="type_account" value="0"/>
+            <enum name="type_password" value="1"/>
+            <enum name="type_code" value="2"/>
+        </attr>
+        <attr name="eiv_hint" format="string"/>
+    </declare-styleable>
 </resources>

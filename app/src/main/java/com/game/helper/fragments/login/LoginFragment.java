@@ -23,6 +23,7 @@ import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.EditInputView;
 import com.game.helper.views.widget.CountDownText;
 
 import butterknife.BindView;
@@ -40,9 +41,9 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
 
     //ui
     @BindView(R.id.et_account)
-    EditText mAccount;
+    EditInputView mAccount;
     @BindView(R.id.et_password)
-    EditText mPassWord;
+    EditInputView mPassWord;
     @BindView(R.id.tv_login_message)
     View mLoginMessage;
     @BindView(R.id.tv_login_password)

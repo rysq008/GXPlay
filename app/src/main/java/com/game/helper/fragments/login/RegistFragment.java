@@ -4,12 +4,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -22,6 +20,7 @@ import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.EditInputView;
 import com.game.helper.views.widget.CountDownText;
 
 import butterknife.BindView;
@@ -37,15 +36,15 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
 
     //ui
     @BindView(R.id.et_account)
-    EditText mAccount;
+    EditInputView mAccount;
     @BindView(R.id.et_password)
-    EditText mPassWord;
+    EditInputView mPassWord;
     @BindView(R.id.et_password1)
-    EditText mPassWord1;
+    EditInputView mPassWord1;
     @BindView(R.id.et_verity)
-    EditText mVerrity;
+    EditInputView mVerrity;
     @BindView(R.id.et_invatation)
-    EditText mInvatation;
+    EditInputView mInvatation;
     @BindView(R.id.tv_regist)
     View mRegist;
     @BindView(R.id.tv_debug)

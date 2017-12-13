@@ -25,6 +25,7 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.EditInputView;
 import com.game.helper.views.widget.CountDownText;
 
 import butterknife.BindView;
@@ -42,13 +43,13 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
     @BindView(R.id.tv_debug)
     TextView debugHint;
     @BindView(R.id.et_account)
-    EditText mAccount;
+    EditInputView mAccount;
     @BindView(R.id.et_password)
-    EditText mPassWord;
+    EditInputView mPassWord;
     @BindView(R.id.et_password1)
-    EditText mPassWord1;
+    EditInputView mPassWord1;
     @BindView(R.id.et_verity)
-    EditText mVerrity;
+    EditInputView mVerrity;
     @BindView(R.id.tv_left_time)
     CountDownText mCountDownText;
     @BindView(R.id.tv_reset_passwd)
