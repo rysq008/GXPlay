@@ -9,7 +9,6 @@ import cn.droidlover.xdroidmvp.mvp.XLazyFragment;
 
 public abstract class XBaseFragment<P extends IPresent> extends XLazyFragment {
 
-
     private P p;
 
     protected P getP() {

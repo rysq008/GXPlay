@@ -9,11 +9,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.adapters.RechargeCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.fragments.recharge.RechargeGoldFragment;
+import com.game.helper.model.MemberInfoResults;
+import com.game.helper.utils.StringUtils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -45,7 +51,21 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
     @BindView(R.id.game_detail_viewpager)
     ViewPager viewPager;
 
-    List<Fragment> list = new ArrayList<Fragment>();
+    @BindView(R.id.tv_value)
+    TextView mBalance;
+    @BindView(R.id.tv_balance1)
+    TextView mBalance1;
+    @BindView(R.id.tv_balance2)
+    TextView mBalance2;
+    @BindView(R.id.tv_balance3)
+    TextView mBalance3;
+    @BindView(R.id.tv_goto_recharge)
+    View mGotoRecharge;
+    @BindView(R.id.tv_goto_cash)
+    View mGotoCash;
+
+    private List<Fragment> list = new ArrayList<Fragment>();
+    private MemberInfoResults userInfo;
 
     public static WalletFragment newInstance(){
         return new WalletFragment();
@@ -68,11 +88,23 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
     private void initView(){
         mHeadTittle.setText(getResources().getString(R.string.common_wallet));
         mHeadBack.setOnClickListener(this);
+        mGotoRecharge.setOnClickListener(this);
+        mGotoCash.setOnClickListener(this);
 
-        list.add(WalletListFragment.newInstance());
-        list.add(WalletListFragment.newInstance());
-        list.add(WalletListFragment.newInstance());
-        list.add(WalletListFragment.newInstance());
+        if (getArguments() == null) {
+            Toast.makeText(getContext(), "数据拉取异常！请重试", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        userInfo = (MemberInfoResults) getArguments().getSerializable(TAG);
+        mBalance.setText(StringUtils.isEmpty(userInfo.total_balance) ? "0.00" : userInfo.total_balance);
+        mBalance1.setText(StringUtils.isEmpty(userInfo.total_balance) ? "0.00" : userInfo.total_balance);
+        mBalance2.setText(StringUtils.isEmpty(userInfo.market_balance) ? "0.00" : userInfo.market_balance);
+        mBalance3.setText(StringUtils.isEmpty(userInfo.balance) ? "0.00" : userInfo.balance);
+
+        list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Consume));
+        list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Recharge));
+        list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Cash));
+        list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Profit));
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -161,6 +193,12 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
     public void onClick(View v) {
         if (v == mHeadBack){
             getActivity().onBackPressed();
+        }
+        if (v == mGotoRecharge){
+            DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
+        }
+        if (v == mGotoCash){
+            DetailFragmentsActivity.launch(getContext(),null, CashFragment.newInstance());
         }
     }
 

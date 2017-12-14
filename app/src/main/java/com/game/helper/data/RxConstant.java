@@ -54,6 +54,13 @@ public final class RxConstant {
         public static final int Account_ResetPasswd_type = 55;//重置密码
     }
 
+    public static final class WalletModelType{
+        public static final int Wallet_Consume_type = 60;
+        public static final int Wallet_Recharge_type = 61;
+        public static final int Wallet_Cash_type = 62;
+        public static final int Wallet_Prifit_type = 63;
+    }
+
     //第三方的一些appkey
     public static final class ThirdPartKey {
         //微信分享

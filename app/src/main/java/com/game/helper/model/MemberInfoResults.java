@@ -45,6 +45,8 @@ public class MemberInfoResults extends XBaseModel {
     public String signature;
     public int address_count;
     public String balance;
+    public String market_balance;
+    public String total_balance;
     public String icon;
 
     @Override

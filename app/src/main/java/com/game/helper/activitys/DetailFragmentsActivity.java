@@ -21,6 +21,7 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
     public static void launch(Context context, Bundle bundle, final Fragment fra) {
         Router.newIntent((Activity) context).to(DetailFragmentsActivity.class).data(bundle).launch();
         currentFragment = fra;
+        currentFragment.setArguments(bundle);
     }
 
     @Override
