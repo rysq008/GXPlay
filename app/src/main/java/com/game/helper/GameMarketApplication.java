@@ -4,11 +4,9 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.game.helper.net.api.Api;
-import com.game.helper.utils.MainThreadPostUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.TotoroToast;
 import com.umeng.socialize.Config;
@@ -85,13 +83,6 @@ public class GameMarketApplication extends MultiDexApplication {
                             sb.append(";");
                             if (cookie.name().equals("sessionid")) {
                                 SharedPreUtil.saveSessionId(sb.toString());
-                                MainThreadPostUtils.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(context, Thread.currentThread().getName() + "111-->" + sb.toString(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-
                             }
                         }
 //                        cookieStore.put(url.host(), cookies);

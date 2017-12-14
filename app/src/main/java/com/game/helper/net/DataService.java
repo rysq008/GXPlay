@@ -15,6 +15,7 @@ import com.game.helper.model.RegistResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.net.api.Api;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
@@ -25,12 +26,9 @@ import io.reactivex.Flowable;
 
 public class DataService {
 
-    public static Flowable<HttpResultModel<LoginResults>> getLoginData(LoginRequestBody baseRequestBody) {
-        return Api.CreateApiService().getApiLoginData(baseRequestBody);
-    }
 
-    public static Flowable<HttpResultModel<BannerResults>> getHomeBanner() {
-        return Api.CreateApiService().getApiBannerData();
+    public static Flowable<HttpResultModel<BannerResults>> getHomeBanner(BannerRequestBody bannerRequestBody) {
+        return Api.CreateApiService().getApiBannerData(bannerRequestBody);
     }
 
     public static Flowable<HttpResultModel<NoticeResults>> getHomeNotice() {
@@ -57,7 +55,7 @@ public class DataService {
         return Api.CreateApiService().getApiCommonData();
     }
 
-    public static Flowable<HttpResultModel<GeneralizeResults>> getGeneralizeData(){
+    public static Flowable<HttpResultModel<GeneralizeResults>> getGeneralizeData() {
         return Api.CreateApiService().getApiGeneralizeAccountData();
     }
 

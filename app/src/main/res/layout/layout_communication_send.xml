@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:padding="@dimen/dp_10"
-    android:background="@color/colorWhite"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_10">
 
     <LinearLayout
-        android:background="@drawable/bg_grey_stroke_radius"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginRight="@dimen/dp_5"
-        android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content">
+        android:background="@drawable/bg_grey_stroke_radius">
 
         <EditText
-            android:padding="@dimen/dp_10"
-            android:textSize="@dimen/text_size_small"
             android:id="@+id/et_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@null"
             android:hint="说点什么吧"
+            android:padding="@dimen/dp_10"
             android:textColorHint="@color/colorShadow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textSize="@dimen/text_size_small" />
     </LinearLayout>
 
     <TextView
-        android:textSize="@dimen/text_size_xlarge"
-        android:textColorHint="@color/colorBlack"
-        android:text="发送"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:paddingLeft="@dimen/dp_15"
         android:paddingRight="@dimen/dp_5"
-        android:gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:text="发送"
+        android:textColorHint="@color/colorBlack"
+        android:textSize="@dimen/text_size_xlarge" />
 </LinearLayout>

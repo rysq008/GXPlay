@@ -1,32 +1,32 @@
-package com.game.helper.fragments;
+package com.game.helper.fragments.recharge;
+
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
+
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+
 import butterknife.BindView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AboutUsFragment extends XBaseFragment implements View.OnClickListener{
-    public static final String TAG = AboutUsFragment.class.getSimpleName();
+public class ChooseAccountFragment extends XBaseFragment implements View.OnClickListener {
+    public static final String TAG = ChooseAccountFragment.class.getSimpleName();
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
-    @BindView(R.id.ll_verision)
-    View mVersion;
 
-    public static AboutUsFragment newInstance(){
-        return new AboutUsFragment();
+    public static ChooseAccountFragment newInstance(){
+        return new ChooseAccountFragment();
     }
 
-    public AboutUsFragment() {
+    public ChooseAccountFragment() {
         // Required empty public constructor
     }
 
@@ -37,13 +37,12 @@ public class AboutUsFragment extends XBaseFragment implements View.OnClickListen
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_about_us;
+        return R.layout.fragment_choose_account;
     }
 
     private void initView(){
-        mHeadTittle.setText(getResources().getString(R.string.common_about_us));
+        mHeadTittle.setText(getResources().getString(R.string.common_recharge_choose_account));
         mHeadBack.setOnClickListener(this);
-        mVersion.setOnClickListener(this);
     }
 
     @Override
@@ -51,13 +50,11 @@ public class AboutUsFragment extends XBaseFragment implements View.OnClickListen
         if (v == mHeadBack){
             getActivity().onBackPressed();
         }
-        if (v == mVersion){
-            DetailFragmentsActivity.launch(getContext(),null,VersionInfoFragment.newInstance());
-        }
     }
 
     @Override
     public Object newP() {
         return null;
     }
+
 }

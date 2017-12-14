@@ -103,7 +103,9 @@ public class Utils {
     }
 
     /**
-     * login状态
+     * 写login状态
+     *
+     * @param userInfo bean
      * */
     public static void writeLoginInfo(Context context, LoginUserInfo userInfo){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -120,6 +122,9 @@ public class Utils {
         edit.commit();
     }
 
+    /**
+     * 清除login信息
+     * */
     public static void clearLoginInfo(Context context){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = mSharedPreferences.edit();
@@ -128,6 +133,9 @@ public class Utils {
         edit.commit();
     }
 
+    /**
+     * 获取login信息
+     * */
     public static LoginUserInfo getLoginInfo(Context context){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
         if (mSharedPreferences.contains(RxConstant.LOGIN_PREFERENCE_KEY_USER)){
@@ -141,6 +149,9 @@ public class Utils {
         return null;
     }
 
+    /**
+     * 登陆状态
+     * */
     public static boolean hasLoginInfo(Context context){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
         if (mSharedPreferences.contains(RxConstant.LOGIN_PREFERENCE_KEY_STATUS)){
@@ -149,10 +160,16 @@ public class Utils {
         return false;
     }
 
+    /**
+     * 字符串判空
+     * */
     public static String emptyConverter(String str) {
         return TextUtils.isEmpty(str) || str.equals("null") ? "" : str;
     }
 
+    /**
+     * list判空
+     * */
     public static JSONArray emptyConverter(List<String> list) {
         JSONArray jsonArray = new JSONArray(list);
         return jsonArray;

@@ -1,39 +1,32 @@
 package com.game.helper.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.model.HotResults;
-import com.game.helper.views.RecommendView;
-import com.makeramen.roundedimageview.RoundedImageView;
+import com.game.helper.views.widget.StateView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class GameDetailCommunityFragment extends XBaseFragment {
     private static final String TAG = GameDetailCommunityFragment.class.getSimpleName();
 
     @BindView(R.id.common_recycler_view_layout)
-    RecyclerView mGiftList;
+    XRecyclerContentLayout xRecyclerContentLayout;
+    private StateView errorView;
 
     public static GameDetailCommunityFragment newInstance() {
         GameDetailCommunityFragment fragment = new GameDetailCommunityFragment();
         return fragment;
-    }
-
-    public GameDetailCommunityFragment() {
-        // Required empty public constructor
     }
 
     private void setData() {
@@ -42,18 +35,42 @@ public class GameDetailCommunityFragment extends XBaseFragment {
 
     private void initList() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        mGiftList.setHasFixedSize(true);
-        mGiftList.setLayoutManager(manager);
-        mGiftList.setItemAnimator(new DefaultItemAnimator());
-        mGiftList.setAdapter(new CommunityAdapter());
+        xRecyclerContentLayout.getRecyclerView().setHasFixedSize(true);
+        xRecyclerContentLayout.getRecyclerView().setLayoutManager(manager);
+        xRecyclerContentLayout.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
+        xRecyclerContentLayout.getRecyclerView().setAdapter(new CommunityAdapter());
+        xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                errorView.setLoadDataType(StateView.REFRESH, 1);
+                xRecyclerContentLayout.showContent();
+            }
 
+            @Override
+            public void onLoadMore(int page) {
+                errorView.setLoadDataType(StateView.LOADMORE, page);
+                xRecyclerContentLayout.getRecyclerView().setPage(1,1);
+                xRecyclerContentLayout.showContent();
+            }
+        });
+
+        if (errorView == null) {
+            errorView = new StateView(context);
+            errorView.setOnRefreshAndLoadMoreListener(xRecyclerContentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
+        }
+
+        xRecyclerContentLayout.errorView(errorView);
+        xRecyclerContentLayout.loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+
+        xRecyclerContentLayout.showLoading();
+        errorView.setLoadDataType(StateView.REFRESH, 1);
+
+        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
     }
 
     @Override
     public void initData(Bundle savedInstanceState) {
-
         initList();
-
     }
 
     @Override

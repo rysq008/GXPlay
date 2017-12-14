@@ -13,10 +13,13 @@ import com.game.helper.R;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.HotResults;
 import com.game.helper.views.RecommendView;
+import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +28,8 @@ public class GameDetailGiftFragment extends XBaseFragment {
     private static final String TAG = GameDetailGiftFragment.class.getSimpleName();
 
     @BindView(R.id.common_recycler_view_layout)
-    RecyclerView mGiftList;
+    XRecyclerContentLayout xRecyclerContentLayout;
+    private StateView errorView;
 
     public static GameDetailGiftFragment newInstance() {
         GameDetailGiftFragment fragment = new GameDetailGiftFragment();
@@ -34,10 +38,38 @@ public class GameDetailGiftFragment extends XBaseFragment {
 
     private void initList() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        mGiftList.setHasFixedSize(true);
-        mGiftList.setLayoutManager(manager);
-        mGiftList.setItemAnimator(new DefaultItemAnimator());
-        mGiftList.setAdapter(new GiftAdapter());
+        xRecyclerContentLayout.getRecyclerView().setHasFixedSize(true);
+        xRecyclerContentLayout.getRecyclerView().setLayoutManager(manager);
+        xRecyclerContentLayout.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
+        xRecyclerContentLayout.getRecyclerView().setAdapter(new GiftAdapter());
+        xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                errorView.setLoadDataType(StateView.REFRESH, 1);
+                xRecyclerContentLayout.showContent();
+                xRecyclerContentLayout.refreshState(false);
+            }
+
+            @Override
+            public void onLoadMore(int page) {
+                errorView.setLoadDataType(StateView.LOADMORE, page);
+                xRecyclerContentLayout.getRecyclerView().setPage(page, page);
+                xRecyclerContentLayout.showContent();
+            }
+        });
+
+        if (errorView == null) {
+            errorView = new StateView(context);
+            errorView.setOnRefreshAndLoadMoreListener(xRecyclerContentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
+        }
+
+        xRecyclerContentLayout.errorView(errorView);
+        xRecyclerContentLayout.loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+
+        xRecyclerContentLayout.showLoading();
+        errorView.setLoadDataType(StateView.REFRESH, 1);
+
+        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
 
     }
 
