@@ -2,16 +2,11 @@ package com.game.helper.fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -24,11 +19,8 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
-
-import java.io.File;
-
+import com.game.helper.views.PasswordEditDialog;
 import butterknife.BindView;
-import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -145,6 +137,10 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         }
         if (v == mItemPassword){
             DetailFragmentsActivity.launch(getContext(),null, ResetPasswdFragment.newInstance());
+        }
+        if (v == mItemOrderPassword){
+            PasswordEditDialog dialog = new PasswordEditDialog();
+            dialog.show(getChildFragmentManager(),PasswordEditDialog.TAG);
         }
         Toast.makeText(getContext(), v.getId()+"", Toast.LENGTH_SHORT).show();
     }
