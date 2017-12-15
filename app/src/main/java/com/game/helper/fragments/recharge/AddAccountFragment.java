@@ -22,7 +22,7 @@ public class AddAccountFragment extends XBaseFragment implements View.OnClickLis
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
 
-    public static AddAccountFragment newInstance(){
+    public static AddAccountFragment newInstance() {
         return new AddAccountFragment();
     }
 
@@ -40,14 +40,14 @@ public class AddAccountFragment extends XBaseFragment implements View.OnClickLis
         return R.layout.fragment_add_account;
     }
 
-    private void initView(){
+    private void initView() {
         mHeadTittle.setText(getResources().getString(R.string.common_recharge_add_account));
         mHeadBack.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
     }

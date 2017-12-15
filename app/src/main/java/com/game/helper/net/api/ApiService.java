@@ -21,6 +21,7 @@ import com.game.helper.model.RegistResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.model.BaseRequestBody;
@@ -34,6 +35,7 @@ import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
@@ -44,7 +46,7 @@ public interface ApiService {
     Flowable<HttpResultModel<LoginResults>> getApiLoginData(@Body LoginRequestBody baseRequestBody);
 
     @POST("/sys/get_banner_list/")
-    Flowable<HttpResultModel<BannerResults>> getApiBannerData();
+    Flowable<HttpResultModel<BannerResults>> getApiBannerData(@Body BannerRequestBody bannerRequestBody);
 
     //首页通告
     @POST("/sys/get_notification_list/")
