@@ -3,12 +3,18 @@ package com.game.helper.views;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
+
 import com.game.helper.R;
+import com.game.helper.utils.ScreenUtils;
 import com.game.helper.utils.StringUtils;
+import com.game.helper.utils.Utils;
 
 /**
  * Created by sung on 2017/12/15.
@@ -121,6 +127,13 @@ public class GXPlayDialog extends android.support.v4.app.DialogFragment implemen
     @Override
     public void onResume() {
         super.onResume();
+        if (getDialog() == null) return;
+        if (!getDialog().isShowing()) return;
+        Window dialogWindow = getDialog().getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        dialogWindow.setGravity(Gravity.CENTER);
+        lp.width = ScreenUtils.getScreenWidth(getContext()) / 3 * 2;
+        dialogWindow.setAttributes(lp);
     }
 
     @Override

@@ -36,7 +36,7 @@ import okhttp3.internal.Util;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CashFragment extends XBaseFragment implements View.OnClickListener, ToggleButton.OnToggleChanged {
+public class CashFragment extends XBaseFragment implements View.OnClickListener, ToggleButton.OnToggleChanged, GXPlayDialog.onDialogActionListner {
     public static final String TAG = CashFragment.class.getSimpleName();
     private static final int PAY_ALIPAY = 0;
     private static final int PAY_WECHAT = 1;
@@ -151,15 +151,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
                     GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm,
                             getResources().getString(R.string.common_dialog_trade_passwd_hint),
                             getResources().getString(R.string.common_dialog_without_trade_passwd));
-                    dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
-                        @Override
-                        public void onCancel() {//cancel
-                        }
-
-                        @Override
-                        public void onConfirm() {//confirm
-                        }
-                    });
+                    dialog.addOnDialogActionListner(CashFragment.this);
                     dialog.show(getFragmentManager(),GXPlayDialog.TAG);
                 }else {
                     Toast.makeText(getContext(), "密码错误!", Toast.LENGTH_SHORT).show();
@@ -221,5 +213,14 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     @Override
     public Object newP() {
         return null;
+    }
+
+    @Override
+    public void onCancel() {
+    }
+
+    @Override
+    public void onConfirm() {//跳转设置交易密码
+
     }
 }

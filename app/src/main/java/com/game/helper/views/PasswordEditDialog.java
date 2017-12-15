@@ -3,11 +3,15 @@ package com.game.helper.views;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import com.game.helper.R;
+import com.game.helper.utils.ScreenUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.views.widget.PasswordEditText;
 
@@ -50,6 +54,18 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
         passwordEditText.addOnEditCompleteListener(this);
         cancel.setOnClickListener(this);
         confirm.setOnClickListener(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getDialog() == null) return;
+        if (!getDialog().isShowing()) return;
+        Window dialogWindow = getDialog().getWindow();
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        dialogWindow.setGravity(Gravity.CENTER);
+        lp.width = ScreenUtils.getScreenWidth(getContext()) / 5 * 4;
+        dialogWindow.setAttributes(lp);
     }
 
     @Override

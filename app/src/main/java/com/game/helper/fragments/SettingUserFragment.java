@@ -12,14 +12,25 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.login.ResetPasswdFragment;
+import com.game.helper.fragments.wallet.CashFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.HeadImageView;
+import com.game.helper.views.OptionsPickerView;
 import com.game.helper.views.PasswordEditDialog;
+import com.game.helper.views.widget.TimePickerView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
@@ -52,6 +63,10 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
 
     //args
     private MemberInfoResults userInfo;
+    private TimePickerView mTimerPicker;
+    private OptionsPickerView mGenderPicker;
+    private Calendar mCalendar;
+    private boolean Trade_Password_Exit = false;
 
     public static SettingUserFragment newInstance(){
         return new SettingUserFragment();
@@ -85,12 +100,66 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         mItemOrderPassword.setOnClickListener(this);
         mItemAlipay.setOnClickListener(this);
 
+        pickerInit();
+        ProvingTradePssword("aaaaa");
         getMemberInfo();
+    }
+
+    private void pickerInit(){
+        //time picker
+        mTimerPicker = new TimePickerView(getContext(), TimePickerView.Type.YEAR_MONTH_DAY);
+        mCalendar = Calendar.getInstance();
+        mTimerPicker.setRange(mCalendar.get(Calendar.YEAR) - 100, mCalendar.get(Calendar.YEAR));
+        mTimerPicker.setTime(new Date());
+        mTimerPicker.setCyclic(false);
+        mTimerPicker.setCancelable(true);
+        mTimerPicker.setTitle("出生日期");
+        mTimerPicker.setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
+
+            @Override
+            public void onTimeSelect(Date date) {
+                int year = date.getYear() + 1900;
+                int month = date.getMonth() + 1;
+                int day = date.getDay();
+                int age = mCalendar.get(Calendar.YEAR) - year;
+                String dateStr = year+"-"+month+"-"+day;
+                mBirthday.setText(dateStr);
+            }
+        });
+
+        //gender picker
+        mGenderPicker = new OptionsPickerView(getContext());
+        mGenderPicker.setTitle("性别");
+        ArrayList<String> gender = new ArrayList<>();
+        gender.add("未知");
+        gender.add("男");
+        gender.add("女");
+        mGenderPicker.setPicker(gender);
+        mGenderPicker.setCyclic(false);
+        mGenderPicker.setSelectOptions(0);
+        mGenderPicker.setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3) {
+                String sex = "保密";
+                switch (options1){
+                    case 0:
+                        sex = "保密";
+                        break;
+                    case 1:
+                        sex = "男";
+                        break;
+                    case 2:
+                        sex = "女";
+                        break;
+                }
+                mSex.setText(String.valueOf(sex));
+            }
+        });
     }
 
     private void setUserData(MemberInfoResults userData){
         mNickname.setText(userData.nick_name);
-        mPhone.setText(userData.phone);
+        mPhone.setText(Utils.converterSecretPhone(userData.phone));
         mBirthday.setText(userData.birthday);
         if (!StringUtils.isEmpty(userData.icon)) {
             Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
@@ -125,9 +194,40 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         });
     }
 
+    /**
+     * 获取交易密码状态
+     * */
+    private void ProvingTradePssword(String password){
+        Flowable<HttpResultModel<CheckTradePasswdResults>> fr = DataService.checkTradePassword(new CheckTradePasswdRequestBody(password));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<CheckTradePasswdResults>>() {
+            @Override
+            public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
+                if (checkTradePasswdResultsHttpResultModel.isNoneTradePassword()) {
+                    Trade_Password_Exit =false;
+                    mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_none));
+                    mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+                }else {
+                    Trade_Password_Exit = true;
+                    mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_exist));
+                    mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorShadow));
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                Trade_Password_Exit = false;
+            }
+        });
+    }
+
     @Override
     public Object newP() {
         return null;
+    }
+
+    private void goToSetTradePassword(){//跳转设置交易密码
+        DetailFragmentsActivity.launch(getContext(),null,UpdateTradePasswordFragment.newInstance());
     }
 
     @Override
@@ -139,9 +239,37 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             DetailFragmentsActivity.launch(getContext(),null, ResetPasswdFragment.newInstance());
         }
         if (v == mItemOrderPassword){
+            if (!Trade_Password_Exit){
+                goToSetTradePassword();
+                return;
+            }
             PasswordEditDialog dialog = new PasswordEditDialog();
+            dialog.addOnPassWordEditListener(new PasswordEditDialog.OnPassWordEditListener() {
+                @Override
+                public void onConfirmComplete(String password) {
+                    goToSetTradePassword();
+                }
+            });
             dialog.show(getChildFragmentManager(),PasswordEditDialog.TAG);
         }
-        Toast.makeText(getContext(), v.getId()+"", Toast.LENGTH_SHORT).show();
+        if (v == mItemBirthday){
+            mTimerPicker.show();
+        }
+        if (v == mItemSex){
+            mGenderPicker.show();
+        }
+        if (v == mItemNickname){
+            DetailFragmentsActivity.launch(getContext(),null,UpdateNicknameFragment.newInstance());
+        }
+        if (v == mItemPhone){
+            DetailFragmentsActivity.launch(getContext(),null,UpdatePhoneFragment.newInstance());
+        }
+        if (v == mItemsign){
+            DetailFragmentsActivity.launch(getContext(),null,UpdateSignFragment.newInstance());
+        }
+        if (v == mItemAlipay){
+            DetailFragmentsActivity.launch(getContext(),null,UpdateAlipayFragment.newInstance());
+        }
+
     }
 }

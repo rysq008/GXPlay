@@ -140,4 +140,11 @@
 
     <!--login-->
     <dimen name="login_tab_width">90dp</dimen>
+
+    <!--picker-->
+    <dimen name="pickerview_topbar_paddingleft">10dp</dimen>
+    <dimen name="pickerview_topbar_paddingright">10dp</dimen>
+    <dimen name="pickerview_topbar_btn_textsize">20sp</dimen>
+    <dimen name="pickerview_topbar_title_textsize">20sp</dimen>
+    <dimen name="pickerview_textsize">20sp</dimen>
 </resources>

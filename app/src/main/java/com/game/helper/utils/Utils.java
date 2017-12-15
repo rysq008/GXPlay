@@ -186,4 +186,13 @@ public class Utils {
         JSONArray jsonArray = new JSONArray(list);
         return jsonArray;
     }
+
+    /**
+     * 隐藏手机号中间数字
+     * */
+    public static String converterSecretPhone(String phone){
+        if (StringUtils.isEmpty(phone)) return "";
+        String converterResult = phone.substring(0,3)+"****"+phone.substring(phone.length()-4,phone.length());
+        return converterResult;
+    }
 }
