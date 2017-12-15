@@ -248,26 +248,27 @@ public class ToggleButton extends View {
 	@Override
 	public void draw(Canvas canvas) {
 		//
+		super.draw(canvas);
 		rect.set(0, 0, getWidth(), getHeight());
 		paint.setColor(borderColor);
 		canvas.drawRoundRect(rect, radius, radius, paint);
-		
-		if(offLineWidth > 0){
+
+		if (offLineWidth > 0) {
 			final float cy = offLineWidth * 0.5f;
 			rect.set(spotX - cy, centerY - cy, endX + cy, centerY + cy);
 			paint.setColor(offColor);
 			canvas.drawRoundRect(rect, cy, cy, paint);
 		}
-		
+
 		rect.set(spotX - 1 - radius, centerY - radius, spotX + 1.1f + radius, centerY + radius);
 		paint.setColor(borderColor);
 		canvas.drawRoundRect(rect, radius, radius, paint);
-		
+
 		final float spotR = spotSize * 0.5f;
 		rect.set(spotX - spotR, centerY - spotR, spotX + spotR, centerY + spotR);
 		paint.setColor(spotColor);
 		canvas.drawRoundRect(rect, spotR, spotR, paint);
-		
+
 	}
 	
 	/**
@@ -300,6 +301,10 @@ public class ToggleButton extends View {
 		borderColor = Color.rgb(sr, sg, sb);
 		
 		postInvalidate();
+	}
+
+	public boolean isToggleOn() {
+		return toggleOn;
 	}
 
 	public interface OnToggleChanged{

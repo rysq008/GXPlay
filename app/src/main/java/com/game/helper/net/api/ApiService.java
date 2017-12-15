@@ -3,6 +3,8 @@ package com.game.helper.net.api;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CashListResults;
+import com.game.helper.model.CashToResults;
+import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
@@ -25,6 +27,8 @@ import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.CashToRequestBody;
+import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.PayRequestBody;
@@ -126,4 +130,10 @@ public interface ApiService {
 
     @POST("/marketing/get_marketing_flow_list/")//钱包-收益明细
     Flowable<HttpResultModel<ProfitListResults>> getProfitListData(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/G9game/paymentController.do?reflect")//钱包-提现
+    Flowable<HttpResultModel<CashToResults>> cashTo(@Body CashToRequestBody cashToRequestBody);
+
+    @POST("/member/check_trade_passwd/")//钱包-验证交易密码
+    Flowable<HttpResultModel<CheckTradePasswdResults>> checkTradePassWord(@Body CheckTradePasswdRequestBody checkTradePasswdRequestBody);
 }

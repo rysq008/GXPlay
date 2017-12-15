@@ -61,6 +61,8 @@
     <string name="common_confirm_order">确认订单</string>
     <string name="common_cash">提现</string>
     <string name="common_cash_hint">提现申请成功后，在3个工作日内到账，请耐心等待</string>
+    <string name="common_dialog_trade_passwd_hint">交易密码</string>
+    <string name="common_dialog_without_trade_passwd">您还未设置交易密码，是否现在去设置？</string>
 
     <!--我的-->
     <string name="mine_tab_game">我的游戏</string>

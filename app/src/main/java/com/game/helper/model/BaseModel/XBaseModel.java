@@ -14,6 +14,10 @@ public class XBaseModel implements IModel, ItemType, Serializable {
     public int total_page;
     public int current_page;
 
+    public boolean isNoneTradePassword(){
+        return code.equals(StateCode.STATE_0027) ? true : false;
+    }
+
     public boolean isSucceful() {
         return code.equals(StateCode.STATE_0000) ? true : false;
     }

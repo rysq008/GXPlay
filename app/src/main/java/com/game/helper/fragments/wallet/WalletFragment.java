@@ -198,7 +198,9 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
             DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
         }
         if (v == mGotoCash){
-            DetailFragmentsActivity.launch(getContext(),null, CashFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(CashFragment.TAG,userInfo);
+            DetailFragmentsActivity.launch(getContext(),bundle, CashFragment.newInstance());
         }
     }
 

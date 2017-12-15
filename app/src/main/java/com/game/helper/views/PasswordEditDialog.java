@@ -18,7 +18,7 @@ import com.game.helper.views.widget.PasswordEditText;
 
 public class PasswordEditDialog extends android.support.v4.app.DialogFragment implements PasswordEditText.OnEditCompleteListener,View.OnClickListener{
     public static final String TAG = PasswordEditDialog.class.getSimpleName();
-
+    private OnPassWordEditListener onPassWordEditListener;
     private TextView tittle;
     private TextView content;
     private TextView cancel;
@@ -59,7 +59,18 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
         }
         if (v == confirm) {
             passWordComplete(passwordEditText.getText().toString());
+            if (onPassWordEditListener != null){
+                onPassWordEditListener.onConfirmComplete(passwordEditText.getText().toString());
+            }
         }
+    }
+
+    public void addOnPassWordEditListener(OnPassWordEditListener onPassWordEditListener){
+        this.onPassWordEditListener = onPassWordEditListener;
+    }
+
+    public interface OnPassWordEditListener{
+        void onConfirmComplete(String password);
     }
 
     /**
@@ -71,7 +82,7 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
     }
 
     /**
-     * 手动完成时补充
+     * 手动完成时补充(如果添加了监听器此处逻辑请注释)
      * */
     private void passWordComplete(String password){
         Log.e(TAG, "onEditComplete: "+password );

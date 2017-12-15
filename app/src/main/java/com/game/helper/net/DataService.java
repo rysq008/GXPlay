@@ -3,6 +3,8 @@ package com.game.helper.net;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CashListResults;
+import com.game.helper.model.CashToResults;
+import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
@@ -26,6 +28,8 @@ import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.CashToRequestBody;
+import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.PayRequestBody;
@@ -130,6 +134,14 @@ public class DataService {
 
     public static Flowable<HttpResultModel<ProfitListResults>> getProfitListData(SinglePageRequestBody pageRequestBody) {
         return Api.CreateApiService().getProfitListData(pageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<CashToResults>> cashTo(CashToRequestBody cashToRequestBody) {
+        return Api.CreatePayOrImageApiService().cashTo(cashToRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<CheckTradePasswdResults>> checkTradePassword(CheckTradePasswdRequestBody checkTradePasswdRequestBody) {
+        return Api.CreateApiService().checkTradePassWord(checkTradePasswdRequestBody);
     }
 
 
