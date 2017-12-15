@@ -12,11 +12,14 @@ import com.alipay.sdk.app.PayTask;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.activitys.GeneralizeIncomeActivity;
+import com.game.helper.activitys.MyAccountActivity;
+import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.activitys.RankingListActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.LoginResults;
@@ -115,6 +118,28 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         xStateController.loadingView(View.inflate(context, R.layout.view_loading, null));
 //        xStateController.showLoading();
         refreshData();
+        getBannerInfo();
+    }
+
+    private void getBannerInfo() {
+        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner();
+
+        RxLoadingUtils.subscribe(fb, this.bindToLifecycle(), new Consumer<HttpResultModel<BannerResults>>() {
+            @Override
+            public void accept(HttpResultModel<BannerResults> data) throws Exception {
+                bannerView.setData(data.data);
+                xStateController.showContent();
+                xStateController.getLoadingView().setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                xStateController.getLoadingView().setVisibility(View.GONE);
+                xStateController.showError();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     private void refreshData() {
@@ -213,21 +238,21 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                     final String info = payRequestBody.data.orderInfo;
                     Log.e(TAG, "accept: info:::::"+info);
                     Runnable payRunnable = new Runnable() {
-            @Override
-            public void run() {
-                PayTask alipay = new PayTask(getActivity());
-                Map<String, String> result = alipay.payV2(info, true);
-                Log.i("msp", result.toString());
+                        @Override
+                        public void run() {
+                            PayTask alipay = new PayTask(getActivity());
+                            Map<String, String> result = alipay.payV2(info, true);
+                            Log.i("msp", result.toString());
 
 //                        Message msg = new Message();
 //                        msg.what = 1;
 //                        msg.obj = result;
 //                        mHandler.sendMessage(msg);
-            }
-        };
+                        }
+                    };
 
-        Thread payThread = new Thread(payRunnable);
-        payThread.start();
+                    Thread payThread = new Thread(payRunnable);
+                    payThread.start();
                 }else {
                     Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -280,7 +305,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.mallTv://商城
                 //TODO h5
-            weixinPay();
+                weixinPay();
                 break;
             case R.id.activityTv://活动
                 AliPay();
@@ -293,9 +318,12 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 startActivity(intent);
                 break;
             case R.id.shareIncome://分享收益
-                //TODO
+                intent.setClass(getActivity(),OrderConfirmActivity.class);
+                startActivity(intent);
                 break;
             case R.id.shareDiscount://分享折扣
+                intent.setClass(getActivity(),MyAccountActivity.class);
+                startActivity(intent);
                 //TODO
                 break;
 

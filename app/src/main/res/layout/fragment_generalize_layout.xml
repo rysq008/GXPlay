@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cn.droidlover.xstatecontroller.XStateController xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/generalize_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -36,7 +37,7 @@
                         android:id="@+id/generalize_head_iv"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_marginLeft="@dimen/dp_10" />
+                        android:layout_marginLeft="@dimen/dp_20" />
 
                     <LinearLayout
                         android:id="@+id/linearLayout3"
@@ -97,35 +98,83 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/generalize_total_income_tv"
+                        android:textSize="@dimen/size_12sp"
+                        android:id="@+id/generalize_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginLeft="20dp"
+                        android:textColor="#999999"
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@+id/generalize_head_iv"
                         android:layout_toRightOf="@+id/generalize_head_iv"
-                        android:text="累计收益：520" />
+                        android:text="推广收益" />
 
                     <TextView
-                        android:id="@+id/generalize_expect_income_tv"
+                        android:textColor="#fe4430"
+                        android:textSize="@dimen/size_18sp"
+                        android:layout_below="@+id/generalize_text"
+                        android:id="@+id/generalize_total_income_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/generalize_head_iv"
+                        android:layout_toRightOf="@+id/generalize_head_iv"
+                        tools:text="520.00" />
+
+                    <LinearLayout
+                        android:id="@+id/expectIncomeLayout"
                         android:layout_alignEnd="@+id/linearLayout3"
                         android:layout_alignParentTop="true"
                         android:layout_alignRight="@+id/linearLayout3"
-                        android:layout_marginEnd="18dp"
-                        android:layout_marginRight="18dp"
-                        android:text="预期收益：200" />
-
-                    <TextView
-                        android:id="@+id/generalize_income_tv"
-                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:textSize="@dimen/margin_12"
+                            android:textColor="#999"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="预期收益：" />
+
+                        <TextView
+                            android:textSize="@dimen/size_18sp"
+                            android:textColor="#00aeff"
+                            android:id="@+id/generalize_expect_income_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="18dp"
+                            android:layout_marginRight="18dp"
+                            tools:text="200" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_above="@+id/linearLayout3"
-                        android:layout_alignLeft="@+id/generalize_expect_income_tv"
-                        android:layout_alignStart="@+id/generalize_expect_income_tv"
-                        android:text="推广收益：120" />
+                        android:layout_alignLeft="@+id/expectIncomeLayout"
+                        android:layout_alignStart="@+id/expectIncomeLayout"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:textSize="@dimen/margin_12"
+                            android:textColor="#999"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="推广收益：" />
+
+                        <TextView
+                            android:textSize="@dimen/size_18sp"
+                            android:textColor="#00aeff"
+                            android:id="@+id/generalize_income_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="120" />
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <LinearLayout

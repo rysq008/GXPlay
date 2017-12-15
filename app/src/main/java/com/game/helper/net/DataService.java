@@ -1,10 +1,14 @@
 package com.game.helper.net;
 
+import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
@@ -19,8 +23,13 @@ import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.api.Api;
+import com.game.helper.net.model.AddGameAccountRequestBody;
+import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
+import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.GameListRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
@@ -107,5 +116,23 @@ public class DataService {
         return Api.CreateApiService().getGeneralizeAccountInfo();
     }
 
+    public static Flowable<HttpResultModel<GameAccountResultModel>> getGameAccountList(GameAccountRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getGameAccountList(friendRangeRequestBody);
+    }
 
+    public static Flowable<HttpResultModel<GameListResultModel>> getGameAccountList(GameListRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getGameListAccordingKey(friendRangeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<ChannelListResultModel>> getChannelAccordingGame(ChannelListRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getChannelAccordingGame(friendRangeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<LogoutResults>> addGameAccount(AddGameAccountRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().addGameAccount(friendRangeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(AvailableRedpackRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getRedPackInfo(friendRangeRequestBody);
+    }
 }

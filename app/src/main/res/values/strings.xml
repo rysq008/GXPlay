@@ -105,4 +105,6 @@
     <string name="login_hint_without_account">请输入手机号码！</string>
     <string name="login_hint_without_code">请输入验证码！</string>
 
+    <string name="redpack_limit">购满%s可使用</string>
+    <string name="redpack_amount">%s元现金券</string>
 </resources>

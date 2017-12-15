@@ -1,10 +1,14 @@
 package com.game.helper.net.api;
 
+import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
@@ -18,8 +22,13 @@ import com.game.helper.model.RegistResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.model.PayResultModel;
+import com.game.helper.net.model.AddGameAccountRequestBody;
+import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
+import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.GameListRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
@@ -103,5 +112,24 @@ public interface ApiService {
     @POST("/marketing/get_marketing_info/")
     Flowable<HttpResultModel<GeneralizeAccountInfoResultModel>> getGeneralizeAccountInfo();
 
+    //获取游戏账号列表
+    @POST("/member/get_game_account_list/")
+    Flowable<HttpResultModel<GameAccountResultModel>> getGameAccountList(@Body GameAccountRequestBody gameAccountRequestBody/*@Path("page") int page, @Path("plat_id") int plat_id, @Path("option_game_id") int option_game_id, @Path("option_channel_id") int option_channel_id*/);
+
+    //根据关键词搜索游戏
+    @POST("/game/query_game_list/")
+    Flowable<HttpResultModel<GameListResultModel>> getGameListAccordingKey(@Body GameListRequestBody payRequestBody/*@Path("page") int pageNum, @Path("key") String key*/);
+
+    //根据游戏搜索平台
+    @POST("/game/get_game_channel_list/")
+    Flowable<HttpResultModel<ChannelListResultModel>> getChannelAccordingGame(@Body ChannelListRequestBody payRequestBody);
+
+    //添加游戏账号
+    @POST("/member/add_game_account/")
+    Flowable<HttpResultModel<LogoutResults>> addGameAccount(@Body AddGameAccountRequestBody payRequestBody);
+
+    //获取可用红包卡券
+    @POST("/activity/get_red_packet_list/")
+    Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(@Body AvailableRedpackRequestBody payRequestBody);
 
 }
