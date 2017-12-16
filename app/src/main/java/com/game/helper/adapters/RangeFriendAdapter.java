@@ -7,15 +7,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.model.FriendRangeResultModel;
-import com.game.helper.utils.StringUtils;
-import com.game.helper.views.HeadImageView;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -38,7 +38,7 @@ public class RangeFriendAdapter extends SimpleRecAdapter<ItemType, RangeFriendAd
     @Override
     public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
         final ItemType item = data.get(position);
-        holder.setDisplay(item,mActivity,position);
+        holder.setDisplay(item, mActivity, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +63,7 @@ public class RangeFriendAdapter extends SimpleRecAdapter<ItemType, RangeFriendAd
         @BindView(R.id.range_number)
         TextView rangeNumber;
         @BindView(R.id.iv_avatar)
-        HeadImageView ivAvatar;
+        RoundedImageView ivAvatar;
         @BindView(R.id.tv_name)
         TextView tvName;
         @BindView(R.id.person_desc)
@@ -80,34 +80,41 @@ public class RangeFriendAdapter extends SimpleRecAdapter<ItemType, RangeFriendAd
             ButterKnife.bind(this, itemView);
         }
 
-        public void setDisplay(ItemType itemType, final Activity activity,final int position) {
-            FriendRangeResultModel.ListBean data = (FriendRangeResultModel.ListBean)itemType;
+        public void setDisplay(ItemType itemType, final Activity activity, final int position) {
+            FriendRangeResultModel.ListBean data = (FriendRangeResultModel.ListBean) itemType;
             //排名
-            if(0 ==position){
-                rangeNumber.setBackgroundResource(R.mipmap.range_1);
-            }else if(1 ==position){
-                rangeNumber.setBackgroundResource(R.mipmap.range_2);
-            }else if(2 ==position){
-                rangeNumber.setBackgroundResource(R.mipmap.range_3);
+            rangeNumber.setText("");
+            switch (position) {
+                case 0:
+                    rangeNumber.setBackgroundResource(R.mipmap.range_1);
+                    break;
+                case 1:
+                    rangeNumber.setBackgroundResource(R.mipmap.range_2);
+                    break;
+                case 2:
+                    rangeNumber.setBackgroundResource(R.mipmap.range_3);
+                    break;
+                default:
+                    rangeNumber.setBackgroundResource(0);
+                    rangeNumber.setText((position + 1) + "");
+                    break;
             }
-//            else{
-//                rangeNumber.setText((position+1)+"");
-//            }
 
             //头像
-            if (!StringUtils.isEmpty(data.getMember().getIcon())) {
-                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
+            if (!/*StringUtils.isEmpty(data.getMember().getIcon()*/Kits.Empty.check(data.getMember().getIcon())) {
+//                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
+                ILFactory.getLoader().loadNet(ivAvatar, data.getMember().getIcon(), null);
             }
             //名字
             tvName.setText(data.getMember().getNick_name());
             //描述
             personDesc.setText(data.getMember().getSignature());
             //推广人数
-            incomeCoin.setText(data.getTotal_promotion_number()+"");
+            incomeCoin.setText(data.getTotal_promotion_number() + "");
 
             //会员等级
             int level = data.getMember().getVip_level().getLevel();
-            switch (level){
+            switch (level) {
                 case 0:
                     vipLevel.setImageResource(R.mipmap.vip0);
                     break;

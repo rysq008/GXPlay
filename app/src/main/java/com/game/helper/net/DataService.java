@@ -166,6 +166,9 @@ public class DataService {
         return Api.CreateApiService().getProfitListData(pageRequestBody);
     }
 
+    public static Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(AvailableRedpackRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getRedPackInfo(friendRangeRequestBody);
+    }
     public static Flowable<HttpResultModel<CashToResults>> cashTo(CashToRequestBody cashToRequestBody) {
         return Api.CreatePayOrImageApiService().cashTo(cashToRequestBody);
     }
@@ -176,9 +179,6 @@ public class DataService {
 
     public static Flowable<HttpResultModel<InvatationResults>> getInvatationList(SinglePageRequestBody singlePageRequestBody) {
         return Api.CreateApiService().getInvatationList(singlePageRequestBody);
-    }
-    public static Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(AvailableRedpackRequestBody friendRangeRequestBody) {
-        return Api.CreateApiService().getRedPackInfo(friendRangeRequestBody);
     }
 
     public static Flowable<HttpResultModel<ResetTradeResults>> resetTradePasswrd(ResetTradeRequestBody resetTradePasswrd) {

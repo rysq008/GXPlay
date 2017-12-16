@@ -31,6 +31,7 @@ public class FriendRangeResultModel extends XBaseModel {
          * id : 5
          */
 
+        public int pos;
         private MemberBean member;
         private int total_promotion_number;
         private String zongshouyi;
