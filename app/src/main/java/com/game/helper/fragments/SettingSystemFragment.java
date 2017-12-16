@@ -2,6 +2,7 @@ package com.game.helper.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.GXPlayDialog;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -39,6 +41,12 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
     View mAboutUs;
     @BindView(R.id.tv_exit_login)
     View mExit;
+    @BindView(R.id.tv_cache)
+    TextView mCache;
+    @BindView(R.id.ll_clear_cache)
+    View mClearCache;
+
+    private Handler handler = new Handler();
 
     public static SettingSystemFragment newInstance(){
         return new SettingSystemFragment();
@@ -63,8 +71,10 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         mHeadTittle.setText(getResources().getString(R.string.common_setting_system));
         mHeadBack.setOnClickListener(this);
 
+        mCache.setText("0MB");
         mAboutUs.setOnClickListener(this);
         mExit.setOnClickListener(this);
+        mClearCache.setOnClickListener(this);
     }
 
     private void loginOut(){
@@ -101,10 +111,41 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             getActivity().onBackPressed();
         }
         if (v == mExit){
-            loginOut();
+            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm,"退出登陆","确定要退出登陆？");
+            dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+                @Override
+                public void onCancel() {
+                }
+
+                @Override
+                public void onConfirm() {
+                    loginOut();
+                }
+            });
+            dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
         }
         if (v == mAboutUs){
             DetailFragmentsActivity.launch(getContext(),null,AboutUsFragment.newInstance());
+        }
+        if (v == mClearCache){
+            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm,"","确认清除本地缓存？");
+            dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+                @Override
+                public void onCancel() {
+                }
+
+                @Override
+                public void onConfirm() {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mCache.setText("0MB");
+                            Toast.makeText(getContext(), "清除缓存成功！", Toast.LENGTH_SHORT).show();
+                        }
+                    },2000);
+                }
+            });
+            dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
         }
     }
 }

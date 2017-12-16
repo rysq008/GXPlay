@@ -281,10 +281,11 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content" />
-                    <android.support.v7.widget.SwitchCompat
-                        android:layout_marginRight="@dimen/dp_15"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                    <com.game.helper.views.widget.ToggleButton
+                        android:id="@+id/tb_order_toggle"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="@dimen/dp_5" />
                 </LinearLayout>
             </LinearLayout>
             <!--账户余额 end-->
@@ -316,8 +317,9 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
                 <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    style="@style/DefaultCheckBoxStyle"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20" />
             </LinearLayout>
             <!--账户余额 end-->
 
@@ -343,8 +345,9 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
                 <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    style="@style/DefaultCheckBoxStyle"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
@@ -367,8 +370,9 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
                 <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    style="@style/DefaultCheckBoxStyle"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20" />
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"

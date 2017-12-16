@@ -98,4 +98,57 @@
         </attr>
         <attr name="eiv_hint" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="ToggleButton">
+        <attr name="borderWidth" format="dimension">
+        </attr>
+        <attr name="offBorderColor" format="reference|color">
+        </attr>
+        <attr name="offColor" format="reference|color">
+        </attr>
+        <attr name="onColor" format="reference|color">
+        </attr>
+        <attr name="spotColor" format="reference|color">
+        </attr>
+        <attr name="animate" format="reference|boolean">
+        </attr>
+        <attr name="isDefaultOn" format="reference|boolean">
+        </attr>
+    </declare-styleable>
+
+    <!--仿支付宝密码输入框-->
+    <declare-styleable name="PasswordEditText">
+        <!-- 密码的个数 -->
+        <attr name="passwordNumber" format="integer"/>
+        <!-- 密码圆点的半径 -->
+        <attr name="passwordRadius" format="dimension" />
+        <!-- 密码圆点的颜色 -->
+        <attr name="passwordColor" format="color" />
+        <!-- 分割线的颜色 -->
+        <attr name="divisionLineColor" format="color" />
+        <!-- 分割线的大小 -->
+        <attr name="divisionLineSize" format="color" />
+        <!-- 背景边框的颜色 -->
+        <attr name="bgColor" format="color" />
+        <!-- 背景边框的大小 -->
+        <attr name="bgSize" format="dimension" />
+        <!-- 背景边框的圆角大小 -->
+        <attr name="bgCorner" format="dimension"/>
+        <!--明文字体颜色-->
+        <attr name="visibleColor" format="color"/>
+        <!--明文字体尺寸-->
+        <attr name="visibleSize" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="wheelview">
+        <attr name="gravity">
+            <enum name="center" value="17"/>
+            <enum name="left" value="3"/>
+            <enum name="right" value="5"/>
+        </attr>
+        <attr name="textSize" format="dimension"/>
+        <attr name="textColorOut" format="color"/>
+        <attr name="textColorCenter" format="color"/>
+        <attr name="dividerColor" format="color"/>
+    </declare-styleable>
 </resources>

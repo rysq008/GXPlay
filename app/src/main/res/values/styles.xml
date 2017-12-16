@@ -70,4 +70,19 @@
         <item name="android:activityCloseEnterAnimation">@anim/activity_close_enter</item>
         <item name="android:activityCloseExitAnimation">@anim/activity_close_exit</item>
     </style>
+
+    <style name="Dialog.FullScreen" parent="Theme.AppCompat.Dialog">
+        <item name="android:padding">0dp</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="DefaultCheckBoxStyle">
+        <item name="android:button">@drawable/check_box_selected</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:width">@dimen/dp_20</item>
+        <item name="android:height">@dimen/dp_20</item>
+    </style>
 </resources>

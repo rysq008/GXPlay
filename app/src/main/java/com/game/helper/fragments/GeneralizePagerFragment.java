@@ -27,6 +27,7 @@ import com.game.helper.model.WxPayInfoBean;
 import com.game.helper.model.model.MemberBean;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.share.UMengShare;
@@ -122,7 +123,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     }
 
     private void getBannerInfo() {
-        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner();
+        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(2));
 
         RxLoadingUtils.subscribe(fb, this.bindToLifecycle(), new Consumer<HttpResultModel<BannerResults>>() {
             @Override
