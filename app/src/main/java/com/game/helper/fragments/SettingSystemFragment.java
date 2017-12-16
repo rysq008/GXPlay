@@ -9,7 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
-import com.game.helper.activitys.AboutUsActivity;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LoginUserInfo;
@@ -104,7 +104,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             loginOut();
         }
         if (v == mAboutUs){
-            startActivity(new Intent(getContext(), AboutUsActivity.class));
+            DetailFragmentsActivity.launch(getContext(),null,AboutUsFragment.newInstance());
         }
     }
 }

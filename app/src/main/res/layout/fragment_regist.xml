@@ -2,22 +2,169 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/dp_10"
-    tools:context="com.game.helper.fragments.RegistFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.game.helper.fragments.login.RegistFragment">
+    <include
+        android:id="@+id/action_bar"
+        layout="@layout/layout_action_bar"/>
 
     <LinearLayout
         android:gravity="center"
+        android:layout_below="@+id/action_bar"
+        android:padding="@dimen/dp_10"
         android:layout_centerInParent="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginRight="@dimen/dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_account"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:eiv_hint="输入账号"
+                app:eiv_type="type_account"/>
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginRight="@dimen/dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@null"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <com.game.helper.views.EditInputView
+                    android:id="@+id/et_verity"
+                    app:eiv_hint="输入验证码"
+                    app:eiv_type="type_code"
+                    android:background="@null"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <com.game.helper.views.widget.CountDownText
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tv_left_time"
+                    android:text="获取验证码"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textColor="@color/colorShadow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginRight="@dimen/dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_password"
+                app:eiv_type="type_password"
+                app:eiv_hint="输入密码"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginRight="@dimen/dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_password1"
+                app:eiv_type="type_password"
+                app:eiv_hint="输入密码"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginRight="@dimen/dp_5"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_invatation"
+                app:eiv_hint="输入邀请码（可选）"
+                app:eiv_type="type_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+
+        <!-- <com.game.helper.views.EditInputView
             android:id="@+id/et_account"
             android:background="@drawable/bg_gradient_radius_hoop_grey"
-            android:padding="@dimen/dp_10"
-            android:hint="输入账号"
-            android:textSize="@dimen/text_size_small"
+            app:eiv_hint="输入账号"
+            app:eiv_type="type_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -26,19 +173,47 @@
             android:layout_marginTop="@dimen/dp_15"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
+            <com.game.helper.views.EditInputView
                 android:id="@+id/et_password"
-                android:padding="@dimen/dp_10"
-                android:hint="输入密码"
+                app:eiv_type="type_password"
+                app:eiv_hint="输入密码"
                 android:background="@null"
-                android:inputType="textPassword"
-                android:textSize="@dimen/text_size_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:background="@drawable/bg_gradient_radius_hoop_grey"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_password1"
+                app:eiv_type="type_password"
+                app:eiv_hint="输入密码"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:background="@drawable/bg_gradient_radius_hoop_grey"
+            android:layout_marginTop="@dimen/dp_15"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_verity"
+                app:eiv_type="type_code"
+                app:eiv_hint="输入验证码"
+                android:background="@null"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content" />
+
             <com.game.helper.views.widget.CountDownText
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
                 android:id="@+id/tv_left_time"
                 android:text="获取验证码"
                 android:textSize="@dimen/text_size_medium"
@@ -47,18 +222,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
-        <EditText
+        <com.game.helper.views.EditInputView
             android:layout_marginTop="@dimen/dp_15"
             android:id="@+id/et_invatation"
             android:background="@drawable/bg_gradient_radius_hoop_grey"
-            android:padding="@dimen/dp_10"
-            android:hint="输入邀请码（可选）"
-            android:inputType="textPassword"
-            android:textSize="@dimen/text_size_small"
+            app:eiv_hint="输入邀请码（可选）"
+            app:eiv_type="type_account"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" /> -->
 
         <TextView
             android:id="@+id/tv_regist"
@@ -68,8 +241,17 @@
             android:textColor="@color/colorWhite"
             android:text="注册"
             android:gravity="center"
-            android:background="@drawable/bg_gradient_radius_hoop_primary"
+            android:background="@drawable/bg_normal_gradient_submit"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="已有账号，去登陆"
+            android:layout_marginTop="@dimen/dp_40"
+            android:id="@+id/tv_goto_login"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
     

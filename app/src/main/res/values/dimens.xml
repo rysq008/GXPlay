@@ -137,4 +137,7 @@
     <dimen name="game_detail_fragment_img_height">200dp</dimen>
     <dimen name="game_detail_fragment_img_width">150dp</dimen>
     <dimen name="game_detail_fragment_icon_avatar">40dp</dimen>
+
+    <!--login-->
+    <dimen name="login_tab_width">90dp</dimen>
 </resources>

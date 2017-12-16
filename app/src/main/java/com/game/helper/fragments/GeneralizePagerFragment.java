@@ -185,7 +185,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     }
 
     private void login(){
-        Flowable<HttpResultModel<LoginResults>> f = DataService.getLoginData(new LoginRequestBody("13312341234","9870","1",""));
+        Flowable<HttpResultModel<LoginResults>> f = DataService.login(new LoginRequestBody("13312341234","9870","1",""));
         RxLoadingUtils.subscribe(f, bindToLifecycle(), new Consumer<HttpResultModel<LoginResults>>() {
             @Override
             public void accept(HttpResultModel<LoginResults> payRequestBody ) throws Exception {

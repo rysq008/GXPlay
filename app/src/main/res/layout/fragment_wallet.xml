@@ -1,0 +1,173 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.game.helper.fragments.recharge.RechargeFragment">
+
+    <include
+        android:id="@+id/action_bar"
+        layout="@layout/layout_action_bar"/>
+
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="110dp">
+
+        <TextView
+            android:text="平台余额(元)"
+            android:layout_above="@+id/tv_value"
+            android:textSize="@dimen/text_size_small"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/tv_value"
+            android:text="0.00"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="提现"
+            android:id="@+id/tv_goto_cash"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/text_size_tiny"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/bg_white_stroke_radius"
+            android:layout_marginRight="@dimen/dp_20"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <HorizontalScrollView
+        android:background="@color/colorWhite"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:paddingTop="@dimen/dp_10">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/bg_grey_stroke_radius"
+                android:layout_width="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="平台账户总余额(元)"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_tiny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="0.00"
+                    android:id="@+id/tv_balance1"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="@dimen/dp_10"
+                android:background="@drawable/bg_grey_stroke_radius"
+                android:layout_width="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="平台推广账户余额(元)"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_tiny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="0.00"
+                    android:id="@+id/tv_balance2"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="@drawable/bg_grey_stroke_radius"
+                android:layout_width="120dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <TextView
+                    android:text="金币余额(元)"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_tiny"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="0.00"
+                    android:id="@+id/tv_balance3"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+    <TextView
+        android:id="@+id/tv_goto_recharge"
+        android:text="去充值"
+        android:textColor="@color/colorPrimary"
+        android:padding="@dimen/dp_10"
+        android:gravity="center"
+        android:textSize="@dimen/text_size_medium"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_5"
+        android:orientation="vertical"
+        android:id="@+id/ll_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:gravity="center"
+            android:background="@color/colorWhite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/game_detail_tabs"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="48dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/game_detail_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:recyclerScrollbarNone="true"
+            app:recyclerScrollbarStyle="outsideOverlay" />
+
+    </LinearLayout>
+</LinearLayout>

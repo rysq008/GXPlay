@@ -52,6 +52,14 @@ public final class RxConstant {
         public static final int Account_Logout_type = 52;//登出
         public static final int Account_Member_Info_type = 53;//用户详情
         public static final int Account_Vertify_type = 54;//验证码
+        public static final int Account_ResetPasswd_type = 55;//重置密码
+    }
+
+    public static final class WalletModelType{
+        public static final int Wallet_Consume_type = 60;
+        public static final int Wallet_Recharge_type = 61;
+        public static final int Wallet_Cash_type = 62;
+        public static final int Wallet_Prifit_type = 63;
     }
 
     //第三方的一些appkey

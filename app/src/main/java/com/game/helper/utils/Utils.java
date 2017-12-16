@@ -67,6 +67,8 @@ public class Utils {
      * */
     public static int getVipLevel(int level){
         switch (level){
+            case 0:
+                return R.mipmap.ic_member_vip1;
             case 1:
                 return R.mipmap.ic_member_vip1;
             case 2:
@@ -103,7 +105,9 @@ public class Utils {
     }
 
     /**
-     * login状态
+     * 写login状态
+     *
+     * @param userInfo bean
      * */
     public static void writeLoginInfo(Context context, LoginUserInfo userInfo){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -120,6 +124,9 @@ public class Utils {
         edit.commit();
     }
 
+    /**
+     * 清除login信息
+     * */
     public static void clearLoginInfo(Context context){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = mSharedPreferences.edit();
@@ -128,6 +135,9 @@ public class Utils {
         edit.commit();
     }
 
+    /**
+     * 获取login信息
+     * */
     public static LoginUserInfo getLoginInfo(Context context){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
         if (mSharedPreferences.contains(RxConstant.LOGIN_PREFERENCE_KEY_USER)){
@@ -141,6 +151,9 @@ public class Utils {
         return null;
     }
 
+    /**
+     * 登陆状态
+     * */
     public static boolean hasLoginInfo(Context context){
         SharedPreferences mSharedPreferences = context.getSharedPreferences(RxConstant.LOGIN_PREFERENCE_NAME, Context.MODE_PRIVATE);
         if (mSharedPreferences.contains(RxConstant.LOGIN_PREFERENCE_KEY_STATUS)){
@@ -149,10 +162,26 @@ public class Utils {
         return false;
     }
 
+    /**
+     * 更新登陆账户密码设置状态
+     * */
+    public static void updateUserPasswdStatus(Context context, boolean hasPasswd){
+        LoginUserInfo savedUser = Utils.getLoginInfo(context);
+        savedUser.has_passwd = hasPasswd;
+        Utils.clearLoginInfo(context);
+        Utils.writeLoginInfo(context,savedUser);
+    }
+
+    /**
+     * 字符串判空
+     * */
     public static String emptyConverter(String str) {
         return TextUtils.isEmpty(str) || str.equals("null") ? "" : str;
     }
 
+    /**
+     * list判空
+     * */
     public static JSONArray emptyConverter(List<String> list) {
         JSONArray jsonArray = new JSONArray(list);
         return jsonArray;

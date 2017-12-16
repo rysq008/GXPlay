@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TextView;
 import com.game.helper.R;
-import com.game.helper.activitys.AboutUsActivity;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import butterknife.BindView;
 
@@ -52,10 +52,7 @@ public class AboutUsFragment extends XBaseFragment implements View.OnClickListen
             getActivity().onBackPressed();
         }
         if (v == mVersion){
-            if (getActivity() instanceof AboutUsActivity) {
-                AboutUsActivity aboutUs = (AboutUsActivity) getActivity();
-                aboutUs.switchFragment();
-            }
+            DetailFragmentsActivity.launch(getContext(),null,VersionInfoFragment.newInstance());
         }
     }
 

@@ -9,6 +9,7 @@ import com.game.helper.model.NoticeResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -28,7 +29,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
     protected XBaseModel mXBaseModel;
 
     public void onRefreshData() {
-        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner();
+        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(1));
         Flowable<HttpResultModel<NoticeResults>> fn = DataService.getHomeNotice();
         Flowable<HttpResultModel<SpecialResults>> fs = DataService.getHomeSpecial(new BaseRequestBody(1));
         Flowable<HttpResultModel<HotResults>> fh = DataService.getHomeHot(new BaseRequestBody(1));

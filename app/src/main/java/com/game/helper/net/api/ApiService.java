@@ -4,8 +4,10 @@ import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.ChannelListResultModel;
+import com.game.helper.model.CashListResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
+import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GameListResultModel;
@@ -17,13 +19,17 @@ import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NoticeResults;
+import com.game.helper.model.ProfitListResults;
+import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.RegistResults;
+import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
@@ -33,6 +39,8 @@ import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.ResetPasswdRequestBody;
+import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
@@ -46,7 +54,7 @@ public interface ApiService {
     Flowable<HttpResultModel<LoginResults>> getApiLoginData(@Body LoginRequestBody baseRequestBody);
 
     @POST("/sys/get_banner_list/")
-    Flowable<HttpResultModel<BannerResults>> getApiBannerData();
+    Flowable<HttpResultModel<BannerResults>> getApiBannerData(@Body BannerRequestBody bannerRequestBody);
 
     //首页通告
     @POST("/sys/get_notification_list/")
@@ -77,19 +85,24 @@ public interface ApiService {
     @POST("/marketing/get_marketing_info/")
     Flowable<HttpResultModel<GeneralizeResults>> getApiGeneralizeAccountData();
 
-    @POST("/member/register/")//注册
+    @POST("/member/register/")
+//注册
     Flowable<HttpResultModel<RegistResults>> ApiRegitst(@Body RegistRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("market_num") String market_num*/);
 
-    @POST("/member/login/")//登陆
+    @POST("/member/login/")
+//登陆
     Flowable<HttpResultModel<LoginResults>> ApiLogin(@Body LoginRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("type") String type, @Path("channel_num") String channel_num*/);
 
-    @POST("/member/logout/")//登出
+    @POST("/member/logout/")
+//登出
     Flowable<HttpResultModel<LogoutResults>> ApiLogout();
 
-    @POST("/member/info/")//会员信息
+    @POST("/member/info/")
+//会员信息
     Flowable<HttpResultModel<MemberInfoResults>> getApiMemberInfo();
 
-    @POST("/public/get_tel_verify/")//验证码
+    @POST("/public/get_tel_verify/")
+//验证码
     Flowable<HttpResultModel<VerifyResults>> getApiVerify(@Body VerifyRequestBody verifyRequestBody/*@Path("phone") String phone, @Path("usefor") String usefor*/);
 
     //支付
@@ -132,4 +145,23 @@ public interface ApiService {
     @POST("/activity/get_red_packet_list/")
     Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(@Body AvailableRedpackRequestBody payRequestBody);
 
+    @POST("/member/reset_passwd/")
+//重置密码
+    Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(@Body ResetPasswdRequestBody resetPasswdRequestBody);
+
+    @POST("/account/get_consume_list/")
+//钱包-消费明细
+    Flowable<HttpResultModel<ConsumeListResults>> getConsumeListData(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/account/get_recharge_list/")
+//钱包-充值明细
+    Flowable<HttpResultModel<RechargeListResults>> getRechargeListData(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/marketing/get_marketing_reflect_list/")
+//钱包-提现明细
+    Flowable<HttpResultModel<CashListResults>> getCashListData(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/marketing/get_marketing_flow_list/")
+//钱包-收益明细
+    Flowable<HttpResultModel<ProfitListResults>> getProfitListData(@Body SinglePageRequestBody singlePageRequestBody);
 }

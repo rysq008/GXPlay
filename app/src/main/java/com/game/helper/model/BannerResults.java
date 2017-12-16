@@ -19,18 +19,14 @@ public class BannerResults extends XBaseModel {
     }
 
     public static class BannerItem implements ItemType {
-        //            "status":true,
-        //                    "name":"广告",
-        //                    "url":"https://www.showdoc.cc/1667248?page_id=15559414",
-        //                    "image":"/upload/images/banner/2017111411253941125.png",
-        //                    "create_time":"2017-11-13 15:55:56",
-        //                    "id":1
         public boolean status;
         public String url;
         public String image;
         public String name;
         public String create_time;
         public int id;
+        public int game_package_id;//: 0,
+        public int type;//banner 类型(1为H5界面，2为游戏): 1,
 
         @Override
         public int itemType() {
