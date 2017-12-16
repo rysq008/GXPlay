@@ -122,6 +122,8 @@
     <string name="login_hint_wrong_code">验证码错误！</string>
     <string name="login_hint_wrong_notequal_passwd">前后密码不一致！</string>
 
+    <string name="redpack_limit">购满%s可使用</string>
+    <string name="redpack_amount">%s元现金券</string>
     <!--setting-->
     <string name="setting_password_status_none">未设置</string>
     <string name="setting_password_status_exist">修改</string>

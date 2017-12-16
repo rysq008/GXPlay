@@ -24,6 +24,7 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.functions.Consumer;
+import zlc.season.practicalrecyclerview.ItemType;
 
 /**
  * Created by zr on 2017-10-13.
@@ -103,6 +104,7 @@ public class RangeIncomeListFragment extends XBaseFragment {
         } else {
             mAdapter.setData(model);
         }
+
         xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
         xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         if (mAdapter.getItemCount() < 1) {
