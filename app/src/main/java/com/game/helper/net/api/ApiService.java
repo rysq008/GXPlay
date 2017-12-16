@@ -13,6 +13,7 @@ import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.IncomeResultModel;
+import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
@@ -136,4 +137,7 @@ public interface ApiService {
 
     @POST("/member/check_trade_passwd/")//钱包-验证交易密码
     Flowable<HttpResultModel<CheckTradePasswdResults>> checkTradePassWord(@Body CheckTradePasswdRequestBody checkTradePasswdRequestBody);
+
+    @POST("/marketing/get_invitation_list/")//邀请记录
+    Flowable<HttpResultModel<InvatationResults>> getInvatationList(@Body SinglePageRequestBody singlePageRequestBody);
 }

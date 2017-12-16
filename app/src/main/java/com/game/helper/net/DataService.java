@@ -13,6 +13,7 @@ import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.IncomeResultModel;
+import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
@@ -144,5 +145,7 @@ public class DataService {
         return Api.CreateApiService().checkTradePassWord(checkTradePasswdRequestBody);
     }
 
-
+    public static Flowable<HttpResultModel<InvatationResults>> getInvatationList(SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getInvatationList(singlePageRequestBody);
+    }
 }
