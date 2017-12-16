@@ -20,6 +20,9 @@ public class RegistResults extends XBaseModel {
 //        }
     public String phone;
     public String member_id;
+    public boolean has_passwd = true;
+    public boolean has_trade_passwd = false;
+    public boolean has_alipay_account = false;
 
     @Override
     public int itemType() {

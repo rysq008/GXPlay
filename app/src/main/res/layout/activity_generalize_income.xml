@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f0f0f6"
+    tools:context="com.game.helper.activitys.GeneralizeIncomeActivity">
+
+    <LinearLayout
+        android:background="@drawable/bg_gradient_generalize_top"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <TextView
+            android:textSize="@dimen/size_12sp"
+            android:textColor="#8ad3ff"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="累计收益(金币)"/>
+
+        <TextView
+            android:id="@+id/incomeTv"
+            android:textSize="45sp"
+            android:textColor="@color/white"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            tools:text="617"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_height="75dp"
+        android:layout_width="match_parent">
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+
+                <TextView
+                    android:textColor="#bebebe"
+                    android:text="可提现"
+                    android:textSize="@dimen/size_12sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"/>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                <TextView
+                    android:id="@+id/canWithdrawals"
+                    android:textColor="@color/black"
+                    tools:text="106"
+                    android:textSize="@dimen/size_24sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"/>
+
+                    <TextView
+                        android:textColor="#fe4430"
+                        android:text="金币"
+                        android:textSize="@dimen/size_12sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_gravity="center"
+            android:layout_width="1px"
+            android:background="#bebebe"
+            android:layout_height="@dimen/dp_40"/>
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content">
+
+                <TextView
+                    android:textColor="#bebebe"
+                    android:text="预计收益"
+                    android:textSize="@dimen/size_12sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"/>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content">
+
+                    <TextView
+                        android:id="@+id/waittingWithdrawals"
+                        android:textColor="@color/black"
+                        tools:text="512"
+                        android:textSize="@dimen/size_24sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"/>
+
+                    <TextView
+                        android:textColor="#fe4430"
+                        android:text="金币"
+                        android:textSize="@dimen/size_12sp"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="#333333"
+            android:text="时间"
+            android:textSize="@dimen/size_15sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="#333333"
+            android:text="收入类型"
+            android:textSize="@dimen/size_15sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="#333333"
+            android:text="金币"
+            android:textSize="@dimen/size_15sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+
+    </LinearLayout>
+    <View
+        android:background="#9e9e9e"
+        android:layout_height="1px"
+        android:layout_width="match_parent"/>
+
+    <cn.droidlover.xrecyclerview.XRecyclerContentLayout
+        android:id="@+id/game_adapter_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

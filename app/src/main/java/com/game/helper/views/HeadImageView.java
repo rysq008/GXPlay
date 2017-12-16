@@ -75,7 +75,7 @@ public class HeadImageView extends FrameLayout {
 
     @OnClick(R.id.common_head_iv)
     public void onClick() {
-        TotoroToast.makeText(getContext(), " on click head view ", 0).show();
+//        TotoroToast.makeText(getContext(), " on click head view ", 0).show();
     }
 
 }

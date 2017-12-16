@@ -17,12 +17,16 @@ import com.game.helper.fragments.GamePagerFragment;
 import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
 import com.game.helper.fragments.MinePagerFragment;
+import com.game.helper.fragments.login.ResetPasswdFragment;
+import com.game.helper.model.LoginUserInfo;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.CustomBadgeItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import okhttp3.internal.Util;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
 
@@ -138,6 +142,14 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             fragmentsViewPager.setCurrentItem(0);
             isFirst = false;
         }
+        if (Utils.hasLoginInfo(this)){
+            LoginUserInfo loginInfo = Utils.getLoginInfo(this);
+            if (!loginInfo.has_passwd) showSetPassWord();
+        }
+    }
+
+    private void showSetPassWord(){
+        DetailFragmentsActivity.launch(this,null, ResetPasswdFragment.newInstance());
     }
 
     @Override

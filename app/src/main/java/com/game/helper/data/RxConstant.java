@@ -51,6 +51,36 @@ public final class RxConstant {
         public static final int Account_Logout_type = 52;//登出
         public static final int Account_Member_Info_type = 53;//用户详情
         public static final int Account_Vertify_type = 54;//验证码
+        public static final int Account_ResetPasswd_type = 55;//重置密码
+    }
+
+    public static final class WalletModelType{
+        public static final int Wallet_Consume_type = 60;
+        public static final int Wallet_Recharge_type = 61;
+        public static final int Wallet_Cash_type = 62;
+        public static final int Wallet_Prifit_type = 63;
+    }
+
+    //第三方的一些appkey
+    public static final class ThirdPartKey {
+        //微信分享
+        public static final String WeixinId = "wx1d5e45ad3dc2019a";
+        public static final String WeixinSecret = "d33400dd7f4e358a435602e26d45e881";
+
+        //微信支付
+        public static final String WeixinPayId = "wx5c644291162536ba";
+        public static final String WeixinPayKey = "384274bea7a4dee9382b5d3cea217094";
+        public static final String WX_MCH_iD = "1313036501";
+        public static final String WX_NOTIFY_URL = "http://60.205.204.218:8080/G9game/paymentController.do?wxReturn";
+
+
+        public static final String QQId = "1105689325";
+        public static final String QQKey = "hMJbCLDB4eiTTTSy";
+
+        public static final String SinaWeiboKey = "734669220";
+        public static final String SinaWeiboSecret = "4c643b2c952fd78d86902e007607e377";
+        public static final String SinaWeiboRedirectUrl = "https://api.weibo.com/oauth2/default.html";
+
     }
 
 }

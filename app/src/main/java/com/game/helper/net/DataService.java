@@ -2,24 +2,37 @@ package com.game.helper.net;
 
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.CashListResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
+import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
+import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NoticeResults;
+import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.RegistResults;
+import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.model.PayResultModel;
+import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
+import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.ResetPasswdRequestBody;
+import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
@@ -78,4 +91,46 @@ public class DataService {
     public static Flowable<HttpResultModel<VerifyResults>> getVerify(VerifyRequestBody verifyRequestBody) {
         return Api.CreateApiService().getApiVerify(verifyRequestBody);
     }
+
+    public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody){
+        return Api.CreateApiService().resetPassWord(resetPasswdRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<PayResultModel>> ApiPay(PayRequestBody payRequestBody) {
+        return Api.CreatePayOrImageApiService().ApiPay(payRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<FriendRangeResultModel>> getFriendRank(FriendRangeRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getFriendRank(friendRangeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<FriendRangeResultModel>> getIncomeRank(FriendRangeRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getIncomeRank(friendRangeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<IncomeResultModel>> getIncomeList(FriendRangeRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getIncomeList(friendRangeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<GeneralizeAccountInfoResultModel>> getGeneralizeAccountInfo() {
+        return Api.CreateApiService().getGeneralizeAccountInfo();
+    }
+
+    public static Flowable<HttpResultModel<ConsumeListResults>> getConsumeListData(SinglePageRequestBody pageRequestBody) {
+        return Api.CreateApiService().getConsumeListData(pageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<RechargeListResults>> getRechargeListData(SinglePageRequestBody pageRequestBody) {
+        return Api.CreateApiService().getRechargeListData(pageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<CashListResults>> getCashListData(SinglePageRequestBody pageRequestBody) {
+        return Api.CreateApiService().getCashListData(pageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<ProfitListResults>> getProfitListData(SinglePageRequestBody pageRequestBody) {
+        return Api.CreateApiService().getProfitListData(pageRequestBody);
+    }
+
+
 }

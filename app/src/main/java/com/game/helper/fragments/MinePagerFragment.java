@@ -18,6 +18,9 @@ import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.coupon.CouponFragment;
+import com.game.helper.fragments.login.LoginFragment;
+import com.game.helper.fragments.login.RegistFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.fragments.wallet.WalletFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -115,16 +118,18 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == mRegist) {
-            DetailFragmentsActivity.launch(getContext(),null,RegistFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null, RegistFragment.newInstance());
         }
         if (v == mLogin) {
-            DetailFragmentsActivity.launch(getContext(),null,LoginFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null, LoginFragment.newInstance());
         }
         if (v == mEditUserInfo || v == mAvatar) {
             DetailFragmentsActivity.launch(getContext(),null,SettingUserFragment.newInstance());
         }
         if (v == mWallet){
-            DetailFragmentsActivity.launch(getContext(),null, WalletFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(WalletFragment.TAG,userInfo);
+            DetailFragmentsActivity.launch(getContext(),bundle, WalletFragment.newInstance());
         }
         if (v == mMineGame) {
 
@@ -136,7 +141,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
 
         }
         if (v == mMineVip) {
-
+            DetailFragmentsActivity.launch(getContext(),null, CouponFragment.newInstance());
         }
         if (v == mRecharge){
             DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());

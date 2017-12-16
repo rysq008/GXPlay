@@ -14,13 +14,18 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.login.ResetPasswdFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,6 +53,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     @BindView(R.id.tv_birthday) TextView mBirthday;
     @BindView(R.id.ll_sign) View mItemsign;
     @BindView(R.id.ll_safe_pw) View mItemPassword;
+    @BindView(R.id.tv_password_status) TextView mPasswordStatus;
     @BindView(R.id.ll_safe_orderpw) View mItemOrderPassword;
     @BindView(R.id.tv_safe_orderpw_status) TextView mOrderPasswordStatus;
     @BindView(R.id.ll_safe_alipay) View mItemAlipay;
@@ -97,6 +103,14 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         if (!StringUtils.isEmpty(userData.icon)) {
             Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
         }
+
+        if(Utils.getLoginInfo(getContext()).has_passwd){
+            mPasswordStatus.setText(getResources().getString(R.string.setting_password_status_exist));
+            mPasswordStatus.setTextColor(getResources().getColor(R.color.colorShadow));
+        }else {
+            mPasswordStatus.setText(getResources().getString(R.string.setting_password_status_none));
+            mPasswordStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
     }
 
     private void getMemberInfo() {
@@ -128,6 +142,9 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     public void onClick(View v) {
         if (v == mHeadBack){
             getActivity().onBackPressed();
+        }
+        if (v == mItemPassword){
+            DetailFragmentsActivity.launch(getContext(),null, ResetPasswdFragment.newInstance());
         }
         Toast.makeText(getContext(), v.getId()+"", Toast.LENGTH_SHORT).show();
     }
