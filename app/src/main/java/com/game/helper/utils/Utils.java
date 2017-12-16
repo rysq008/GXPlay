@@ -173,6 +173,26 @@ public class Utils {
     }
 
     /**
+     * 更新登陆账户交易密码设置状态
+     * */
+    public static void updateUserTradePasswdStatus(Context context, boolean hasTradePasswd){
+        LoginUserInfo savedUser = Utils.getLoginInfo(context);
+        savedUser.has_trade_passwd = hasTradePasswd;
+        Utils.clearLoginInfo(context);
+        Utils.writeLoginInfo(context,savedUser);
+    }
+
+    /**
+     * 更新登陆账户支付宝设置状态
+     * */
+    public static void updateUserAlipayStatus(Context context, boolean hasAlipay){
+        LoginUserInfo savedUser = Utils.getLoginInfo(context);
+        savedUser.has_alipay_account = hasAlipay;
+        Utils.clearLoginInfo(context);
+        Utils.writeLoginInfo(context,savedUser);
+    }
+
+    /**
      * 字符串判空
      * */
     public static String emptyConverter(String str) {

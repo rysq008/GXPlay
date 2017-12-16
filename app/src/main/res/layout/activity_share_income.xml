@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="#ffc13f"
+    android:layout_height="match_parent"
+    tools:context="com.game.helper.activitys.ShareIncomeActivity">
+
+    <RelativeLayout
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+
+    <com.game.helper.views.HeadImageView
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/share_head_iv"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+         />
+
+    <TextView
+        android:id="@+id/phoneNumTv"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:paddingRight="@dimen/dp_15"
+        android:background="@drawable/bg_phone"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="240dp"
+        android:layout_gravity="center_horizontal"
+        android:text="135****4587"
+        android:textColor="#13a7ee"
+        android:textSize="@dimen/size_18sp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/dp_30"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:layout_marginLeft="80dp"
+            android:textColor="@color/white"
+            android:text="已分享:"
+            android:textSize="@dimen/size_15sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/shareNum"
+            android:layout_marginLeft="@dimen/dp_10"
+            tools:text="3人"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_18sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="18dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:layout_marginLeft="80dp"
+            android:textColor="@color/white"
+            android:text="已收益:"
+            android:textSize="@dimen/size_15sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/coinNum"
+            android:layout_marginLeft="@dimen/dp_10"
+            tools:text="1453金币"
+            android:textColor="@color/white"
+            android:textSize="@dimen/size_18sp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/shareBtn"
+        android:layout_marginTop="100dp"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
+        android:background="@drawable/bg_share"
+        android:gravity="center"
+        android:textColor="#b77a2d"
+        android:text="分享"
+        android:textSize="@dimen/size_18sp"
+        android:layout_marginRight="@dimen/dp_30"
+        android:layout_marginLeft="@dimen/dp_30"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+</LinearLayout>

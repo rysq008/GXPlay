@@ -35,6 +35,7 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,13 +61,13 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     @BindView(R.id.ll_safe_orderpw) View mItemOrderPassword;
     @BindView(R.id.tv_safe_orderpw_status) TextView mOrderPasswordStatus;
     @BindView(R.id.ll_safe_alipay) View mItemAlipay;
+    @BindView(R.id.tv_safe_alipay_status) TextView mAlipayStatus;
 
     //args
     private MemberInfoResults userInfo;
     private TimePickerView mTimerPicker;
     private OptionsPickerView mGenderPicker;
     private Calendar mCalendar;
-    private boolean Trade_Password_Exit = false;
 
     public static SettingUserFragment newInstance(){
         return new SettingUserFragment();
@@ -101,7 +102,11 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         mItemAlipay.setOnClickListener(this);
 
         pickerInit();
-        ProvingTradePssword("aaaaa");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getMemberInfo();
     }
 
@@ -172,6 +177,20 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             mPasswordStatus.setText(getResources().getString(R.string.setting_password_status_none));
             mPasswordStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
+        if (Utils.getLoginInfo(getContext()).has_trade_passwd) {
+            mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_exist));
+            mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorShadow));
+        }else {
+            mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_none));
+            mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+        if (Utils.getLoginInfo(getContext()).has_alipay_account) {
+            mAlipayStatus.setText(getResources().getString(R.string.setting_password_status_exist));
+            mAlipayStatus.setTextColor(getResources().getColor(R.color.colorShadow));
+        }else {
+            mAlipayStatus.setText(getResources().getString(R.string.setting_password_status_none));
+            mAlipayStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
     }
 
     private void getMemberInfo() {
@@ -202,21 +221,13 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<CheckTradePasswdResults>>() {
             @Override
             public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
-                if (checkTradePasswdResultsHttpResultModel.isNoneTradePassword()) {
-                    Trade_Password_Exit =false;
-                    mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_none));
-                    mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
-                }else {
-                    Trade_Password_Exit = true;
-                    mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_exist));
-                    mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorShadow));
-                }
+                if (checkTradePasswdResultsHttpResultModel.isSucceful()) goToSetTradePassword();
+                else Toast.makeText(getContext(), "交易密码验证失败！", Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
                 Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
-                Trade_Password_Exit = false;
             }
         });
     }
@@ -230,6 +241,14 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         DetailFragmentsActivity.launch(getContext(),null,UpdateTradePasswordFragment.newInstance());
     }
 
+    private void goToSetAlipay(){//跳转设置支付宝
+        UpdateAlipayFragment updateAlipayFragment = UpdateAlipayFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(UpdateAlipayFragment.TAG,Utils.getLoginInfo(getContext()).has_alipay_account);
+        updateAlipayFragment.setArguments(bundle);
+        DetailFragmentsActivity.launch(getContext(),bundle,updateAlipayFragment);
+    }
+
     @Override
     public void onClick(View v) {
         if (v == mHeadBack){
@@ -239,15 +258,16 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             DetailFragmentsActivity.launch(getContext(),null, ResetPasswdFragment.newInstance());
         }
         if (v == mItemOrderPassword){
-            if (!Trade_Password_Exit){
+            if (!(Utils.getLoginInfo(getContext()).has_trade_passwd)){
                 goToSetTradePassword();
                 return;
             }
-            PasswordEditDialog dialog = new PasswordEditDialog();
+            final PasswordEditDialog dialog = new PasswordEditDialog();
             dialog.addOnPassWordEditListener(new PasswordEditDialog.OnPassWordEditListener() {
                 @Override
                 public void onConfirmComplete(String password) {
-                    goToSetTradePassword();
+                    dialog.dismiss();
+                    ProvingTradePssword(password);
                 }
             });
             dialog.show(getChildFragmentManager(),PasswordEditDialog.TAG);
@@ -268,7 +288,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             DetailFragmentsActivity.launch(getContext(),null,UpdateSignFragment.newInstance());
         }
         if (v == mItemAlipay){
-            DetailFragmentsActivity.launch(getContext(),null,UpdateAlipayFragment.newInstance());
+            goToSetAlipay();
         }
 
     }

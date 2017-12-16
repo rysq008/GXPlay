@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
@@ -35,6 +36,7 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
     public static final int Type_Account = 0;//账号输入模式
     public static final int Type_Password = 1;//密码输入模式
     public static final int Type_Code = 2;//验证码输入模式
+    public static final int Type_Trade_Password = 3;//交易密码输入模式
 
     private boolean text_can_see = false;//内容可见
     private int type;
@@ -54,6 +56,7 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.EditInputView);
         type = typedArray.getInteger(R.styleable.EditInputView_eiv_type, 0);
         String hint = typedArray.getString(R.styleable.EditInputView_eiv_hint);
+        int maxLength = typedArray.getInteger(R.styleable.EditInputView_eiv_maxlength,200);
         typedArray.recycle();
 
         this.context = context;
@@ -66,6 +69,7 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
         mEyes.setOnClickListener(this);
         mClear.setOnClickListener(this);
         mClear.setVisibility(GONE);
+        mContent.setFilters(new InputFilter[] { new InputFilter.LengthFilter(maxLength) });
         mContent.setHint(hint);
         mContent.setOnFocusChangeListener(this);
         mContent.addTextChangedListener(textWatcher);
@@ -88,6 +92,11 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
             case Type_Code:
                 this.mContent.setInputType(InputType.TYPE_CLASS_NUMBER);
                 this.mEyes.setVisibility(GONE);
+                break;
+            case Type_Trade_Password:
+                this.mContent.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+                this.mEyes.setVisibility(VISIBLE);
+                this.mEyes.setSelected(false);
                 break;
         }
     }

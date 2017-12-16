@@ -95,8 +95,10 @@
             <enum name="type_account" value="0"/>
             <enum name="type_password" value="1"/>
             <enum name="type_code" value="2"/>
+            <enum name="type_trde_password" value="3"/>
         </attr>
         <attr name="eiv_hint" format="string"/>
+        <attr name="eiv_maxlength" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="ToggleButton">
