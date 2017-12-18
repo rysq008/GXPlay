@@ -11,6 +11,7 @@ import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
@@ -30,6 +31,8 @@ import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VipGameAccountResults;
+import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.api.Api;
@@ -187,5 +190,17 @@ public class DataService {
 
     public static Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(ResetAlipayRequestBody resetAlipayRequestBody) {
         return Api.CreateApiService().resetAlipayAccount(resetAlipayRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount() {
+        return Api.CreateApiService().getVipGameAccount();
+    }
+
+    public static Flowable<HttpResultModel<GameAccountDiscountResults>> getGameAccountDiscount(SingleGameIdRequestBody singleGameIdRequestBody) {
+        return Api.CreateApiService().getGameAccountDiscount(singleGameIdRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<VipLevelResults>> getVipLevel() {
+        return Api.CreateApiService().getVipLevel();
     }
 }

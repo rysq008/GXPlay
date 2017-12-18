@@ -7,21 +7,31 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.AboutUsFragment;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.ConfirmOrderFragment;
 import com.game.helper.fragments.GameDetailCommunityFragment;
 import com.game.helper.fragments.GameDetailGiftFragment;
 import com.game.helper.fragments.GameDetailInfoFragment;
 import com.game.helper.fragments.VersionInfoFragment;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.CheckTradePasswdResults;
+import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.net.DataService;
+import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.PasswordEditDialog;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -36,6 +46,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.net.NetError;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,8 +65,15 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     MagicIndicator tabStrip;
     @BindView(R.id.game_detail_viewpager)
     ViewPager viewPager;
+    @BindView(R.id.tv_connect_kefu)
+    View mConnectKefu;
+    @BindView(R.id.tv_confirm_order)
+    View mConfirmOrder;
 
-    List<Fragment> list = new ArrayList<Fragment>();
+    private int current_page = 0;
+    private List<Fragment> list = new ArrayList<Fragment>();
+    private RechargeGameFragment rechargeGameFragment;
+    private RechargeGoldFragment rechargeGoldFragment;
 
     public static RechargeFragment newInstance(){
         return new RechargeFragment();
@@ -76,9 +96,13 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private void initView(){
         mHeadTittle.setText(getResources().getString(R.string.common_recharge));
         mHeadBack.setOnClickListener(this);
+        mConfirmOrder.setOnClickListener(this);
+        mConnectKefu.setOnClickListener(this);
 
-        list.add(RechargeGameFragment.newInstance());
-        list.add(RechargeGoldFragment.newInstance());
+        rechargeGameFragment = RechargeGameFragment.newInstance();
+        list.add(rechargeGameFragment);
+        rechargeGoldFragment = RechargeGoldFragment.newInstance();
+        list.add(rechargeGoldFragment);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -103,6 +127,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
 
             @Override
             public void onPageSelected(int position) {
+                current_page = position;
             }
 
             @Override
@@ -157,10 +182,36 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
+    private void confirmOrder(){
+        if (current_page == 0) {
+            GameAccountResultModel.ListBean gameBean = rechargeGameFragment.getGameBean();
+            double totalBalanceValue = rechargeGameFragment.getTotalBalanceValue();
+            if (gameBean == null || totalBalanceValue <= 0.0) {
+                Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
+                bundle.putDouble(ConfirmOrderFragment.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
+                ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance();
+                confirmOrderFragment.setArguments(bundle);
+                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
+            }
+        }
+        if (current_page == 1) {
+
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (v == mHeadBack){
             getActivity().onBackPressed();
+        }
+        if (v == mConfirmOrder){
+            confirmOrder();
+        }
+        if (v == mConnectKefu){
+
         }
     }
 
@@ -168,5 +219,4 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     public Object newP() {
         return null;
     }
-
 }
