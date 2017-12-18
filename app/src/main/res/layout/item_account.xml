@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white">
 
-        <com.game.helper.views.HeadImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_centerVertical="true"
             android:id="@+id/iv_avatar"

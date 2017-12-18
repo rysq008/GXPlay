@@ -52,7 +52,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
     private void init() {
         fragments.add(RangeFriendListFragment.newInstance());
-        fragments.add(RangeIncomeListFragment.newInstance());
+        fragments.add(RangeFriendListFragment.newInstance());
         fragments.add(RangeIncomeListFragment.newInstance());
 
         adapter = new MyPagerAdapter(getSupportFragmentManager());

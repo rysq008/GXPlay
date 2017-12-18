@@ -6,15 +6,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.model.GameAccountResultModel;
-import com.game.helper.utils.StringUtils;
-import com.game.helper.views.HeadImageView;
+import com.game.helper.net.api.Api;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -81,7 +82,7 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
      */
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_avatar)
-        HeadImageView ivAvatar;
+        RoundedImageView ivAvatar;
         @BindView(R.id.gameAccountName)
         TextView gameAccountName;
         @BindView(R.id.gameChannelName)
@@ -103,10 +104,9 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
         public void setDisplay(ItemType itemType, final Activity activity, final int position) {
             GameAccountResultModel.ListBean data = (GameAccountResultModel.ListBean) itemType;
 
-            //头像
-            if (!StringUtils.isEmpty(data.getGame_logo())) {
-                Glide.with(activity).load(data.getGame_logo()).into(ivAvatar.getAvatarView());
-            }
+            //游戏icon
+            ILFactory.getLoader().loadNet(ivAvatar, Api.API_PAY_OR_IMAGE_URL.concat(data.getGame_logo()), ILoader.Options.defaultOptions());
+
             //游戏账号
             gameAccountName.setText(data.getGame_account());
             //游戏渠道名

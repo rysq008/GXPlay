@@ -2,6 +2,7 @@ package com.game.helper.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.game.helper.R;
@@ -238,6 +240,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         Intent intent= new Intent();
         switch (view.getId()) {
             case R.id.action_bar_back://返回
+            case R.id.cancelTv:
                 onBackPressed();
                 break;
             case R.id.redPackLayout://红包
@@ -247,7 +250,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 break;
             case R.id.suretv://确定
                 //todo 如果还需支付的金额不是0的话，就要选择支付宝或者微信（单选）
-                //1.西安判断
+                //1.先判断页面信息是否填写完整
+                checkPageInfo();
 
 
                 //TODO 是否设置过交易密码  如果用户没有设置过交易密码则弹出框提示用户去设置，否则弹出交易密码输入框
@@ -258,6 +262,76 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 break;
         }
     }
+
+    /**
+     * 检查页面信息是否填写完整
+     */
+    private boolean checkPageInfo() {
+        if(TextUtils.isEmpty(getGameName())){
+            Toast.makeText(this,"游戏名字为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(TextUtils.isEmpty(getAccountName())){
+            Toast.makeText(this,"账户名称为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(TextUtils.isEmpty(getMoneyAmount())){
+            Toast.makeText(this,"金额为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(TextUtils.isEmpty(getRealPayAmount())){
+            Toast.makeText(this,"实付金额为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(TextUtils.isEmpty(getChannelName())){
+            Toast.makeText(this,"平台名称为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 获取游戏名字
+     * @return
+     */
+    public String getGameName() {
+        return gameName.getText().toString().trim();
+    }
+
+    /**
+     * 账户名称
+     * @return
+     */
+    public String getAccountName() {
+        return accountName.getText().toString().trim();
+    }
+
+    /**
+     * 充值金额
+     * @return
+     */
+    public String getMoneyAmount() {
+        return moneyNum.getText().toString().trim();
+    }
+
+    /**
+     * 实付
+     * @return
+     */
+    public String getRealPayAmount() {
+        return realPay.getText().toString().trim();
+    }
+
+    /**
+     * 平台名称
+     * @return
+     */
+    public String getChannelName() {
+        return channelName.getText().toString().trim();
+    }
+
+
 
     @Override
     protected void onDestroy() {

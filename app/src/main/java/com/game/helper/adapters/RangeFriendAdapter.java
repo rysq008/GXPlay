@@ -105,6 +105,7 @@ public class RangeFriendAdapter extends SimpleRecAdapter<ItemType, RangeFriendAd
 //                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
                 ILFactory.getLoader().loadNet(ivAvatar, data.getMember().getIcon(), null);
             }
+
             //名字
             tvName.setText(data.getMember().getNick_name());
             //描述
