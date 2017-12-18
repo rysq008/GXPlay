@@ -51,12 +51,17 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
     public int option_channel_id;
 
     @Override
+    protected void onResume() {
+        getGameAccountInfo(1);
+        super.onResume();
+    }
+
+    @Override
     public void initData(Bundle savedInstanceState) {
         initIntentData(getIntent());
         initView();
         initAdapter();
         errorView.setLoadDataType(StateView.REFRESH, 1);
-        getGameAccountInfo(1);
     }
 
     private void initIntentData(Intent intent) {
@@ -65,7 +70,7 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
     }
 
     private void initView() {
-        mHeadTittle.setText("添加账号");
+        mHeadTittle.setText("选择账号");
         mHeadBack.setOnClickListener(this);
         addAccount.setOnClickListener(this);
     }

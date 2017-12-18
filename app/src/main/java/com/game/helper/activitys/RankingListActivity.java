@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
@@ -20,6 +21,10 @@ import butterknife.BindView;
 
 public class RankingListActivity extends XBaseActivity implements View.OnClickListener{
 
+    @BindView(R.id.action_bar_back)
+    View mHeadBack;
+    @BindView(R.id.action_bar_tittle)
+    TextView mHeadTittle;
     @BindView(R.id.vp)
     ViewPager vp;
     @BindView(R.id.superStarIv)
@@ -39,7 +44,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
     @Override
     public void initData(Bundle savedInstanceState) {
-
+        mHeadTittle.setText("排行榜");
         initListeners();
         init();
 
@@ -56,6 +61,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
     private void initListeners() {
 
+        mHeadBack.setOnClickListener(this);
         superStarIv.setOnClickListener(this);
         renmaiIv.setOnClickListener(this);
         incomeIv.setOnClickListener(this);
@@ -106,6 +112,9 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.action_bar_back:
+                onBackPressed();
+                break;
             case R.id.superStarIv:
                 vp.setCurrentItem(0);
                 break;

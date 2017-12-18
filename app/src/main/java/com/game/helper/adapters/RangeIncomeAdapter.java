@@ -60,7 +60,7 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
      *
      * @author ButterKnifeZelezny, plugin for Android Studio by Avast Developers (http://github.com/avast)
      */
-    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
+    public class PhotoViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.range_number)
         TextView rangeNumber;
         @BindView(R.id.iv_avatar)
@@ -85,17 +85,22 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
         public void setDisplay(ItemType itemType, final Activity activity,final int position) {
             FriendRangeResultModel.ListBean data = (FriendRangeResultModel.ListBean)itemType;
             //排名
-            rangeNumber.setBackgroundResource(0);
             if(0 ==position){
-                rangeNumber.setBackgroundResource(R.mipmap.range_1);
-            }else if(1 ==position){
-                rangeNumber.setBackgroundResource(R.mipmap.range_2);
-            }else if(2 ==position){
-                rangeNumber.setBackgroundResource(R.mipmap.range_3);
+                rangeNumber.setBackgroundDrawable(activity.getResources().getDrawable(R.mipmap.range_1));
+                rangeNumber.setText("");
             }
-            else{
+            else if(1 ==position){
+                rangeNumber.setBackgroundDrawable(activity.getResources().getDrawable(R.mipmap.range_2));
+                rangeNumber.setText("");
+            }
+            else if(2 ==position){
+                rangeNumber.setBackgroundDrawable(activity.getResources().getDrawable(R.mipmap.range_3));
+                rangeNumber.setText("");
+            }else{
+                rangeNumber.setBackgroundDrawable(null);
                 rangeNumber.setText((position+1)+"");
             }
+
 
             //头像
             if (!StringUtils.isEmpty(data.getMember().getIcon())) {

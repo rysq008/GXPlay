@@ -40,8 +40,36 @@
         </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/channelLayout"
+        android:id="@+id/gameNameLayout"
         android:layout_toRightOf="@+id/nameLayout"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_gravity="top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorShadow"
+            android:text="游戏名称"
+            android:textSize="@dimen/size_10sp"/>
+
+        <TextView
+            android:layout_marginTop="@dimen/dp_10"
+            android:id="@+id/gameName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            tools:text="hello word!"
+            android:textSize="@dimen/size_18sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/channelLayout"
+        android:layout_toRightOf="@+id/gameNameLayout"
         android:layout_marginLeft="@dimen/dp_15"
         android:orientation="vertical"
         android:layout_width="wrap_content"

@@ -90,6 +90,9 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
         TextView gameLevel;
         @BindView(R.id.checkStatusIv)
         ImageView checkStatusIv;
+        @BindView(R.id.gameName)
+        TextView gameName;
+
 
 
         public PhotoViewHolder(View itemView) {
@@ -110,6 +113,8 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
             gameChannelName.setText(data.getGame_channel_name());
             //vip等级
             gameLevel.setText("VIP"+data.getVip_level());
+            //游戏名称
+            gameName.setText(data.getGame_name());
 
             //选中
             if(data.isSelected()){

@@ -141,7 +141,7 @@ public class RangeIncomeListFragment extends XBaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_game_adapter_layout;
+        return R.layout.fragment_rank_list;
     }
 
     @Override
