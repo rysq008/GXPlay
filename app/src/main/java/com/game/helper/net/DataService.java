@@ -3,9 +3,9 @@ package com.game.helper.net;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.CashListResults;
 import com.game.helper.model.CashToResults;
+import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
@@ -17,6 +17,7 @@ import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
+import com.game.helper.model.HotWordResults;
 import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
@@ -24,24 +25,25 @@ import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
+import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.RegistResults;
 import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
+import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.model.PayResultModel;
-import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
-import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
+import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
@@ -54,6 +56,7 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
+import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
@@ -114,7 +117,7 @@ public class DataService {
         return Api.CreateApiService().getApiVerify(verifyRequestBody);
     }
 
-    public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody){
+    public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody) {
         return Api.CreateApiService().resetPassWord(resetPasswdRequestBody);
     }
 
@@ -173,6 +176,7 @@ public class DataService {
     public static Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(AvailableRedpackRequestBody friendRangeRequestBody) {
         return Api.CreateApiService().getRedPackInfo(friendRangeRequestBody);
     }
+
     public static Flowable<HttpResultModel<CashToResults>> cashTo(CashToRequestBody cashToRequestBody) {
         return Api.CreatePayOrImageApiService().cashTo(cashToRequestBody);
     }
@@ -203,5 +207,13 @@ public class DataService {
 
     public static Flowable<HttpResultModel<VipLevelResults>> getVipLevel() {
         return Api.CreateApiService().getVipLevel();
+    }
+
+    public static Flowable<HttpResultModel<HotWordResults>> getApiHotWordData(BaseRequestBody baseRequestBody) {
+        return Api.CreateApiService().getApiHotWordData(baseRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<SearchListResults>> getApiSearchByWordData(SearchRequestBody searchRequestBody) {
+        return Api.CreateApiService().getApiSearchByWordData(searchRequestBody);
     }
 }
