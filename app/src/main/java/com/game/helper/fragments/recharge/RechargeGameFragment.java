@@ -16,27 +16,17 @@ import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.MyAccountActivity;
-import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
-import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.SingleGameIdRequestBody;
-import com.game.helper.net.model.CheckTradePasswdRequestBody;
-import com.game.helper.net.model.VerifyRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.ScreenUtils;
 import com.game.helper.utils.StringUtils;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
-import com.game.helper.views.PasswordEditDialog;
-
-import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;

@@ -1,4 +1,4 @@
-package com.game.helper.net;
+package com.game.helper.net.model;
 
 import com.game.helper.net.model.BaseRequestBody;
 
