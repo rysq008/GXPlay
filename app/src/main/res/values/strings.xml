@@ -147,4 +147,10 @@
     <string name="pickerview_day">日</string>
     <string name="pickerview_hours">时</string>
     <string name="pickerview_minutes">分</string>
+
+    <!--recharge-->
+    <string name="recharge_high_vip_discount">首充享受皇冠会员</string>
+    <string name="recharge_vip_discount">VIP会员</string>
+    <string name="recharge_member_discount">普通会员</string>
+    <string name="recharge_can_use_discount">可用vip账号剩余</string>
 </resources>

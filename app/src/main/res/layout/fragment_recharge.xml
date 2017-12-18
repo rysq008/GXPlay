@@ -53,6 +53,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/tv_connect_kefu"
             android:background="@color/colorWhite"
             android:textColor="@color/colorShadow"
             android:text="联系客服"
@@ -63,6 +64,7 @@
             android:layout_weight="2"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/tv_confirm_order"
             android:textSize="@dimen/text_size_large"
             android:text="充值"
             android:textColor="@color/colorWhite"

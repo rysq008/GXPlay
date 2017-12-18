@@ -2,6 +2,7 @@ package com.game.helper.model;
 
 import com.game.helper.model.BaseModel.XBaseModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 import zlc.season.practicalrecyclerview.ItemType;
@@ -25,7 +26,7 @@ public class GameAccountResultModel extends XBaseModel{
     }
 
 
-    public static class ListBean implements ItemType {
+    public class ListBean implements ItemType,Serializable {
 
         /**
          * game_account : 15201675725

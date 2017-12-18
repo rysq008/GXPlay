@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.adapters.MyAccountAdapter;
+import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.net.DataService;
@@ -26,7 +27,7 @@ import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
-public class MyAccountActivity extends XBaseActivity implements View.OnClickListener {
+public class MyAccountActivity extends XBaseActivity implements View.OnClickListener, MyAccountAdapter.OnItemCheckListener {
 
     public static final String TAG = "MyAccountActivity";
 
@@ -60,8 +61,8 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
     }
 
     private void initIntentData(Intent intent) {
-        option_game_id = intent.getIntExtra(OPTION_GAME_ID,0);
-        option_channel_id = intent.getIntExtra(OPTION_CHANNEL_ID,0);
+        option_game_id = intent.getIntExtra(OPTION_GAME_ID, 0);
+        option_channel_id = intent.getIntExtra(OPTION_CHANNEL_ID, 0);
     }
 
     private void initView() {
@@ -74,6 +75,7 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == mAdapter) {
             mAdapter = new MyAccountAdapter(context);
+            mAdapter.addOnItemCheckListener(this);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
         xRecyclerContentLayout.getRecyclerView().setRefreshEnabled(false);
@@ -98,7 +100,7 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
     }
 
     private void getGameAccountInfo(int page) {
-        Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page,1,option_game_id,option_channel_id));
+        Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page, 1, option_game_id, option_channel_id));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
             @Override
             public void accept(HttpResultModel<GameAccountResultModel> recommendResultsHttpResultModel) throws Exception {
@@ -116,8 +118,8 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
     }
 
     public void showData(int cur_page, int total_page, List model) {
-            mAdapter.setData(model);
-            xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
+        mAdapter.setData(model);
+        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         if (mAdapter.getItemCount() < 1) {
             xRecyclerContentLayout.showEmpty();
             return;
@@ -145,17 +147,24 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.action_bar_back:
                 onBackPressed();
                 break;
             case R.id.addAccount://添加账户
-                Intent intent = new Intent(MyAccountActivity.this,AddAccountActivity.class);
+                Intent intent = new Intent(MyAccountActivity.this, AddAccountActivity.class);
                 startActivity(intent);
                 break;
 
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onItemCheked(GameAccountResultModel.ListBean gameBean) {
+        Intent bundle = new Intent();
+        bundle.putExtra(RechargeGameFragment.TAG, gameBean);
+        setResult(RechargeGameFragment.RESULT_CODE, bundle);
     }
 }

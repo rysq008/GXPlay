@@ -24,6 +24,7 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
 
     private Activity mActivity;
     private GameAccountResultModel.ListBean bean;
+    private OnItemCheckListener onItemCheckListener;
 
     public MyAccountAdapter(Activity context) {
         super(context);
@@ -72,6 +73,13 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
         return R.layout.item_account;
     }
 
+    public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener){
+        this.onItemCheckListener = onItemCheckListener;
+    }
+
+    public interface OnItemCheckListener{
+        void onItemCheked(GameAccountResultModel.ListBean gameBean);
+    }
 
     /**
      * This class contains all butterknife-injected Views & Layouts from layout file 'home_page_adapter_item.xml'
@@ -79,7 +87,7 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
      *
      * @author ButterKnifeZelezny, plugin for Android Studio by Avast Developers (http://github.com/avast)
      */
-    public static class PhotoViewHolder extends RecyclerView.ViewHolder {
+    public class PhotoViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_avatar)
         HeadImageView ivAvatar;
         @BindView(R.id.gameAccountName)
@@ -114,6 +122,9 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
             //选中
             if(data.isSelected()){
                 checkStatusIv.setVisibility(View.VISIBLE);
+                if (onItemCheckListener != null){
+                    onItemCheckListener.onItemCheked(data);
+                }
             }else{
                 checkStatusIv.setVisibility(View.INVISIBLE);
             }

@@ -11,6 +11,7 @@ import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
@@ -31,6 +32,9 @@ import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VipGameAccountResults;
+import com.game.helper.model.VipLevelResults;
+import com.game.helper.net.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.model.model.PayResultModel;
@@ -186,4 +190,12 @@ public interface ApiService {
     @POST("/member/set_or_update_apliy_info/")//重置支付宝
     Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(@Body ResetAlipayRequestBody resetAlipayRequestBody);
 
+    @POST("/member/get_left_vip_game_count/")//获取vip充值游戏账号数量
+    Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount();
+
+    @POST("/game/get_game_discount/")//获取游戏折扣
+    Flowable<HttpResultModel<GameAccountDiscountResults>> getGameAccountDiscount(@Body SingleGameIdRequestBody singleGameIdRequestBody);
+
+    @POST("/member/get_vip_list")//获取vip列表
+    Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
 }
