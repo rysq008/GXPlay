@@ -103,6 +103,7 @@ public class RangeIncomeListFragment extends XBaseFragment {
         } else {
             mAdapter.setData(model);
         }
+
         xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
         xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         if (mAdapter.getItemCount() < 1) {

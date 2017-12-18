@@ -30,6 +30,8 @@ public class StateCode {
     public static final String STATE_0022 = "0022";
     public static final String STATE_0023 = "0023";
     public static final String STATE_0024 = "0024";
+    public static final String STATE_0027 = "0027";
+    public static final String STATE_0028 = "0028";
     /* 短信接口 */
     public static final String STATE_0101 = "0101";
     public static final String STATE_0102 = "0102";
@@ -130,6 +132,10 @@ public class StateCode {
                 return "支付宝身份证后六位错误";
             case STATE_0024:
                 return "没有对应的我的游戏礼包";
+            case STATE_0027:
+                return "还未设置交易密码";
+            case STATE_0028:
+                return "交易密码错误";
             case STATE_0101:
                 return "验证码申请失败!";
             case STATE_0102:

@@ -119,6 +119,7 @@
 
             <LinearLayout
                 android:padding="@dimen/dp_10"
+                android:gravity="center"
                 android:background="@color/colorWhite"
                 android:layout_marginTop="@dimen/dp_5"
                 android:layout_width="match_parent"
@@ -127,8 +128,14 @@
                     android:text="启用充值账户余额"
                     android:textSize="@dimen/text_size_small"
                     android:textColor="@color/colorBlack"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content" />
+                <com.game.helper.views.widget.ToggleButton
+                    android:id="@+id/tb_recharge_toggle"
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:layout_marginRight="@dimen/dp_5" />
             </LinearLayout>
 
             <LinearLayout
@@ -178,6 +185,8 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content" />
                 <CheckBox
+                    android:id="@+id/cb_alipay"
+                    style="@style/DefaultCheckBoxStyle"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20" />
             </LinearLayout>
@@ -201,10 +210,12 @@
                     android:layout_marginLeft="@dimen/dp_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <EditText
+                <TextView
+                    android:id="@+id/tv_cash"
                     android:layout_marginLeft="@dimen/dp_5"
                     android:hint="请输入提现账户"
                     android:background="@null"
+                    android:textColor="@color/colorBlack"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:textSize="@dimen/text_size_small"
@@ -233,7 +244,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
+                    android:id="@+id/et_cash_to"
                     android:layout_marginLeft="@dimen/dp_5"
+                    android:textColor="@color/colorBlack"
                     android:hint="请输入账户名称"
                     android:background="@null"
                     android:layout_width="0dp"
@@ -262,8 +275,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
+                    android:id="@+id/et_cash_value"
                     android:layout_marginLeft="@dimen/dp_5"
                     android:hint="请输入大于100的金额"
+                    android:textColor="@color/colorBlack"
                     android:background="@null"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -285,6 +300,7 @@
         </LinearLayout>
     </ScrollView>
     <TextView
+        android:id="@+id/tv_cash_apply"
         android:background="@color/colorPrimary"
         android:textColor="@color/colorWhite"
         android:gravity="center"

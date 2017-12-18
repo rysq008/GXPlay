@@ -7,15 +7,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.model.FriendRangeResultModel;
-import com.game.helper.utils.StringUtils;
-import com.game.helper.views.HeadImageView;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -37,9 +37,9 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
     }
 
     @Override
-    public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
+    public void onBindViewHolder(final PhotoViewHolder holder, int position) {
         final ItemType item = data.get(position);
-        holder.setDisplay(item,mActivity,position);
+        holder.setDisplay(item, mActivity, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +64,7 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
         @BindView(R.id.range_number)
         TextView rangeNumber;
         @BindView(R.id.iv_avatar)
-        HeadImageView ivAvatar;
+        RoundedImageView ivAvatar;
         @BindView(R.id.tv_name)
         TextView tvName;
         @BindView(R.id.person_desc)
@@ -82,29 +82,29 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
             ButterKnife.bind(this, itemView);
         }
 
-        public void setDisplay(ItemType itemType, final Activity activity,final int position) {
-            FriendRangeResultModel.ListBean data = (FriendRangeResultModel.ListBean)itemType;
+        public void setDisplay(ItemType itemType, final Activity activity, final int position) {
+            FriendRangeResultModel.ListBean data = (FriendRangeResultModel.ListBean) itemType;
             //排名
-            if(0 ==position){
-                rangeNumber.setBackgroundDrawable(activity.getResources().getDrawable(R.mipmap.range_1));
-                rangeNumber.setText("");
+            rangeNumber.setText("");
+            switch (position) {
+                case 0:
+                    rangeNumber.setBackgroundResource(R.mipmap.range_1);
+                    break;
+                case 1:
+                    rangeNumber.setBackgroundResource(R.mipmap.range_2);
+                    break;
+                case 2:
+                    rangeNumber.setBackgroundResource(R.mipmap.range_3);
+                    break;
+                default:
+                    rangeNumber.setBackgroundResource(0);
+                    rangeNumber.setText((position + 1) + "");
+                    break;
             }
-            else if(1 ==position){
-                rangeNumber.setBackgroundDrawable(activity.getResources().getDrawable(R.mipmap.range_2));
-                rangeNumber.setText("");
-            }
-            else if(2 ==position){
-                rangeNumber.setBackgroundDrawable(activity.getResources().getDrawable(R.mipmap.range_3));
-                rangeNumber.setText("");
-            }else{
-                rangeNumber.setBackgroundDrawable(null);
-                rangeNumber.setText((position+1)+"");
-            }
-
-
             //头像
-            if (!StringUtils.isEmpty(data.getMember().getIcon())) {
-                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
+            if (!/*StringUtils.isEmpty(data.getMember().getIcon()*/Kits.Empty.check(data.getMember().getIcon())) {
+//                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
+                ILFactory.getLoader().loadNet(ivAvatar, data.getMember().getIcon(), null);
             }
             //名字
             tvName.setText(data.getMember().getNick_name());
@@ -115,7 +115,7 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
 
             //会员等级
             int level = data.getMember().getVip_level().getLevel();
-            switch (level){
+            switch (level) {
                 case 0:
                     vipLevel.setImageResource(R.mipmap.vip0);
                     break;

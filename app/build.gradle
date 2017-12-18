@@ -85,6 +85,8 @@ dependencies {
     //LayoutManager常见动画
     compile 'com.github.hackware1993:MagicIndicator:1.5.0'
     //是ViewPagerIndicator、TabLayout、PagerSlidingTabStrip的最佳替代品。
+    compile 'com.facebook.rebound:rebound:0.3.8'
+    //facebook动画库
 
     //刷新布局
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.2'

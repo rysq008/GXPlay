@@ -1,0 +1,258 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.game.helper.fragments.login.RegistFragment">
+    <include
+        android:id="@+id/action_bar"
+        layout="@layout/layout_action_bar"/>
+
+    <LinearLayout
+        android:gravity="center"
+        android:layout_below="@+id/action_bar"
+        android:padding="@dimen/dp_10"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="手机号"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_account"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:eiv_hint="输入账号"
+                app:eiv_type="type_account"/>
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="验证码"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@null"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <com.game.helper.views.EditInputView
+                    android:id="@+id/et_verity"
+                    app:eiv_hint="输入验证码"
+                    app:eiv_type="type_code"
+                    android:background="@null"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <com.game.helper.views.widget.CountDownText
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/tv_left_time"
+                    android:text="获取验证码"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textColor="@color/colorShadow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_15"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:id="@+id/ll_old_alipay"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="旧支付宝"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/type_trde_old_account"
+                app:eiv_type="type_account"
+                app:eiv_hint="请输入旧支付宝账号"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="新支付宝"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/type_trde_new_account"
+                app:eiv_type="type_account"
+                app:eiv_hint="请输入新支付宝账号"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="确认账号"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/type_trde_new_account1"
+                app:eiv_type="type_account"
+                app:eiv_hint="请再次确认支付宝账号"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="身份证号"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_identy"
+                app:eiv_type="type_account"
+                app:eiv_hint="请输入身份证后6位数"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/dp_5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="真实姓名"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <com.game.helper.views.EditInputView
+                android:id="@+id/et_real_name"
+                app:eiv_type="type_account"
+                app:eiv_hint="请输入您的真实姓名"
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tabbar_divider_height"
+            android:background="@color/colorDivider"/>
+
+        <TextView
+            android:text="@string/common_safe_hint"
+            android:layout_marginTop="@dimen/dp_5"
+            android:textSize="@dimen/text_size_tiny"
+            android:textColor="@color/colorShadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_reset_passwd"
+            android:layout_marginTop="@dimen/dp_30"
+            android:padding="@dimen/dp_10"
+            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/colorWhite"
+            android:text="提交"
+            android:gravity="center"
+            android:background="@drawable/bg_normal_gradient_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_debug"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:textSize="@dimen/text_size_tiny"
+        android:textColor="@color/colorHint"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
