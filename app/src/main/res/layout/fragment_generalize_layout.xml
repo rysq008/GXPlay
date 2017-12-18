@@ -108,7 +108,7 @@
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@+id/generalize_head_iv"
                         android:layout_toRightOf="@+id/generalize_head_iv"
-                        android:text="推广收益" />
+                        android:text="累计收益" />
 
                     <TextView
                         android:textColor="#fe4430"
@@ -137,7 +137,7 @@
                             android:textColor="#999"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="预期收益：" />
+                            android:text="预计收益：" />
 
                         <TextView
                             android:textSize="@dimen/size_18sp"

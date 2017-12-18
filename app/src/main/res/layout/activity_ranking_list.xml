@@ -7,6 +7,10 @@
     android:background="#f0f0f6"
     tools:context="com.game.helper.activitys.RankingListActivity">
 
+    <include
+        android:id="@+id/action_bar"
+        layout="@layout/layout_action_bar"/>
+
     <LinearLayout
         android:paddingTop="@dimen/dp_15"
         android:paddingBottom="@dimen/dp_15"

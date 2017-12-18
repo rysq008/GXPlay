@@ -24,7 +24,6 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.annotations.Nullable;
 import io.reactivex.functions.Consumer;
-import zlc.season.practicalrecyclerview.ItemType;
 
 /**
  * Created by zr on 2017-10-13.
@@ -143,7 +142,7 @@ public class RangeIncomeListFragment extends XBaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_game_adapter_layout;
+        return R.layout.fragment_rank_list;
     }
 
     @Override

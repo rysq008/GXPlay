@@ -32,6 +32,9 @@ import io.reactivex.functions.Consumer;
  */
 public class GeneralizeIncomeActivity extends XBaseActivity implements View.OnClickListener {
 
+    View mHeadBack;
+    @BindView(R.id.action_bar_tittle)
+    TextView mHeadTittle;
     @BindView(R.id.incomeTv)
     TextView incomeTv;
     @BindView(R.id.canWithdrawals)
@@ -48,13 +51,20 @@ public class GeneralizeIncomeActivity extends XBaseActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_generalize_income);
         ButterKnife.bind(this);
+        mHeadTittle.setText("累计收益");
+        mHeadBack.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()){
+            case R.id.action_bar_back:
+                onBackPressed();
+            break;
+        default:
+            break;
+}
     }
 
     @Override
