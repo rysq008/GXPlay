@@ -23,6 +23,9 @@ import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
+import com.game.helper.model.MarketExpectedFlowlistResults;
+import com.game.helper.model.MarketFlowlistResults;
+import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
@@ -251,5 +254,17 @@ public class DataService {
 
     public static Flowable<HttpResultModel<FeedbackListResults>> feedBackList() {
         return Api.CreateApiService().feedBackList();
+    }
+
+    public static Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo() {
+        return Api.CreateApiService().getMarketInfo();
+    }
+
+    public static Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getMarketFlowList(singlePageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
     }
 }

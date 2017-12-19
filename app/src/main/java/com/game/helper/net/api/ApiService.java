@@ -23,6 +23,9 @@ import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
+import com.game.helper.model.MarketExpectedFlowlistResults;
+import com.game.helper.model.MarketFlowlistResults;
+import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
@@ -229,4 +232,13 @@ public interface ApiService {
     Flowable<HttpResultModel<NotConcernResults>> feedBack(@Body FeedbackRequestBody feedbackRequestBody);
     @POST("/sys/get_feedback_list/")//反馈列表
     Flowable<HttpResultModel<FeedbackListResults>> feedBackList();
+
+    @POST("/marketing/get_marketing_info/")//推广账号详情
+    Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();
+
+    @POST("/marketing/get_marketing_flow_list/")//推广收益列表
+    Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/marketing/get_expected_flow_list/")//推广预期收益列表
+    Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 }
