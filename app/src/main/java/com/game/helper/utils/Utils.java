@@ -3,17 +3,24 @@ package com.game.helper.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.data.RxConstant;
 import com.game.helper.model.LoginUserInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
+
+import java.io.File;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by sung on 2017/11/20.
@@ -214,5 +221,37 @@ public class Utils {
         if (StringUtils.isEmpty(phone)) return "";
         String converterResult = phone.substring(0,3)+"****"+phone.substring(phone.length()-4,phone.length());
         return converterResult;
+    }
+
+    public static File getRootDir() {
+        final File file;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            file = new File(Environment.getExternalStorageDirectory(), RxConstant.ROOT_DIR);
+        } else {
+            file = new File(GameMarketApplication.getInstance().getCacheDir(), RxConstant.ROOT_DIR);
+        }
+        if (!file.exists()) {
+            boolean success = file.mkdirs();
+            if (!success) {
+                throw new IllegalStateException("Unable to create directory: " +
+                        file.getAbsolutePath());
+            }
+        }
+        return file;
+    }
+
+    /**
+     * 判断字符串中包不包含特殊字符
+     * */
+    public static boolean hasRestrictionString(String string){
+        String limitEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+
+        Pattern pattern = Pattern.compile(limitEx);
+        Matcher m = pattern.matcher(string);
+
+        if( m.find()){
+            return true;
+        }
+        return false;
     }
 }

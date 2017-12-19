@@ -10,6 +10,7 @@ import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -23,6 +24,7 @@ import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
@@ -45,6 +47,7 @@ import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -58,6 +61,12 @@ import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.UpdateAvatarRequestBody;
+import com.game.helper.net.model.UpdateBirthdayRequestBody;
+import com.game.helper.net.model.UpdateGenderRequestBody;
+import com.game.helper.net.model.UpdateNicknameRequestBody;
+import com.game.helper.net.model.UpdatePhoneRequestBody;
+import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.UploadUtils;
 
@@ -229,9 +238,7 @@ public class DataService {
         //构建body
         //addFormDataPart()第一个参数为表单名字，这是和后台约定好的
         MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-/*                .addFormDataPart("username", "name")
-                .addFormDataPart("phone", "phone")*/;
+                .setType(MultipartBody.FORM);
         //注意，file是后台约定的参数，如果是多图，file[]，如果是单张图片，file就行
         for (File file : list) {
             //这里上传的是多图
@@ -247,5 +254,37 @@ public class DataService {
         UploadUtils.UploadFileRequestBody uploadFileRequestBody = new UploadUtils.UploadFileRequestBody(file, fileUploadFlowable);
         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), uploadFileRequestBody);
         return Api.CreateApiService().setApiUserIcon(part);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(UpdateNicknameRequestBody updateNicknameRequestBody) {
+        return Api.CreateApiService().updateNickname(updateNicknameRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateAvatar(UpdateAvatarRequestBody updateAvatarRequestBody) {
+        return Api.CreateApiService().updateAvatar(updateAvatarRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateBirthday(UpdateBirthdayRequestBody updateBirthdayRequestBody) {
+        return Api.CreateApiService().updateBirthday(updateBirthdayRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateGender(UpdateGenderRequestBody updateGenderRequestBody) {
+        return Api.CreateApiService().updateGender(updateGenderRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updatePhone(UpdatePhoneRequestBody updatePhoneRequestBody) {
+        return Api.CreateApiService().updatePhone(updatePhoneRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateSignatrue(UpdateSignatrueRequestBody updateSignatrueRequestBody) {
+        return Api.CreateApiService().updateSignatrue(updateSignatrueRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> feedBack(FeedbackRequestBody feedbackRequestBody) {
+        return Api.CreateApiService().feedBack(feedbackRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<FeedbackListResults>> feedBackList() {
+        return Api.CreateApiService().feedBackList();
     }
 }

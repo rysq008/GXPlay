@@ -7,6 +7,9 @@ package com.game.helper.data;
 
 public final class RxConstant {
 
+    public static final int WRITE_PERMISSION_REQ_CODE = 2;
+    public static final String ROOT_DIR = "gxplayer";
+
     public static final String VERIFY_USER_FOR_LOGIN = "0";
     public static final String VERIFY_USER_FOR_REGIST = "1";
 
