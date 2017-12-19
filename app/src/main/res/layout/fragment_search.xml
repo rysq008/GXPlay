@@ -15,61 +15,95 @@
         app:is_search_page="true"
         app:right_tv_res_txt="搜索" />
 
-    <LinearLayout
+    <com.game.helper.views.ReloadableFrameLayout
+        android:id="@+id/common_search_reload_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/dp_10">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_flag_round" />
-
-        <TextView
+        <cn.droidlover.xrecyclerview.XRecyclerContentLayout
+            android:id="@+id/common_search_xrecycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:text="热门搜素"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/text_size_small" />
-    </LinearLayout>
-    <!--热门-->
-    <LinearLayout
-        android:id="@+id/ll_hot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="@dimen/dp_10">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_flag_round" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_weight="1"
-            android:text="历史搜素"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/text_size_small" />
-
-        <ImageView
-            android:id="@+id/iv_delete"
-            android:layout_width="@dimen/dp_20"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_delete" />
-    </LinearLayout>
-    <!--历史-->
-    <LinearLayout
-        android:id="@+id/ll_history"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
+            android:visibility="gone"
+            app:x_errorLayoutId="@layout/view_error_state"
+            app:x_loadingLayoutId="@layout/view_loading" />
+
+        <LinearLayout
+            android:id="@+id/common_search_word_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_flag_round" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:text="热门搜素"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_small" />
+            </LinearLayout>
+            <!--热门-->
+            <LinearLayout
+                android:id="@+id/ll_hot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <com.zhy.view.flowlayout.TagFlowLayout
+                android:id="@+id/hot_flowlayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                app:max_select="1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dp_10">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_flag_round" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_weight="1"
+                    android:text="历史搜素"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size_small" />
+
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/ic_delete" />
+            </LinearLayout>
+            <!--历史-->
+            <LinearLayout
+                android:id="@+id/ll_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <com.zhy.view.flowlayout.TagFlowLayout
+                android:id="@+id/histtory_flowlayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                app:max_select="1" />
+
+        </LinearLayout>
+    </com.game.helper.views.ReloadableFrameLayout>
 </LinearLayout>

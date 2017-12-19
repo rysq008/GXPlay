@@ -18,6 +18,7 @@ import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
+import com.game.helper.model.HotWordResults;
 import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
@@ -32,6 +33,7 @@ import com.game.helper.model.RegistResults;
 import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
+import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
@@ -56,6 +58,7 @@ import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
+import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
@@ -202,6 +205,12 @@ public interface ApiService {
 
     @POST("/member/get_vip_list")//获取vip列表
     Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
+
+    @POST("/game/get_hot_game_list/")//搜索热词列表
+    Flowable<HttpResultModel<HotWordResults>> getApiHotWordData(@Body BaseRequestBody baseRequestBody);
+
+    @POST("/game/query_game_list/")//搜索列表
+    Flowable<HttpResultModel<SearchListResults>> getApiSearchByWordData(@Body SearchRequestBody searchRequestBody);
 
     @POST("/member/set_nickname/")//设置昵称
     Flowable<HttpResultModel<NotConcernResults>> updateNickname(@Body UpdateNicknameRequestBody updateNicknameRequestBody);

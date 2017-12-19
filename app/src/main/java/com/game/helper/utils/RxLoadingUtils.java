@@ -9,6 +9,8 @@ import android.util.Log;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.HotWordResults;
 import com.game.helper.views.ReloadableFrameLayout;
 import com.game.helper.views.widget.TotoroToast;
 
@@ -22,16 +24,14 @@ import cn.droidlover.xdroidmvp.net.XApi;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableTransformer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class RxLoadingUtils {
 
     public static <T extends IModel> void subscribeWithReload(final ReloadableFrameLayout reloadableFrameLayout,
-                                                              final Flowable<T> Flowable, final Consumer<T> onNext, final Consumer<Throwable> onError,
+                                                              final Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
                                                               final Action onComplete, final boolean finishWhenFirstOnNext) {
         if (reloadableFrameLayout == null) return;
 
@@ -39,7 +39,7 @@ public class RxLoadingUtils {
         reloadableFrameLayout.setOnReloadListener(new ReloadableFrameLayout.OnReloadListener() {
             @Override
             public void onReload(ReloadableFrameLayout reloadableFrameLayout) {
-                subscribeWithReload(reloadableFrameLayout, Flowable, onNext, onError, onComplete,
+                subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, onError, onComplete,
                         finishWhenFirstOnNext);
             }
         });
@@ -47,8 +47,9 @@ public class RxLoadingUtils {
         final boolean[] finishReload = new boolean[]{false};
 
         Flowable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(XApi.<T>getApiTransformer())
+                .compose(XApi.<T>getScheduler())
+                .compose(transformer)
                 .subscribe(new ApiSubscriber<T>() {
 
                     @Override
@@ -105,26 +106,26 @@ public class RxLoadingUtils {
     }
 
     public static <T extends IModel> void subscribeWithReload(final ReloadableFrameLayout reloadableFrameLayout,
-                                                              Flowable<T> Flowable, final Consumer<T> onNext, final Consumer<Throwable> onError) {
-        subscribeWithReload(reloadableFrameLayout, Flowable, onNext, onError, null, false);
+                                                              Flowable<HttpResultModel<HotWordResults>> Flowable, final FlowableTransformer transformer, final Consumer<HttpResultModel<HotWordResults>> onNext, final Consumer<NetError> onError) {
+        subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, onError, null, false);
     }
 
     public static <T extends IModel> void subscribeWithReload(final ReloadableFrameLayout reloadableFrameLayout,
-                                                              Flowable<T> Flowable, final Consumer<T> onNext, final Consumer<Throwable> onError,
+                                                              Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
                                                               boolean finishWhenFirstOnNext) {
-        subscribeWithReload(reloadableFrameLayout, Flowable, onNext, onError, null,
+        subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, onError, null,
                 finishWhenFirstOnNext);
     }
 
     public static <T extends IModel> void subscribeWithReload(final ReloadableFrameLayout reloadableFrameLayout,
-                                                              Flowable<T> Flowable, final Consumer<T> onNext) {
-        subscribeWithReload(reloadableFrameLayout, Flowable, onNext, null, null, false);
+                                                              Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext) {
+        subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, null, null, false);
     }
 
     public static <T extends IModel> void subscribeWithReload(final ReloadableFrameLayout reloadableFrameLayout,
-                                                              Flowable<T> Flowable, final Consumer<T> onNext,
+                                                              Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext,
                                                               boolean finishWhenFirstOnNext) {
-        subscribeWithReload(reloadableFrameLayout, Flowable, onNext, null, null,
+        subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, null, null,
                 finishWhenFirstOnNext);
     }
 
