@@ -10,6 +10,7 @@ import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -22,6 +23,7 @@ import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RecommendResults;
@@ -43,6 +45,7 @@ import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -55,9 +58,16 @@ import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.UpdateAvatarRequestBody;
+import com.game.helper.net.model.UpdateBirthdayRequestBody;
+import com.game.helper.net.model.UpdateGenderRequestBody;
+import com.game.helper.net.model.UpdateNicknameRequestBody;
+import com.game.helper.net.model.UpdatePhoneRequestBody;
+import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
+import retrofit2.http.Body;
 
 public class DataService {
 
@@ -203,5 +213,32 @@ public class DataService {
 
     public static Flowable<HttpResultModel<VipLevelResults>> getVipLevel() {
         return Api.CreateApiService().getVipLevel();
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(@Body UpdateNicknameRequestBody updateNicknameRequestBody) {
+        return Api.CreateApiService().updateNickname(updateNicknameRequestBody);
+    }
+    public static Flowable<HttpResultModel<NotConcernResults>> updateAvatar(@Body UpdateAvatarRequestBody updateAvatarRequestBody) {
+        return Api.CreateApiService().updateAvatar(updateAvatarRequestBody);
+    }
+    public static Flowable<HttpResultModel<NotConcernResults>> updateBirthday(@Body UpdateBirthdayRequestBody updateBirthdayRequestBody) {
+        return Api.CreateApiService().updateBirthday(updateBirthdayRequestBody);
+    }
+    public static Flowable<HttpResultModel<NotConcernResults>> updateGender(@Body UpdateGenderRequestBody updateGenderRequestBody) {
+        return Api.CreateApiService().updateGender(updateGenderRequestBody);
+    }
+    public static Flowable<HttpResultModel<NotConcernResults>> updatePhone(@Body UpdatePhoneRequestBody updatePhoneRequestBody) {
+        return Api.CreateApiService().updatePhone(updatePhoneRequestBody);
+    }
+    public static Flowable<HttpResultModel<NotConcernResults>> updateSignatrue(@Body UpdateSignatrueRequestBody updateSignatrueRequestBody) {
+        return Api.CreateApiService().updateSignatrue(updateSignatrueRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> feedBack(@Body FeedbackRequestBody feedbackRequestBody) {
+        return Api.CreateApiService().feedBack(feedbackRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<FeedbackListResults>> feedBackList() {
+        return Api.CreateApiService().feedBackList();
     }
 }

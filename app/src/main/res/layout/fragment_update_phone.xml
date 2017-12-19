@@ -2,10 +2,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.game.helper.fragments.AboutUsFragment">
     <include
         android:id="@+id/action_bar"
         layout="@layout/layout_action_bar"/>
+    
+    <TextView
+        android:text="绑定手机号码可以提升账号安全性，方便登陆与数据同步，您的个人隐私将被保护，请放心绑定。"
+        android:layout_margin="@dimen/dp_10"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/colorShadow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
+    <com.game.helper.views.EditInputView
+        android:id="@+id/et_phone"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:eiv_hint="输入你的手机号"
+        app:eiv_type="type_account"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/tabbar_divider_height"
+        android:layout_marginBottom="@dimen/dp_15"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.game.helper.views.EditInputView
+            android:id="@+id/et_code"
+            app:eiv_hint="输入验证码"
+            app:eiv_type="type_code"
+            android:background="@null"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+
+        <com.game.helper.views.widget.CountDownText
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/tv_left_time"
+            android:text="获取验证码"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/colorShadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_submit"
+        android:layout_margin="@dimen/dp_15"
+        android:padding="@dimen/dp_10"
+        android:textSize="@dimen/text_size_large"
+        android:textColor="@color/colorWhite"
+        android:text="提交"
+        android:gravity="center"
+        android:background="@drawable/bg_normal_gradient_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

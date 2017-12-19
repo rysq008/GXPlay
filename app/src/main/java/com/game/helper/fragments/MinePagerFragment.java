@@ -178,12 +178,14 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                 R.mipmap.ic_mine_yaoqing,
                 R.mipmap.ic_mine_tuiguang,
                 R.mipmap.ic_mine_kefu,
+                R.mipmap.ic_mine_kefu,
                 R.mipmap.ic_mine_fankui,
                 R.mipmap.ic_mine_setting};
         resName = new int[]{
                 R.string.mine_name_0,
                 R.string.mine_name_1,
                 R.string.mine_name_2,
+                R.string.mine_name_5,
                 R.string.mine_name_3,
                 R.string.mine_name_4};
     }
@@ -284,6 +286,9 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                         break;
                     case R.string.mine_name_4:
                         fra = SettingSystemFragment.newInstance();
+                        break;
+                    case R.string.mine_name_5:
+                        fra = AccountManageFragment.newInstance();
                         break;
                 }
                 if (fra != null) {

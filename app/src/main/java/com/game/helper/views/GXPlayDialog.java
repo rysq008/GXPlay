@@ -132,7 +132,7 @@ public class GXPlayDialog extends android.support.v4.app.DialogFragment implemen
         Window dialogWindow = getDialog().getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         dialogWindow.setGravity(Gravity.CENTER);
-        lp.width = ScreenUtils.getScreenWidth(getContext()) / 3 * 2;
+        lp.width = ScreenUtils.getScreenWidth(getContext()) / 5 * 4;
         dialogWindow.setAttributes(lp);
     }
 

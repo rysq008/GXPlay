@@ -66,7 +66,6 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         return R.layout.fragment_setting_system;
     }
 
-
     private void initView(){
         mHeadTittle.setText(getResources().getString(R.string.common_setting_system));
         mHeadBack.setOnClickListener(this);

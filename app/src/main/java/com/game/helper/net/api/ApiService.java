@@ -10,6 +10,7 @@ import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -22,6 +23,7 @@ import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
@@ -34,6 +36,7 @@ import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
@@ -54,6 +57,12 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.UpdateAvatarRequestBody;
+import com.game.helper.net.model.UpdateBirthdayRequestBody;
+import com.game.helper.net.model.UpdateGenderRequestBody;
+import com.game.helper.net.model.UpdateNicknameRequestBody;
+import com.game.helper.net.model.UpdatePhoneRequestBody;
+import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
@@ -193,4 +202,22 @@ public interface ApiService {
 
     @POST("/member/get_vip_list")//获取vip列表
     Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
+
+    @POST("/member/set_nickname/")//设置昵称
+    Flowable<HttpResultModel<NotConcernResults>> updateNickname(@Body UpdateNicknameRequestBody updateNicknameRequestBody);
+    @POST("/member/set_icon/")//设置头像
+    Flowable<HttpResultModel<NotConcernResults>> updateAvatar(@Body UpdateAvatarRequestBody updateAvatarRequestBody);
+    @POST("/member/set_birthday/")//设置生日
+    Flowable<HttpResultModel<NotConcernResults>> updateBirthday(@Body UpdateBirthdayRequestBody updateBirthdayRequestBody);
+    @POST("/member/set_phone/")//设置手机
+    Flowable<HttpResultModel<NotConcernResults>> updatePhone(@Body UpdatePhoneRequestBody updatePhoneRequestBody);
+    @POST("/member/set_gender/")//设置性别
+    Flowable<HttpResultModel<NotConcernResults>> updateGender(@Body UpdateGenderRequestBody updateGenderRequestBody);
+    @POST("/member/set_signature/")//设置签名
+    Flowable<HttpResultModel<NotConcernResults>> updateSignatrue(@Body UpdateSignatrueRequestBody updateSignatrueRequestBody);
+
+    @POST("/sys/submit_feedback/")//反馈
+    Flowable<HttpResultModel<NotConcernResults>> feedBack(@Body FeedbackRequestBody feedbackRequestBody);
+    @POST("/sys/get_feedback_list/")//反馈列表
+    Flowable<HttpResultModel<FeedbackListResults>> feedBackList();
 }

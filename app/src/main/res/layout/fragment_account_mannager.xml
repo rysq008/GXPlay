@@ -8,14 +8,4 @@
     <include
         android:id="@+id/action_bar"
         layout="@layout/layout_action_bar"/>
-
-    <com.game.helper.views.EditInputView
-        android:id="@+id/et_nickname"
-        android:background="@color/colorWhite"
-        android:layout_marginTop="@dimen/dp_15"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:eiv_hint="输入你的昵称"
-        app:eiv_type="type_account"/>
-
 </LinearLayout>
