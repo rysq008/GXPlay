@@ -24,9 +24,7 @@
             android:id="@+id/common_search_xrecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            app:x_errorLayoutId="@layout/view_error_state"
-            app:x_loadingLayoutId="@layout/view_loading" />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/common_search_word_layout"

@@ -36,11 +36,10 @@ import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
-import com.game.helper.net.model.SingleGameIdRequestBody;
-import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
@@ -56,12 +55,17 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 
 
 public interface ApiService {
@@ -101,19 +105,24 @@ public interface ApiService {
     @POST("/marketing/get_marketing_info/")
     Flowable<HttpResultModel<GeneralizeResults>> getApiGeneralizeAccountData();
 
-    @POST("/member/register/")//注册
+    @POST("/member/register/")
+//注册
     Flowable<HttpResultModel<RegistResults>> ApiRegitst(@Body RegistRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("market_num") String market_num*/);
 
-    @POST("/member/login/")//登陆
+    @POST("/member/login/")
+//登陆
     Flowable<HttpResultModel<LoginResults>> ApiLogin(@Body LoginRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("type") String type, @Path("channel_num") String channel_num*/);
 
-    @POST("/member/logout/")//登出
+    @POST("/member/logout/")
+//登出
     Flowable<HttpResultModel<LogoutResults>> ApiLogout();
 
-    @POST("/member/info/")//会员信息
+    @POST("/member/info/")
+//会员信息
     Flowable<HttpResultModel<MemberInfoResults>> getApiMemberInfo();
 
-    @POST("/public/get_tel_verify/")//验证码
+    @POST("/public/get_tel_verify/")
+//验证码
     Flowable<HttpResultModel<VerifyResults>> getApiVerify(@Body VerifyRequestBody verifyRequestBody/*@Path("phone") String phone, @Path("usefor") String usefor*/);
 
     //支付
@@ -156,19 +165,24 @@ public interface ApiService {
     @POST("/activity/get_red_packet_list/")
     Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(@Body AvailableRedpackRequestBody payRequestBody);
 
-    @POST("/member/reset_passwd/")//重置密码
+    @POST("/member/reset_passwd/")
+//重置密码
     Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(@Body ResetPasswdRequestBody resetPasswdRequestBody);
 
-    @POST("/account/get_consume_list/")//钱包-消费明细
+    @POST("/account/get_consume_list/")
+//钱包-消费明细
     Flowable<HttpResultModel<ConsumeListResults>> getConsumeListData(@Body SinglePageRequestBody singlePageRequestBody);
 
-    @POST("/account/get_recharge_list/")//钱包-充值明细
+    @POST("/account/get_recharge_list/")
+//钱包-充值明细
     Flowable<HttpResultModel<RechargeListResults>> getRechargeListData(@Body SinglePageRequestBody singlePageRequestBody);
 
-    @POST("/marketing/get_marketing_reflect_list/")//钱包-提现明细
+    @POST("/marketing/get_marketing_reflect_list/")
+//钱包-提现明细
     Flowable<HttpResultModel<CashListResults>> getCashListData(@Body SinglePageRequestBody singlePageRequestBody);
 
-    @POST("/marketing/get_marketing_flow_list/")//钱包-收益明细
+    @POST("/marketing/get_marketing_flow_list/")
+//钱包-收益明细
     Flowable<HttpResultModel<ProfitListResults>> getProfitListData(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/G9game/paymentController.do?reflect")
@@ -179,27 +193,44 @@ public interface ApiService {
 //钱包-验证交易密码
     Flowable<HttpResultModel<CheckTradePasswdResults>> checkTradePassWord(@Body CheckTradePasswdRequestBody checkTradePasswdRequestBody);
 
-    @POST("/marketing/get_invitation_list/")//邀请记录
+    @POST("/marketing/get_invitation_list/")
+//邀请记录
     Flowable<HttpResultModel<InvatationResults>> getInvatationList(@Body SinglePageRequestBody singlePageRequestBody);
 
-    @POST("/member/reset_trade_password/")//重置交易密码
+    @POST("/member/reset_trade_password/")
+//重置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> resetTradePassword(@Body ResetTradeRequestBody resetTradeRequestBody);
 
-    @POST("/member/set_or_update_apliy_info/")//重置支付宝
+    @POST("/member/set_or_update_apliy_info/")
+//重置支付宝
     Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(@Body ResetAlipayRequestBody resetAlipayRequestBody);
 
-    @POST("/member/get_left_vip_game_count/")//获取vip充值游戏账号数量
+    @POST("/member/get_left_vip_game_count/")
+//获取vip充值游戏账号数量
     Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount();
 
-    @POST("/game/get_game_discount/")//获取游戏折扣
+    @POST("/game/get_game_discount/")
+//获取游戏折扣
     Flowable<HttpResultModel<GameAccountDiscountResults>> getGameAccountDiscount(@Body SingleGameIdRequestBody singleGameIdRequestBody);
 
-    @POST("/member/get_vip_list")//获取vip列表
+    @POST("/member/get_vip_list")
+//获取vip列表
     Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
 
-    @POST("/game/get_hot_game_list/")//搜索热词列表
+    @POST("/game/get_hot_game_list/")
+//搜索热词列表
     Flowable<HttpResultModel<HotWordResults>> getApiHotWordData(@Body BaseRequestBody baseRequestBody);
 
-    @POST("/game/query_game_list/")//搜索列表
+    @POST("/game/query_game_list/")
+//搜索列表
     Flowable<HttpResultModel<SearchListResults>> getApiSearchByWordData(@Body SearchRequestBody searchRequestBody);
+
+    //多文件上传无进度值
+    @POST("/member/set_icon/")
+    Flowable<HttpResultModel> setApiUserIcon(@Body RequestBody Body);
+
+    //单个文件上传有进度
+    @Multipart
+    @POST("/member/set_icon/")
+    Flowable<HttpResultModel> setApiUserIcon(@Part MultipartBody.Part file);
 }

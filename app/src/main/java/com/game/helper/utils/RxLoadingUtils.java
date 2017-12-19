@@ -292,7 +292,6 @@ public class RxLoadingUtils {
         return dialog;
     }
 
-
     public static <T extends IModel> void subscribe(Flowable<T> Flowable, FlowableTransformer transformer, final Consumer<T> onNext,
                                                     final Consumer<NetError> onError,
                                                     final Action onComplete, final boolean toastError) {
