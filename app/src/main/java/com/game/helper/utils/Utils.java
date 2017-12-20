@@ -92,6 +92,30 @@ public class Utils {
     }
 
     /**
+     * 获取邀请记录vip等级图标
+     *
+     * @param level 等级
+     * */
+    public static int getExtensionVipIcon(int level){
+        switch (level){
+            case 0:
+                return R.mipmap.ic_launcher_round;
+            case 1:
+                return R.mipmap.ic_launcher_round;
+            case 2:
+                return R.mipmap.ic_launcher_round;
+            case 3:
+                return R.mipmap.ic_launcher_round;
+            case 4:
+                return R.mipmap.ic_launcher_round;
+            case 5:
+                return R.mipmap.ic_launcher_round;
+            default:
+                return 0;
+        }
+    }
+
+    /**
      * 游戏下载状态图标
      * */
     public static int getGameDownloadStatusIcon(int status){

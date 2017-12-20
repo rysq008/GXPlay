@@ -27,7 +27,9 @@ import com.game.helper.net.api.Api;
 import com.game.helper.net.api.ApiService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.StateView;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -200,7 +203,8 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         class ExtensionHistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             private int position = 0;
             private View rootView;
-            private ImageView avatar;
+            private RoundedImageView avatar;
+            private ImageView vip;
             private TextView name;
             private TextView time;
             private TextView content;
@@ -210,6 +214,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
                 rootView = view;
                 avatar = view.findViewById(R.id.iv_avatar);
                 name = view.findViewById(R.id.tv_name);
+                vip = view.findViewById(R.id.iv_vip_level);
                 time = view.findViewById(R.id.tv_time);
                 content = view.findViewById(R.id.tv_content);
             }
@@ -218,7 +223,8 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
                 this.position = position;
                 rootView.setOnClickListener(this);
                 InvatationResults.InvatationListItem item = (InvatationResults.InvatationListItem) data.get(position);
-                Glide.with(context).load(Api.API_PAY_OR_IMAGE_URL+item.member.icon).into(avatar);
+                Glide.with(context).load(Api.API_BASE_URL+item.member.icon).into(avatar);
+                vip.setImageResource(Utils.getExtensionVipIcon(item.member.vip_level.level));
                 name.setText(item.member.nick_name);
                 time.setText(item.member.user.date_joined);
                 content.setText(item.member.signature);
