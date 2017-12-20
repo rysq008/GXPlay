@@ -27,6 +27,9 @@ import com.game.helper.model.MarketExpectedFlowlistResults;
 import com.game.helper.model.MarketFlowlistResults;
 import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.MineGamelistResults;
+import com.game.helper.model.MineGiftlistResults;
+import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
@@ -55,6 +58,7 @@ import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
+import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
@@ -332,5 +336,17 @@ public class DataService {
 
     public static Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
         return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody) {
+        return Api.CreateApiService().getMineGameList(mineGameRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<MineGiftlistResults>> getMineGiftList(@Body MineGameRequestBody mineGameRequestBody) {
+        return Api.CreateApiService().getMineGiftList(mineGameRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<MineOrderlistResults>> getMineOrderList(@Body SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getMineOrderList(singlePageRequestBody);
     }
 }

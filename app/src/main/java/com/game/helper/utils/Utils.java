@@ -1,6 +1,7 @@
 package com.game.helper.utils;
 
 import android.app.Activity;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -277,5 +278,17 @@ public class Utils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 复制内容到剪贴板
+     * */
+    public static boolean copyToClipboard(Context context, String text){
+        // 从API11开始android推荐使用android.content.ClipboardManager
+        // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
+        ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        // 将文本内容放到系统剪贴板里。
+        cm.setText(text);
+        return true;
     }
 }

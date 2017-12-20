@@ -13,6 +13,8 @@ public final class RxConstant {
     public static final String VERIFY_USER_FOR_LOGIN = "0";
     public static final String VERIFY_USER_FOR_REGIST = "1";
 
+    public static final int PLATFORM_ANDROID = 1;
+
     /**
      * 登陆share preference
      * */

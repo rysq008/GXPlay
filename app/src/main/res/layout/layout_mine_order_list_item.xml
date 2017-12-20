@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/game_list_item_height"
+    android:background="@color/colorWhite"
+
+    android:orientation="vertical">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/riv_avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@mipmap/ic_launcher"
+        android:scaleType="fitXY"
+        app:riv_corner_radius="6dip" />
+
+   <LinearLayout
+       android:layout_centerVertical="true"
+       android:gravity="center_vertical"
+       android:layout_marginRight="@dimen/dp_10"
+       android:orientation="horizontal"
+       android:layout_toRightOf="@+id/riv_avatar"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+       <LinearLayout
+           android:gravity="center_vertical"
+           android:layout_width="0dp"
+           android:layout_weight="1"
+           android:orientation="vertical"
+           android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/tv_name"
+               android:text="绝地仙王"
+               android:maxLines="1"
+               android:ellipsize="end"
+               android:textSize="@dimen/text_size_medium"
+               android:textColor="@color/colorBlack"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+           <TextView
+               android:id="@+id/tv_time"
+               android:text="2018-10-01"
+               android:maxLines="1"
+               android:ellipsize="end"
+               android:layout_marginTop="@dimen/dp_10"
+               android:textSize="@dimen/text_size_small"
+               android:textColor="@color/colorShadow"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+
+       </LinearLayout>
+       <LinearLayout
+           android:gravity="center_vertical"
+           android:layout_width="0dp"
+           android:layout_weight="1"
+           android:orientation="vertical"
+           android:layout_height="wrap_content">
+           <LinearLayout
+               android:orientation="horizontal"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+
+               <TextView
+                   android:text="账号："
+                   android:textSize="@dimen/text_size_small"
+                   android:textColor="@color/colorShadow"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+               <TextView
+                   android:text="疏影"
+                   android:id="@+id/tv_account"
+                   android:layout_marginLeft="@dimen/dp_5"
+                   android:textSize="@dimen/text_size_small"
+                   android:textColor="@color/colorBlack"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+           </LinearLayout>
+           <LinearLayout
+               android:layout_marginTop="@dimen/dp_10"
+               android:orientation="horizontal"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:text="金额："
+                   android:textSize="@dimen/text_size_small"
+                   android:textColor="@color/colorShadow"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+               <TextView
+                   android:text="20元"
+                   android:id="@+id/tv_price"
+                   android:layout_marginLeft="@dimen/dp_5"
+                   android:textSize="@dimen/text_size_small"
+                   android:textColor="@color/colorBlack"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content" />
+           </LinearLayout>
+       </LinearLayout>
+       <LinearLayout
+           android:gravity="center"
+           android:layout_width="0dp"
+           android:layout_weight="1"
+           android:orientation="horizontal"
+           android:layout_height="wrap_content">
+           <TextView
+               android:text="支付成功"
+               android:id="@+id/tv_status"
+               android:textSize="@dimen/text_size_large"
+               android:textColor="@color/colorBlack"
+               android:maxLines="1"
+               android:ellipsize="end"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
+
+       </LinearLayout>
+   </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tabbar_divider_height"
+        android:background="@color/colorDivider" />
+</RelativeLayout>

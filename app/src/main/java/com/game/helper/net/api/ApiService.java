@@ -27,6 +27,9 @@ import com.game.helper.model.MarketExpectedFlowlistResults;
 import com.game.helper.model.MarketFlowlistResults;
 import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.MineGamelistResults;
+import com.game.helper.model.MineGiftlistResults;
+import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
@@ -42,6 +45,7 @@ import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
@@ -293,4 +297,13 @@ public interface ApiService {
 
     @POST("/marketing/get_expected_flow_list/")//推广预期收益列表
     Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/member/get_my_game_list/")//获取我的游戏列表
+    Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody);
+
+    @POST("/member/get_my_gift_code_list")//获取我的礼包列表
+    Flowable<HttpResultModel<MineGiftlistResults>> getMineGiftList(@Body MineGameRequestBody mineGameRequestBody);
+
+    @POST("/account/get_game_consume_list/")//获取我的订单列表
+    Flowable<HttpResultModel<MineOrderlistResults>> getMineOrderList(@Body SinglePageRequestBody singlePageRequestBody);
 }

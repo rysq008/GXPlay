@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/game_list_item_height"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/riv_avatar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:background="@mipmap/ic_launcher"
+        android:scaleType="fitXY"
+        app:riv_corner_radius="6dip" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/riv_avatar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/riv_avatar"
+        android:layout_toRightOf="@+id/riv_avatar"
+        android:gravity="center_vertical"
+        android:text="游戏名称"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_small" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_name"
+        android:layout_alignStart="@+id/tv_name"
+        android:layout_centerVertical="true"
+        android:text="有效期：2018-10-01" />
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_time"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/tv_time"
+        android:layout_below="@+id/tv_time"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/iv_copy"
+        android:layout_toStartOf="@+id/iv_copy"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="礼包码：asdasd12127x8" />
+
+    <ImageView
+        android:id="@+id/iv_copy"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:src="@mipmap/bg_game_list_item_install" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tabbar_divider_height"
+        android:background="@color/colorDivider" />
+</RelativeLayout>
