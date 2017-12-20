@@ -200,16 +200,18 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
 
         List<File> list = new ArrayList<File>();
-//        File f = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
+        File f1 = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
         list.add(f);
+        list.add(f1);
+        list.add(f);
+        list.add(f1);
 
         final ProgressDialog dialog = new ProgressDialog(context);
         dialog.setTitle("");
         dialog.setMax(100);
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dialog.setCancelable(false);
 
-        Flowable<HttpResultModel> ff = DataService.setApiUserIcon(f, new UploadUtils.FileUploadProgress() {
+        Flowable<HttpResultModel> ff = DataService.setApiUserIcon(list, new UploadUtils.FileUploadProgress() {
             @Override
             public void onProgress(final int progress) {
                 dialog.setProgress(progress);
@@ -226,9 +228,9 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-
+                Toast.makeText(context,netError.getMessage()+"--"+netError.getType(),Toast.LENGTH_SHORT).show();
             }
-        }, null, false);
+        }, null, true);
     }
 
     public void loadSearchListData(final boolean showLoading, int page, String word) {

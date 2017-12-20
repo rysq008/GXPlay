@@ -76,9 +76,12 @@ import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.UploadUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.droidlover.xdroidmvp.kit.Kits;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -264,6 +267,27 @@ public class DataService {
         UploadUtils.UploadFileRequestBody uploadFileRequestBody = new UploadUtils.UploadFileRequestBody(file, fileUploadFlowable);
         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), uploadFileRequestBody);
         return Api.CreateApiService().setApiUserIcon(part);
+    }
+
+    //多个文件上传有进度监听
+    public static Flowable<HttpResultModel> setApiUserIcon(List<File> files, UploadUtils.FileUploadProgress fileUploadFlowable) {
+        if (!Kits.Empty.check(files)) {
+            List list = new ArrayList();
+            for (File file : files) {
+                list.add(setApiUserIcon(file, fileUploadFlowable));
+            }
+            return Flowable.zipIterable(list, new Function<Object[], ArrayList<HttpResultModel>>() {
+                @Override
+                public ArrayList<HttpResultModel> apply(Object[] objects) throws Exception {
+                    ArrayList<HttpResultModel> arrayList = new ArrayList<>();
+                    for (Object obj : objects) {
+                        arrayList.add((HttpResultModel) obj);
+                    }
+                    return arrayList;
+                }
+            }, true, 1);
+        }
+        return null;
     }
 
     public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(UpdateNicknameRequestBody updateNicknameRequestBody) {

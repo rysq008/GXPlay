@@ -141,7 +141,7 @@ public class RxLoadingUtils {
 
     public static <T extends IModel> void subscribeWithDialog(final ProgressDialog progressDialog,
                                                               final Flowable<T> Flowable, FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
-                                                              final Action onComplete, final boolean isCancel/*toastErrorMeg*/) {
+                                                              final Action onComplete, final boolean isCancel/*是否可以中断请求*/) {
         /*bindDialog(progressDialog, Flowable, false)*/
         Flowable
                 .compose(XApi.<T>getApiTransformer())
