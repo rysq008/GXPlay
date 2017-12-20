@@ -48,8 +48,8 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
 
     @BindView(R.id.tv_debug)
     TextView debugHint;
-    @BindView(R.id.et_account)
-    EditInputView mAccount;
+    @BindView(R.id.tv_account)
+    TextView mAccount;
     @BindView(R.id.type_trde_password)
     EditInputView mPassWord;
     @BindView(R.id.type_trde_password1)
@@ -64,6 +64,8 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     EditInputView mName;
     @BindView(R.id.tv_reset_passwd)
     View mResetPasswd;
+
+    private boolean is_new = true;
 
     public static UpdateTradePasswordFragment newInstance(){
         return new UpdateTradePasswordFragment();
@@ -84,11 +86,13 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     }
 
     private void initView(){
-        mHeadTittle.setText(getResources().getString(R.string.common_update_trade_password));
+        Bundle arguments = getArguments();
+        is_new = (arguments == null) ? true : !(arguments.getBoolean(UpdateTradePasswordFragment.TAG));
+        mHeadTittle.setText(getResources().getString(is_new ? R.string.common_update_trade_password : R.string.common_update_trade_password1));
         mHeadBack.setOnClickListener(this);
 
         mResetPasswd.setSelected(false);
-        mAccount.addOnEditInputListener(this);
+        mAccount.setText(Utils.getLoginInfo(getContext()).phone);
         mPassWord.addOnEditInputListener(this);
         mPassWord1.addOnEditInputListener(this);
         mVerrity.addOnEditInputListener(this);
@@ -122,7 +126,60 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
             return;
         }
 
-        Flowable<HttpResultModel<ResetTradeResults>> fr = DataService.resetTradePasswrd(new ResetTradeRequestBody(passWord,code));
+        Flowable<HttpResultModel<ResetTradeResults>> fr = DataService.resetTradePasswrd(new ResetTradeRequestBody(passWord,code,name,identy));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<ResetTradeResults>>() {
+            @Override
+            public void accept(HttpResultModel<ResetTradeResults> resetTradeResultsHttpResultModel) throws Exception {
+                String hint = "修改交易密码失败！请重试";
+                if (resetTradeResultsHttpResultModel.isSucceful()) {
+                    hint = "修改交易密码成功！";
+                    Utils.updateUserTradePasswdStatus(getContext(),true);
+                }
+                final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Single_Confirm,"",hint);
+                dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+                    @Override
+                    public void onCancel() {
+                    }
+
+                    @Override
+                    public void onConfirm() {
+                        dialog.dismiss();
+                        getActivity().onBackPressed();
+                    }
+                });
+                dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
+            }
+        });
+    }
+
+    private void setTradePassword(){
+        String account = mAccount.getText().toString().trim();
+        String passWord = mPassWord.getText().toString().trim();
+        String passWord1 = mPassWord1.getText().toString().trim();
+        String code = mVerrity.getText().toString().trim();
+        String identy = mIdenty.getText().toString().trim();
+        String name = mName.getText().toString().trim();
+
+        String errorMsg = null;
+        if (StringUtils.isEmpty(account)) errorMsg = getResources().getString(R.string.login_hint_without_account);
+        else if (StringUtils.isEmpty(passWord)) errorMsg = getResources().getString(R.string.login_hint_without_passwd);
+        else if (StringUtils.isEmpty(passWord1)) errorMsg = getResources().getString(R.string.login_hint_without_confirm_passwd);
+        else if (passWord != null && passWord1 != null && !passWord.equals(passWord1)) errorMsg = getResources().getString(R.string.login_hint_wrong_notequal_passwd);
+        else if (StringUtils.isEmpty(code)) errorMsg = getResources().getString(R.string.login_hint_without_code);
+        else if (StringUtils.isEmpty(identy)) errorMsg = getResources().getString(R.string.login_hint_without_identy);
+        else if (StringUtils.isEmpty(name)) errorMsg = getResources().getString(R.string.login_hint_without_name);
+
+        if (errorMsg != null) {
+            Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Flowable<HttpResultModel<ResetTradeResults>> fr = DataService.resetTradePasswrd(new ResetTradeRequestBody(passWord,code,name,identy));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<ResetTradeResults>>() {
             @Override
             public void accept(HttpResultModel<ResetTradeResults> resetTradeResultsHttpResultModel) throws Exception {

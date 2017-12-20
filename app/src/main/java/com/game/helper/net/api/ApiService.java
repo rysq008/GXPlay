@@ -42,6 +42,7 @@ import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
@@ -196,6 +197,9 @@ public interface ApiService {
 
     @POST("/member/reset_trade_password/")//重置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> resetTradePassword(@Body ResetTradeRequestBody resetTradeRequestBody);
+
+    @POST("/member/set_trade_password/")//设置交易密码
+    Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
 
     @POST("/member/set_or_update_apliy_info/")//重置支付宝
     Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(@Body ResetAlipayRequestBody resetAlipayRequestBody);

@@ -47,6 +47,8 @@ import com.game.helper.views.PasswordEditDialog;
 import com.game.helper.views.widget.TimePickerView;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -179,7 +181,8 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
                 int month = date.getMonth() + 1;
                 int day = date.getDay();
                 int age = mCalendar.get(Calendar.YEAR) - year;
-                String dateStr = year + "-" + month + "-" + day;
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String dateStr = simpleDateFormat.format(date);
                 mBirthday.setText(dateStr);
                 updateBirthday(dateStr);
             }
@@ -267,8 +270,9 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             DetailFragmentsActivity.launch(getContext(), null, ResetPasswdFragment.newInstance());
         }
         if (v == mItemOrderPassword) {
-            if (!(Utils.getLoginInfo(getContext()).has_trade_passwd)) {
-                goToSetTradePassword();
+            goToSetTradePassword(true);
+            /*if (!(Utils.getLoginInfo(getContext()).has_trade_passwd)) {
+                goToSetTradePassword(true);
                 return;
             }
             final PasswordEditDialog dialog = new PasswordEditDialog();
@@ -279,7 +283,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
                     ProvingTradePssword(password);
                 }
             });
-            dialog.show(getChildFragmentManager(), PasswordEditDialog.TAG);
+            dialog.show(getChildFragmentManager(), PasswordEditDialog.TAG);*/
         }
         if (v == mItemBirthday) {
             mTimerPicker.show();
@@ -324,7 +328,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<CheckTradePasswdResults>>() {
             @Override
             public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
-                if (checkTradePasswdResultsHttpResultModel.isSucceful()) goToSetTradePassword();
+                if (checkTradePasswdResultsHttpResultModel.isSucceful()) goToSetTradePassword(false);
                 else Toast.makeText(getContext(), "交易密码验证失败！", Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
@@ -343,8 +347,11 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     /**
      * 跳转设置交易密码
      */
-    private void goToSetTradePassword() {
-        DetailFragmentsActivity.launch(getContext(), null, UpdateTradePasswordFragment.newInstance());
+    private void goToSetTradePassword(boolean isSetTrade) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(UpdateTradePasswordFragment.TAG,isSetTrade);
+        UpdateTradePasswordFragment updateTradePasswordFragment = UpdateTradePasswordFragment.newInstance();
+        DetailFragmentsActivity.launch(getContext(), bundle, updateTradePasswordFragment);
     }
 
     /**
