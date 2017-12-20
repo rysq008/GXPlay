@@ -53,14 +53,28 @@
                 android:textColor="@color/colorShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_balance_left"
-                android:textSize="@dimen/text_size_xlarge"
-                android:layout_marginTop="@dimen/dp_5"
-                android:textColor="@color/red"
-                android:text="0"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="bottom"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_balance_left"
+                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:textColor="@color/red"
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="金币"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginLeft="2dp"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorShadow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
         <View
             android:layout_width="@dimen/tabbar_divider_height"
@@ -78,14 +92,28 @@
                 android:textColor="@color/colorShadow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/tv_balance_right"
-                android:textSize="@dimen/text_size_xlarge"
-                android:layout_marginTop="@dimen/dp_5"
-                android:textColor="@color/red"
-                android:text="0"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="bottom"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_balance_right"
+                    android:textSize="@dimen/text_size_xxxlarge"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:textColor="@color/red"
+                    android:text="0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="金币"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginLeft="2dp"
+                    android:textSize="@dimen/text_size_small"
+                    android:textColor="@color/colorShadow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

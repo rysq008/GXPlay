@@ -19,7 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class RankingListActivity extends XBaseActivity implements View.OnClickListener{
+public class RankingListActivity extends XBaseActivity implements View.OnClickListener {
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -57,6 +57,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
         adapter = new MyPagerAdapter(getSupportFragmentManager());
         vp.setAdapter(adapter);
+        vp.setOffscreenPageLimit(2);
     }
 
     private void initListeners() {
@@ -74,7 +75,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
+                switch (position) {
                     case 0:
                         superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_select);
                         renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
@@ -111,7 +112,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.action_bar_back:
                 onBackPressed();
                 break;
@@ -141,7 +142,6 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
         @Override
         public Fragment getItem(int position) {
             return fragments.get(position);
-
         }
     }
 }

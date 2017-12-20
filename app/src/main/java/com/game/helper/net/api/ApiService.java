@@ -23,6 +23,9 @@ import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
+import com.game.helper.model.MarketExpectedFlowlistResults;
+import com.game.helper.model.MarketFlowlistResults;
+import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
@@ -38,6 +41,10 @@ import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
@@ -209,6 +216,9 @@ public interface ApiService {
 //重置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> resetTradePassword(@Body ResetTradeRequestBody resetTradeRequestBody);
 
+    @POST("/member/set_trade_password/")//设置交易密码
+    Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
+
     @POST("/member/set_or_update_apliy_info/")
 //重置支付宝
     Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(@Body ResetAlipayRequestBody resetAlipayRequestBody);
@@ -274,4 +284,13 @@ public interface ApiService {
 //反馈列表
     Flowable<HttpResultModel<FeedbackListResults>> feedBackList();
 
+
+    @POST("/marketing/get_marketing_info/")//推广账号详情
+    Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();
+
+    @POST("/marketing/get_marketing_flow_list/")//推广收益列表
+    Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/marketing/get_expected_flow_list/")//推广预期收益列表
+    Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 }

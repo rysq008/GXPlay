@@ -8,15 +8,23 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.adapters.RechargeCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.wallet.WalletListFragment;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.MarketInfoResults;
+import com.game.helper.model.NotConcernResults;
+import com.game.helper.net.DataService;
+import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.utils.RxLoadingUtils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -31,6 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.net.NetError;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,12 +59,16 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
     MagicIndicator tabStrip;
     @BindView(R.id.game_detail_viewpager)
     ViewPager viewPager;
+
+    @BindView(R.id.tv_value)
+    TextView mTotalValue;
     @BindView(R.id.tv_balance_left)
-    TextView mBalanceLeft;
+    TextView mLeftValue;
     @BindView(R.id.tv_balance_right)
-    TextView mBalanceRight;
+    TextView mRightValue;
 
     private List<Fragment> list = new ArrayList<Fragment>();
+    private MarketInfoResults marketInfo;
 
     public static ExtensionProfitFragment newInstance(){
         return new ExtensionProfitFragment();
@@ -77,8 +92,9 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
         mHeadTittle.setText(getResources().getString(R.string.common_extension_profit));
         mHeadBack.setOnClickListener(this);
 
-        list.add(ExtensionProfitItemFragment.newInstance(0));
-        list.add(ExtensionProfitItemFragment.newInstance(1));
+        getMarketInfo();
+        list.add(ExtensionProfitItemFragment.newInstance(ExtensionProfitItemFragment.Type_Extension_Gold));
+        list.add(ExtensionProfitItemFragment.newInstance(ExtensionProfitItemFragment.Type_Plan_Gold));
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -155,6 +171,33 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
         tabStrip.setNavigator(commonNavigator);
         ViewPagerHelper.bind(tabStrip, viewPager);
         viewPager.getAdapter().notifyDataSetChanged();
+    }
+
+    private void setUserData(){
+        if (marketInfo == null) return;
+        mTotalValue.setText(marketInfo.zongshouyi);
+        mLeftValue.setText(marketInfo.yue);
+        mRightValue.setText(marketInfo.yujizongshouyi);
+    }
+
+    private void getMarketInfo(){
+        Flowable<HttpResultModel<MarketInfoResults>> fr = DataService.getMarketInfo();
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MarketInfoResults>>() {
+            @Override
+            public void accept(HttpResultModel<MarketInfoResults> marketInfoResultsHttpResultModel) throws Exception {
+                if (marketInfoResultsHttpResultModel.isSucceful()) {
+                    marketInfo = marketInfoResultsHttpResultModel.data;
+                    setUserData();
+                } else {
+                    Toast.makeText(getContext(), marketInfoResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
     }
 
     @Override

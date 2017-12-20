@@ -23,6 +23,9 @@ import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
+import com.game.helper.model.MarketExpectedFlowlistResults;
+import com.game.helper.model.MarketFlowlistResults;
+import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
@@ -58,6 +61,8 @@ import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
@@ -80,6 +85,7 @@ import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 
 public class DataService {
 
@@ -212,6 +218,10 @@ public class DataService {
         return Api.CreateApiService().resetTradePassword(resetTradePasswrd);
     }
 
+    public static Flowable<HttpResultModel<ResetTradeResults>> setTradePasswrd(SetTradeRequestBody setTradeRequestBody) {
+        return Api.CreateApiService().setTradePassword(setTradeRequestBody);
+    }
+
     public static Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(ResetAlipayRequestBody resetAlipayRequestBody) {
         return Api.CreateApiService().resetAlipayAccount(resetAlipayRequestBody);
     }
@@ -310,5 +320,17 @@ public class DataService {
 
     public static Flowable<HttpResultModel<FeedbackListResults>> feedBackList() {
         return Api.CreateApiService().feedBackList();
+    }
+
+    public static Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo() {
+        return Api.CreateApiService().getMarketInfo();
+    }
+
+    public static Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getMarketFlowList(singlePageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
     }
 }

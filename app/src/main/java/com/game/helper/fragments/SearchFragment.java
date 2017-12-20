@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.load.model.file_descriptor.FileDescriptorUriLoader;
 import com.game.helper.R;
 import com.game.helper.adapters.SearchListAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
@@ -28,21 +27,17 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.UploadUtils;
 import com.game.helper.views.ReloadableFrameLayout;
 import com.game.helper.views.SearchComponentView;
-import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.io.File;
-import java.io.FileFilter;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
@@ -72,6 +67,7 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
     TagFlowLayout historyFlowlayout;
     @BindView(R.id.common_search_word_layout)
     LinearLayout searchWordLayout;
+
 
     private List<HotWordResults.HotWordItem> hotWordList;
     private List<String> historyWordList;
@@ -178,7 +174,7 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
     public void selectFile(View view) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
+        intent.setType("image/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(intent, 0);
     }
@@ -200,11 +196,9 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
 
         List<File> list = new ArrayList<File>();
-        File f1 = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
+//        File f1 = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
         list.add(f);
-        list.add(f1);
         list.add(f);
-        list.add(f1);
 
         final ProgressDialog dialog = new ProgressDialog(context);
         dialog.setTitle("");
@@ -221,14 +215,14 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
         RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel>() {
             @Override
             public void accept(HttpResultModel httpResultModel) throws Exception {
-                if(httpResultModel.isSucceful()){
-                    Toast.makeText(context,((Map<String,String>)httpResultModel.data).get("image"),Toast.LENGTH_SHORT).show();
+                if (httpResultModel.isSucceful()) {
+                    Toast.makeText(context, ((Map<String, String>) httpResultModel.data).get("image"), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Toast.makeText(context,netError.getMessage()+"--"+netError.getType(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, netError.getMessage() + "--" + netError.getType(), Toast.LENGTH_SHORT).show();
             }
         }, null, true);
     }
