@@ -2,6 +2,7 @@ package com.game.helper.fragments;
 
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -38,6 +39,7 @@ import com.game.helper.net.model.UpdateGenderRequestBody;
 import com.game.helper.utils.FileUtils;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
+import com.game.helper.utils.UploadUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.AvatarEditDialog;
 import com.game.helper.views.GXPlayDialog;
@@ -53,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -488,21 +491,33 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
      * 更新头像
      */
     private void updateAvatar(File avatar) {
-        Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateAvatar(new UpdateAvatarRequestBody(avatar));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
+        final ProgressDialog dialog = new ProgressDialog(getContext());
+        dialog.setTitle("");
+        dialog.setMax(100);
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setCancelable(false);
+
+        Flowable<HttpResultModel> ff = DataService.setApiUserIcon(avatar, new UploadUtils.FileUploadProgress() {
             @Override
-            public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
-                if (notConcernResultsHttpResultModel.isSucceful()) {
-                } else {
+            public void onProgress(final int progress) {
+                dialog.setProgress(progress);
+            }
+        });
+
+        RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel>() {
+            @Override
+            public void accept(HttpResultModel httpResultModel) throws Exception {
+                if(httpResultModel.isSucceful()){
+                    Toast.makeText(getContext(),((Map<String,String>)httpResultModel.data).get("image"),Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "accept: "+netError.getMessage() );
             }
-        });
+        }, null, false);
     }
 
     /**
