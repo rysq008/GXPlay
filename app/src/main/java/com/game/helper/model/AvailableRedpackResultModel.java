@@ -2,6 +2,7 @@ package com.game.helper.model;
 
 import com.game.helper.model.BaseModel.XBaseModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class AvailableRedpackResultModel extends XBaseModel {
         this.list = list;
     }
 
-    public static class ListBean implements ItemType {
+    public static class ListBean implements ItemType ,Serializable{
 
 
         private int red_id;

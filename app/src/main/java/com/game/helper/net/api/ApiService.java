@@ -1,5 +1,6 @@
 package com.game.helper.net.api;
 
+import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -34,19 +35,14 @@ import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.SingleGameIdRequestBody;
-import com.game.helper.net.model.BannerRequestBody;
-import com.game.helper.model.model.PayResultModel;
-import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
-import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
-import com.game.helper.net.model.CashToRequestBody;
-import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
@@ -198,4 +194,8 @@ public interface ApiService {
 
     @POST("/member/get_vip_list")//获取vip列表
     Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
+
+    //获取全部账号信息
+    @POST("/account/get_all_account_info/")
+    Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts();
 }

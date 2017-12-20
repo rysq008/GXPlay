@@ -9,13 +9,14 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
-import cn.droidlover.xdroidmvp.kit.Kits;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -101,10 +102,7 @@ public class RangeFriendAdapter extends SimpleRecAdapter<ItemType, RangeFriendAd
             }
 
             //头像
-            if (!/*StringUtils.isEmpty(data.getMember().getIcon()*/Kits.Empty.check(data.getMember().getIcon())) {
-//                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
-                ILFactory.getLoader().loadNet(ivAvatar, data.getMember().getIcon(), null);
-            }
+            ILFactory.getLoader().loadNet(ivAvatar, Api.API_BASE_URL.concat(data.getMember().getIcon()), ILoader.Options.defaultOptions());
 
             //名字
             tvName.setText(data.getMember().getNick_name());

@@ -1,5 +1,6 @@
 package com.game.helper.net;
 
+import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -202,5 +203,9 @@ public class DataService {
 
     public static Flowable<HttpResultModel<VipLevelResults>> getVipLevel() {
         return Api.CreateApiService().getVipLevel();
+    }
+
+    public static Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts() {
+        return Api.CreateApiService().getAllAccounts();
     }
 }

@@ -2,36 +2,21 @@ package com.game.helper.fragments.recharge;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.fragments.AboutUsFragment;
+import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.fragments.ConfirmOrderFragment;
-import com.game.helper.fragments.GameDetailCommunityFragment;
-import com.game.helper.fragments.GameDetailGiftFragment;
-import com.game.helper.fragments.GameDetailInfoFragment;
-import com.game.helper.fragments.VersionInfoFragment;
-import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.GameAccountResultModel;
-import com.game.helper.net.DataService;
-import com.game.helper.net.model.CheckTradePasswdRequestBody;
-import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.Utils;
-import com.game.helper.views.PasswordEditDialog;
+import com.game.helper.utils.NumberUtil;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -46,9 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.net.NetError;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -186,15 +168,27 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         if (current_page == 0) {
             GameAccountResultModel.ListBean gameBean = rechargeGameFragment.getGameBean();
             double totalBalanceValue = rechargeGameFragment.getTotalBalanceValue();
-            if (gameBean == null || totalBalanceValue <= 0.0) {
+            double inputValue = rechargeGameFragment.getInputValue();
+            if (gameBean == null
+                    || NumberUtil.compare(String.valueOf(totalBalanceValue),NumberUtil.Zero) <= 0
+                    || NumberUtil.compare(String.valueOf(totalBalanceValue),NumberUtil.Zero) <= 0) {
                 Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
             } else {
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
+//                bundle.putDouble(ConfirmOrderFragment.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
+//                ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance();
+//                confirmOrderFragment.setArguments(bundle);
+//                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
+
+                //订单确认页面用OrderConfirmActivity
+                Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
-                bundle.putDouble(ConfirmOrderFragment.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
-                ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance();
-                confirmOrderFragment.setArguments(bundle);
-                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
+                bundle.putSerializable(OrderConfirmActivity.BUNDLE_GAME_BEAN, gameBean);
+                bundle.putDouble(OrderConfirmActivity.BUNDLE_INPUT_VALUE,inputValue);
+                bundle.putDouble(OrderConfirmActivity.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
+                intent.putExtra(OrderConfirmActivity.TAG,bundle);
+                startActivity(intent);
             }
         }
         if (current_page == 1) {

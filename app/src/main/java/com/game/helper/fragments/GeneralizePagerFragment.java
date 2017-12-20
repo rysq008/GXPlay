@@ -13,7 +13,6 @@ import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.activitys.GeneralizeIncomeActivity;
 import com.game.helper.activitys.MyAccountActivity;
-import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.activitys.RankingListActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
@@ -319,8 +318,6 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 startActivity(intent);
                 break;
             case R.id.shareIncome://分享收益
-                intent.setClass(getActivity(),OrderConfirmActivity.class);
-                startActivity(intent);
                 break;
             case R.id.shareDiscount://分享折扣
                 intent.setClass(getActivity(),MyAccountActivity.class);

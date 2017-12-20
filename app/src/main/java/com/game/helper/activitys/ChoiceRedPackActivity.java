@@ -9,9 +9,6 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.adapters.AvailableRedpackAdapter;
-import com.game.helper.data.RxConstant;
-import com.game.helper.event.BusProvider;
-import com.game.helper.event.RedPackEvent;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.net.DataService;
@@ -176,8 +173,14 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
     public void onBackPressed() {
         AvailableRedpackResultModel.ListBean bean = mAdapter.getRecordAccount();
         if(null!=bean){
-            BusProvider.getBus().post(new RedPackEvent<>(0, RxConstant.Chooice_RedPack, bean));
+//            BusProvider.getBus().post(new RedPackEvent<>(0, RxConstant.Chooice_RedPack, bean));
+            Intent intent = new Intent();
+            intent.putExtra(OrderConfirmActivity.RED_PACK_AMOUNT,bean.getAmount());
+            intent.putExtra(OrderConfirmActivity.RED_PACK_ID,bean.getRed_id());
+            setResult(RESULT_OK, intent);
         }
+
+
         super.onBackPressed();
-    }
+  }
 }
