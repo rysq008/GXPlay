@@ -1,0 +1,115 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.game.helper.fragments.recharge.RechargeFragment">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dp_10"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_50" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:text="simon"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/text_size_medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_platform"
+                android:text="乐友端"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="@dimen/dp_5"
+                android:textColor="@color/colorShadow"
+                android:textSize="@dimen/text_size_small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="账号绑定身份："
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:textColor="@color/colorShadow"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_identy"
+                    android:text="素影"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/text_size_small"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="账号创建时间："
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:textColor="@color/colorShadow"
+                    android:textSize="@dimen/text_size_small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:text="07-01-01"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:textColor="@color/colorShadow"
+                    android:textSize="@dimen/text_size_small"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_action"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tabbar_divider_height"
+        android:background="@color/colorDivider"/>
+</LinearLayout>
