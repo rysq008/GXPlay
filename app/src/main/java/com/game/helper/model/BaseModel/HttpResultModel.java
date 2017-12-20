@@ -2,22 +2,25 @@ package com.game.helper.model.BaseModel;
 
 import com.game.helper.net.StateCode;
 
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.IModel;
 
 /**
  * Created by zr on 2017-10-13.
  */
-public class HttpResultModel<T extends IModel> extends XBaseModel {
+public class HttpResultModel<T> extends XBaseModel {
     public T data;
 
     @Override
     public boolean isNull() {
-        return data.isNull();
+        if (data instanceof IModel)
+            return ((IModel) data).isNull();
+        return Kits.Empty.check(data);
     }
 
     @Override
     public boolean isAuthError() {
-        return code.equals("00006");//登陆错误（验证错误）
+        return code.equals("0006");//登陆错误（验证错误）
     }
 
     @Override

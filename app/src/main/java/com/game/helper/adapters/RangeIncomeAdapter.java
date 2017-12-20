@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.model.FriendRangeResultModel;
+import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
@@ -101,10 +102,12 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
                     rangeNumber.setText((position + 1) + "");
                     break;
             }
+
+            String icon = data.getMember().getIcon();
             //头像
-            if (!/*StringUtils.isEmpty(data.getMember().getIcon()*/Kits.Empty.check(data.getMember().getIcon())) {
+            if (!/*StringUtils.isEmpty(data.getMember().getIcon()*/Kits.Empty.check(icon)) {
 //                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
-                ILFactory.getLoader().loadNet(ivAvatar, data.getMember().getIcon(), null);
+                ILFactory.getLoader().loadNet(ivAvatar, Api.API_BASE_URL.concat(icon), null);
             }
             //名字
             tvName.setText(data.getMember().getNick_name());

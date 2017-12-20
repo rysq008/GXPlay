@@ -64,6 +64,7 @@ import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
@@ -72,8 +73,15 @@ import com.game.helper.net.model.UpdateNicknameRequestBody;
 import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
+import com.game.helper.utils.UploadUtils;
+
+import java.io.File;
+import java.util.List;
 
 import io.reactivex.Flowable;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Body;
 
 public class DataService {
@@ -190,6 +198,7 @@ public class DataService {
     public static Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(AvailableRedpackRequestBody friendRangeRequestBody) {
         return Api.CreateApiService().getRedPackInfo(friendRangeRequestBody);
     }
+
     public static Flowable<HttpResultModel<CashToResults>> cashTo(CashToRequestBody cashToRequestBody) {
         return Api.CreatePayOrImageApiService().cashTo(cashToRequestBody);
     }
@@ -234,26 +243,54 @@ public class DataService {
         return Api.CreateApiService().getApiSearchByWordData(searchRequestBody);
     }
 
-    public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(@Body UpdateNicknameRequestBody updateNicknameRequestBody) {
+    //多个文件上传没有进度值
+    public static Flowable<HttpResultModel> setApiUserIcon(List<File> list) {
+        //构建body
+        //addFormDataPart()第一个参数为表单名字，这是和后台约定好的
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        //注意，file是后台约定的参数，如果是多图，file[]，如果是单张图片，file就行
+        for (File file : list) {
+            //这里上传的是多图
+//            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            builder.addFormDataPart("file[]", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+        }
+        RequestBody requestBody = builder.build();
+        return Api.CreateApiService().setApiUserIcon(requestBody);
+    }
+
+    //单个文件上传有进度监听
+    public static Flowable<HttpResultModel> setApiUserIcon(File file, UploadUtils.FileUploadProgress fileUploadFlowable) {
+        UploadUtils.UploadFileRequestBody uploadFileRequestBody = new UploadUtils.UploadFileRequestBody(file, fileUploadFlowable);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), uploadFileRequestBody);
+        return Api.CreateApiService().setApiUserIcon(part);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(UpdateNicknameRequestBody updateNicknameRequestBody) {
         return Api.CreateApiService().updateNickname(updateNicknameRequestBody);
     }
-    public static Flowable<HttpResultModel<NotConcernResults>> updateAvatar(@Body UpdateAvatarRequestBody updateAvatarRequestBody) {
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateAvatar(UpdateAvatarRequestBody updateAvatarRequestBody) {
         return Api.CreateApiService().updateAvatar(updateAvatarRequestBody);
     }
-    public static Flowable<HttpResultModel<NotConcernResults>> updateBirthday(@Body UpdateBirthdayRequestBody updateBirthdayRequestBody) {
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateBirthday(UpdateBirthdayRequestBody updateBirthdayRequestBody) {
         return Api.CreateApiService().updateBirthday(updateBirthdayRequestBody);
     }
-    public static Flowable<HttpResultModel<NotConcernResults>> updateGender(@Body UpdateGenderRequestBody updateGenderRequestBody) {
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateGender(UpdateGenderRequestBody updateGenderRequestBody) {
         return Api.CreateApiService().updateGender(updateGenderRequestBody);
     }
-    public static Flowable<HttpResultModel<NotConcernResults>> updatePhone(@Body UpdatePhoneRequestBody updatePhoneRequestBody) {
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updatePhone(UpdatePhoneRequestBody updatePhoneRequestBody) {
         return Api.CreateApiService().updatePhone(updatePhoneRequestBody);
     }
-    public static Flowable<HttpResultModel<NotConcernResults>> updateSignatrue(@Body UpdateSignatrueRequestBody updateSignatrueRequestBody) {
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateSignatrue(UpdateSignatrueRequestBody updateSignatrueRequestBody) {
         return Api.CreateApiService().updateSignatrue(updateSignatrueRequestBody);
     }
 
-    public static Flowable<HttpResultModel<NotConcernResults>> feedBack(@Body FeedbackRequestBody feedbackRequestBody) {
+    public static Flowable<HttpResultModel<NotConcernResults>> feedBack(FeedbackRequestBody feedbackRequestBody) {
         return Api.CreateApiService().feedBack(feedbackRequestBody);
     }
 

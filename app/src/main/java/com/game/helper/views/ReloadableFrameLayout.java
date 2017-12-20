@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.game.helper.R;
+import com.wang.avi.AVLoadingIndicatorView;
 
 
 public class ReloadableFrameLayout extends FrameLayout {
@@ -23,7 +24,8 @@ public class ReloadableFrameLayout extends FrameLayout {
     private ImageView customImageView;
     private TextView customTextView;
 
-    private ProgressBar loadingProgressBar;
+    //    private ProgressBar loadingProgressBar;
+    private AVLoadingIndicatorView loadingProgressBar;
     private TextView errorText;
     private OnReloadListener onReloadListener;
     private boolean isChildrenHided = false;
@@ -70,7 +72,8 @@ public class ReloadableFrameLayout extends FrameLayout {
         super.onFinishInflate();
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.common_reloadable_layout, this, true);
         contentContainer = (FrameLayout) contentView.findViewById(R.id.content_container);
-        loadingProgressBar = (ProgressBar) contentView.findViewById(R.id.loading_progress_bar);
+//        loadingProgressBar = (AVLoadingIndicatorView) contentView.findViewById(R.id.loading_progress_bar);
+        loadingProgressBar = (AVLoadingIndicatorView) contentView.findViewById(R.id.loading_avloading_bar);
         errorText = (TextView) contentView.findViewById(R.id.error_text);
         customViewContainer = contentView.findViewById(R.id.custom_view_container);
         customImageView = (ImageView) customViewContainer.findViewById(R.id.custom_image_view);

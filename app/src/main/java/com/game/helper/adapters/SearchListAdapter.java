@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.game.helper.R;
-import com.game.helper.model.RecommendResults;
-import com.game.helper.model.SearchListResults;
 import com.game.helper.views.RecommendView;
 
 import butterknife.BindView;

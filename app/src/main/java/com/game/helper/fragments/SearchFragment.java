@@ -1,6 +1,9 @@
 package com.game.helper.fragments;
 
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.model.file_descriptor.FileDescriptorUriLoader;
 import com.game.helper.R;
 import com.game.helper.adapters.SearchListAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
@@ -19,24 +23,33 @@ import com.game.helper.model.SearchListResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.utils.FileUtil;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.UploadUtils;
 import com.game.helper.views.ReloadableFrameLayout;
 import com.game.helper.views.SearchComponentView;
-import com.game.helper.views.widget.StateView;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+
+import static android.app.Activity.RESULT_OK;
 
 public class SearchFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = SearchFragment.class.getSimpleName();
@@ -113,6 +126,7 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             }
         });
 
+        xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         searchListAdapter = new SearchListAdapter(context);
         xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
         xRecyclerContentLayout.getRecyclerView().setAdapter(searchListAdapter);
@@ -128,6 +142,8 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             }
         });
         loadHotWordData();
+
+
     }
 
     @OnClick({R.id.iv_delete})
@@ -136,6 +152,7 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             case R.id.iv_delete:
                 historyWordList.clear();
                 historyFlowlayout.getAdapter().notifyDataChanged();
+                selectFile(v);
                 break;
         }
     }
@@ -156,6 +173,62 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
                 hotFlowlayout.getAdapter().notifyDataChanged();
             }
         });
+
+    }
+
+    public void selectFile(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 0) {
+                setResult(data);
+            }
+        }
+    }
+
+    private void setResult(Intent data) {
+        Uri uri = data.getData();
+        String path = FileUtil.getPath(context, uri);
+        File f = new File(path);
+
+
+        List<File> list = new ArrayList<File>();
+//        File f = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
+        list.add(f);
+
+        final ProgressDialog dialog = new ProgressDialog(context);
+        dialog.setTitle("");
+        dialog.setMax(100);
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setCancelable(false);
+
+        Flowable<HttpResultModel> ff = DataService.setApiUserIcon(f, new UploadUtils.FileUploadProgress() {
+            @Override
+            public void onProgress(final int progress) {
+                dialog.setProgress(progress);
+            }
+        });
+
+        RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel>() {
+            @Override
+            public void accept(HttpResultModel httpResultModel) throws Exception {
+                if(httpResultModel.isSucceful()){
+                    Toast.makeText(context,((Map<String,String>)httpResultModel.data).get("image"),Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+
+            }
+        }, null, false);
     }
 
     public void loadSearchListData(final boolean showLoading, int page, String word) {
