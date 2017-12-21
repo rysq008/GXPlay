@@ -26,6 +26,7 @@ import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.GiftDescDialog;
 import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -214,6 +215,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                 desc = itemView.findViewById(R.id.tv_desc);
                 copy = itemView.findViewById(R.id.iv_copy);
                 rootView.setOnClickListener(this);
+                copy.setOnClickListener(this);
             }
 
             public void onBind(int position){
@@ -224,14 +226,24 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                 name.setText(item.gift_code.gift.giftname);
                 time.setText("有效期："+item.gift_code.gift.end_time);
                 desc.setText("礼包码："+item.gift_code.code);
-                rootView.setTag(item.gift_code.code);
+                rootView.setTag(item);
+                copy.setTag(item);
             }
 
             @Override
             public void onClick(View v) {
-                if (v == rootView){
-                    if (rootView.getTag()!=null){
-                        Utils.copyToClipboard(getContext(),(String) rootView.getTag());
+                if (rootView.getTag()==null) {
+                    Toast.makeText(getContext(), "数据错误！请重试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (rootView.getTag() instanceof MineGiftlistResults.MineGiftlistItem){
+                    MineGiftlistResults.MineGiftlistItem item = (MineGiftlistResults.MineGiftlistItem) rootView.getTag();
+                    if (v == rootView){
+                        GiftDescDialog dialog = new GiftDescDialog(item.gift_code.id);
+                        dialog.show(getChildFragmentManager(),GiftDescDialog.TAG);
+                    }
+                    if (v == copy){
+                        Utils.copyToClipboard(getContext(),item.gift_code.code);
                         Toast.makeText(getContext(), "礼包码已复制到剪贴板！", Toast.LENGTH_SHORT).show();
                     }
                 }
