@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.activitys.GeneralizeIncomeActivity;
 import com.game.helper.activitys.MyAccountActivity;
 import com.game.helper.activitys.RankingListActivity;
 import com.game.helper.data.RxConstant;
@@ -227,9 +226,9 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
             case R.id.generalize_total_income_tv:
             case R.id.generalize_expect_income_tv:
             case R.id.generalize_income_tv:
-//                DetailFragmentsActivity.launch(getContext(), null, ExtensionProfitFragment.newInstance());
-                intent.setClass(getActivity(),GeneralizeIncomeActivity.class);
-                startActivity(intent);
+                DetailFragmentsActivity.launch(getContext(), null, ExtensionProfitFragment.newInstance());
+//                intent.setClass(getActivity(),GeneralizeIncomeActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.shareIncome://分享收益
                 break;
