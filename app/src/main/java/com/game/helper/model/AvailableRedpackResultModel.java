@@ -31,15 +31,15 @@ public class AvailableRedpackResultModel extends XBaseModel {
     public static class ListBean implements ItemType ,Serializable{
 
 
-        private int red_id;
-        private String amount;
-        private String money_limit;
-        private List<GameBean> games;
-        private String name;
+        private int red_id;//红包id
+        private String amount;//红包金额
+        private String money_limit;//启用红包金额
+        private List<GameBean> games;//支持的游戏列表
+        private String name;//红包名称
         private String end_date;
-        private int my_red_id;
-        private int type;
-        private int kind;
+        private int my_red_id;//我的红包id 为0表示无效的
+        private int type;//1为通用红包 2指定游戏红包
+        private int kind;//1为单发红包 2为群发红包
         private boolean select;
 
         public boolean isSelect() {

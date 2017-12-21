@@ -1,17 +1,17 @@
 package com.game.helper.event;
 
-public class RedPackEvent<T> {
+public class RedPackEvent {
 
-    private T data;
+    private int data;
 
     private int type;
     private int requestCode;
 
-    public RedPackEvent(T data) {
+    public RedPackEvent(int data) {
         this.data = data;
     }
 
-    public RedPackEvent(int requestCode, int type, T data) {
+    public RedPackEvent(int requestCode, int type, int data) {
         this.type = type;
         this.data = data;
         this.requestCode = requestCode;
@@ -25,7 +25,7 @@ public class RedPackEvent<T> {
         return requestCode;
     }
 
-    public T getData() {
+    public int getData() {
         return data;
     }
 

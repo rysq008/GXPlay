@@ -70,6 +70,7 @@
     <string name="common_update_alipay">修改支付宝账户</string>
     <string name="common_set_alipay">设置支付宝账户</string>
     <string name="common_safe_hint">为了保证您的账户安全，请确认您输入的信息真实有效</string>
+    <string name="common_account_mannager">账号管理</string>
 
     <!--我的-->
     <string name="mine_tab_game">我的游戏</string>
@@ -79,6 +80,7 @@
     <string name="mine_name_0">邀请记录</string>
     <string name="mine_name_1">推广收益</string>
     <string name="mine_name_2">我的客服</string>
+    <string name="mine_name_5">账号管理</string>
     <string name="mine_name_3">我的反馈</string>
     <string name="mine_name_4">我的设置</string>
     <string name="mine_login_hint">登陆后，钱包余额、推广记录、邀请记录\n会显示在这里，方便查看</string>
@@ -113,6 +115,7 @@
 
     <!--反馈-->
     <string name="feedback_tittle">意见反馈</string>
+    <string name="feedback_list_tittle">我的反馈</string>
     <string name="feedback_edit_contnet_tittle">请描述您的问题或者建议</string>
     <string name="feedback_edit_content_hint">您的声音，我们倾听....</string>
     <string name="feedback_edit_phone_hint">您的联系方式（选填）</string>

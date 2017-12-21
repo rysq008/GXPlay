@@ -91,12 +91,12 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
     public class PhotoViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_avatar)
         RoundedImageView ivAvatar;
+        @BindView(R.id.iv_vip_level)
+        RoundedImageView iv_vip_level;
         @BindView(R.id.gameAccountName)
         TextView gameAccountName;
         @BindView(R.id.gameChannelName)
         TextView gameChannelName;
-        @BindView(R.id.gameLevel)
-        TextView gameLevel;
         @BindView(R.id.checkStatusIv)
         ImageView checkStatusIv;
         @BindView(R.id.gameName)
@@ -120,7 +120,22 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
             //游戏渠道名
             gameChannelName.setText(data.getGame_channel_name());
             //vip等级
-            gameLevel.setText("VIP"+data.getVip_level());
+            int vipLevel = data.getVip_level();
+            switch (vipLevel){
+                case 0:
+//                    iv_vip_level.setImageResource(R.mipmap.vip0);
+                    break;
+                case 1:
+                    iv_vip_level.setImageResource(R.mipmap.vip1);
+                    break;
+                case 2:
+                    iv_vip_level.setImageResource(R.mipmap.vip2);
+                    break;
+                case 3:
+                    iv_vip_level.setImageResource(R.mipmap.vip3);
+                    break;
+            }
+
             //游戏名称
             gameName.setText(data.getGame_name());
 

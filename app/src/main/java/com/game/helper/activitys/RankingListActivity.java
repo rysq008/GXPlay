@@ -27,8 +27,8 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
     TextView mHeadTittle;
     @BindView(R.id.vp)
     ViewPager vp;
-    @BindView(R.id.superStarIv)
-    ImageView superStarIv;
+//    @BindView(R.id.superStarIv)
+//    ImageView superStarIv;
     @BindView(R.id.renmaiIv)
     ImageView renmaiIv;
     @BindView(R.id.incomeIv)
@@ -52,7 +52,6 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
     private void init() {
         fragments.add(RangeFriendListFragment.newInstance());
-        fragments.add(RangeFriendListFragment.newInstance());
         fragments.add(RangeIncomeListFragment.newInstance());
 
         adapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -62,7 +61,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
     private void initListeners() {
 
         mHeadBack.setOnClickListener(this);
-        superStarIv.setOnClickListener(this);
+//        superStarIv.setOnClickListener(this);
         renmaiIv.setOnClickListener(this);
         incomeIv.setOnClickListener(this);
 
@@ -75,18 +74,18 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
             @Override
             public void onPageSelected(int position) {
                 switch (position){
+//                    case 0:
+//                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_select);
+//                        renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
+//                        incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
+//                        break;
                     case 0:
-                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_select);
-                        renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
-                        incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
-                        break;
-                    case 1:
-                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
+//                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
                         renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_select);
                         incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
                         break;
-                    case 2:
-                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
+                    case 1:
+//                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
                         renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
                         incomeIv.setBackgroundResource(R.mipmap.bg_income_select);
                         break;
@@ -115,14 +114,14 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
             case R.id.action_bar_back:
                 onBackPressed();
                 break;
-            case R.id.superStarIv:
+//            case R.id.superStarIv:
+//                vp.setCurrentItem(0);
+//                break;
+            case R.id.renmaiIv:
                 vp.setCurrentItem(0);
                 break;
-            case R.id.renmaiIv:
-                vp.setCurrentItem(1);
-                break;
             case R.id.incomeIv:
-                vp.setCurrentItem(2);
+                vp.setCurrentItem(1);
                 break;
         }
     }

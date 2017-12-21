@@ -7,6 +7,9 @@ package com.game.helper.data;
 
 public final class RxConstant {
 
+    public static final int WRITE_PERMISSION_REQ_CODE = 2;
+    public static final String ROOT_DIR = "gxplayer";
+
     public static final String VERIFY_USER_FOR_LOGIN = "0";
     public static final String VERIFY_USER_FOR_REGIST = "1";
 
@@ -20,7 +23,7 @@ public final class RxConstant {
     public static final int Head_Image_Change_Type = 40;
     public static final int Login_Type = 200;
     public static final int Proving_Trade_Password = 201;
-    public static final int Chooice_RedPack = 300;
+    public static final int WX_PAY = 300;
 
     public static final class HomeModeType {//首页模块数据类型描述
         public static final int Banner_Model_Type = 0;

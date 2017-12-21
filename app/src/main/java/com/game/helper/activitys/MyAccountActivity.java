@@ -171,5 +171,6 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
         Intent bundle = new Intent();
         bundle.putExtra(RechargeGameFragment.TAG, gameBean);
         setResult(RechargeGameFragment.RESULT_CODE, bundle);
+        onBackPressed();
     }
 }

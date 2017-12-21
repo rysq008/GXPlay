@@ -35,11 +35,13 @@ import okhttp3.Response;
 public class GameMarketApplication extends MultiDexApplication {
     private static Context context;
     public static IWXAPI api;
+    private static GameMarketApplication gminstance;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
+        gminstance = this;
 
         initWX();
         initUmengShare();
@@ -90,7 +92,7 @@ public class GameMarketApplication extends MultiDexApplication {
                             }
                         }
 //                        cookieStore.put(url.host(), cookies);
-                        SharedPreUtil.saveObject(url.host(), cookies);
+//                        SharedPreUtil.saveObject(url.host(), cookies);
 
                         String cookes = cookieHeader(cookies);
                         CookieSyncManager.createInstance(getApplicationContext());
@@ -140,6 +142,10 @@ public class GameMarketApplication extends MultiDexApplication {
                 return false;
             }
         });
+    }
+
+    public static GameMarketApplication getInstance() {
+        return gminstance;
     }
 
     /**

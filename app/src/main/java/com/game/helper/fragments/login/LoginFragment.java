@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;

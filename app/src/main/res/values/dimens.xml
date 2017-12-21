@@ -68,6 +68,7 @@
     <dimen name="dp_30">30dp</dimen>
     <dimen name="dp_37">37dp</dimen>
     <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_50">50dp</dimen>
 
     <!--text-->
     <dimen name="text_size_tiny">10.0sp</dimen>

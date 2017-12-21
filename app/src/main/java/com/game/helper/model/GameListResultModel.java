@@ -101,7 +101,7 @@ public class GameListResultModel extends XBaseModel {
             private String zhekou_shouchong;
             private String zhekou_xuchong;
             private String filesize;
-            private int discount_vip;
+            private String discount_vip;
 
             public String getZhekou_shouchong() {
                 return zhekou_shouchong;
@@ -127,11 +127,11 @@ public class GameListResultModel extends XBaseModel {
                 this.filesize = filesize;
             }
 
-            public int getDiscount_vip() {
+            public String getDiscount_vip() {
                 return discount_vip;
             }
 
-            public void setDiscount_vip(int discount_vip) {
+            public void setDiscount_vip(String discount_vip) {
                 this.discount_vip = discount_vip;
             }
         }

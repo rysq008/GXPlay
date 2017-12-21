@@ -49,6 +49,7 @@
             android:text="搜索"
             android:visibility="gone"
             android:id="@+id/tv_action"
+            android:layout_margin="@dimen/dp_10"
             android:gravity="center_vertical"
             android:layout_centerInParent="true"
             android:textColor="@color/colorWhite"

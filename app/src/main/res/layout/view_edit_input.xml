@@ -2,6 +2,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
     android:padding="@dimen/dp_10">
     <EditText
         android:layout_centerVertical="true"

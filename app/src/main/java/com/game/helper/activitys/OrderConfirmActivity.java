@@ -1,8 +1,12 @@
 package com.game.helper.activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -13,16 +17,35 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.alipay.sdk.app.PayTask;
+import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.RedPackEvent;
+import com.game.helper.fragments.UpdateTradePasswordFragment;
 import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.CheckTradePasswdResults;
+import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.WxPayInfoBean;
+import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
-import com.game.helper.utils.NumberUtil;
+import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.net.model.ConsumeRequestBody;
+import com.game.helper.net.model.PayRequestBody;
+import com.game.helper.utils.AliPayResultUtils;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.Utils;
+import com.game.helper.utils.WXPayUtils;
+import com.game.helper.views.PasswordEditDialog;
+
+import java.math.BigDecimal;
+import java.util.Map;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -37,7 +60,11 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public static final String BUNDLE_TOTAL_BALANCE = "after_diacount_total_balance";
     public static final String BUNDLE_INPUT_VALUE = "input_value";
     public static final String RED_PACK_AMOUNT = "red_pack_amount";
+    public static final String RED_PACK_TYPE = "red_pack_type";
     public static final String RED_PACK_ID = "input_value_id";
+    public static final String PAYPURPOSE = "payPurpose";
+    public static final String VIPLEVEL = "vipLevel";
+
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -105,11 +132,11 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     /**
      * 游戏名称
      */
-    private String mGameName ;
+    private String mGameName;
     /**
      * 账户名称
      */
-    private String mAccountName ;
+    private String mAccountName;
     /**
      * 显示充值页面用户输入的金额
      */
@@ -117,11 +144,15 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     /**
      * 用户选择红包抵用券金额
      */
-    private Double mRedpack  = 0.0;
+    private Double mRedpackAmount = 0.0;
+    /**
+     * 用户选择红包抵用券类型
+     */
+    private String mRedpackType = "0";
     /**
      * 用户选择红包抵用券金id
      */
-    private int mRedpackId = 0;
+    private String mRedpackId = "";
     /**
      * 实际支付金额 = 用户输入金额 * 折扣 - 红包抵用金额
      */
@@ -129,21 +160,21 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     /**
      * 还需支付
      */
-    private Double mNeedPay = 0.0;
+    private Double mNeedPay;
     /**
      * 平台名称
      */
     private String mChannel;
 
     /**
-     * 游戏 ID
+     * 游戏账户 ID
      */
-    private int mGameId;
+    private int gameAccountId;
     /**
      * 用户选择的支付方式
      * 1:ali支付  2:wx支付
      */
-    private int payWay;
+    private int payWay = 2;
     /**
      * 是否使用可用金币
      */
@@ -168,7 +199,50 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      */
     private Double mAvailableCoin = 0.0;
 
+    /**
+     * 是否是vip
+     */
+    private boolean is_vip;
+
+    /**
+     * 支付密码
+     */
+    public String password = "";
+
+    //支付用途（1：普通充值、2：充值会员）
+    public String payPurpose = "1";
+
+    public String vipLevel = "0";
+
     private AvailableRedpackResultModel mRedPacks = new AvailableRedpackResultModel();
+
+    String accountAmount = "";//使用充值账户金额
+    String marketingAmount = "";//使用推广账户金额
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1: {
+                    @SuppressWarnings("unchecked")
+                    AliPayResultUtils payResult = new AliPayResultUtils((Map<String, String>) msg.obj);
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        Toast.makeText(OrderConfirmActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                        doConsume(accountAmount, marketingAmount);
+                    } else {
+                        Toast.makeText(OrderConfirmActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,8 +254,13 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         initIntentData(getIntent());
         initView();
         initListeners();
-        fetchAvailableRedpackInfo(1, mGameId);
+    }
+
+    @Override
+    protected void onResume() {
+        fetchAvailableRedpackInfo(1, gameAccountId);
         fetchAccountInfo();
+        super.onResume();
     }
 
     /**
@@ -201,31 +280,35 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     pushAccountTv.setText(data.data.getYue());
 
                     //可用金币
-                    if(usePushAccount){
+                    if (usePushAccount) {
                         mAvailableCoin = mAccountAvailableBalance + mPushAccountAvailableBalance;
-                    }else{
+                    } else {
                         mAvailableCoin = mAccountAvailableBalance;
                     }
-                    availableCoinTv.setText(String.valueOf(mAvailableCoin));
+                    BigDecimal b = new BigDecimal(mAvailableCoin + "");
+                    String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    availableCoinTv.setText(result);
 
                     //计算还需支付
-                    calcNeedPay();
-                }else{
+                    mNeedPay = calcNeedPay();
+                } else {
                     mAccountAvailableBalance = 0.0;
                     chargeAccountTv.setText(String.valueOf(mAccountAvailableBalance));
                     mPushAccountAvailableBalance = 0.0;
                     pushAccountTv.setText(String.valueOf(mPushAccountAvailableBalance));
 
                     //可用金币
-                    if(usePushAccount){
+                    if (usePushAccount) {
                         mAvailableCoin = mAccountAvailableBalance + mPushAccountAvailableBalance;
-                    }else{
+                    } else {
                         mAvailableCoin = mAccountAvailableBalance;
                     }
-                    availableCoinTv.setText(String.valueOf(mAvailableCoin));
+                    BigDecimal b = new BigDecimal(mAvailableCoin + "");
+                    String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    availableCoinTv.setText(result);
 
                     //计算还需支付
-                    calcNeedPay();
+                    mNeedPay = calcNeedPay();
                 }
 
             }
@@ -238,15 +321,17 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 pushAccountTv.setText(String.valueOf(mPushAccountAvailableBalance));
 
                 //可用金币
-                if(usePushAccount){
+                if (usePushAccount) {
                     mAvailableCoin = mAccountAvailableBalance + mPushAccountAvailableBalance;
-                }else{
+                } else {
                     mAvailableCoin = mAccountAvailableBalance;
                 }
-                availableCoinTv.setText(String.valueOf(mAvailableCoin));
+                BigDecimal b = new BigDecimal(mAvailableCoin + "");
+                String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                availableCoinTv.setText(result);
 
                 //计算还需支付
-                calcNeedPay();
+                mNeedPay = calcNeedPay();
             }
         });
     }
@@ -257,17 +342,28 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mHeadBack.setOnClickListener(this);
         cancelTv.setOnClickListener(this);
 
-//        BusProvider.getBus().receive(RedPackEvent.class).subscribe(new Consumer<RedPackEvent>() {
-//            @Override
-//            public void accept(RedPackEvent redPackEvent) throws Exception {
-//                if (null != redPackEvent) {
-//                    if (redPackEvent.getType() == RxConstant.Chooice_RedPack) {
-//                        redPackNum.setText("-" + ((AvailableRedpackResultModel.ListBean) redPackEvent.getData()).getAmount());
-//                    }
-//                }
-//
-//            }
-//        });
+        BusProvider.getBus().receive(RedPackEvent.class).subscribe(new Consumer<RedPackEvent>() {
+            @Override
+            public void accept(RedPackEvent redPackEvent) throws Exception {
+                if (null != redPackEvent) {
+                    if (redPackEvent.getType() == RxConstant.WX_PAY) {
+                        switch (redPackEvent.getData()) {
+                            case 0:
+                                doConsume(accountAmount, marketingAmount);
+                                break;
+                            case -1:
+//                                Toast.makeText(OrderConfirmActivity.this, "充值失败，请重试", Toast.LENGTH_SHORT).show();
+                                break;
+                            case -2:
+//                                Toast.makeText(OrderConfirmActivity.this, "充值失败，请重试", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+
+                    }
+                }
+
+            }
+        });
 
         //wx支付
         wxPayCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -318,18 +414,22 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     usePushAccount = true;
                     // 打开了推广账户余额   可用金币=充值账户余额+ 推广账户余额
                     mAvailableCoin = mAccountAvailableBalance + mPushAccountAvailableBalance;
-                    availableCoinTv.setText(String.valueOf(mAvailableCoin));
+                    BigDecimal bigDecimal = new BigDecimal(mAvailableCoin + "");
+                    String result = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    availableCoinTv.setText(result);
 
                     //计算还需支付
-                    calcNeedPay();
+                    mNeedPay = calcNeedPay();
                 } else {
                     usePushAccount = false;
                     // 关闭了推广账户余额   可用金币=充值账户余额
                     mAvailableCoin = mAccountAvailableBalance;
-                    availableCoinTv.setText(String.valueOf(mAvailableCoin));
+                    BigDecimal bigDecimal = new BigDecimal(mAvailableCoin + "");
+                    String result = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    availableCoinTv.setText(result);
 
                     //计算还需支付
-                    calcNeedPay();
+                    mNeedPay = calcNeedPay();
                 }
             }
         });
@@ -339,7 +439,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 计算实际支付
      */
     public Double calcRealPay() {
-        mRealPay = totalBalance - mRedpack;
+        mRealPay = totalBalance - mRedpackAmount;
         return mRealPay;
     }
 
@@ -348,24 +448,23 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      */
     public Double calcNeedPay() {
         double needPay = 0.0;
-        if(useCoin){
-            needPay = mRealPay - mRedpack - mAvailableCoin;
-            if(needPay>0){
-                needPayTv.setText(String.valueOf(needPay));
-            }else{
+        if (useCoin) {
+            needPay = mRealPay -mRedpackAmount - mAvailableCoin;
+            if (needPay <= 0) {
                 needPayTv.setText("0.0");
+            } else {
+                needPayTv.setText(needPay + "");
             }
-            return needPay;
-        }else{
-            needPay = mRealPay - mRedpack ;
-            if(needPay>0){
-                needPayTv.setText(String.valueOf(needPay));
-            }else{
+        } else {
+            needPay = mRealPay -mRedpackAmount ;
+            if (needPay <= 0) {
                 needPayTv.setText("0.0");
+            } else {
+                needPayTv.setText(needPay+"");
             }
-            return needPay;
-        }
 
+        }
+        return needPay;
     }
 
     /**
@@ -398,6 +497,9 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             gameBean = (GameAccountResultModel.ListBean) bundle.getSerializable(BUNDLE_GAME_BEAN);
             totalBalance = bundle.getDouble(BUNDLE_TOTAL_BALANCE);
             inputBalance = bundle.getDouble(BUNDLE_INPUT_VALUE);
+            payPurpose = bundle.getString(PAYPURPOSE);
+            vipLevel = bundle.getString(VIPLEVEL);
+
         }
 
         //分解数据
@@ -405,7 +507,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mAccountName = gameBean.getGame_account();
         mMoney = inputBalance;
         mChannel = gameBean.getGame_channel_name();
-        mGameId = gameBean.getGame_id();
+        gameAccountId = gameBean.getId();
+        is_vip = gameBean.isIs_vip();
     }
 
     private void initView() {
@@ -414,7 +517,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         gameName.setText(mGameName);
         accountName.setText(mAccountName);
         moneyNum.setText(String.valueOf(mMoney));
-        redPackNum.setText(String.valueOf(mRedpack));
+        redPackNum.setText(String.valueOf(mRedpackAmount));
         realPay.setText(String.valueOf(calcRealPay()));
         channelName.setText(mChannel);
     }
@@ -440,15 +543,32 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 break;
             case R.id.redPackLayout://红包
                 intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
-                intent.putExtra(OPTION_GAME_ID, mGameId);
+                intent.putExtra(OPTION_GAME_ID, gameAccountId);
                 startActivityForResult(intent, 0);
                 break;
             case R.id.suretv://确定
                 //1.先判断页面信息是否填写完整
-                checkPageInfo();
+                if (!checkPageInfo()) {
+                    Log.e("", "页面信息不完整");
+                    return;
+                }
 
+                //是否设置了交易密码
+                if (Utils.getLoginInfo(OrderConfirmActivity.this).has_trade_passwd) {
+                    final PasswordEditDialog dialog = new PasswordEditDialog();
+                    dialog.addOnPassWordEditListener(new PasswordEditDialog.OnPassWordEditListener() {
+                        @Override
+                        public void onConfirmComplete(String password) {
+                            dialog.dismiss();
+                            ProvingTradePssword(password);
+                        }
+                    });
+                    dialog.show(getSupportFragmentManager(), TAG);
+                } else {
+                    goToSetTradePassword();
+                }
 
-                //TODO 是否设置过交易密码  如果用户没有设置过交易密码则弹出框提示用户去设置，否则弹出交易密码输入框
+//                weixinPay();
 
                 break;
 
@@ -483,8 +603,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         }
 
         //如果还需支付的金额不是0的话，就要选择支付宝或者微信（单选）
-        if(NumberUtil.compare(String.valueOf(mNeedPay),NumberUtil.Zero)>0){
-            if(!aliPayCb.isChecked() && !wxPayCb.isChecked()){
+        if (mNeedPay > 0) {
+            if (!aliPayCb.isChecked() && !wxPayCb.isChecked()) {
                 Toast.makeText(this, "请选择一种支付方式", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -543,33 +663,221 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             String amount = data.getStringExtra(RED_PACK_AMOUNT);
-            int red_id = data.getIntExtra(RED_PACK_ID, 0);
-            if (null == amount || TextUtils.isEmpty(amount)) {
-                amount = "0.0";
-            }
-            onRedPackSelected(amount,red_id);
+            String type = data.getStringExtra(RED_PACK_TYPE);
+            String red_id = data.getStringExtra(RED_PACK_ID);
+            onRedPackSelected(amount, type, red_id);
         }
     }
 
-    private void onRedPackSelected(String amount,int red_id) {
+    private void onRedPackSelected(String amount, String type, String red_id) {
         //重新赋值红包金额,id
-        if(null == amount || TextUtils.isEmpty(amount) || NumberUtil.compare(amount,NumberUtil.Zero)<=0){
-            mRedpack = 0.0;
-        }else{
-            mRedpack = Double.parseDouble(amount);
-        }
+        mRedpackAmount = Double.parseDouble(amount);
+        mRedpackType = type;
         mRedpackId = red_id;
         //展示红包抵用金额
-        redPackNum.setText("-" + mRedpack);
+        redPackNum.setText("-" + mRedpackAmount);
         //重新计算实际支付
         realPay.setText(String.valueOf(calcRealPay()));
         //计算还需支付
-        calcNeedPay();
+        mNeedPay = calcNeedPay();
+    }
+
+    /**
+     * 跳转设置交易密码
+     */
+    private void goToSetTradePassword() {
+        DetailFragmentsActivity.launch(this, null, UpdateTradePasswordFragment.newInstance());
+    }
+
+    /**
+     * 校验输入的交易密码
+     */
+    private void ProvingTradePssword(final String password) {
+        Flowable<HttpResultModel<CheckTradePasswdResults>> fr = DataService.checkTradePassword(new CheckTradePasswdRequestBody(password));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<CheckTradePasswdResults>>() {
+            @Override
+            public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
+                //校验支付密码成功
+                if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
+                    OrderConfirmActivity.this.password = password;
+                    consumeOrCharge();
+                } else {
+                    Toast.makeText(OrderConfirmActivity.this, "交易密码验证失败！", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
+    }
+
+    /**
+     * 支付还是消费
+     */
+    private void consumeOrCharge() {
+
+        if (useCoin) {//使用可用金币
+            if (usePushAccount) {//使用推广账户余额
+                if (mAccountAvailableBalance >= mRealPay) {//先判断充值账户余额够不够,充值账户余额够
+                    accountAmount = String.valueOf(mRealPay);
+                    marketingAmount = "0";
+
+                } else {//充值账户余额不够
+                    accountAmount = String.valueOf(mAccountAvailableBalance);
+
+                    if (mPushAccountAvailableBalance >= (mRealPay - mAccountAvailableBalance)) {//推广账户余额足够
+                        marketingAmount = String.valueOf((mRealPay - mAccountAvailableBalance));
+                    } else {
+                        marketingAmount = String.valueOf(mPushAccountAvailableBalance);
+                    }
+
+
+                }
+            } else {//不使用推广账户余额，只使用充值账户余额
+                if (mAccountAvailableBalance >= mRealPay) {//充值账户余额够
+                    accountAmount = String.valueOf(mRealPay);
+                } else {//充值账户余额不够
+                    accountAmount = String.valueOf(mAccountAvailableBalance);
+                }
+                marketingAmount = "0";
+
+            }
+
+        } else {
+            //不使用可用金币
+            accountAmount = "0";
+            marketingAmount = "0";
+        }
+
+        //如果还需支付>0,先去微信或支付宝充值，否则直接消费
+        if (mNeedPay > 0) {
+            doCharge();
+        } else {
+            doConsume(accountAmount, marketingAmount);
+        }
+    }
+
+    /**
+     * 充值
+     */
+    private void doCharge() {
+        if (payWay == 1) {
+            aliPay();
+        } else if (payWay == 2) {
+            weixinPay();
+        } else {
+            Toast.makeText(OrderConfirmActivity.this, "非法参数", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    /**
+     * ali支付
+     */
+    private void aliPay() {
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id, mNeedPay + "", "1", payPurpose, vipLevel));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
+            @Override
+            public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
+                if (payRequestBody.isSucceful()) {
+                    final String info = payRequestBody.data.orderInfo;
+                    Runnable payRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            PayTask alipay = new PayTask(OrderConfirmActivity.this);
+                            Map<String, String> result = alipay.payV2(info, true);
+                            Log.i("msp", result.toString());
+
+                            Message msg = new Message();
+                            msg.what = 1;
+                            msg.obj = result;
+                            mHandler.sendMessage(msg);
+                        }
+                    };
+
+                    Thread payThread = new Thread(payRunnable);
+                    payThread.start();
+                } else {
+                    Toast.makeText(OrderConfirmActivity.this, payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e("", "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
+
+    }
+
+    /**
+     * 微信支付
+     */
+    private void weixinPay() {
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id, mNeedPay + "", "2", payPurpose, vipLevel));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
+            @Override
+            public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
+                if (payRequestBody.isSucceful()) {
+                    WxPayInfoBean bean = new WxPayInfoBean();
+                    bean.setAppid(RxConstant.ThirdPartKey.WeixinId);
+                    bean.setNoncestr(payRequestBody.data.getWxorderInfo().getNoncestr());
+                    bean.setPackagestr(payRequestBody.data.getWxorderInfo().getPackagevalue());
+                    bean.setPartnerid(payRequestBody.data.getWxorderInfo().getPartnerid());
+                    bean.setPrepayid(payRequestBody.data.getWxorderInfo().getPrepayid());
+                    bean.setSign(payRequestBody.data.getWxorderInfo().getSign());
+                    bean.setTimestamp(payRequestBody.data.getWxorderInfo().getTimestamp());
+                    GameMarketApplication.api.sendReq(WXPayUtils.weChatPay(bean));
+                } else {
+                    Toast.makeText(OrderConfirmActivity.this, payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e("", "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
+
+    }
+
+    /**
+     * 消费
+     */
+    private void doConsume(String accountAmount, String marketingAmount) {
+        Log.e("nuoyan", "gameAccountId：：：" + gameAccountId + "\r\n"
+                + "consumeAmount:::" + inputBalance + "\r\n"
+                + "accountAmount:::" + accountAmount + "\r\n"
+                + "marketingAmount:::" + marketingAmount + "\r\n"
+                + "rechargeAmount:::" + mNeedPay + "\r\n"
+                + "is_vip:::" + is_vip + "\r\n"
+                + "tradePassword:::" + password + "\r\n"
+                + "redpacketType:::" + mRedpackType + "\r\n"
+                + "redpacketId:::" + mRedpackId + "\r\n");
+
+        Flowable<HttpResultModel<FeedbackListResults>> fr = DataService.consume(new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, "0", is_vip ? "1" : "0", password, mRedpackType, mRedpackId));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FeedbackListResults>>() {
+            @Override
+            public void accept(HttpResultModel<FeedbackListResults> checkTradePasswdResultsHttpResultModel) {
+//                if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
+                    Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
+//                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
-//        BusProvider.getBus().unregister(this);
+        BusProvider.getBus().unregister(this);
         super.onDestroy();
     }
 }

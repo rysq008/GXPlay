@@ -104,6 +104,18 @@ public class SearchComponentView extends LinearLayout {
         }
     }
 
+    public String getTextContent() {
+        return et_center.getText().toString().trim();
+    }
+
+    public void setTextContent(String str) {
+        et_center.setText(str);
+    }
+
+    public void setHitText(String hitText){
+        et_center.setHint(hitText);
+    }
+
     public void setLeftViewOnClick(OnClickListener listener) {
         if (null != listener && !iv_back.isShown()) {
             layout_left.setOnClickListener(listener);

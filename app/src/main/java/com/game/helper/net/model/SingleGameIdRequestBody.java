@@ -1,6 +1,4 @@
-package com.game.helper.net;
-
-import com.game.helper.net.model.BaseRequestBody;
+package com.game.helper.net.model;
 
 public class SingleGameIdRequestBody extends BaseRequestBody {
 

@@ -21,6 +21,7 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
 
     private Activity mActivity;
     private AvailableRedpackResultModel.ListBean bean;
+    private OnItemCheckListener onItemCheckListener;
 
     public AvailableRedpackAdapter(Activity context) {
         super(context);
@@ -52,6 +53,13 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
         return R.layout.item_available_redpack;
     }
 
+    public interface OnItemCheckListener{
+        void onItemCheked(AvailableRedpackResultModel.ListBean bean);
+    }
+
+    public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener){
+        this.onItemCheckListener = onItemCheckListener;
+    }
 
     /**
      * This class contains all butterknife-injected Views & Layouts from layout file 'home_page_adapter_item.xml'
@@ -59,7 +67,7 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
      *
      * @author ButterKnifeZelezny, plugin for Android Studio by Avast Developers (http://github.com/avast)
      */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.redPackName)
         TextView redPackName;
         @BindView(R.id.redPackDesc)
@@ -91,6 +99,9 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
 
             if(data.isSelect()){
                 rootRl.setSelected(true);
+                if (onItemCheckListener != null){
+                    onItemCheckListener.onItemCheked(data);
+                }
             }else{
                 rootRl.setSelected(false);
             }

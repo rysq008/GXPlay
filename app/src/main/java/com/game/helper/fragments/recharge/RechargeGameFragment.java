@@ -24,7 +24,7 @@ import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.SingleGameIdRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.views.GXPlayDialog;

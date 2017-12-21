@@ -3,14 +3,14 @@ package com.game.helper.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alipay.sdk.app.PayTask;
-import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.GeneralizeIncomeActivity;
 import com.game.helper.activitys.MyAccountActivity;
 import com.game.helper.activitys.RankingListActivity;
@@ -18,27 +18,21 @@ import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GeneralizeResults;
-import com.game.helper.model.LoginResults;
-import com.game.helper.model.WxPayInfoBean;
 import com.game.helper.model.model.MemberBean;
-import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BannerRequestBody;
-import com.game.helper.net.model.LoginRequestBody;
-import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.WXPayUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.BannerView;
 import com.game.helper.views.HeadImageView;
 import com.game.helper.views.widget.StateView;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.util.Map;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
@@ -79,6 +73,12 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     TextView shareIncome;
     @BindView(R.id.shareDiscount)
     TextView shareDiscount;
+    @BindView(R.id.loginTv)
+    TextView loginTv;
+    @BindView(R.id.login_layout)
+    RelativeLayout loginLayout;
+    @BindView(R.id.loginRl)
+    RelativeLayout loginRl;
 
 
     @Override
@@ -92,6 +92,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         expect_tv.setOnClickListener(this);
         total_tv.setOnClickListener(this);
         generalize_tv.setOnClickListener(this);
+        loginTv.setOnClickListener(this);
 
         swipeRefreshLayout.setColorSchemeResources(
                 cn.droidlover.xrecyclerview.R.color.x_red,
@@ -184,26 +185,6 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         return new GeneralizePagerFragment();
     }
 
-    private void login(){
-        Flowable<HttpResultModel<LoginResults>> f = DataService.login(new LoginRequestBody("13312341234","9870","1",""));
-        RxLoadingUtils.subscribe(f, bindToLifecycle(), new Consumer<HttpResultModel<LoginResults>>() {
-            @Override
-            public void accept(HttpResultModel<LoginResults> payRequestBody ) throws Exception {
-                if (payRequestBody.isSucceful()) {
-                    Log.d("","accept");
-
-                }else {
-                    Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Log.e("", "Link Net Error! Error Msg: "+netError.getMessage().trim());
-            }
-        });
-    }
-
     private void umShare() {
         UMengShare share = new UMengShare(getActivity());
         share.shareLinkWithBoard(new UMShareListener() {
@@ -229,72 +210,6 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         });
     }
 
-    private void AliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody("1","0.01","1","1","0"));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
-            @Override
-            public void accept(HttpResultModel<PayResultModel> payRequestBody ) throws Exception {
-                if (payRequestBody.isSucceful()) {
-                    final String info = payRequestBody.data.orderInfo;
-                    Log.e(TAG, "accept: info:::::"+info);
-                    Runnable payRunnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            PayTask alipay = new PayTask(getActivity());
-                            Map<String, String> result = alipay.payV2(info, true);
-                            Log.i("msp", result.toString());
-
-//                        Message msg = new Message();
-//                        msg.what = 1;
-//                        msg.obj = result;
-//                        mHandler.sendMessage(msg);
-                        }
-                    };
-
-                    Thread payThread = new Thread(payRunnable);
-                    payThread.start();
-                }else {
-                    Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Log.e("", "Link Net Error! Error Msg: "+netError.getMessage().trim());
-            }
-        });
-
-    }
-
-    private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody("1","0.01","2","1","0"));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
-            @Override
-            public void accept(HttpResultModel<PayResultModel> payRequestBody ) throws Exception {
-                if (payRequestBody.isSucceful()) {
-                    Log.d("","accept");
-                    WxPayInfoBean bean = new WxPayInfoBean();
-                    bean.setAppid(RxConstant.ThirdPartKey.WeixinId);
-                    bean.setNoncestr(payRequestBody.data.getWxorderInfo().getNoncestr());
-                    bean.setPackagestr(payRequestBody.data.getWxorderInfo().getPackagevalue());
-                    bean.setPartnerid(payRequestBody.data.getWxorderInfo().getPartnerid());
-                    bean.setPrepayid(payRequestBody.data.getWxorderInfo().getPrepayid());
-                    bean.setSign(payRequestBody.data.getWxorderInfo().getSign());
-                    bean.setTimestamp(payRequestBody.data.getWxorderInfo().getTimestamp());
-                    GameMarketApplication.api.sendReq(WXPayUtils.weChatPay(bean));
-                }else {
-                    Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Log.e("", "Link Net Error! Error Msg: "+netError.getMessage().trim());
-            }
-        });
-
-    }
-
     @Override
     public void onClick(View view) {
         Intent intent = new Intent();
@@ -305,15 +220,14 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.mallTv://商城
                 //TODO h5
-                weixinPay();
                 break;
             case R.id.activityTv://活动
-                AliPay();
                 //TODO h5
                 break;
             case R.id.generalize_total_income_tv:
             case R.id.generalize_expect_income_tv:
             case R.id.generalize_income_tv:
+//                DetailFragmentsActivity.launch(getContext(), null, ExtensionProfitFragment.newInstance());
                 intent.setClass(getActivity(),GeneralizeIncomeActivity.class);
                 startActivity(intent);
                 break;
@@ -324,7 +238,31 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 startActivity(intent);
                 //TODO
                 break;
+            case R.id.loginTv://登录
+                DetailFragmentsActivity.launch(getContext(),null, LoginFragment.newInstance());
+                break;
 
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onResumeLazy() {
+        super.onResumeLazy();
+        Log.e("ttttttttt","onresume");
+        if (loginRl == null || loginLayout == null)
+            return;
+        if(!TextUtils.isEmpty(SharedPreUtil.getSessionId())){
+            loginRl.setVisibility(View.GONE);
+            loginLayout.setVisibility(View.VISIBLE);
+        }else{
+            loginRl.setVisibility(View.VISIBLE);
+            loginLayout.setVisibility(View.GONE);
         }
     }
 }

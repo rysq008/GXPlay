@@ -32,7 +32,7 @@ import zlc.season.practicalrecyclerview.ItemType;
 
 public class GameListFragment extends XBaseFragment {
 
-    @BindView(R.id.game_adapter_layout)
+    @BindView(R.id.game_list_layout)
     XRecyclerContentLayout xRecyclerContentLayout;
 
     GameItemAdapter mAdapter;
@@ -147,7 +147,7 @@ public class GameListFragment extends XBaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_game_adapter_layout;
+        return R.layout.fragment_game_list_layout;
     }
 
     @Override

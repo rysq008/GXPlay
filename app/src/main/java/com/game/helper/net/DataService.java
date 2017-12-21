@@ -4,13 +4,14 @@ import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.CashListResults;
 import com.game.helper.model.CashToResults;
+import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -18,32 +19,37 @@ import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
+import com.game.helper.model.HotWordResults;
 import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
+import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.RegistResults;
 import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
+import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.model.PayResultModel;
-import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
-import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
+import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.net.model.ConsumeRequestBody;
+import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -54,10 +60,25 @@ import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
+import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.UpdateAvatarRequestBody;
+import com.game.helper.net.model.UpdateBirthdayRequestBody;
+import com.game.helper.net.model.UpdateGenderRequestBody;
+import com.game.helper.net.model.UpdateNicknameRequestBody;
+import com.game.helper.net.model.UpdatePhoneRequestBody;
+import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
+import com.game.helper.utils.UploadUtils;
+
+import java.io.File;
+import java.util.List;
 
 import io.reactivex.Flowable;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class DataService {
 
@@ -205,7 +226,75 @@ public class DataService {
         return Api.CreateApiService().getVipLevel();
     }
 
+    public static Flowable<HttpResultModel<HotWordResults>> getApiHotWordData(BaseRequestBody baseRequestBody) {
+        return Api.CreateApiService().getApiHotWordData(baseRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<SearchListResults>> getApiSearchByWordData(SearchRequestBody searchRequestBody) {
+        return Api.CreateApiService().getApiSearchByWordData(searchRequestBody);
+    }
+
+    //多个文件上传没有进度值
+    public static Flowable<HttpResultModel> setApiUserIcon(List<File> list) {
+        //构建body
+        //addFormDataPart()第一个参数为表单名字，这是和后台约定好的
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        //注意，file是后台约定的参数，如果是多图，file[]，如果是单张图片，file就行
+        for (File file : list) {
+            //这里上传的是多图
+//            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            builder.addFormDataPart("file[]", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+        }
+        RequestBody requestBody = builder.build();
+        return Api.CreateApiService().setApiUserIcon(requestBody);
+    }
+
+    //单个文件上传有进度监听
+    public static Flowable<HttpResultModel> setApiUserIcon(File file, UploadUtils.FileUploadProgress fileUploadFlowable) {
+        UploadUtils.UploadFileRequestBody uploadFileRequestBody = new UploadUtils.UploadFileRequestBody(file, fileUploadFlowable);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), uploadFileRequestBody);
+        return Api.CreateApiService().setApiUserIcon(part);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(UpdateNicknameRequestBody updateNicknameRequestBody) {
+        return Api.CreateApiService().updateNickname(updateNicknameRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateAvatar(UpdateAvatarRequestBody updateAvatarRequestBody) {
+        return Api.CreateApiService().updateAvatar(updateAvatarRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateBirthday(UpdateBirthdayRequestBody updateBirthdayRequestBody) {
+        return Api.CreateApiService().updateBirthday(updateBirthdayRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateGender(UpdateGenderRequestBody updateGenderRequestBody) {
+        return Api.CreateApiService().updateGender(updateGenderRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updatePhone(UpdatePhoneRequestBody updatePhoneRequestBody) {
+        return Api.CreateApiService().updatePhone(updatePhoneRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateSignatrue(UpdateSignatrueRequestBody updateSignatrueRequestBody) {
+        return Api.CreateApiService().updateSignatrue(updateSignatrueRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> feedBack(FeedbackRequestBody feedbackRequestBody) {
+        return Api.CreateApiService().feedBack(feedbackRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<FeedbackListResults>> feedBackList() {
+        return Api.CreateApiService().feedBackList();
+    }
+
     public static Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts() {
         return Api.CreateApiService().getAllAccounts();
     }
+
+    public static Flowable<HttpResultModel<FeedbackListResults>> consume(ConsumeRequestBody consumeRequestBody) {
+        return Api.CreatePayOrImageApiService().consume(consumeRequestBody);
+    }
+
 }

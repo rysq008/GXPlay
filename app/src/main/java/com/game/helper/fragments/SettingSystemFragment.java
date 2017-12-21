@@ -1,6 +1,5 @@
 package com.game.helper.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -13,12 +12,10 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.LogoutResults;
-import com.game.helper.model.RegistResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
@@ -66,7 +63,6 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         return R.layout.fragment_setting_system;
     }
 
-
     private void initView(){
         mHeadTittle.setText(getResources().getString(R.string.common_setting_system));
         mHeadBack.setOnClickListener(this);
@@ -97,6 +93,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         });
 
         Utils.clearLoginInfo(getContext());
+        SharedPreUtil.saveSessionId("");
         getActivity().onBackPressed();
     }
 

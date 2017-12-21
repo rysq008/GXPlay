@@ -7,11 +7,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.RedPackEvent;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
 
 public class WXPayEntryActivity extends Activity implements
         IWXAPIEventHandler {
@@ -56,6 +59,7 @@ public class WXPayEntryActivity extends Activity implements
                 tipStr = "用户取消";
                 break;
         }
+        BusProvider.getBus().post(new RedPackEvent(0, RxConstant.WX_PAY, resp.errCode));
         Toast.makeText(this,tipStr,Toast.LENGTH_SHORT).show();
         finish();
     }
