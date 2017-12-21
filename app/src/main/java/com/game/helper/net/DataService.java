@@ -1,5 +1,6 @@
 package com.game.helper.net;
 
+import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -43,6 +44,7 @@ import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialResults;
+import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
@@ -55,6 +57,7 @@ import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.net.model.ConsumeRequestBody;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.DeleteGiftRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
@@ -75,6 +78,7 @@ import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
@@ -211,6 +215,10 @@ public class DataService {
         return Api.CreateApiService().getRedPackInfo(friendRangeRequestBody);
     }
 
+    public static Flowable<HttpResultModel<UnAvailableRedpackResultModel>> getUnuseRedPackInfo(UnAvailableRedpackRequestBody unAvailableRedpackRequestBody) {
+        return Api.CreateApiService().getUnuseRedPackInfo(unAvailableRedpackRequestBody);
+    }
+
     public static Flowable<HttpResultModel<CashToResults>> cashTo(CashToRequestBody cashToRequestBody) {
         return Api.CreatePayOrImageApiService().cashTo(cashToRequestBody);
     }
@@ -343,6 +351,15 @@ public class DataService {
     public static Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
         return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
     }
+
+    public static Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts() {
+        return Api.CreateApiService().getAllAccounts();
+    }
+
+    public static Flowable<HttpResultModel<FeedbackListResults>> consume(ConsumeRequestBody consumeRequestBody) {
+        return Api.CreatePayOrImageApiService().consume(consumeRequestBody);
+    }
+
 
     public static Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody) {
         return Api.CreateApiService().getMineGameList(mineGameRequestBody);

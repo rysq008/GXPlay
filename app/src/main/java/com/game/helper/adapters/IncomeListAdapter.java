@@ -33,7 +33,7 @@ public class IncomeListAdapter extends SimpleRecAdapter<ItemType, IncomeListAdap
     @Override
     public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
         final ItemType item = data.get(position);
-        holder.setDisplay(item,mActivity,position);
+        holder.setDisplay(item, mActivity, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,20 +60,12 @@ public class IncomeListAdapter extends SimpleRecAdapter<ItemType, IncomeListAdap
             ButterKnife.bind(this, itemView);
         }
 
-        public void setDisplay(ItemType itemType, final Activity activity,final int position) {
-            IncomeResultModel.ListBean data = (IncomeResultModel.ListBean)itemType;
+        public void setDisplay(ItemType itemType, final Activity activity, final int position) {
+            IncomeResultModel.ListBean data = (IncomeResultModel.ListBean) itemType;
             //时间
             timeTv.setText(data.getCreate_time());
             //收入类型
-            int type = data.getType();
-            if(1 == type){
-                incomeTypeTv.setText("充值vip返利");
-            }else if(2 == type){
-                incomeTypeTv.setText("普通充值返利");
-            }
-//            else if(3 == type){
-//                incomeTypeTv.setText("");
-//            }
+            incomeTypeTv.setText(data.getType());
             //金币
             coinTv.setText(data.getReward());
 

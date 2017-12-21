@@ -92,7 +92,7 @@ public class GameMarketApplication extends MultiDexApplication {
                             }
                         }
 //                        cookieStore.put(url.host(), cookies);
-                        SharedPreUtil.saveObject(url.host(), cookies);
+//                        SharedPreUtil.saveObject(url.host(), cookies);
 
                         String cookes = cookieHeader(cookies);
                         CookieSyncManager.createInstance(getApplicationContext());

@@ -9,9 +9,6 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.adapters.AvailableRedpackAdapter;
-import com.game.helper.data.RxConstant;
-import com.game.helper.event.BusProvider;
-import com.game.helper.event.RedPackEvent;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.net.DataService;
@@ -28,7 +25,7 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
-public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClickListener {
+public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClickListener, AvailableRedpackAdapter.OnItemCheckListener {
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -108,6 +105,7 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == mAdapter) {
             mAdapter = new AvailableRedpackAdapter(context);
+            mAdapter.addOnItemCheckListener(this);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
@@ -174,10 +172,33 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        AvailableRedpackResultModel.ListBean bean = mAdapter.getRecordAccount();
-        if(null!=bean){
-            BusProvider.getBus().post(new RedPackEvent<>(0, RxConstant.Chooice_RedPack, bean));
-        }
+//        AvailableRedpackResultModel.ListBean bean = mAdapter.getRecordAccount();
         super.onBackPressed();
+  }
+
+    @Override
+    public void onItemCheked(AvailableRedpackResultModel.ListBean bean) {
+        Intent intent = new Intent();
+        if(null!=bean){
+//            BusProvider.getBus().post(new RedPackEvent<>(0, RxConstant.Chooice_RedPack, bean));
+
+            intent.putExtra(OrderConfirmActivity.RED_PACK_AMOUNT,bean.getAmount());
+            if(1 == bean.getKind()){//单发
+                intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE,"1");
+                intent.putExtra(OrderConfirmActivity.RED_PACK_ID,bean.getMy_red_id()+"");
+            }else if(2 == bean.getKind()){//群发
+                intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE,"2");
+                intent.putExtra(OrderConfirmActivity.RED_PACK_ID,bean.getRed_id()+"");
+            }else{
+                intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE,"0");
+                intent.putExtra(OrderConfirmActivity.RED_PACK_ID,"");
+            }
+        }else{
+            intent.putExtra(OrderConfirmActivity.RED_PACK_AMOUNT,"0.0");
+            intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE,"0");
+            intent.putExtra(OrderConfirmActivity.RED_PACK_ID,"");
+        }
+        setResult(RESULT_OK, intent);
+        onBackPressed();
     }
 }

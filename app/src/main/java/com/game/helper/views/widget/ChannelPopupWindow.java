@@ -145,32 +145,6 @@ public class ChannelPopupWindow extends PopupWindow {
         super.dismiss();
     }
 
-    /**
-     * 根据关键词搜游戏
-     * @param page
-     */
-//    private void getGameListAccordingKey(int page,String word) {
-//        Flowable<HttpResultModel<GameListResultModel>> fr = DataService.getGameAccountList(new GameListRequestBody(page,word));
-//        RxLoadingUtils.subscribe(fr, new FlowableTransformer() {
-//            @Override
-//            public Publisher apply(Flowable upstream) {
-//                return upstream;
-//            }
-//        }, new Consumer<HttpResultModel<GameListResultModel>>() {
-//            @Override
-//            public void accept(HttpResultModel<GameListResultModel> recommendResultsHttpResultModel) throws Exception {
-//                if(recommendResultsHttpResultModel.isSucceful()){
-//                    totalPage = recommendResultsHttpResultModel.total_page;
-//                    showData(recommendResultsHttpResultModel.data.getList(),recommendResultsHttpResultModel.current_page);
-//                }
-//            }
-//        }, new Consumer<NetError>() {
-//            @Override
-//            public void accept(NetError netError) throws Exception {
-//            }
-//        });
-//
-//    }
 
     /**
      * 根据游戏搜平台
@@ -187,6 +161,7 @@ public class ChannelPopupWindow extends PopupWindow {
             @Override
             public void accept(HttpResultModel<ChannelListResultModel> recommendResultsHttpResultModel) throws Exception {
                 if(recommendResultsHttpResultModel.isSucceful()){
+                    Log.d(TAG,"根据游戏搜平台陈宫");
                     totalPage = recommendResultsHttpResultModel.total_page;
                     showData(recommendResultsHttpResultModel.data.getList(),recommendResultsHttpResultModel.current_page);
                 }

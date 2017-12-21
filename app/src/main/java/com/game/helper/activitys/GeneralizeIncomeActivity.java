@@ -32,6 +32,7 @@ import io.reactivex.functions.Consumer;
  */
 public class GeneralizeIncomeActivity extends XBaseActivity implements View.OnClickListener {
 
+    @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;

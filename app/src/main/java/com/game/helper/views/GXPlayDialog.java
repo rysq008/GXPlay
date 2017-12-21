@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.utils.ScreenUtils;
 import com.game.helper.utils.StringUtils;
-import com.game.helper.utils.Utils;
 
 /**
  * Created by sung on 2017/12/15.

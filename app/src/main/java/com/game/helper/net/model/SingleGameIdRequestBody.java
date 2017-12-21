@@ -1,7 +1,5 @@
 package com.game.helper.net.model;
 
-import com.game.helper.net.model.BaseRequestBody;
-
 public class SingleGameIdRequestBody extends BaseRequestBody {
 
     public int game_account_id;

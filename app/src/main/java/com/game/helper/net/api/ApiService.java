@@ -1,5 +1,6 @@
 package com.game.helper.net.api;
 
+import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -43,6 +44,7 @@ import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialResults;
+import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
@@ -66,6 +68,7 @@ import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.net.model.ConsumeRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
@@ -80,6 +83,7 @@ import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
@@ -98,9 +102,11 @@ import retrofit2.http.Part;
 
 public interface ApiService {
 
+    //登录
     @POST("/member/login/")
     Flowable<HttpResultModel<LoginResults>> getApiLoginData(@Body LoginRequestBody baseRequestBody);
 
+    //banner数据
     @POST("/sys/get_banner_list/")
     Flowable<HttpResultModel<BannerResults>> getApiBannerData(@Body BannerRequestBody bannerRequestBody);
 
@@ -133,24 +139,24 @@ public interface ApiService {
     @POST("/marketing/get_marketing_info/")
     Flowable<HttpResultModel<GeneralizeResults>> getApiGeneralizeAccountData();
 
+    //注册
     @POST("/member/register/")
-//注册
     Flowable<HttpResultModel<RegistResults>> ApiRegitst(@Body RegistRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("market_num") String market_num*/);
 
+    //登陆
     @POST("/member/login/")
-//登陆
     Flowable<HttpResultModel<LoginResults>> ApiLogin(@Body LoginRequestBody baseRequestBody/*@Path("phone") String phone, @Path("code") String code, @Path("type") String type, @Path("channel_num") String channel_num*/);
 
+    //登出
     @POST("/member/logout/")
-//登出
     Flowable<HttpResultModel<LogoutResults>> ApiLogout();
 
+    //会员信息
     @POST("/member/info/")
-//会员信息
     Flowable<HttpResultModel<MemberInfoResults>> getApiMemberInfo();
 
+    //验证码
     @POST("/public/get_tel_verify/")
-//验证码
     Flowable<HttpResultModel<VerifyResults>> getApiVerify(@Body VerifyRequestBody verifyRequestBody/*@Path("phone") String phone, @Path("usefor") String usefor*/);
 
     //支付
@@ -193,67 +199,75 @@ public interface ApiService {
     @POST("/activity/get_red_packet_list/")
     Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(@Body AvailableRedpackRequestBody payRequestBody);
 
+    //获取不可用红包卡券
+    @POST("/activity/get_unavailable_red_packet/")
+    Flowable<HttpResultModel<UnAvailableRedpackResultModel>> getUnuseRedPackInfo(@Body UnAvailableRedpackRequestBody unAvailableRedpackRequestBody);
+
+    //重置密码
     @POST("/member/reset_passwd/")
-//重置密码
     Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(@Body ResetPasswdRequestBody resetPasswdRequestBody);
 
+    //钱包-消费明细
     @POST("/account/get_consume_list/")
-//钱包-消费明细
     Flowable<HttpResultModel<ConsumeListResults>> getConsumeListData(@Body SinglePageRequestBody singlePageRequestBody);
 
+    //钱包-充值明细
     @POST("/account/get_recharge_list/")
-//钱包-充值明细
     Flowable<HttpResultModel<RechargeListResults>> getRechargeListData(@Body SinglePageRequestBody singlePageRequestBody);
 
+    //钱包-提现明细
     @POST("/marketing/get_marketing_reflect_list/")
-//钱包-提现明细
     Flowable<HttpResultModel<CashListResults>> getCashListData(@Body SinglePageRequestBody singlePageRequestBody);
 
+    //钱包-收益明细
     @POST("/marketing/get_marketing_flow_list/")
-//钱包-收益明细
     Flowable<HttpResultModel<ProfitListResults>> getProfitListData(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/G9game/paymentController.do?reflect")
-//钱包-提现
+    //钱包-提现
     Flowable<HttpResultModel<CashToResults>> cashTo(@Body CashToRequestBody cashToRequestBody);
 
     @POST("/member/check_trade_passwd/")
-//钱包-验证交易密码
+    //钱包-验证交易密码
     Flowable<HttpResultModel<CheckTradePasswdResults>> checkTradePassWord(@Body CheckTradePasswdRequestBody checkTradePasswdRequestBody);
 
+    //邀请记录
     @POST("/marketing/get_invitation_list/")
-//邀请记录
     Flowable<HttpResultModel<InvatationResults>> getInvatationList(@Body SinglePageRequestBody singlePageRequestBody);
 
+    //重置交易密码
     @POST("/member/reset_trade_password/")
-//重置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> resetTradePassword(@Body ResetTradeRequestBody resetTradeRequestBody);
 
     @POST("/member/set_trade_password/")//设置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
 
+    //重置支付宝
     @POST("/member/set_or_update_apliy_info/")
-//重置支付宝
     Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(@Body ResetAlipayRequestBody resetAlipayRequestBody);
 
+    //获取vip充值游戏账号数量
     @POST("/member/get_left_vip_game_count/")
-//获取vip充值游戏账号数量
     Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount();
 
+    //获取游戏折扣
     @POST("/game/get_game_discount/")
-//获取游戏折扣
     Flowable<HttpResultModel<GameAccountDiscountResults>> getGameAccountDiscount(@Body SingleGameIdRequestBody singleGameIdRequestBody);
 
+    //获取vip列表
     @POST("/member/get_vip_list")
-//获取vip列表
     Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
 
+    //获取全部账号信息
+    @POST("/account/get_all_account_info/")
+    Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts();
+
     @POST("/game/get_hot_game_list/")
-//搜索热词列表
+    //搜索热词列表
     Flowable<HttpResultModel<HotWordResults>> getApiHotWordData(@Body BaseRequestBody baseRequestBody);
 
     @POST("/game/query_game_list/")
-//搜索列表
+    //搜索列表
     Flowable<HttpResultModel<SearchListResults>> getApiSearchByWordData(@Body SearchRequestBody searchRequestBody);
 
     //多文件上传无进度值
@@ -266,36 +280,41 @@ public interface ApiService {
     Flowable<HttpResultModel> setApiUserIcon(@Part MultipartBody.Part file);
 
     @POST("/member/set_nickname/")
-//设置昵称
+    //设置昵称
     Flowable<HttpResultModel<NotConcernResults>> updateNickname(@Body UpdateNicknameRequestBody updateNicknameRequestBody);
 
     @POST("/member/set_icon/")
-//设置头像
+    //设置头像
     Flowable<HttpResultModel<NotConcernResults>> updateAvatar(@Body UpdateAvatarRequestBody updateAvatarRequestBody);
 
     @POST("/member/set_birthday/")
-//设置生日
+    //设置生日
     Flowable<HttpResultModel<NotConcernResults>> updateBirthday(@Body UpdateBirthdayRequestBody updateBirthdayRequestBody);
 
     @POST("/member/set_phone/")
-//设置手机
+    //设置手机
     Flowable<HttpResultModel<NotConcernResults>> updatePhone(@Body UpdatePhoneRequestBody updatePhoneRequestBody);
 
     @POST("/member/set_gender/")
-//设置性别
+    //设置性别
     Flowable<HttpResultModel<NotConcernResults>> updateGender(@Body UpdateGenderRequestBody updateGenderRequestBody);
 
     @POST("/member/set_signature/")
-//设置签名
+    //设置签名
     Flowable<HttpResultModel<NotConcernResults>> updateSignatrue(@Body UpdateSignatrueRequestBody updateSignatrueRequestBody);
 
     @POST("/sys/submit_feedback/")
-//反馈
+    //反馈
     Flowable<HttpResultModel<NotConcernResults>> feedBack(@Body FeedbackRequestBody feedbackRequestBody);
 
     @POST("/sys/get_feedback_list/")
-//反馈列表
+    //反馈列表
     Flowable<HttpResultModel<FeedbackListResults>> feedBackList();
+
+    //消费下单接口
+    @POST("/G9game/paymentController.do?consume")
+    Flowable<HttpResultModel<FeedbackListResults>> consume(@Body ConsumeRequestBody consumeRequestBody);
+
 
     @POST("/marketing/get_marketing_info/")//推广账号详情
     Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();

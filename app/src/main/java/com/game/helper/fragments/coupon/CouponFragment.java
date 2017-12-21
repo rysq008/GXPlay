@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.adapters.CouponCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.VersionInfoFragment;
 import com.game.helper.fragments.recharge.RechargeGameFragment;
@@ -70,9 +71,9 @@ public class CouponFragment extends XBaseFragment implements View.OnClickListene
         mHeadTittle.setText(getResources().getString(R.string.common_coupon));
         mHeadBack.setOnClickListener(this);
 
-        list.add(CouponListFragment.newInstance());
-        list.add(CouponListFragment.newInstance());
-        list.add(CouponListFragment.newInstance());
+        list.add(CouponListFragment.newInstance(CouponCommonAdapter.Type_Coupon_Canuse));
+        list.add(CouponListFragment.newInstance(CouponCommonAdapter.Type_Coupon_Hasuse));
+        list.add(CouponListFragment.newInstance(CouponCommonAdapter.Type_Coupon_Outuse));
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {

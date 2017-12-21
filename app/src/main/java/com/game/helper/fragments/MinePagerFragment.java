@@ -106,6 +106,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
+        Log.e("ll","onresume");
         if (mLoginView == null || mUnLoginView == null)
             return;
         if (Utils.hasLoginInfo(getContext())) {

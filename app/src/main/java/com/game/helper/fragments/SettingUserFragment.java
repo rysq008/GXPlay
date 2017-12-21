@@ -26,7 +26,6 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.login.ResetPasswdFragment;
-import com.game.helper.fragments.wallet.CashFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.MemberInfoResults;
@@ -42,7 +41,6 @@ import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.UploadUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.AvatarEditDialog;
-import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.HeadImageView;
 import com.game.helper.views.OptionsPickerView;
 import com.game.helper.views.PasswordEditDialog;
@@ -61,7 +59,6 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import okhttp3.internal.Util;
 
 import static android.app.Activity.RESULT_OK;
 

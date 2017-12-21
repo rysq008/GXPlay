@@ -27,7 +27,7 @@ public class IncomeResultModel extends XBaseModel {
     public static class ListBean implements ItemType {
 
         private RecommendedBean recommended;
-        private int type;
+        private String type;
         private String reward;
         private String create_time;
 
@@ -39,11 +39,11 @@ public class IncomeResultModel extends XBaseModel {
             this.recommended = recommended;
         }
 
-        public int getType() {
+        public String getType() {
             return type;
         }
 
-        public void setType(int type) {
+        public void setType(String type) {
             this.type = type;
         }
 

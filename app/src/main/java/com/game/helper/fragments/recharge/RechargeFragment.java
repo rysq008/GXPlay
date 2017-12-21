@@ -3,43 +3,32 @@ package com.game.helper.fragments.recharge;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
-import com.game.helper.fragments.AboutUsFragment;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.fragments.ConfirmOrderFragment;
-import com.game.helper.fragments.GameDetailCommunityFragment;
-import com.game.helper.fragments.GameDetailGiftFragment;
-import com.game.helper.fragments.GameDetailInfoFragment;
-import com.game.helper.fragments.VersionInfoFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.WxPayInfoBean;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.DataService;
-import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.utils.WXPayUtils;
-import com.game.helper.views.PasswordEditDialog;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -85,7 +74,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private RechargeGoldFragment rechargeGoldFragment;
     private ProgressDialog dialog;
 
-    public static RechargeFragment newInstance(){
+    public static RechargeFragment newInstance() {
         return new RechargeFragment();
     }
 
@@ -103,7 +92,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         return R.layout.fragment_recharge;
     }
 
-    private void initView(){
+    private void initView() {
         mHeadTittle.setText(getResources().getString(R.string.common_recharge));
         mHeadBack.setOnClickListener(this);
         mConfirmOrder.setOnClickListener(this);
@@ -192,33 +181,45 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
-    private void confirmOrder(){
+    private void confirmOrder() {
         if (current_page == 0) {
             GameAccountResultModel.ListBean gameBean = rechargeGameFragment.getGameBean();
             double totalBalanceValue = rechargeGameFragment.getTotalBalanceValue();
-            if (gameBean == null || totalBalanceValue <= 0.0) {
+            double inputValue = rechargeGameFragment.getInputValue();
+            if (gameBean == null || totalBalanceValue <= 0 || inputValue <= 0) {
                 Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
             } else {
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
+//                bundle.putDouble(ConfirmOrderFragment.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
+//                ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance();
+//                confirmOrderFragment.setArguments(bundle);
+//                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
+
+                //订单确认页面用OrderConfirmActivity
+                Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
-                bundle.putDouble(ConfirmOrderFragment.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
-                ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance();
-                confirmOrderFragment.setArguments(bundle);
-                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
+                bundle.putSerializable(OrderConfirmActivity.BUNDLE_GAME_BEAN, gameBean);
+                bundle.putDouble(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
+                bundle.putDouble(OrderConfirmActivity.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
+                bundle.putString(OrderConfirmActivity.PAYPURPOSE, "1");
+                bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
+                intent.putExtra(OrderConfirmActivity.TAG, bundle);
+                startActivity(intent);
             }
         }
         if (current_page == 1) {
             int select_pay_mode = rechargeGoldFragment.getSelect_pay_mode();
             int totalChargeGold = rechargeGoldFragment.getmTotalChrgeGold();
-            if (totalChargeGold <= 0 || select_pay_mode == -1){
+            if (totalChargeGold <= 0 || select_pay_mode == -1) {
                 Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (select_pay_mode == RechargeGoldFragment.Pay_Type_Wechat){
+            if (select_pay_mode == RechargeGoldFragment.Pay_Type_Wechat) {
                 //微信支付
                 weixinPay(totalChargeGold);
             }
-            if (select_pay_mode == RechargeGoldFragment.Pay_Type_Alipay){
+            if (select_pay_mode == RechargeGoldFragment.Pay_Type_Alipay) {
                 //支付宝支付
                 AliPay(totalChargeGold);
             }
@@ -229,16 +230,16 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
                 Utils.getLoginInfo(getContext()).member_id,
-                amount+"",
+                amount + "",
                 "1",
                 "1",
                 "1"));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
-            public void accept(HttpResultModel<PayResultModel> payRequestBody ) throws Exception {
+            public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
                 if (payRequestBody.isSucceful()) {
                     final String info = payRequestBody.data.orderInfo;
-                    Log.e(TAG, "accept: info:::::"+info);
+                    Log.e(TAG, "accept: info:::::" + info);
                     Runnable payRunnable = new Runnable() {
                         @Override
                         public void run() {
@@ -250,7 +251,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
 
                     Thread payThread = new Thread(payRunnable);
                     payThread.start();
-                }else {
+                } else {
                     dismissWaittingDialog();
                     Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -259,7 +260,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public void accept(NetError netError) throws Exception {
                 dismissWaittingDialog();
-                Log.e("", "Link Net Error! Error Msg: "+netError.getMessage().trim());
+                Log.e("", "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
 
@@ -269,15 +270,15 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
                 Utils.getLoginInfo(getContext()).member_id,
-                amount+"",
+                amount + "",
                 "2",
                 "1",
                 "0"));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
-            public void accept(HttpResultModel<PayResultModel> payRequestBody ) throws Exception {
+            public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
                 if (payRequestBody.isSucceful()) {
-                    Log.d("","accept");
+                    Log.d("", "accept");
                     WxPayInfoBean bean = new WxPayInfoBean();
                     bean.setAppid(RxConstant.ThirdPartKey.WeixinId);
                     bean.setNoncestr(payRequestBody.data.getWxorderInfo().getNoncestr());
@@ -287,7 +288,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                     bean.setSign(payRequestBody.data.getWxorderInfo().getSign());
                     bean.setTimestamp(payRequestBody.data.getWxorderInfo().getTimestamp());
                     GameMarketApplication.api.sendReq(WXPayUtils.weChatPay(bean));
-                }else {
+                } else {
                     dismissWaittingDialog();
                     Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -296,34 +297,34 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public void accept(NetError netError) throws Exception {
                 dismissWaittingDialog();
-                Log.e("", "Link Net Error! Error Msg: "+netError.getMessage().trim());
+                Log.e("", "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
 
     }
 
-    private void showWaittingDialog(){
+    private void showWaittingDialog() {
         dialog = null;
-        dialog = new ProgressDialog(getContext(),ProgressDialog.STYLE_SPINNER);
+        dialog = new ProgressDialog(getContext(), ProgressDialog.STYLE_SPINNER);
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setMessage("支付中");
         dialog.show();
     }
 
-    private void dismissWaittingDialog(){
+    private void dismissWaittingDialog() {
         dialog.dismiss();
     }
 
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
-        if (v == mConfirmOrder){
+        if (v == mConfirmOrder) {
             confirmOrder();
         }
-        if (v == mConnectKefu){
+        if (v == mConnectKefu) {
 
         }
     }

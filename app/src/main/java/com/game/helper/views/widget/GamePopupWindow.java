@@ -61,9 +61,9 @@ public class GamePopupWindow extends PopupWindow {
     private int totalPage;
     List<GameListResultModel.ListBean> mDatas = null;
 
-    private String word ="";
+    private String word = "";
 
-    public GamePopupWindow(Activity context){
+    public GamePopupWindow(Activity context) {
         this.context = context;
         contentView = LayoutInflater.from(context).inflate(R.layout.fragment_game_adapter_layout, null);
         setContentView(contentView);
@@ -73,7 +73,7 @@ public class GamePopupWindow extends PopupWindow {
         initView();
     }
 
-    public void init(String key){
+    public void init(String key) {
         this.word = key;
         getGameListAccordingKey(page, word);
     }
@@ -119,9 +119,9 @@ public class GamePopupWindow extends PopupWindow {
         refresh_layout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
-                if(++page<=totalPage){
+                if (++page <= totalPage) {
                     getGameListAccordingKey(page, word);
-                }else{
+                } else {
                     noMoreData();
                 }
 
@@ -147,10 +147,11 @@ public class GamePopupWindow extends PopupWindow {
 
     /**
      * 根据关键词搜游戏
+     *
      * @param page
      */
-    private void getGameListAccordingKey(int page,String word) {
-        Flowable<HttpResultModel<GameListResultModel>> fr = DataService.getGameAccountList(new GameListRequestBody(page,word));
+    private void getGameListAccordingKey(int page, String word) {
+        Flowable<HttpResultModel<GameListResultModel>> fr = DataService.getGameAccountList(new GameListRequestBody(page, word));
         RxLoadingUtils.subscribe(fr, new FlowableTransformer() {
             @Override
             public Publisher apply(Flowable upstream) {
@@ -158,15 +159,15 @@ public class GamePopupWindow extends PopupWindow {
             }
         }, new Consumer<HttpResultModel<GameListResultModel>>() {
             @Override
-            public void accept(HttpResultModel<GameListResultModel> recommendResultsHttpResultModel) throws Exception {
-                if(recommendResultsHttpResultModel.isSucceful()){
-                    totalPage = recommendResultsHttpResultModel.total_page;
-                    showData(recommendResultsHttpResultModel.data.getList(),recommendResultsHttpResultModel.current_page);
-                }
+            public void accept(HttpResultModel<GameListResultModel> recommendResultsHttpResultModel){
+                Log.d(TAG,"showData");
+                totalPage = recommendResultsHttpResultModel.total_page;
+                showData(recommendResultsHttpResultModel.data.getList(), recommendResultsHttpResultModel.current_page);
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
+                Log.e(TAG,"NetErrorNetErrorNetErrorNetErrorNetError");
 //                noData();
 //                Toast.makeText(context,"请求出错了",Toast.LENGTH_SHORT).show();
             }
@@ -175,7 +176,7 @@ public class GamePopupWindow extends PopupWindow {
     }
 
     public void showData(List<GameListResultModel.ListBean> datas, int cur_page) {
-        Log.d(TAG ,"展示数据");
+        Log.d(TAG, "展示数据");
         no_match.setVisibility(View.GONE);
         stopRefresh();
 

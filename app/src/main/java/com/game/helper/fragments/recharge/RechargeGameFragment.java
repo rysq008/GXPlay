@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -424,6 +425,14 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     public double getTotalBalanceValue() {
         return mTotalBalanceValue;
+    }
+
+    public double getInputValue() {
+        String inputValue = mBalance.getText().toString().trim();
+        if(TextUtils.isEmpty(inputValue)){
+            inputValue = "0.0";
+        }
+        return Double.parseDouble(inputValue);
     }
 
     @Override

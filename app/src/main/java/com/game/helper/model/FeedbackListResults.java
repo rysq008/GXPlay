@@ -3,7 +3,6 @@ package com.game.helper.model;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.List;
 
 import zlc.season.practicalrecyclerview.ItemType;
