@@ -42,4 +42,5 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         super.onDestroy();
         currentFragment = null;
     }
+
 }

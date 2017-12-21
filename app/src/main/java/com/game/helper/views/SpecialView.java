@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,18 +16,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.SpecialDetailFragment;
+import com.game.helper.fragments.SpecialMoreFragment;
 import com.game.helper.model.SpecialResults;
+import com.game.helper.net.api.Api;
 import com.leochuan.CenterScrollListener;
 import com.leochuan.CircleLayoutManager;
 import com.leochuan.GalleryLayoutManager;
 import com.leochuan.RotateLayoutManager;
 import com.leochuan.ScaleLayoutManager;
+import com.leochuan.ViewPagerLayoutManager;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.imageloader.LoadCallback;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 
@@ -69,7 +76,7 @@ public class SpecialView extends LinearLayout {
             }
         });
 
-        bannerViewPager.setLayoutManager(new GalleryLayoutManager(2));
+        bannerViewPager.setLayoutManager(new ScaleLayoutManager(2, ViewPagerLayoutManager.HORIZONTAL));
         //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
 //        bannerViewPager.setHasFixedSize(true);
 
@@ -103,16 +110,18 @@ public class SpecialView extends LinearLayout {
         @SuppressLint("NewApi")
         @Override
         public void onBindViewHolder(SViewHolder holder, int position) {
-//            SpecialResults.SpecialItem itemData = data.list.get(position);
-//            ILFactory.getLoader().loadNet(holder.riv, Api.API_PAY_OR_IMAGE_URL.concat(itemData.image), ILoader.Options.defaultOptions());
+            SpecialResults.SpecialItem itemData = data.list.get(position);
+            holder.setPosition(position);
+            ILFactory.getLoader().loadNet(holder.riv, Api.API_PAY_OR_IMAGE_URL.concat(itemData.image), ILoader.Options.defaultOptions());
         }
 
         @Override
         public int getItemCount() {
-            return data.list.size() * 10;
+            return data.list.size();
         }
 
         class SViewHolder extends RecyclerView.ViewHolder {
+            int mPosition = 0;
             @BindView(R.id.special_item_iv)
             RoundedImageView riv;
 
@@ -120,10 +129,23 @@ public class SpecialView extends LinearLayout {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
             }
+            @OnClick(R.id.special_item_iv)
+            public void onclick(){
+                Bundle bundle = new Bundle();
+                bundle.putString("imagerurl",(data.list.get(mPosition).image));
+                bundle.putString("content",(data.list.get(mPosition).content));
+                bundle.putString("name",(data.list.get(mPosition).name));
+                bundle.putInt("id",(data.list.get(mPosition).id));
+                DetailFragmentsActivity.launch(getContext(), bundle, SpecialDetailFragment.newInstance());
+            }
+            public void setPosition(int p){
+                mPosition = p;
+            }
         }
     }
 
     @OnClick(R.id.special_item_tv)
     public void onClick() {
+        DetailFragmentsActivity.launch(getContext(), null, SpecialMoreFragment.newInstance());
     }
 }

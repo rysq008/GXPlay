@@ -38,6 +38,7 @@ import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
+import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
@@ -56,6 +57,7 @@ import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
+import com.game.helper.net.model.GamePackageRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
@@ -68,6 +70,7 @@ import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.SpecialDetailRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
@@ -324,6 +327,10 @@ public class DataService {
         return Api.CreateApiService().feedBackList();
     }
 
+    public static Flowable<HttpResultModel<SpecialResults>> getSpecialMoreList(BaseRequestBody baseRequestBody){
+        return  Api.CreateApiService().getSpecialMoreList(baseRequestBody);
+    }
+
     public static Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo() {
         return Api.CreateApiService().getMarketInfo();
     }
@@ -335,6 +342,10 @@ public class DataService {
     public static Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
         return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
     }
+    public static Flowable<HttpResultModel<SpecialDetailResults>> getSpecialDetailList(@Body SpecialDetailRequestBody specialDetailRequestBody) {
+        return Api.CreateApiService().getSpecialDetailList(specialDetailRequestBody);
+    }
+
 
     public static Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts() {
         return Api.CreateApiService().getAllAccounts();
@@ -343,5 +354,9 @@ public class DataService {
     public static Flowable<HttpResultModel<FeedbackListResults>> consume(ConsumeRequestBody consumeRequestBody) {
         return Api.CreatePayOrImageApiService().consume(consumeRequestBody);
     }
+    public static Flowable<HttpResultModel<GameListResultModel>> getGamePackageList(GamePackageRequestBody getGamePackageList) {
+        return Api.CreatePayOrImageApiService().getGamePackageList(getGamePackageList);
+    }
+
 
 }
