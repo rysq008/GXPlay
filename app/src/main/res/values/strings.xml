@@ -67,6 +67,7 @@
     <string name="common_update_phone">绑定手机号</string>
     <string name="common_update_sign">个人签名</string>
     <string name="common_update_trade_password">设置交易密码</string>
+    <string name="common_update_trade_password1">修改交易密码</string>
     <string name="common_update_alipay">修改支付宝账户</string>
     <string name="common_set_alipay">设置支付宝账户</string>
     <string name="common_safe_hint">为了保证您的账户安全，请确认您输入的信息真实有效</string>

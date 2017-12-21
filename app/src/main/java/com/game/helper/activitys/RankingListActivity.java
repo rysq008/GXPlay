@@ -19,7 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class RankingListActivity extends XBaseActivity implements View.OnClickListener{
+public class RankingListActivity extends XBaseActivity implements View.OnClickListener {
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -27,8 +27,8 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
     TextView mHeadTittle;
     @BindView(R.id.vp)
     ViewPager vp;
-//    @BindView(R.id.superStarIv)
-//    ImageView superStarIv;
+    @BindView(R.id.superStarIv)
+    ImageView superStarIv;
     @BindView(R.id.renmaiIv)
     ImageView renmaiIv;
     @BindView(R.id.incomeIv)
@@ -53,15 +53,17 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
     private void init() {
         fragments.add(RangeFriendListFragment.newInstance());
         fragments.add(RangeIncomeListFragment.newInstance());
+        fragments.add(RangeIncomeListFragment.newInstance());
 
         adapter = new MyPagerAdapter(getSupportFragmentManager());
         vp.setAdapter(adapter);
+        vp.setOffscreenPageLimit(2);
     }
 
     private void initListeners() {
 
         mHeadBack.setOnClickListener(this);
-//        superStarIv.setOnClickListener(this);
+        superStarIv.setOnClickListener(this);
         renmaiIv.setOnClickListener(this);
         incomeIv.setOnClickListener(this);
 
@@ -73,19 +75,19 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
-//                    case 0:
-//                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_select);
-//                        renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
-//                        incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
-//                        break;
+                switch (position) {
                     case 0:
-//                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
-                        renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_select);
+                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_select);
+                        renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
                         incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
                         break;
                     case 1:
-//                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
+                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
+                        renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_select);
+                        incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
+                        break;
+                    case 2:
+                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
                         renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
                         incomeIv.setBackgroundResource(R.mipmap.bg_income_select);
                         break;
@@ -110,18 +112,18 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.action_bar_back:
                 onBackPressed();
                 break;
-//            case R.id.superStarIv:
-//                vp.setCurrentItem(0);
-//                break;
-            case R.id.renmaiIv:
+            case R.id.superStarIv:
                 vp.setCurrentItem(0);
                 break;
-            case R.id.incomeIv:
+            case R.id.renmaiIv:
                 vp.setCurrentItem(1);
+                break;
+            case R.id.incomeIv:
+                vp.setCurrentItem(2);
                 break;
         }
     }
@@ -140,7 +142,6 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
         @Override
         public Fragment getItem(int position) {
             return fragments.get(position);
-
         }
     }
 }

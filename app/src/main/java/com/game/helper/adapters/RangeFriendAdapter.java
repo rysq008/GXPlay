@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
-import cn.droidlover.xdroidmvp.imageloader.ILoader;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -101,9 +101,14 @@ public class RangeFriendAdapter extends SimpleRecAdapter<ItemType, RangeFriendAd
                     break;
             }
 
-            //头像
-            ILFactory.getLoader().loadNet(ivAvatar, Api.API_BASE_URL.concat(data.getMember().getIcon()), ILoader.Options.defaultOptions());
-
+            String icon  = data.getMember().getIcon();
+            //头像\
+            if (!/*StringUtils.isEmpty(data.getMember().getIcon()*/Kits.Empty.check(icon)) {
+//                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
+                ILFactory.getLoader().loadNet(ivAvatar, Api.API_BASE_URL.concat(icon), null);
+            }else{
+                ILFactory.getLoader().loadResource(ivAvatar, R.mipmap.ic_default_avatar, null);
+            }
             //名字
             tvName.setText(data.getMember().getNick_name());
             //描述

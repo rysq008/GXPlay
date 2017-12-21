@@ -24,6 +24,9 @@ import com.game.helper.model.IncomeResultModel;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.model.LoginResults;
 import com.game.helper.model.LogoutResults;
+import com.game.helper.model.MarketExpectedFlowlistResults;
+import com.game.helper.model.MarketFlowlistResults;
+import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
@@ -60,6 +63,8 @@ import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
@@ -73,12 +78,16 @@ import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.UploadUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.droidlover.xdroidmvp.kit.Kits;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Body;
 
 public class DataService {
 
@@ -135,7 +144,7 @@ public class DataService {
         return Api.CreateApiService().getApiVerify(verifyRequestBody);
     }
 
-    public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody){
+    public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody) {
         return Api.CreateApiService().resetPassWord(resetPasswdRequestBody);
     }
 
@@ -194,6 +203,7 @@ public class DataService {
     public static Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(AvailableRedpackRequestBody friendRangeRequestBody) {
         return Api.CreateApiService().getRedPackInfo(friendRangeRequestBody);
     }
+
     public static Flowable<HttpResultModel<CashToResults>> cashTo(CashToRequestBody cashToRequestBody) {
         return Api.CreatePayOrImageApiService().cashTo(cashToRequestBody);
     }
@@ -208,6 +218,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<ResetTradeResults>> resetTradePasswrd(ResetTradeRequestBody resetTradePasswrd) {
         return Api.CreateApiService().resetTradePassword(resetTradePasswrd);
+    }
+
+    public static Flowable<HttpResultModel<ResetTradeResults>> setTradePasswrd(SetTradeRequestBody setTradeRequestBody) {
+        return Api.CreateApiService().setTradePassword(setTradeRequestBody);
     }
 
     public static Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(ResetAlipayRequestBody resetAlipayRequestBody) {
@@ -257,6 +271,27 @@ public class DataService {
         return Api.CreateApiService().setApiUserIcon(part);
     }
 
+    //多个文件上传有进度监听
+    public static Flowable<HttpResultModel> setApiUserIcon(List<File> files, UploadUtils.FileUploadProgress fileUploadFlowable) {
+        if (!Kits.Empty.check(files)) {
+            List list = new ArrayList();
+            for (File file : files) {
+                list.add(setApiUserIcon(file, fileUploadFlowable));
+            }
+            return Flowable.zipIterable(list, new Function<Object[], ArrayList<HttpResultModel>>() {
+                @Override
+                public ArrayList<HttpResultModel> apply(Object[] objects) throws Exception {
+                    ArrayList<HttpResultModel> arrayList = new ArrayList<>();
+                    for (Object obj : objects) {
+                        arrayList.add((HttpResultModel) obj);
+                    }
+                    return arrayList;
+                }
+            }, true, 1);
+        }
+        return null;
+    }
+
     public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(UpdateNicknameRequestBody updateNicknameRequestBody) {
         return Api.CreateApiService().updateNickname(updateNicknameRequestBody);
     }
@@ -287,6 +322,18 @@ public class DataService {
 
     public static Flowable<HttpResultModel<FeedbackListResults>> feedBackList() {
         return Api.CreateApiService().feedBackList();
+    }
+
+    public static Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo() {
+        return Api.CreateApiService().getMarketInfo();
+    }
+
+    public static Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getMarketFlowList(singlePageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
     }
 
     public static Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts() {

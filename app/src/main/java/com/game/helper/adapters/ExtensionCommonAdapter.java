@@ -10,11 +10,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
+import com.game.helper.fragments.ExtensionProfitItemFragment;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.CashListResults;
-import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.MarketFlowlistResults;
+import com.game.helper.model.MarketExpectedFlowlistResults;
+import com.game.helper.model.MarketFlowlistResults;
 import com.game.helper.model.ProfitListResults;
-import com.game.helper.model.RechargeListResults;
+import com.game.helper.model.MarketExpectedFlowlistResults;
 import com.game.helper.net.api.Api;
 
 import java.util.ArrayList;
@@ -22,45 +25,35 @@ import java.util.List;
 
 /**
  * Created by sung on 2017/11/19.
- * 详情账号
  */
 public class ExtensionCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = ExtensionCommonAdapter.class.getSimpleName();
-    public static final int Type_Account_Consume = 0;
-    public static final int Type_Account_Recharge = 1;
 
     private List data = new ArrayList();
     private Context context;
-    private int type = Type_Account_Consume;
+    private int type = ExtensionProfitItemFragment.Type_Extension_Gold;
 
     public ExtensionCommonAdapter(Context context, XBaseModel data, int type) {
         this.context = context;
         this.type = type;
         if (data == null) return;
-        if (data instanceof ConsumeListResults){
-            this.data = ((ConsumeListResults) data).list;
-        }else if (data instanceof RechargeListResults){
-            this.data = ((RechargeListResults) data).list;
+        if (data instanceof MarketFlowlistResults){
+            this.data = ((MarketFlowlistResults) data).list;
+        }else if (data instanceof MarketExpectedFlowlistResults){
+            this.data = ((MarketExpectedFlowlistResults) data).list;
         }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if (type == Type_Account_Recharge){
-            return new AccountRechargeHolder(inflater.inflate(R.layout.layout_account_list_item_recharge, parent, false));
-        }
-        return new AccountConsumeHolder(inflater.inflate(R.layout.layout_account_list_item_consume, parent, false));
+        return new MarketFlowHolder(inflater.inflate(R.layout.layout_extension_profit_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof AccountConsumeHolder) {
-            AccountConsumeHolder viewHolder = (AccountConsumeHolder) holder;
-            viewHolder.onBind(position);
-        }
-        if (holder instanceof AccountRechargeHolder) {
-            AccountRechargeHolder viewHolder = (AccountRechargeHolder) holder;
+        if (holder instanceof MarketFlowHolder) {
+            MarketFlowHolder viewHolder = (MarketFlowHolder) holder;
             viewHolder.onBind(position);
         }
     }
@@ -73,83 +66,52 @@ public class ExtensionCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void setData(XBaseModel data,boolean clear){
         if (data == null) return;
         List list = null;
-        if (data instanceof ConsumeListResults){
-            list = ((ConsumeListResults) data).list;
-        }else if (data instanceof RechargeListResults){
-            list = ((RechargeListResults) data).list;
+        if (data instanceof MarketFlowlistResults){
+            list = ((MarketFlowlistResults) data).list;
+        }else if (data instanceof MarketExpectedFlowlistResults){
+            list = ((MarketExpectedFlowlistResults) data).list;
         }
         if (clear) this.data = list;
         else this.data.addAll(list);
         notifyDataSetChanged();
     }
 
-    /**
-    * 消费明细
-    * */
-    class AccountConsumeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MarketFlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private int position = -1;
         private View mRootView;
-        private TextView name;
-        private ImageView icon;
-        private TextView value;
-        private TextView account;
-        private TextView platform;
-        private TextView time;
+        private TextView left;
+        private TextView center;
+        private TextView right;
 
-        public AccountConsumeHolder(View itemView) {
+        public MarketFlowHolder(View itemView) {
             super(itemView);
             mRootView = itemView;
-            name = itemView.findViewById(R.id.tv_name);
-            icon = itemView.findViewById(R.id.iv_icon);
-            value = itemView.findViewById(R.id.tv_value);
-            account = itemView.findViewById(R.id.tv_account);
-            platform = itemView.findViewById(R.id.tv_platform);
-            time = itemView.findViewById(R.id.tv_time);
+            left = itemView.findViewById(R.id.tv_left);
+            center = itemView.findViewById(R.id.tv_center);
+            right = itemView.findViewById(R.id.tv_right);
         }
 
         void onBind(int position) {
             this.position = position;
-            if (!(data.get(position) instanceof ConsumeListResults.ConsumeListItem)) return;
-            ConsumeListResults.ConsumeListItem consumeListItem = (ConsumeListResults.ConsumeListItem) data.get(position);
-            name.setText(consumeListItem.name);
-            Glide.with(context).load(Api.API_PAY_OR_IMAGE_URL+consumeListItem.img).into(icon);
-            value.setText("-"+consumeListItem.amount);
-            account.setText(consumeListItem.game_account);
-            platform.setText(consumeListItem.channel_name);
-            time.setText(consumeListItem.finish_time);
-        }
 
-        @Override
-        public void onClick(View v) {
-            if (v == mRootView) {
+            if (type == ExtensionProfitItemFragment.Type_Extension_Gold) {
+                if (!(data.get(position) instanceof MarketFlowlistResults.MarketFlowlistItem))
+                    return;
+
+                MarketFlowlistResults.MarketFlowlistItem item = (MarketFlowlistResults.MarketFlowlistItem) data.get(position);
+                left.setText(item.create_time);
+                center.setText(item.type);
+                right.setText(item.reward);
             }
-        }
-    }
+            if (type == ExtensionProfitItemFragment.Type_Plan_Gold){
+                if (!(data.get(position) instanceof MarketExpectedFlowlistResults.MarketExpectedFlowlistItem))
+                    return;
 
-    /**
-     * 充值明细
-     * */
-    class AccountRechargeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private int position = -1;
-        private View mRootView;
-        private TextView value;
-        private TextView recharge;
-        private TextView time;
-
-        public AccountRechargeHolder(View itemView) {
-            super(itemView);
-            mRootView = itemView;
-            value = itemView.findViewById(R.id.tv_value);
-            recharge = itemView.findViewById(R.id.tv_recharge);
-            time = itemView.findViewById(R.id.tv_time);
-        }
-
-        void onBind(int position) {
-            this.position = position;
-            if (!(data.get(position) instanceof RechargeListResults.RechargeListItem)) return;
-            RechargeListResults.RechargeListItem rechargeListItem = (RechargeListResults.RechargeListItem) data.get(position);
-            value.setText("+"+rechargeListItem.jine);
-            time.setText(rechargeListItem.finish_time);
+                MarketExpectedFlowlistResults.MarketExpectedFlowlistItem item = (MarketExpectedFlowlistResults.MarketExpectedFlowlistItem) data.get(position);
+                left.setText(item.name);
+                center.setText(item.amount+"元");
+                right.setText(item.status);
+            }
         }
 
         @Override

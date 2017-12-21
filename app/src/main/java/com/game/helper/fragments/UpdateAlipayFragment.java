@@ -46,8 +46,8 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
 
     @BindView(R.id.tv_debug)
     TextView debugHint;
-    @BindView(R.id.et_account)
-    EditInputView mAccount;
+    @BindView(R.id.tv_account)
+    TextView mAccount;
     @BindView(R.id.type_trde_old_account)
     EditInputView mOldAlipay;
     @BindView(R.id.type_trde_new_account)
@@ -94,7 +94,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
         mHeadBack.setOnClickListener(this);
 
         mResetPasswd.setSelected(false);
-        mAccount.addOnEditInputListener(this);
+        mAccount.setText(Utils.getLoginInfo(getContext()).phone);
         mOldAlipay.addOnEditInputListener(this);
         mAlipayAccount.addOnEditInputListener(this);
         mAlipayAccount1.addOnEditInputListener(this);

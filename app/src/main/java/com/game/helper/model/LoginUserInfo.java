@@ -7,9 +7,9 @@ package com.game.helper.model;
 public class LoginUserInfo {
     public String phone;
     public String member_id;
-    public boolean has_passwd;
-    public boolean has_trade_passwd;
-    public boolean has_alipay_account;
+    public boolean has_passwd;//登陆密码
+    public boolean has_trade_passwd;//交易密码
+    public boolean has_alipay_account;//支付宝账号
 
     public LoginUserInfo() {
     }

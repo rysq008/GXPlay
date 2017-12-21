@@ -117,7 +117,6 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     private void initView(){
         setCheckStatus(-1,true);
         if (getArguments() != null) setChooseGameData(true);
-        getVipGameAccount();//获取当前平台账户vip信息
         //getVipLevel();//获取最高vip
 
         discount_high_vip = getResources().getString(R.string.recharge_high_vip_discount);
@@ -190,20 +189,30 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             @Override
             public void accept(HttpResultModel<VipGameAccountResults> vipGameAccountResultsHttpResultModel ) throws Exception {
                 accountBean = vipGameAccountResultsHttpResultModel.data;
-                if (gameBean != null && gameBean.isIs_xc()){
+                /*
+                进来页面选完游戏账号 先判断游戏首充
+                有首充默认首充其他不可点
+                无首充 判断该游戏账号绑定vip
+                    有绑定 默认vip折扣不弹窗
+                    没有酒普通会员折扣
+                这时候点击VIP折扣再执行判断弹窗的逻辑
+                * */
+                if (gameBean == null) return;
+                if (gameBean.isIs_xc()){
                     setCheckStatus(-1,true);
                     setCheckStatus(0,false);
+                    mItemDiscount1.performClick();
                 }else {
                     //打开普通会员选择
                     setCheckStatus(1, false);
                     //打开vip会员选择
                     setCheckStatus(2, false);
-                }
-                //根据vip等级设置选中折扣
-                if (accountBean.vip_level == 0){
-                    mItemDiscount2.performClick();
-                }else if (accountBean.vip_level > 0){
-                    mItemDiscount3.performClick();
+                    if (gameBean.isIs_vip()){
+                        //当前游戏肯定是vip 默认选中vip折扣 不需要判断vip数量
+                        setChecked(2);
+                    }else {
+                        mItemDiscount2.performClick();
+                    }
                 }
                 //打开vip剩余数量提示
                 setVipHint(accountBean.count);
@@ -444,6 +453,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean){
                 gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
                 setChooseGameData(false);
+                getVipGameAccount();//获取当前平台账户vip信息
             }
         }
     }
