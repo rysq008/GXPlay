@@ -46,6 +46,11 @@ import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.net.model.DeleteGameRequestBody;
+import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
+import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.DeleteGiftRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.MineGameRequestBody;
@@ -292,7 +297,6 @@ public interface ApiService {
 //反馈列表
     Flowable<HttpResultModel<FeedbackListResults>> feedBackList();
 
-
     @POST("/marketing/get_marketing_info/")//推广账号详情
     Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();
 
@@ -313,6 +317,9 @@ public interface ApiService {
 
     @POST("/member/delete_my_gift_code/")//删除游戏礼包
     Flowable<HttpResultModel<DeleteMineGiftResults>> deleteMineGiftCode(@Body DeleteGiftRequestBody deleteGiftRequestBody);
+
+    @POST("/member/delete_my_game/")//删除游戏
+    Flowable<HttpResultModel<NotConcernResults>> deleteMineGame(@Body DeleteGameRequestBody deleteGameRequestBody);
 
     @POST("/game/get_gift_info/")//游戏礼包详情
     Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody);

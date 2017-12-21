@@ -21,8 +21,10 @@ import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MineGamelistResults;
 import com.game.helper.model.MineGamelistResults;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
+import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -41,6 +43,7 @@ import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,6 +127,25 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public void accept(HttpResultModel<MineGamelistResults> mineGamelistResultsHttpResultModel) throws Exception {
                 notifyData(mineGamelistResultsHttpResultModel.data,page);
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                showError(netError);
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
+    }
+
+    /**
+     * 删除游戏
+     * */
+    private void deleteGame(int packageId){
+        Flowable<HttpResultModel<NotConcernResults>> fr = DataService.deleteMineGame(new DeleteGameRequestBody(packageId));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
+            @Override
+            public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
+                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
@@ -230,15 +252,19 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
                 type.setText(item.channel.name);
                 size.setText("");
                 desc.setText(item.name_package);
+                delete.setTag(item);
             }
 
             @Override
             public void onClick(View v) {
-                if (v == delete){
-                    Toast.makeText(getContext(), "delete", Toast.LENGTH_SHORT).show();
-                }
-                if (v == launch){
-                    Toast.makeText(getContext(), "launch", Toast.LENGTH_SHORT).show();
+                if (delete.getTag() != null && delete.getTag() instanceof MineGamelistResults.MineGamelistItem){
+                    MineGamelistResults.MineGamelistItem item = (MineGamelistResults.MineGamelistItem) delete.getTag();
+                    if (v == delete){
+                        deleteGame(item.game.id);
+                    }
+                    if (v == launch){
+                        Utils.doStartApplicationWithPackageName(getContext(), item.name_package);
+                    }
                 }
             }
         }

@@ -108,6 +108,8 @@ public class RangeIncomeAdapter extends SimpleRecAdapter<ItemType, RangeIncomeAd
             if (!/*StringUtils.isEmpty(data.getMember().getIcon()*/Kits.Empty.check(icon)) {
 //                Glide.with(activity).load(data.getMember().getIcon()).into(ivAvatar.getAvatarView());
                 ILFactory.getLoader().loadNet(ivAvatar, Api.API_BASE_URL.concat(icon), null);
+            } else {
+                ILFactory.getLoader().loadResource(ivAvatar, R.mipmap.ic_default_avatar, null);
             }
             //名字
             tvName.setText(data.getMember().getNick_name());

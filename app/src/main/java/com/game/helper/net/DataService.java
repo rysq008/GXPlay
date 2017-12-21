@@ -55,6 +55,7 @@ import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
+import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.DeleteGiftRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
@@ -330,6 +331,7 @@ public class DataService {
         return Api.CreateApiService().feedBackList();
     }
 
+
     public static Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo() {
         return Api.CreateApiService().getMarketInfo();
     }
@@ -356,6 +358,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<DeleteMineGiftResults>> deleteMineGiftCode(@Body DeleteGiftRequestBody deleteGiftRequestBody) {
         return Api.CreateApiService().deleteMineGiftCode(deleteGiftRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> deleteMineGame(@Body DeleteGameRequestBody deleteGameRequestBody) {
+        return Api.CreateApiService().deleteMineGame(deleteGameRequestBody);
     }
 
     public static Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody) {
