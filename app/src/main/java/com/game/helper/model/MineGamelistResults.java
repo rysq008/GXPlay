@@ -37,7 +37,7 @@ public class MineGamelistResults extends XBaseModel {
 }
     * */
     @SerializedName("list")
-    public List<MarketFlowlistResults.MarketFlowlistItem> list;
+    public List<MineGamelistItem> list;
 
     public static class MineGamelistItem implements ItemType{
         public String name_package;

@@ -301,7 +301,7 @@ public interface ApiService {
     @POST("/member/get_my_game_list/")//获取我的游戏列表
     Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody);
 
-    @POST("/member/get_my_gift_code_list")//获取我的礼包列表
+    @POST("/member/get_my_gift_code_list/")//获取我的礼包列表
     Flowable<HttpResultModel<MineGiftlistResults>> getMineGiftList(@Body MineGameRequestBody mineGameRequestBody);
 
     @POST("/account/get_game_consume_list/")//获取我的订单列表
