@@ -229,7 +229,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private void AliPay(float amount) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                Utils.getLoginInfo(getContext()).member_id,
+                Utils.getLoginInfo(getContext()).member_id+"",
                 amount + "",
                 "1",
                 "1",
@@ -269,7 +269,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private void weixinPay(float amount) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                Utils.getLoginInfo(getContext()).member_id,
+                Utils.getLoginInfo(getContext()).member_id+"",
                 amount + "",
                 "2",
                 "1",

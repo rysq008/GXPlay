@@ -123,7 +123,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
                 || (isUseAccountBalance() && Float.parseFloat(userInfo.balance) <= 0) ){
             Toast.makeText(getContext(), "该账户暂无可提现金额！", Toast.LENGTH_SHORT).show();
             // TODO: 2017/12/15 方便测试，去除对比金额限制，上线请移除
-            //return;
+            return;
         }
 
         PasswordEditDialog dialog = new PasswordEditDialog();
@@ -145,7 +145,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
             @Override
             public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
                 if (checkTradePasswdResultsHttpResultModel.isSucceful()){
-                    applyFromNet(Utils.getLoginInfo(getContext()).member_id,cashValue,isUseAccountBalance()+"",password);
+                    applyFromNet(Utils.getLoginInfo(getContext()).member_id+"",cashValue,isUseAccountBalance()+"",password);
                 }else if (checkTradePasswdResultsHttpResultModel.isNoneTradePassword()) {
                     //设置交易密码
                     GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm,

@@ -182,4 +182,10 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
     public void setHintText(String text){
         mContent.setHint(text);
     }
+
+    public void setEditAble(boolean editAble){
+        mContent.setEnabled(editAble);
+        mContent.setFocusable(editAble);
+        mContent.setFocusableInTouchMode(editAble);
+    }
 }

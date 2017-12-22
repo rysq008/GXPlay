@@ -58,9 +58,9 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:layout_marginRight="@dimen/dp_5"
-                    android:src="@mipmap/ic_launcher"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30" />
+                    android:src="@mipmap/login_ic_phone"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20" />
                 <com.game.helper.views.EditInputView
                     android:id="@+id/et_account"
                     android:background="@null"
@@ -83,9 +83,9 @@
                 android:layout_height="wrap_content">
                 <ImageView
                     android:layout_marginRight="@dimen/dp_5"
-                    android:src="@mipmap/ic_launcher"
-                    android:layout_width="@dimen/dp_30"
-                    android:layout_height="@dimen/dp_30" />
+                    android:src="@mipmap/login_ic_code"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20" />
                 <LinearLayout
                     android:orientation="horizontal"
                     android:gravity="center"

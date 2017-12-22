@@ -80,7 +80,10 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             @Override
             public void accept(HttpResultModel<LogoutResults> logoutResultsHttpResultModel) throws Exception {
                 if (logoutResultsHttpResultModel.isSucceful()) {
-
+                        SharedPreUtil.cleanLoginUserInfo();
+                    Utils.clearLoginInfo(getContext());
+                    SharedPreUtil.saveSessionId("");
+                    getActivity().onBackPressed();
                 }else {
                     //Toast.makeText(getContext(), logoutResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -92,9 +95,9 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             }
         });
 
-        Utils.clearLoginInfo(getContext());
-        SharedPreUtil.saveSessionId("");
-        getActivity().onBackPressed();
+//        Utils.clearLoginInfo(getContext());
+//        SharedPreUtil.saveSessionId("");
+//        getActivity().onBackPressed();
     }
 
     @Override

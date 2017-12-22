@@ -61,7 +61,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
-        android:src="@mipmap/bg_game_list_item_install" />
+        android:src="@mipmap/ic_copy" />
 
     <View
         android:layout_width="match_parent"

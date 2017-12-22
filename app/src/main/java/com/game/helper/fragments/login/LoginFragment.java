@@ -23,6 +23,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
@@ -36,7 +37,7 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LoginFragment extends XBaseFragment implements View.OnClickListener,EditInputView.OnEditInputListener{
+public class LoginFragment extends XBaseFragment implements View.OnClickListener, EditInputView.OnEditInputListener {
     public static final String TAG = LoginFragment.class.getSimpleName();
     public static final int LOGIN_TYPE_MESSAGE = 1;
     public static final int LOGIN_TYPE_PASSWORD = 0;
@@ -66,12 +67,12 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     TextView debugHint;
     @BindView(R.id.tv_left_time)
     CountDownText mCountDownText;
-    
+
     //args
     private int Login_Type = 1;
     private onLoginListener mOnLoginListener;
 
-    public static LoginFragment newInstance(){
+    public static LoginFragment newInstance() {
         return new LoginFragment();
     }
 
@@ -94,7 +95,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
 
         mCountDownText.setVisibility(View.GONE);
         switchLoginType(LOGIN_TYPE_PASSWORD);
-        if (BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             debugHint.setVisibility(View.VISIBLE);
             debugHint.setText("测试环境默认验证码：9870");
         }
@@ -105,50 +106,51 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         return R.layout.fragment_login;
     }
 
-    private void login(int type){
+    private void login(int type) {
         String account = mAccount.getText().toString().trim();
         String code = mPassWord.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)){
+        if (StringUtils.isEmpty(account)) {
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (StringUtils.isEmpty(code)){
+        if (StringUtils.isEmpty(code)) {
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_code), Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Flowable<HttpResultModel<LoginResults>> fr = DataService.login(new LoginRequestBody(account,code,type+"",""));
+        Flowable<HttpResultModel<LoginResults>> fr = DataService.login(new LoginRequestBody(account, code, type + "", ""));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<LoginResults>>() {
             @Override
             public void accept(HttpResultModel<LoginResults> loginResultsHttpResultModel) throws Exception {
                 if (loginResultsHttpResultModel.isSucceful()) {
                     LoginUserInfo userInfo = new LoginUserInfo(loginResultsHttpResultModel.data);
-                    Utils.writeLoginInfo(getContext(),userInfo);
-                    if (mOnLoginListener != null){
+                    Utils.writeLoginInfo(getContext(), userInfo);
+                    SharedPreUtil.saveLoginUserInfo(userInfo);
+                    if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginSuccessful(userInfo);
                     }
                     getActivity().onBackPressed();
 
-                    if (!loginResultsHttpResultModel.data.has_passwd){
-                        DetailFragmentsActivity.launch(getContext(),null,ResetPasswdFragment.newInstance());
+                    if (!loginResultsHttpResultModel.data.has_passwd) {
+                        DetailFragmentsActivity.launch(getContext(), null, ResetPasswdFragment.newInstance());
                     }
-                }else {
+                } else {
                     Toast.makeText(getContext(), loginResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
     }
 
-    private void getVerify(){
+    private void getVerify() {
         String account = mAccount.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)){
+        if (StringUtils.isEmpty(account)) {
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -156,49 +158,49 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_LOGIN));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
-            public void accept(HttpResultModel<VerifyResults> verifyResultsHttpResultModel ) throws Exception {
+            public void accept(HttpResultModel<VerifyResults> verifyResultsHttpResultModel) throws Exception {
                 if (verifyResultsHttpResultModel.isSucceful()) {
-                }else {
+                } else {
                     Toast.makeText(getContext(), verifyResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        if (v == mBack){
+        if (v == mBack) {
             getActivity().onBackPressed();
         }
-        if (v == mLoginPassword){
+        if (v == mLoginPassword) {
             if (!mLoginPassword.isSelected()) return;
             login(Login_Type);
         }
-        if (v == mCountDownText){
-            mCountDownText.setCountDownTimer(60 * 1000,1000);
+        if (v == mCountDownText) {
+            mCountDownText.setCountDownTimer(60 * 1000, 1000);
             mCountDownText.startTimer();
             getVerify();
         }
-        if (v == mGotoRegist){
-            DetailFragmentsActivity.launch(getContext(),null,RegistFragment.newInstance());
+        if (v == mGotoRegist) {
+            DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
         if (v == mForgetPasswd){
-            DetailFragmentsActivity.launch(getContext(),null,ResetPasswdFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null,ForgetPasswdFragment.newInstance());
         }
-        if (v == mTabMessage ){
+        if (v == mTabMessage) {
             switchLoginType(LOGIN_TYPE_MESSAGE);
         }
-        if (v == mTabPasswd){
+        if (v == mTabPasswd) {
             switchLoginType(LOGIN_TYPE_PASSWORD);
         }
     }
 
-    private void switchLoginType(int type){
+    private void switchLoginType(int type) {
         if (Login_Type == type) return;
         boolean message_login = false;
         if (Login_Type == LOGIN_TYPE_MESSAGE) message_login = true;
@@ -228,14 +230,14 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
 
     @Override
     public void onTextChange(EditText content) {
-        mLoginPassword.setSelected(content.getText()!= null && content.getText().toString().length()>0 ? true : false);
+        mLoginPassword.setSelected(content.getText() != null && content.getText().toString().length() > 0 ? true : false);
     }
 
-    public interface onLoginListener{
+    public interface onLoginListener {
         void onLoginSuccessful(LoginUserInfo userInfo);
     }
 
-    public void addOnRegistListener(onLoginListener onLoginListener){
+    public void addOnRegistListener(onLoginListener onLoginListener) {
         mOnLoginListener = onLoginListener;
     }
 }

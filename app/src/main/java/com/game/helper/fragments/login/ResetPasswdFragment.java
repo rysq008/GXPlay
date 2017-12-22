@@ -86,7 +86,8 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
         mTittle.setText(getResources().getString(R.string.reset_tittle));
         mBack.setOnClickListener(this);
         mResetPasswd.setSelected(false);
-        mAccount.addOnEditInputListener(this);
+        mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
+        mAccount.setEditAble(false);
         mPassWord.addOnEditInputListener(this);
         mPassWord1.addOnEditInputListener(this);
         mVerrity.addOnEditInputListener(this);

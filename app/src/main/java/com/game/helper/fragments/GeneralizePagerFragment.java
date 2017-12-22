@@ -21,6 +21,7 @@ import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GeneralizeResults;
+import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.model.MemberBean;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BannerRequestBody;
@@ -247,7 +248,10 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
-
+        if (getUserVisibleHint()) {
+            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
+        }
     }
 
     @Override

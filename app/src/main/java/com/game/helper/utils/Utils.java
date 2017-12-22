@@ -106,19 +106,15 @@ public class Utils {
     public static int getExtensionVipIcon(int level){
         switch (level){
             case 0:
-                return R.mipmap.ic_launcher_round;
+                return R.mipmap.vip_0;
             case 1:
-                return R.mipmap.ic_launcher_round;
+                return R.mipmap.vip_1;
             case 2:
-                return R.mipmap.ic_launcher_round;
+                return R.mipmap.vip_2;
             case 3:
-                return R.mipmap.ic_launcher_round;
-            case 4:
-                return R.mipmap.ic_launcher_round;
-            case 5:
-                return R.mipmap.ic_launcher_round;
+                return R.mipmap.vip_3;
             default:
-                return 0;
+                return R.mipmap.vip_0;
         }
     }
 
@@ -344,4 +340,5 @@ public class Utils {
             Toast.makeText(context, "无当前应用！", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

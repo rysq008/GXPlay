@@ -228,6 +228,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                 desc.setText("礼包码："+item.gift_code.code);
                 rootView.setTag(item);
                 copy.setTag(item);
+
             }
 
             @Override
@@ -244,6 +245,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                     }
                     if (v == copy){
                         Utils.copyToClipboard(getContext(),item.gift_code.code);
+
                         Toast.makeText(getContext(), "礼包码已复制到剪贴板！", Toast.LENGTH_SHORT).show();
                     }
                 }

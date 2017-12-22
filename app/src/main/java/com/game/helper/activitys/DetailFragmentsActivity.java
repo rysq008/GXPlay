@@ -29,6 +29,10 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         return currentFragment;
     }
 
+    public static Fragment getCurrentFragment(){
+        return currentFragment;
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent keyEvent) {
         if (currentFragment instanceof OnKeyDownListener) {

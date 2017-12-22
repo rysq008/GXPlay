@@ -159,6 +159,7 @@ public class TotoroToast implements IToast {
     private void handleShow() {
         initTN();
         try {
+            if (show == null || mTN == null) return;
             show.invoke(mTN);
         } catch (IllegalAccessException e) {
             e.printStackTrace();

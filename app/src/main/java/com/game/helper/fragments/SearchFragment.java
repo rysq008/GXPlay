@@ -1,6 +1,5 @@
 package com.game.helper.fragments;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,8 +24,9 @@ import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.utils.FileUtil;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.UploadUtils;
-import com.game.helper.views.ReloadableFrameLayout;
 import com.game.helper.views.SearchComponentView;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
+import com.game.helper.views.XReloadableStateContorller;
 import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
@@ -34,12 +34,10 @@ import com.zhy.view.flowlayout.TagFlowLayout;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -52,9 +50,9 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
     @BindView(R.id.common_search_view)
     SearchComponentView searchComponentView;
     @BindView(R.id.common_search_reload_layout)
-    ReloadableFrameLayout reloadableFrameLayout;
+    XReloadableStateContorller xReloadableStateContorller;
     @BindView(R.id.common_search_xrecycler)
-    XRecyclerContentLayout xRecyclerContentLayout;
+    XReloadableRecyclerContentLayout xReloadableRecyclerContentLayout;
     @BindView(R.id.iv_delete)
     ImageView mDelete;
     @BindView(R.id.ll_hot)
@@ -122,11 +120,13 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             }
         });
 
-        xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
-        searchListAdapter = new SearchListAdapter(context);
-        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
-        xRecyclerContentLayout.getRecyclerView().setAdapter(searchListAdapter);
-        xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+        xReloadableRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
+        if (null == searchListAdapter) {
+            searchListAdapter = new SearchListAdapter(context);
+        }
+        xReloadableRecyclerContentLayout.getRecyclerView().setAdapter(searchListAdapter);
+        xReloadableRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
+        xReloadableRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
                 loadSearchListData(false, 1, searchComponentView.getTextContent());
@@ -138,7 +138,6 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             }
         });
         loadHotWordData();
-
 
     }
 
@@ -162,13 +161,18 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
     public void loadHotWordData() {
         Flowable<HttpResultModel<HotWordResults>> flowable = DataService.getApiHotWordData(new BaseRequestBody(1));
-        RxLoadingUtils.subscribeWithReload(reloadableFrameLayout, flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<HotWordResults>>() {
+        RxLoadingUtils.subscribeWithReload(xReloadableStateContorller, flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<HotWordResults>>() {
             @Override
             public void accept(HttpResultModel<HotWordResults> hotWordResultsHttpResultModel) throws Exception {
                 hotWordList.addAll(hotWordResultsHttpResultModel.data.list);
                 hotFlowlayout.getAdapter().notifyDataChanged();
             }
-        });
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+
+            }
+        }, null, false);
 
     }
 
@@ -196,27 +200,29 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
 
         List<File> list = new ArrayList<File>();
-//        File f1 = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
+        File f1 = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
         list.add(f);
-        list.add(f);
+        list.add(f1);
+        list.add(f1);
 
         final ProgressDialog dialog = new ProgressDialog(context);
         dialog.setTitle("");
         dialog.setMax(100);
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 
-        Flowable<HttpResultModel> ff = DataService.setApiUserIcon(list, new UploadUtils.FileUploadProgress() {
+        Flowable<HttpResultModel<Object>> ff = DataService.uploadApiFilesForSingleResult("/member/set_icon/", list, new UploadUtils.FileUploadProgress() {
             @Override
             public void onProgress(final int progress) {
                 dialog.setProgress(progress);
             }
         });
 
-        RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel>() {
+        RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel<Object>>() {
             @Override
-            public void accept(HttpResultModel httpResultModel) throws Exception {
-                if (httpResultModel.isSucceful()) {
-                    Toast.makeText(context, ((Map<String, String>) httpResultModel.data).get("image"), Toast.LENGTH_SHORT).show();
+            public void accept(HttpResultModel<Object> httpResultModel) throws Exception {
+//                if (httpResultModel.isSucceful())
+                {
+//                    Toast.makeText(context, ((Map<String, String>) httpResultModel.data).get("image"), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
@@ -228,13 +234,10 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
     }
 
     public void loadSearchListData(final boolean showLoading, int page, String word) {
-        xRecyclerContentLayout.setVisibility(View.VISIBLE);
-        searchWordLayout.setVisibility(View.GONE);
-        if (showLoading) {
-            xRecyclerContentLayout.showLoading();
-        }
+        xReloadableRecyclerContentLayout.setVisibility(View.VISIBLE);
+        xReloadableStateContorller.setVisibility(View.GONE);
         Flowable<HttpResultModel<SearchListResults>> flowable = DataService.getApiSearchByWordData(new SearchRequestBody(page, word));
-        RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<SearchListResults>>() {
+        RxLoadingUtils.subscribeWithReload(xReloadableRecyclerContentLayout, flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<SearchListResults>>() {
             @Override
             public void accept(HttpResultModel<SearchListResults> searchListResultsHttpResultModel) throws Exception {
                 ArrayList<SearchListResults.SearchListItem> list = new ArrayList<>();
@@ -246,14 +249,13 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             public void accept(NetError netError) throws Exception {
                 showError(netError);
             }
-        });
+        }, null, showLoading);
     }
 
-
     public void showError(NetError error) {
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
-        xRecyclerContentLayout.refreshState(false);
-        xRecyclerContentLayout.showError();
+//        xReloadableRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
+        xReloadableRecyclerContentLayout.refreshState(false);
+//        xReloadableRecyclerContentLayout.showError();
     }
 
     public void showData(int cur_page, int total_page, List model) {
@@ -262,15 +264,15 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
         } else {
             searchListAdapter.setData(model);
         }
-        xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
+        xReloadableRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
+//        xReloadableRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         if (searchListAdapter.getItemCount() < 1) {
-            xRecyclerContentLayout.showEmpty();
+            xReloadableRecyclerContentLayout.showEmpty();
             return;
         } else {
-            xRecyclerContentLayout.showContent();
-            xRecyclerContentLayout.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
-            return;
+//            xReloadableRecyclerContentLayout.showContent();
+//            xReloadableRecyclerContentLayout.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
+//            return;
         }
     }
 

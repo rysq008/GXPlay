@@ -15,16 +15,14 @@
         app:is_search_page="true"
         app:right_tv_res_txt="搜索" />
 
-    <com.game.helper.views.ReloadableFrameLayout
+    <com.game.helper.views.XReloadableStateContorller
         android:id="@+id/common_search_reload_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <cn.droidlover.xrecyclerview.XRecyclerContentLayout
-            android:id="@+id/common_search_xrecycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:x_emptyLayoutId="@layout/view_error_state"
+        app:x_errorLayoutId="@layout/view_error_state"
+        app:x_loadingLayoutId="@layout/view_loading">
 
         <LinearLayout
             android:id="@+id/common_search_word_layout"
@@ -101,7 +99,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 app:max_select="1" />
-
         </LinearLayout>
-    </com.game.helper.views.ReloadableFrameLayout>
+    </com.game.helper.views.XReloadableStateContorller>
+
+    <com.game.helper.views.XReloadableRecyclerContentLayout
+        android:id="@+id/common_search_xrecycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:x_emptyLayoutId="@layout/view_error_state"
+        app:x_errorLayoutId="@layout/view_error_state"
+        app:x_loadingLayoutId="@layout/view_loading" />
+
 </LinearLayout>

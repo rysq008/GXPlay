@@ -12,6 +12,8 @@ import com.game.helper.event.MsgEvent;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.HotWordResults;
 import com.game.helper.views.ReloadableFrameLayout;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
+import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.TotoroToast;
 
 import org.reactivestreams.Subscriber;
@@ -457,5 +459,164 @@ public class RxLoadingUtils {
             stackTrace = stackTrace.substring(0, MAX_STACK_TRACE_LENGTH);
         }
         return stackTrace;
+    }
+
+
+    public static <T extends IModel> void subscribeWithReload(final XReloadableStateContorller reloadableFrameLayout,
+                                                              final Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
+                                                              final Action onComplete, final boolean finishWhenFirstOnNext) {
+        if (reloadableFrameLayout == null) return;
+
+        reloadableFrameLayout.showLoading();
+        reloadableFrameLayout.setOnReloadListener(new XReloadableStateContorller.OnReloadListener() {
+            @Override
+            public void onReload(XReloadableStateContorller reloadableFrameLayout) {
+                subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, onError, onComplete,
+                        finishWhenFirstOnNext);
+            }
+        });
+
+        final boolean[] finishReload = new boolean[]{false};
+
+        Flowable
+                .compose(XApi.<T>getApiTransformer())
+                .compose(XApi.<T>getScheduler())
+                .compose(transformer)
+                .subscribe(new ApiSubscriber<T>() {
+
+                    @Override
+                    protected void onStart() {
+                        super.onStart();
+
+                    }
+
+                    @Override
+                    public void onNext(T t) {
+                        if (onNext != null) {
+                            try {
+                                onNext.accept(t);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (finishWhenFirstOnNext && !finishReload[0]) {
+//                            reloadableFrameLayout.finishReload();
+                            reloadableFrameLayout.showContent();
+                            finishReload[0] = true;
+                        }
+                    }
+
+                    @Override
+                    protected void onFail(NetError error) {
+                        if (onError != null) {
+                            try {
+                                BusProvider.getBus().post(error);
+                                onError.accept(error);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (!finishReload[0]) {
+//                            reloadableFrameLayout.needReload(getDisplayMessage(error, true));
+                            reloadableFrameLayout.showError();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        if (onComplete != null) {
+                            try {
+                                onComplete.run();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (!finishReload[0]) {
+//                            reloadableFrameLayout.finishReload();
+                            reloadableFrameLayout.showContent();
+                        }
+                    }
+                });
+    }
+
+    public static <T extends IModel> void subscribeWithReload(final XReloadableRecyclerContentLayout reloadableLayout,
+                                                              final Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
+                                                              final Action onComplete, final boolean finishWhenFirstOnNext) {
+        if (reloadableLayout == null) return;
+
+        if(finishWhenFirstOnNext){
+            reloadableLayout.showLoading();
+        }
+        reloadableLayout.setOnReloadListener(new XReloadableRecyclerContentLayout.OnReloadListener() {
+            @Override
+            public void onReload(XReloadableRecyclerContentLayout reloadableFrameLayout) {
+                subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, onError, onComplete,
+                        finishWhenFirstOnNext);
+            }
+        });
+
+        final boolean[] finishReload = new boolean[]{false};
+
+        Flowable
+                .compose(XApi.<T>getApiTransformer())
+                .compose(XApi.<T>getScheduler())
+                .compose(transformer)
+                .subscribe(new ApiSubscriber<T>() {
+
+                    @Override
+                    protected void onStart() {
+                        super.onStart();
+
+                    }
+
+                    @Override
+                    public void onNext(T t) {
+                        if (onNext != null) {
+                            try {
+                                onNext.accept(t);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (!finishReload[0]) {
+//                            reloadableFrameLayout.finishReload();
+                            reloadableLayout.showContent();
+                            finishReload[0] = true;
+                        }
+                    }
+
+                    @Override
+                    protected void onFail(NetError error) {
+                        if (onError != null) {
+                            try {
+                                BusProvider.getBus().post(error);
+                                onError.accept(error);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (!finishReload[0]) {
+//                            reloadableFrameLayout.needReload(getDisplayMessage(error, true));
+                            reloadableLayout.showError();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                        if (onComplete != null) {
+                            try {
+                                onComplete.run();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (!finishReload[0]) {
+//                            reloadableFrameLayout.finishReload();
+                            reloadableLayout.showError();
+                        }
+                    }
+                });
     }
 }

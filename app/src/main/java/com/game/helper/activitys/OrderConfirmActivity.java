@@ -785,7 +785,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * ali支付
      */
     private void aliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id, mNeedPay + "", "1", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "1", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -824,7 +824,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 微信支付
      */
     private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id, mNeedPay + "", "2", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "2", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {

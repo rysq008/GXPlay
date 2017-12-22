@@ -84,20 +84,20 @@ public class AvatarEditDialog extends android.support.v4.app.DialogFragment impl
     public void onClick(View v) {
         if (v == mCancel) {
             onDialogActionListner.onCancel();
-            getDialog().dismiss();
+            if (getDialog() != null) getDialog().dismiss();
             return;
         }
         if (!mPermission) mPermission = checkCropPermission();
-        getDialog().dismiss();
+        if (getDialog() != null) getDialog().dismiss();
         if (!mPermission) {
             Toast.makeText(getContext(), "权限不足哦", Toast.LENGTH_SHORT).show();
             return;
         }
         if (onDialogActionListner == null) return;
-        if (v == mTakePhoto){
+        if (v == mTakePhoto) {
             onDialogActionListner.onTakePhoto();
         }
-        if (v == mChoosePic){
+        if (v == mChoosePic) {
             onDialogActionListner.onChoosePic();
         }
     }
@@ -144,7 +144,9 @@ public class AvatarEditDialog extends android.support.v4.app.DialogFragment impl
 
     public interface onDialogActionListner {
         void onCancel();
+
         void onTakePhoto();
+
         void onChoosePic();
     }
 }

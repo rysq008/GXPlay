@@ -7,9 +7,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
+import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.GameBasePagerFragment;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
+import com.game.helper.model.LoginUserInfo;
+import com.game.helper.utils.SharedPreUtil;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -24,6 +29,25 @@ public class GamePagerFragment extends GameBasePagerFragment {
 
     FragmentPagerAdapter mAdapter;
     SparseArray sparseArray = new SparseArray<Fragment>();
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+////        if (getUserVisibleHint())
+//        {
+//            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+//            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
+//        }
+//    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
+        }
+    }
 
     @Override
     public FragmentPagerAdapter getPageAdapter(final List<ItemType> list) {

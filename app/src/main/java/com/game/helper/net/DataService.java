@@ -13,6 +13,7 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
 import com.game.helper.model.FeedbackListResults;
+import com.game.helper.model.ForgetPasswdResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -62,6 +63,7 @@ import com.game.helper.net.model.ConsumeRequestBody;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.DeleteGiftRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -75,12 +77,12 @@ import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
-import com.game.helper.net.model.SetTradeRequestBody;
-import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
+import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
@@ -92,13 +94,9 @@ import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.UploadUtils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import cn.droidlover.xdroidmvp.kit.Kits;
 import io.reactivex.Flowable;
-import io.reactivex.functions.Function;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -159,7 +157,11 @@ public class DataService {
     }
 
     public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody) {
-        return Api.CreateApiService().resetPassWord(resetPasswdRequestBody);
+        return Api.CreateApiService().updatePassWord(resetPasswdRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<ResetPasswdResults>> forgetPassWord(ForgetPasswdRequestBody forgetPasswdRequestBody) {
+        return Api.CreateApiService().forgetPassWord(forgetPasswdRequestBody);
     }
 
     public static Flowable<HttpResultModel<PayResultModel>> ApiPay(PayRequestBody payRequestBody) {
@@ -266,8 +268,8 @@ public class DataService {
         return Api.CreateApiService().getApiSearchByWordData(searchRequestBody);
     }
 
-    //多个文件上传没有进度值
-    public static Flowable<HttpResultModel> setApiUserIcon(List<File> list) {
+    //多个文件上传,返回一个总体结果
+    public static Flowable<HttpResultModel<Object>> uploadApiFilesForSingleResult(String url, List<File> list, UploadUtils.FileUploadProgress fileUploadFlowable) {
         //构建body
         //addFormDataPart()第一个参数为表单名字，这是和后台约定好的
         MultipartBody.Builder builder = new MultipartBody.Builder()
@@ -276,46 +278,54 @@ public class DataService {
         for (File file : list) {
             //这里上传的是多图
 //            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-            builder.addFormDataPart("file[]", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+//            RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), file)
+            UploadUtils.UploadFileRequestBody uploadFileRequestBody = new UploadUtils.UploadFileRequestBody(file, fileUploadFlowable);
+            builder.addFormDataPart("file[]", file.getName(), uploadFileRequestBody);
         }
         RequestBody requestBody = builder.build();
-        return Api.CreateApiService().setApiUserIcon(requestBody);
+        return Api.CreateApiService().uploadApiFile(url, requestBody);
     }
 
-    //单个文件上传有进度监听
-    public static Flowable<HttpResultModel> setApiUserIcon(File file, UploadUtils.FileUploadProgress fileUploadFlowable) {
+    //单个文件上传
+    public static Flowable<HttpResultModel<Object>> uploadApiSingleFile(String url, File file, UploadUtils.FileUploadProgress fileUploadFlowable) {
         UploadUtils.UploadFileRequestBody uploadFileRequestBody = new UploadUtils.UploadFileRequestBody(file, fileUploadFlowable);
         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), uploadFileRequestBody);
-        return Api.CreateApiService().setApiUserIcon(part);
+        return Api.CreateApiService().uploadApiFile(url, part);
     }
 
-    //多个文件上传有进度监听
-    public static Flowable<HttpResultModel> setApiUserIcon(List<File> files, UploadUtils.FileUploadProgress fileUploadFlowable) {
-        if (!Kits.Empty.check(files)) {
-            List list = new ArrayList();
-            for (File file : files) {
-                list.add(setApiUserIcon(file, fileUploadFlowable));
-            }
-            return Flowable.zipIterable(list, new Function<Object[], ArrayList<HttpResultModel>>() {
-                @Override
-                public ArrayList<HttpResultModel> apply(Object[] objects) throws Exception {
-                    ArrayList<HttpResultModel> arrayList = new ArrayList<>();
-                    for (Object obj : objects) {
-                        arrayList.add((HttpResultModel) obj);
-                    }
-                    return arrayList;
-                }
-            }, true, 1);
-        }
-        return null;
+    //头像上传
+    public static Flowable<HttpResultModel<Object>> setApiUserIcon(File file, UploadUtils.FileUploadProgress fileUploadFlowable) {
+        return uploadApiSingleFile("/member/set_icon/", file, fileUploadFlowable);
     }
+
+//    //多个文件上传，返回每个文件的上传结果的列表（相当于把多个文件单独上传压缩成一个上传请求列表）
+//    public static Flowable<List<HttpResultModel<Object>>> uploadApiFilesForListResult(String url, List<File> files, UploadUtils.FileUploadProgress fileUploadFlowable) {
+//        if (!Kits.Empty.check(files)) {
+//            List list = new ArrayList();
+//            for (File file : files) {
+//                list.add(uploadApiSingleFile(url, file, fileUploadFlowable));
+//            }
+//            return Flowable.zipIterable(list, new Function<Object[], ArrayList<HttpResultModel<Object>>>() {
+//                @Override
+//                public ArrayList<HttpResultModel<Object>> apply(Object[] objects) throws Exception {
+//                    ArrayList<HttpResultModel<Object>> arrayList = new ArrayList<>();
+//                    for (Object obj : objects) {
+//                        arrayList.add((HttpResultModel<Object>) obj);
+//                    }
+//                    return arrayList;
+//                }
+//            }, true, 1);
+//        }
+//        return null;
+//    }
 
     public static Flowable<HttpResultModel<NotConcernResults>> updateNickname(UpdateNicknameRequestBody updateNicknameRequestBody) {
         return Api.CreateApiService().updateNickname(updateNicknameRequestBody);
     }
 
-    public static Flowable<HttpResultModel<NotConcernResults>> updateAvatar(UpdateAvatarRequestBody updateAvatarRequestBody) {
-        return Api.CreateApiService().updateAvatar(updateAvatarRequestBody);
+    //头像上传
+    public static Flowable<HttpResultModel<Object>> updateAvatar(File file, UploadUtils.FileUploadProgress fileUploadFlowable) {
+        return uploadApiSingleFile("/member/set_icon/", file, fileUploadFlowable);
     }
 
     public static Flowable<HttpResultModel<NotConcernResults>> updateBirthday(UpdateBirthdayRequestBody updateBirthdayRequestBody) {
@@ -346,6 +356,7 @@ public class DataService {
         return  Api.CreateApiService().getSpecialMoreList(baseRequestBody);
     }
 
+
     public static Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo() {
         return Api.CreateApiService().getMarketInfo();
     }
@@ -362,6 +373,7 @@ public class DataService {
     }
 
 
+
     public static Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts() {
         return Api.CreateApiService().getAllAccounts();
     }
@@ -372,7 +384,6 @@ public class DataService {
     public static Flowable<HttpResultModel<GameListResultModel>> getGamePackageList(GamePackageRequestBody getGamePackageList) {
         return Api.CreatePayOrImageApiService().getGamePackageList(getGamePackageList);
     }
-
 
 
     public static Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody) {
@@ -398,4 +409,5 @@ public class DataService {
     public static Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody) {
         return Api.CreateApiService().getMineGiftCodeInfo(mineGiftInfoRequestBody);
     }
+
 }

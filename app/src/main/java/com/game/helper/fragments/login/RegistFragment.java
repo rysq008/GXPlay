@@ -21,6 +21,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
@@ -128,6 +129,7 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
                 if (registResultsHttpResultModel.isSucceful()) {
                     LoginUserInfo userInfo = new LoginUserInfo(registResultsHttpResultModel.data);
                     Utils.writeLoginInfo(getContext(),userInfo);
+                    SharedPreUtil.saveLoginUserInfo(userInfo);
                     if (mOnRegistListener != null){
                         mOnRegistListener.onRegistSuccessful(userInfo);
                     }
