@@ -69,6 +69,7 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
@@ -311,6 +312,7 @@ public interface ApiService {
     //消费下单接口
     @POST("/G9game/paymentController.do?consume")
     Flowable<HttpResultModel<FeedbackListResults>> consume(@Body ConsumeRequestBody consumeRequestBody);
+
 
     @POST("/marketing/get_marketing_info/")//推广账号详情
     Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();
