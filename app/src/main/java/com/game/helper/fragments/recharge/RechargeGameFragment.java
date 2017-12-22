@@ -361,8 +361,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         }
         if (v == mItemDiscount3){
             setChecked(2);
+            setCheckStatus(1,true);
 
-            if (accountBean == null || mCbDiscount1.isChecked()) return;
+            if (accountBean == null || mCbDiscount1.isChecked() || mCbDiscount3.isChecked()) return;
             if (accountBean.count == 0){
                 if (accountBean.is_highest_vip){//是最高等级
                     showVipHintDialog(2);

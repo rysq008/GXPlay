@@ -122,10 +122,10 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
 
         String errorMsg = null;
         if (StringUtils.isEmpty(account)) errorMsg = getResources().getString(R.string.login_hint_without_account);
-        else if (StringUtils.isEmpty(oldAlipay) && !is_new) errorMsg = getResources().getString(R.string.login_hint_without_passwd);
-        else if (StringUtils.isEmpty(passWord)) errorMsg = getResources().getString(R.string.login_hint_without_passwd);
-        else if (StringUtils.isEmpty(passWord1)) errorMsg = getResources().getString(R.string.login_hint_without_confirm_passwd);
-        else if (passWord != null && passWord1 != null && !passWord.equals(passWord1)) errorMsg = getResources().getString(R.string.login_hint_wrong_notequal_passwd);
+        else if (StringUtils.isEmpty(oldAlipay) && !is_new) errorMsg = getResources().getString(R.string.login_hint_without_alipay);
+        else if (StringUtils.isEmpty(passWord)) errorMsg = getResources().getString(R.string.login_hint_without_alipay);
+        else if (StringUtils.isEmpty(passWord1)) errorMsg = getResources().getString(R.string.login_hint_without_confirm_alipay);
+        else if (passWord != null && passWord1 != null && !passWord.equals(passWord1)) errorMsg = getResources().getString(R.string.login_hint_wrong_notequal_alipay);
         else if (StringUtils.isEmpty(code)) errorMsg = getResources().getString(R.string.login_hint_without_code);
         else if (StringUtils.isEmpty(identy)) errorMsg = getResources().getString(R.string.login_hint_without_identy);
         else if (StringUtils.isEmpty(name)) errorMsg = getResources().getString(R.string.login_hint_without_name);
@@ -161,6 +161,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
             }
         });

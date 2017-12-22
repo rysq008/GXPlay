@@ -20,7 +20,7 @@
         android:layout_height="@dimen/mine_icon_avatar">
         <com.game.helper.views.HeadImageView
             android:id="@+id/iv_avatar"
-            android:background="@mipmap/ic_default_avatar"
+            android:background="@mipmap/ic_default_avatar_circle"
             android:layout_width="@dimen/mine_icon_avatar"
             android:layout_height="@dimen/mine_icon_avatar" />
         <LinearLayout

@@ -37,6 +37,7 @@
                     android:layout_height="wrap_content" />
                 <com.game.helper.views.HeadImageView
                     android:id="@+id/hv_avatar"
+                    android:background="@mipmap/ic_default_avatar_circle"
                     android:layout_width="@dimen/dp_40"
                     android:layout_height="@dimen/dp_40" />
                 <ImageView

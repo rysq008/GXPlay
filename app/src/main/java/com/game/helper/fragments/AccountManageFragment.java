@@ -121,7 +121,6 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
                 showError(netError);
             }
         });
-
     }
 
     private void notifyData(XBaseModel data, int page){

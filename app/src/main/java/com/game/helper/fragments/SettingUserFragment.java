@@ -31,6 +31,7 @@ import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.api.Api;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
@@ -56,6 +57,8 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -226,9 +229,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         if (userData.gender.equals("2")) mSex.setText("保密");
         else if (userData.gender.equals("0")) mSex.setText("女");
         else if (userData.gender.equals("1")) mSex.setText("男");
-        if (!StringUtils.isEmpty(userData.icon)) {
-            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
-        }
+        ILFactory.getLoader().loadNet(mAvatar.getAvatarView(),Api.API_PAY_OR_IMAGE_URL + userData.icon_thumb, ILoader.Options.defaultOptions());
 
         //安全管理三项状态设置
         if (Utils.getLoginInfo(getContext()).has_passwd) {

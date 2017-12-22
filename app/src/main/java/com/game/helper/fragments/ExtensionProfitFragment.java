@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.MemberDescDialog;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -66,6 +68,8 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
     TextView mLeftValue;
     @BindView(R.id.tv_balance_right)
     TextView mRightValue;
+    @BindView(R.id.iv_help)
+    ImageView mHelp;
 
     private List<Fragment> list = new ArrayList<Fragment>();
     private MarketInfoResults marketInfo;
@@ -91,6 +95,7 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
     private void initView(){
         mHeadTittle.setText(getResources().getString(R.string.common_extension_profit));
         mHeadBack.setOnClickListener(this);
+        mHelp.setOnClickListener(this);
 
         getMarketInfo();
         list.add(ExtensionProfitItemFragment.newInstance(ExtensionProfitItemFragment.Type_Extension_Gold));
@@ -204,6 +209,10 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
     public void onClick(View v) {
         if (v == mHeadBack){
             getActivity().onBackPressed();
+        }
+        if (v == mHelp){
+            MemberDescDialog dialog = new MemberDescDialog();
+            dialog.show(getChildFragmentManager(),MemberDescDialog.TAG);
         }
     }
 

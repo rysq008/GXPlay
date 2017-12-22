@@ -289,7 +289,7 @@ public interface ApiService {
     Flowable<HttpResultModel<GameAccountDiscountResults>> getGameAccountDiscount(@Body SingleGameIdRequestBody singleGameIdRequestBody);
 
     //获取vip列表
-    @POST("/member/get_vip_list")
+    @POST("/member/get_vip_list/")
     Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
 
     //获取全部账号信息

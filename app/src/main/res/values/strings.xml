@@ -135,9 +135,12 @@
     <string name="login_hint_without_account">请输入手机号码！</string>
     <string name="login_hint_without_code">请输入验证码！</string>
     <string name="login_hint_without_passwd">请输入密码！</string>
+    <string name="login_hint_without_alipay">请输入支付宝账户！</string>
     <string name="login_hint_without_confirm_passwd">请再次输入密码！</string>
+    <string name="login_hint_without_confirm_alipay">请再次输入支付宝账户！</string>
     <string name="login_hint_wrong_code">验证码错误！</string>
     <string name="login_hint_wrong_notequal_passwd">前后密码不一致！</string>
+    <string name="login_hint_wrong_notequal_alipay">前后支付宝账户不一致！</string>
     <string name="login_hint_without_identy">请输入身份证后六位！</string>
     <string name="login_hint_without_name">请输入真实姓名！</string>
 

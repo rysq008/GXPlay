@@ -31,7 +31,7 @@ public class ExtensionCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private List data = new ArrayList();
     private Context context;
-    private int type = ExtensionProfitItemFragment.Type_Extension_Gold;
+    private int type;
 
     public ExtensionCommonAdapter(Context context, XBaseModel data, int type) {
         this.context = context;
@@ -39,7 +39,8 @@ public class ExtensionCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if (data == null) return;
         if (data instanceof MarketFlowlistResults){
             this.data = ((MarketFlowlistResults) data).list;
-        }else if (data instanceof MarketExpectedFlowlistResults){
+        }
+        if (data instanceof MarketExpectedFlowlistResults){
             this.data = ((MarketExpectedFlowlistResults) data).list;
         }
     }
@@ -47,13 +48,23 @@ public class ExtensionCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new MarketFlowHolder(inflater.inflate(R.layout.layout_extension_profit_item, parent, false));
+        if (type == ExtensionProfitItemFragment.Type_Extension_Gold) {
+            return new MarketFlowHolder(inflater.inflate(R.layout.layout_extension_profit_item, parent, false));
+        }
+        if (type == ExtensionProfitItemFragment.Type_Plan_Gold) {
+            return new MarketExpectedFlowHolder(inflater.inflate(R.layout.layout_extension_profit_item, parent, false));
+        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof MarketFlowHolder) {
             MarketFlowHolder viewHolder = (MarketFlowHolder) holder;
+            viewHolder.onBind(position);
+        }
+        if (holder instanceof MarketExpectedFlowHolder) {
+            MarketExpectedFlowHolder viewHolder = (MarketExpectedFlowHolder) holder;
             viewHolder.onBind(position);
         }
     }
@@ -68,11 +79,15 @@ public class ExtensionCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         List list = null;
         if (data instanceof MarketFlowlistResults){
             list = ((MarketFlowlistResults) data).list;
-        }else if (data instanceof MarketExpectedFlowlistResults){
+        }
+        if (data instanceof MarketExpectedFlowlistResults){
             list = ((MarketExpectedFlowlistResults) data).list;
         }
-        if (clear) this.data = list;
-        else this.data.addAll(list);
+        if (clear) {
+            this.data = list;
+        }else {
+            this.data.addAll(list);
+        }
         notifyDataSetChanged();
     }
 
@@ -94,24 +109,45 @@ public class ExtensionCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         void onBind(int position) {
             this.position = position;
 
-            if (type == ExtensionProfitItemFragment.Type_Extension_Gold) {
-                if (!(data.get(position) instanceof MarketFlowlistResults.MarketFlowlistItem))
-                    return;
-
+            if (data.get(position) instanceof MarketFlowlistResults.MarketFlowlistItem) {
                 MarketFlowlistResults.MarketFlowlistItem item = (MarketFlowlistResults.MarketFlowlistItem) data.get(position);
-                left.setText(item.create_time);
+                left.setText(item.create_time.replace(" ","\n"));
                 center.setText(item.type);
                 right.setText(item.reward);
             }
-            if (type == ExtensionProfitItemFragment.Type_Plan_Gold){
-                if (!(data.get(position) instanceof MarketExpectedFlowlistResults.MarketExpectedFlowlistItem))
-                    return;
+        }
 
+        @Override
+        public void onClick(View v) {
+            if (v == mRootView) {
+            }
+        }
+    }
+
+    class MarketExpectedFlowHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private int position = -1;
+        private View mRootView;
+        private TextView left;
+        private TextView center;
+        private TextView right;
+
+        public MarketExpectedFlowHolder(View itemView) {
+            super(itemView);
+            mRootView = itemView;
+            left = itemView.findViewById(R.id.tv_left);
+            center = itemView.findViewById(R.id.tv_center);
+            right = itemView.findViewById(R.id.tv_right);
+        }
+
+        void onBind(int position) {
+            this.position = position;
+            if (data.get(position) instanceof MarketExpectedFlowlistResults.MarketExpectedFlowlistItem) {
                 MarketExpectedFlowlistResults.MarketExpectedFlowlistItem item = (MarketExpectedFlowlistResults.MarketExpectedFlowlistItem) data.get(position);
                 left.setText(item.name);
-                center.setText(item.amount+"元");
+                center.setText(item.amount + "元");
                 right.setText(item.status);
             }
+
         }
 
         @Override

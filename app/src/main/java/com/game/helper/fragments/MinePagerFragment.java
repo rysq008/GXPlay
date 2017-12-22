@@ -26,12 +26,15 @@ import com.game.helper.fragments.wallet.WalletFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.api.Api;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -210,9 +213,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         Drawable d = getResources().getDrawable(Utils.getVipLevel(Integer.valueOf(userData.gender)));
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
         mVipLevel.setCompoundDrawables(null, null, d, null);
-        if (!StringUtils.isEmpty(userData.icon)) {
-            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
-        }
+        ILFactory.getLoader().loadNet(mAvatar.getAvatarView(),Api.API_PAY_OR_IMAGE_URL + userData.icon_thumb, ILoader.Options.defaultOptions());
     }
 
     class SettingListAdapter extends RecyclerView.Adapter<SettingListHolder> {

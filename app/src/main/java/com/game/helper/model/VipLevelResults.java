@@ -60,13 +60,17 @@ public class VipLevelResults extends XBaseModel {
 
     public static class VipBean implements ItemType {
         /*{
-            "name": "普通",
+       {
+                "name": "黄钻",
                 "year_fee": "",
                 "level": 0,
                 "image": "",
                 "descs": "",
                 "num_account": "",
+                "no_re_rate": "0.20",
+                "vip_re_amount": "",
                 "id": 99
+            },
         }*/
 
         public String name;
@@ -75,6 +79,8 @@ public class VipLevelResults extends XBaseModel {
         public String image;
         public String descs;
         public String num_account;
+        public String no_re_rate;//奖励比例
+        public String vip_re_amount;//奖励金额
         public int id;
 
         @Override
