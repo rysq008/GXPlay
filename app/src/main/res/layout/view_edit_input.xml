@@ -21,7 +21,7 @@
         android:id="@+id/iv_clear"
         android:layout_toLeftOf="@+id/iv_eye"
         android:layout_centerVertical="true"
-        android:src="@mipmap/ic_error"
+        android:src="@mipmap/login_ic_clear"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_width="@dimen/dp_15"
         android:layout_height="@dimen/dp_15" />
