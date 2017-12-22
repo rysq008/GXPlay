@@ -6,7 +6,11 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.HotRecommandGameListActivity;
 import com.game.helper.adapters.HomeItemAdapter;
 import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.HomeBasePagerFragment;
+import com.game.helper.model.LoginUserInfo;
+import com.game.helper.utils.SharedPreUtil;
 
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xrecyclerview.RecyclerItemCallback;
@@ -22,6 +26,15 @@ public class HomePagerFragment extends HomeBasePagerFragment {
     HomeItemAdapter mAdapter;
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
+        }
+    }
+
+    @Override
     public SimpleRecAdapter getAdapter() {
         if (mAdapter == null) {
             mAdapter = new HomeItemAdapter(context);
@@ -31,7 +44,7 @@ public class HomePagerFragment extends HomeBasePagerFragment {
                     super.onItemClick(position, model, tag, holder);
                     switch (model.itemType()) {
                         case RxConstant.HomeModeType.Recommend_Model_Type:
-                            DetailFragmentsActivity.launch(context,null, GameDetailFragment.newInstance());
+                            DetailFragmentsActivity.launch(context, null, GameDetailFragment.newInstance());
                             break;
                         case RxConstant.HomeModeType.Hot_Model_Type:
                             startActivity(new Intent(getActivity(), HotRecommandGameListActivity.class));

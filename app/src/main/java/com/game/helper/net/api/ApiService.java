@@ -85,6 +85,7 @@ import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
+import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
@@ -113,6 +114,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 public interface ApiService {
 
@@ -273,7 +275,8 @@ public interface ApiService {
     @POST("/member/reset_trade_password/")
     Flowable<HttpResultModel<ResetTradeResults>> resetTradePassword(@Body ResetTradeRequestBody resetTradeRequestBody);
 
-    @POST("/member/set_trade_password/")//设置交易密码
+    @POST("/member/set_trade_password/")
+//设置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
 
     //重置支付宝
@@ -304,14 +307,23 @@ public interface ApiService {
     //搜索列表
     Flowable<HttpResultModel<SearchListResults>> getApiSearchByWordData(@Body SearchRequestBody searchRequestBody);
 
-    //多文件上传无进度值
-    @POST("/member/set_icon/")
-    Flowable<HttpResultModel> setApiUserIcon(@Body RequestBody Body);
+//    //设置头像
+//    @POST("/member/set_icon/")
+//    Flowable<HttpResultModel> setApiUserIcon(@Body RequestBody Body);
+//
+//    //设置头像
+//    @Multipart
+//    @POST("/member/set_icon/")
+//    Flowable<HttpResultModel> setApiUserIcon(@Part MultipartBody.Part file);
 
-    //单个文件上传有进度
+    //上传文件(方式一)
+    @POST("{url}")
+    Flowable<HttpResultModel<Object>> uploadApiFile(@Path(value = "url", encoded = true) String url, @Body RequestBody Body);
+
+    //上传文件(方式二)
     @Multipart
-    @POST("/member/set_icon/")
-    Flowable<HttpResultModel> setApiUserIcon(@Part MultipartBody.Part file);
+    @POST("{url}")
+    Flowable<HttpResultModel<Object>> uploadApiFile(@Path(value = "url", encoded = true) String url, @Part MultipartBody.Part file);
 
     @POST("/member/set_nickname/")
     //设置昵称
@@ -320,6 +332,10 @@ public interface ApiService {
     @POST("/member/set_icon/")
     //设置头像
     Flowable<HttpResultModel<NotConcernResults>> updateAvatar(@Body UpdateAvatarRequestBody updateAvatarRequestBody);
+
+    //    @POST("/member/set_icon/")
+////设置头像
+//    Flowable<HttpResultModel<NotConcernResults>> updateAvatar(@Body UpdateAvatarRequestBody updateAvatarRequestBody);
 
     @POST("/member/set_birthday/")
     //设置生日
@@ -351,13 +367,16 @@ public interface ApiService {
     Flowable<HttpResultModel<FeedbackListResults>> consume(@Body ConsumeRequestBody consumeRequestBody);
 
 
-    @POST("/marketing/get_marketing_info/")//推广账号详情
+    @POST("/marketing/get_marketing_info/")
+//推广账号详情
     Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();
 
-    @POST("/marketing/get_marketing_flow_list/")//推广收益列表
+    @POST("/marketing/get_marketing_flow_list/")
+//推广收益列表
     Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 
-    @POST("/marketing/get_expected_flow_list/")//推广预期收益列表
+    @POST("/marketing/get_expected_flow_list/")
+//推广预期收益列表
     Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/member/get_my_game_list/")//获取我的游戏列表
@@ -377,4 +396,5 @@ public interface ApiService {
 
     @POST("/game/get_gift_info/")//游戏礼包详情
     Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody);
+
 }

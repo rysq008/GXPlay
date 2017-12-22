@@ -21,6 +21,8 @@ import com.game.helper.net.api.ApiService;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+
 /**
  * Created by sung on 2017/11/19.
  * 详情账号
@@ -135,7 +137,8 @@ public class RechargeCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if (!(data.get(position) instanceof ConsumeListResults.ConsumeListItem)) return;
             ConsumeListResults.ConsumeListItem consumeListItem = (ConsumeListResults.ConsumeListItem) data.get(position);
             name.setText(consumeListItem.name);
-            Glide.with(context).load(Api.API_PAY_OR_IMAGE_URL+consumeListItem.img).into(icon);
+//            Glide.with(context).load(Api.API_PAY_OR_IMAGE_URL+consumeListItem.img).into(icon);
+            ILFactory.getLoader().loadNet(icon,Api.API_PAY_OR_IMAGE_URL.concat(consumeListItem.img),null);
             value.setText("-"+consumeListItem.amount);
             account.setText(consumeListItem.game_account);
             platform.setText(consumeListItem.channel_name);
