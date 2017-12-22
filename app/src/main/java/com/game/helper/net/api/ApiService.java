@@ -42,10 +42,6 @@ import com.game.helper.model.SpecialResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
-import com.game.helper.net.model.FeedbackRequestBody;
-import com.game.helper.net.model.SetTradeRequestBody;
-import com.game.helper.net.model.SingleGameIdRequestBody;
-import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
@@ -67,6 +63,7 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
@@ -305,4 +302,5 @@ public interface ApiService {
 
     @POST("/marketing/get_expected_flow_list/")//推广预期收益列表
     Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
+
 }

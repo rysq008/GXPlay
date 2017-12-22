@@ -8,14 +8,24 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
-import com.game.helper.adapters.MyAccountAdapter;
+import com.game.helper.adapters.HotRecommandAdapter;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.RecommendResults;
+import com.game.helper.net.DataService;
+import com.game.helper.net.model.RecommendRequestBody;
+import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.views.widget.StateView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
+import cn.droidlover.xrecyclerview.XRecyclerView;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
+import zlc.season.practicalrecyclerview.ItemType;
 
 public class HotRecommandGameListActivity extends XBaseActivity implements View.OnClickListener {
 
@@ -28,24 +38,14 @@ public class HotRecommandGameListActivity extends XBaseActivity implements View.
     @BindView(R.id.hot_game_layout)
     XRecyclerContentLayout xRecyclerContentLayout;
 
-    MyAccountAdapter mAdapter;
+    HotRecommandAdapter mAdapter;
     private StateView errorView;
     private View loadingView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.action_bar_back:
-                onBackPressed();
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -54,25 +54,24 @@ public class HotRecommandGameListActivity extends XBaseActivity implements View.
         initView();
         initAdapter();
         errorView.setLoadDataType(StateView.REFRESH, 1);
-        getGameAccountInfo(1);
+        getHomeHot(1);
     }
 
-    private void getGameAccountInfo(int page) {
-//        Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page, 1, option_game_id, option_channel_id));
-//        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
-//            @Override
-//            public void accept(HttpResultModel<GameAccountResultModel> recommendResultsHttpResultModel) throws Exception {
-//                List<GameAccountResultModel.ListBean> list = new ArrayList<>();
-//                list.addAll(recommendResultsHttpResultModel.data.getList());
-//                showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
-//            }
-//        }, new Consumer<NetError>() {
-//            @Override
-//            public void accept(NetError netError) throws Exception {
-//                showError(netError);
-//            }
-//        });
-
+    public void getHomeHot(int page) {
+        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(page, 0, 0));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+            @Override
+            public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
+                List<ItemType> list = new ArrayList<>();
+                list.addAll(recommendResultsHttpResultModel.data.list);
+                showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                showError(netError);
+            }
+        });
     }
 
     public void showData(int cur_page, int total_page, List model) {
@@ -95,14 +94,28 @@ public class HotRecommandGameListActivity extends XBaseActivity implements View.
 
     private void initAdapter() {
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
+
         if (null == mAdapter) {
-            mAdapter = new MyAccountAdapter(context);
+            mAdapter = new HotRecommandAdapter(context);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
-        xRecyclerContentLayout.getRecyclerView().setRefreshEnabled(false);
+        xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                errorView.setLoadDataType(StateView.REFRESH, 1);
+                getHomeHot(1);
+            }
+
+            @Override
+            public void onLoadMore(int page) {
+                errorView.setLoadDataType(StateView.LOADMORE, page);
+                getHomeHot(page);
+            }
+        });
 
         if (errorView == null) {
             errorView = new StateView(context);
+            errorView.setOnRefreshAndLoadMoreListener(xRecyclerContentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
         }
         if (null != errorView.getParent()) {
             ((ViewGroup) errorView.getParent()).removeView(errorView);
@@ -114,6 +127,7 @@ public class HotRecommandGameListActivity extends XBaseActivity implements View.
             ((ViewGroup) loadingView.getParent()).removeView(loadingView);
         }
         xRecyclerContentLayout.errorView(errorView);
+        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
 
         xRecyclerContentLayout.loadingView(loadingView);
         xRecyclerContentLayout.showLoading();
@@ -122,11 +136,12 @@ public class HotRecommandGameListActivity extends XBaseActivity implements View.
 
     public void showError(NetError error) {
         xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
+        xRecyclerContentLayout.refreshState(false);
         xRecyclerContentLayout.showError();
     }
 
     private void initView() {
-        mHeadTittle.setText("主题游戏");
+        mHeadTittle.setText("热门推荐");
         mHeadBack.setOnClickListener(this);
     }
 
@@ -143,5 +158,16 @@ public class HotRecommandGameListActivity extends XBaseActivity implements View.
     @Override
     public Object newP() {
         return null;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.action_bar_back:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
     }
 }
