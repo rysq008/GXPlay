@@ -117,7 +117,7 @@
             android:layout_width="@dimen/view_59"
             android:layout_height="@dimen/view_29"
             android:layout_marginRight="@dimen/margin_21"
-            android:background="@mipmap/Middle_az" />
+            android:background="@mipmap/middle_az" />
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"

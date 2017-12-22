@@ -3,7 +3,6 @@ package com.game.helper.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -13,21 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
-import com.game.helper.adapters.RechargeCommonAdapter;
+import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.BaseModel.XBaseModel;
-import com.game.helper.model.ConsumeListResults;
-import com.game.helper.model.InvatationResults;
+import com.game.helper.model.MineGiftlistResults;
+import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
-import com.game.helper.net.api.ApiService;
+import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.GiftDescDialog;
 import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -35,37 +34,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.RecyclerAdapter;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
- * 邀请记录
  */
-public class ExtensionHistoryFragment extends XBaseFragment implements View.OnClickListener{
-    public static final String TAG = ExtensionHistoryFragment.class.getSimpleName();
-
+public class MineGiftFragment extends XBaseFragment implements View.OnClickListener{
+    public static final String TAG = MineGiftFragment.class.getSimpleName();
     @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
-    @BindView(R.id.rc_extension_list)
+    @BindView(R.id.rc_list)
     XRecyclerContentLayout mContent;
 
-    private ExtensionHistoryAdapter mAdapter;
+    private MineGiftAdapter mAdapter;
     private StateView errorView;
     private View loadingView;
 
-    public static ExtensionHistoryFragment newInstance(){
-        return new ExtensionHistoryFragment();
+    public static MineGiftFragment newInstance(){
+        return new MineGiftFragment();
     }
 
-    public ExtensionHistoryFragment() {
+    public MineGiftFragment() {
         // Required empty public constructor
     }
 
@@ -76,13 +73,13 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_extension_history;
+        return R.layout.fragment_mine_single_list;
     }
 
-    private void initView(){
-        mHeadTittle.setText(getResources().getString(R.string.common_extension_history));
-        mHeadBack.setOnClickListener(this);
 
+    private void initView(){
+        mHeadTittle.setText(getResources().getString(R.string.common_mine_gift));
+        mHeadBack.setOnClickListener(this);
         if (errorView == null) {
             errorView = new StateView(context);
             errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
@@ -99,7 +96,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     private void initList(){
         mAdapter = null;
-        mAdapter = new ExtensionHistoryAdapter(getContext(), null);
+        mAdapter = new MineGiftAdapter(getContext(), null);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
@@ -123,11 +120,11 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
      * 获取数据
      * */
     private void getDataFromNet(final int page){
-        Flowable<HttpResultModel<InvatationResults>> fr = DataService.getInvatationList(new SinglePageRequestBody(page));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<InvatationResults>>() {
+        Flowable<HttpResultModel<MineGiftlistResults>> fr = DataService.getMineGiftList(new MineGameRequestBody(page, RxConstant.PLATFORM_ANDROID));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MineGiftlistResults>>() {
             @Override
-            public void accept(HttpResultModel<InvatationResults> invatationResultsHttpResultModel) throws Exception {
-                notifyData(invatationResultsHttpResultModel.data,page);
+            public void accept(HttpResultModel<MineGiftlistResults> mineGiftlistResultsHttpResultModel) throws Exception {
+                notifyData(mineGiftlistResultsHttpResultModel.data,page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -138,7 +135,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         });
     }
 
-    private void notifyData(InvatationResults data, int page){
+    private void notifyData(MineGiftlistResults data, int page){
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
@@ -163,11 +160,11 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         return null;
     }
 
-    class ExtensionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class MineGiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private List data = new ArrayList();
         private Context context;
 
-        public ExtensionHistoryAdapter(Context context, List data) {
+        public MineGiftAdapter(Context context, List data) {
             this.context = context;
             if (data != null) this.data = data;
         }
@@ -175,14 +172,14 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.layout_extension_history_item, parent, false);
-            return new ExtensionHistoryHolder(view);
+            View view = inflater.inflate(R.layout.layout_mine_gift_list_item, parent, false);
+            return new MineGiftAdapter.MineGiftHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof ExtensionHistoryHolder){
-                ExtensionHistoryHolder extensionHistoryHolder = (ExtensionHistoryHolder) holder;
+            if (holder instanceof MineGiftAdapter.MineGiftHolder){
+                MineGiftAdapter.MineGiftHolder extensionHistoryHolder = (MineGiftAdapter.MineGiftHolder) holder;
                 extensionHistoryHolder.onBind(position);
             }
         }
@@ -192,7 +189,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             return data.size();
         }
 
-        public void setData(InvatationResults data, boolean clear){
+        public void setData(MineGiftlistResults data, boolean clear){
             if (data == null) return;
             List list = data.list;
             if (clear) this.data = list;
@@ -200,38 +197,56 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             notifyDataSetChanged();
         }
 
-        class ExtensionHistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class MineGiftHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             private int position = 0;
             private View rootView;
-            private RoundedImageView avatar;
-            private ImageView vip;
+            private RoundedImageView icon;
             private TextView name;
             private TextView time;
-            private TextView content;
+            private TextView desc;
+            private ImageView copy;
 
-            public ExtensionHistoryHolder(View view) {
+            public MineGiftHolder(View view) {
                 super(view);
                 rootView = view;
-                avatar = view.findViewById(R.id.iv_avatar);
-                name = view.findViewById(R.id.tv_name);
-                vip = view.findViewById(R.id.iv_vip_level);
-                time = view.findViewById(R.id.tv_time);
-                content = view.findViewById(R.id.tv_content);
+                icon = itemView.findViewById(R.id.riv_avatar);
+                name = itemView.findViewById(R.id.tv_name);
+                time = itemView.findViewById(R.id.tv_time);
+                desc = itemView.findViewById(R.id.tv_desc);
+                copy = itemView.findViewById(R.id.iv_copy);
+                rootView.setOnClickListener(this);
+                copy.setOnClickListener(this);
             }
 
             public void onBind(int position){
                 this.position = position;
                 rootView.setOnClickListener(this);
-                InvatationResults.InvatationListItem item = (InvatationResults.InvatationListItem) data.get(position);
-                Glide.with(context).load(Api.API_BASE_URL+item.member.icon).into(avatar);
-                vip.setImageResource(Utils.getExtensionVipIcon(item.member.vip_level.level));
-                name.setText(item.member.nick_name);
-                time.setText(item.member.user.date_joined);
-                content.setText(item.member.signature);
+                MineGiftlistResults.MineGiftlistItem item = (MineGiftlistResults.MineGiftlistItem) data.get(position);
+                ILFactory.getLoader().loadNet(icon, Api.API_PAY_OR_IMAGE_URL+item.gift_code.gift.game.logo,ILoader.Options.defaultOptions());
+                name.setText(item.gift_code.gift.giftname);
+                time.setText("有效期："+item.gift_code.gift.end_time);
+                desc.setText("礼包码："+item.gift_code.code);
+                rootView.setTag(item);
+                copy.setTag(item);
             }
 
             @Override
             public void onClick(View v) {
+                if (rootView.getTag()==null) {
+                    Toast.makeText(getContext(), "数据错误！请重试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (rootView.getTag() instanceof MineGiftlistResults.MineGiftlistItem){
+                    MineGiftlistResults.MineGiftlistItem item = (MineGiftlistResults.MineGiftlistItem) rootView.getTag();
+                    if (v == rootView){
+                        GiftDescDialog dialog = new GiftDescDialog(item.gift_code.id);
+                        dialog.show(getChildFragmentManager(),GiftDescDialog.TAG);
+                    }
+                    if (v == copy){
+                        Utils.copyToClipboard(getContext(),item.gift_code.code);
+                        Toast.makeText(getContext(), "礼包码已复制到剪贴板！", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
     }

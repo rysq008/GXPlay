@@ -94,7 +94,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
         mHeadBack.setOnClickListener(this);
 
         mResetPasswd.setSelected(false);
-        mAccount.setText(Utils.getLoginInfo(getContext()).phone);
+        mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
         mOldAlipay.addOnEditInputListener(this);
         mAlipayAccount.addOnEditInputListener(this);
         mAlipayAccount1.addOnEditInputListener(this);
@@ -111,7 +111,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
     }
 
     private void resetAlipayAccount(){
-        String account = mAccount.getText().toString().trim();
+        String account = Utils.getLoginInfo(getContext()).phone;
         String oldAlipay = mOldAlipay.getText().toString().trim();
         String passWord = mAlipayAccount.getText().toString().trim();
         String passWord1 = mAlipayAccount1.getText().toString().trim();
@@ -167,7 +167,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
     }
 
     private void getVerify(){
-        String account = mAccount.getText().toString().trim();
+        String account = Utils.getLoginInfo(getContext()).phone;
 
         if (StringUtils.isEmpty(account)){
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
@@ -197,7 +197,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
             getActivity().onBackPressed();
         }
         if (v == mCountDownText){
-            String account = mAccount.getText().toString().trim();
+            String account = Utils.getLoginInfo(getContext()).phone;
             if (StringUtils.isEmpty(account)) return;
             mCountDownText.setCountDownTimer(60 * 1000,1000);
             mCountDownText.startTimer();

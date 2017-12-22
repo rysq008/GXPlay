@@ -92,7 +92,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
         mHeadBack.setOnClickListener(this);
 
         mResetPasswd.setSelected(false);
-        mAccount.setText(Utils.getLoginInfo(getContext()).phone);
+        mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
         mPassWord.addOnEditInputListener(this);
         mPassWord1.addOnEditInputListener(this);
         mVerrity.addOnEditInputListener(this);
@@ -105,7 +105,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     }
 
     private void resetTradePassword(){
-        String account = mAccount.getText().toString().trim();
+        String account = Utils.getLoginInfo(getContext()).phone;
         String passWord = mPassWord.getText().toString().trim();
         String passWord1 = mPassWord1.getText().toString().trim();
         String code = mVerrity.getText().toString().trim();
@@ -158,7 +158,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     }
 
     private void setTradePassword(){
-        String account = mAccount.getText().toString().trim();
+        String account = Utils.getLoginInfo(getContext()).phone;
         String passWord = mPassWord.getText().toString().trim();
         String passWord1 = mPassWord1.getText().toString().trim();
         String code = mVerrity.getText().toString().trim();
@@ -211,7 +211,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     }
 
     private void getVerify(){
-        String account = mAccount.getText().toString().trim();
+        String account = Utils.getLoginInfo(getContext()).phone;
 
         if (StringUtils.isEmpty(account)){
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
@@ -241,7 +241,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
             getActivity().onBackPressed();
         }
         if (v == mCountDownText){
-            String account = mAccount.getText().toString().trim();
+            String account = Utils.getLoginInfo(getContext()).phone;
             if (StringUtils.isEmpty(account)) return;
             mCountDownText.setCountDownTimer(60 * 1000,1000);
             mCountDownText.startTimer();

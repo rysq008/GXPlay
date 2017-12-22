@@ -133,13 +133,13 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
             DetailFragmentsActivity.launch(getContext(),bundle, WalletFragment.newInstance());
         }
         if (v == mMineGame) {
-
+            DetailFragmentsActivity.launch(getContext(),null, MineGameFragment.newInstance());
         }
         if (v == mMineGift) {
-
+            DetailFragmentsActivity.launch(getContext(),null, MineGiftFragment.newInstance());
         }
         if (v == mMineOrder) {
-
+            DetailFragmentsActivity.launch(getContext(),null, MineOrderFragment.newInstance());
         }
         if (v == mMineVip) {
             DetailFragmentsActivity.launch(getContext(),null, CouponFragment.newInstance());

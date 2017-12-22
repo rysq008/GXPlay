@@ -3,7 +3,6 @@ package com.game.helper.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -11,23 +10,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
-import com.game.helper.adapters.RechargeCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.BaseModel.XBaseModel;
-import com.game.helper.model.ConsumeListResults;
-import com.game.helper.model.InvatationResults;
+import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
-import com.game.helper.net.api.ApiService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -35,37 +28,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.RecyclerAdapter;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
- * 邀请记录
  */
-public class ExtensionHistoryFragment extends XBaseFragment implements View.OnClickListener{
-    public static final String TAG = ExtensionHistoryFragment.class.getSimpleName();
-
+public class MineOrderFragment extends XBaseFragment implements View.OnClickListener{
+    public static final String TAG = MineOrderFragment.class.getSimpleName();
     @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
-    @BindView(R.id.rc_extension_list)
+    @BindView(R.id.rc_list)
     XRecyclerContentLayout mContent;
 
-    private ExtensionHistoryAdapter mAdapter;
+    private MineOrderAdapter mAdapter;
     private StateView errorView;
     private View loadingView;
 
-    public static ExtensionHistoryFragment newInstance(){
-        return new ExtensionHistoryFragment();
+    public static MineOrderFragment newInstance(){
+        return new MineOrderFragment();
     }
 
-    public ExtensionHistoryFragment() {
+    public MineOrderFragment() {
         // Required empty public constructor
     }
 
@@ -76,13 +67,13 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_extension_history;
+        return R.layout.fragment_mine_single_list;
     }
 
-    private void initView(){
-        mHeadTittle.setText(getResources().getString(R.string.common_extension_history));
-        mHeadBack.setOnClickListener(this);
 
+    private void initView(){
+        mHeadTittle.setText(getResources().getString(R.string.common_mine_order));
+        mHeadBack.setOnClickListener(this);
         if (errorView == null) {
             errorView = new StateView(context);
             errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
@@ -99,7 +90,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     private void initList(){
         mAdapter = null;
-        mAdapter = new ExtensionHistoryAdapter(getContext(), null);
+        mAdapter = new MineOrderAdapter(getContext(), null);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
@@ -123,10 +114,10 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
      * 获取数据
      * */
     private void getDataFromNet(final int page){
-        Flowable<HttpResultModel<InvatationResults>> fr = DataService.getInvatationList(new SinglePageRequestBody(page));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<InvatationResults>>() {
+        Flowable<HttpResultModel<MineOrderlistResults>> fr = DataService.getMineOrderList(new SinglePageRequestBody(page));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MineOrderlistResults>>() {
             @Override
-            public void accept(HttpResultModel<InvatationResults> invatationResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<MineOrderlistResults> invatationResultsHttpResultModel) throws Exception {
                 notifyData(invatationResultsHttpResultModel.data,page);
             }
         }, new Consumer<NetError>() {
@@ -138,7 +129,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         });
     }
 
-    private void notifyData(InvatationResults data, int page){
+    private void notifyData(MineOrderlistResults data, int page){
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
@@ -163,11 +154,11 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         return null;
     }
 
-    class ExtensionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class MineOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private List data = new ArrayList();
         private Context context;
 
-        public ExtensionHistoryAdapter(Context context, List data) {
+        public MineOrderAdapter(Context context, List data) {
             this.context = context;
             if (data != null) this.data = data;
         }
@@ -175,14 +166,14 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.layout_extension_history_item, parent, false);
-            return new ExtensionHistoryHolder(view);
+            View view = inflater.inflate(R.layout.layout_mine_order_list_item, parent, false);
+            return new MineOrderAdapter.MineOrderHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof ExtensionHistoryHolder){
-                ExtensionHistoryHolder extensionHistoryHolder = (ExtensionHistoryHolder) holder;
+            if (holder instanceof MineOrderAdapter.MineOrderHolder){
+                MineOrderAdapter.MineOrderHolder extensionHistoryHolder = (MineOrderAdapter.MineOrderHolder) holder;
                 extensionHistoryHolder.onBind(position);
             }
         }
@@ -192,7 +183,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             return data.size();
         }
 
-        public void setData(InvatationResults data, boolean clear){
+        public void setData(MineOrderlistResults data, boolean clear){
             if (data == null) return;
             List list = data.list;
             if (clear) this.data = list;
@@ -200,38 +191,53 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             notifyDataSetChanged();
         }
 
-        class ExtensionHistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class MineOrderHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             private int position = 0;
             private View rootView;
             private RoundedImageView avatar;
-            private ImageView vip;
             private TextView name;
             private TextView time;
-            private TextView content;
+            private TextView account;
+            private TextView price;
+            private TextView status;
 
-            public ExtensionHistoryHolder(View view) {
+            public MineOrderHolder(View view) {
                 super(view);
                 rootView = view;
-                avatar = view.findViewById(R.id.iv_avatar);
+                avatar = view.findViewById(R.id.riv_avatar);
                 name = view.findViewById(R.id.tv_name);
-                vip = view.findViewById(R.id.iv_vip_level);
                 time = view.findViewById(R.id.tv_time);
-                content = view.findViewById(R.id.tv_content);
+                account = view.findViewById(R.id.tv_account);
+                price = view.findViewById(R.id.tv_price);
+                status = view.findViewById(R.id.tv_status);
+                rootView.setOnClickListener(this);
             }
 
             public void onBind(int position){
                 this.position = position;
-                rootView.setOnClickListener(this);
-                InvatationResults.InvatationListItem item = (InvatationResults.InvatationListItem) data.get(position);
-                Glide.with(context).load(Api.API_BASE_URL+item.member.icon).into(avatar);
-                vip.setImageResource(Utils.getExtensionVipIcon(item.member.vip_level.level));
-                name.setText(item.member.nick_name);
-                time.setText(item.member.user.date_joined);
-                content.setText(item.member.signature);
+                MineOrderlistResults.MineOrderlistItem item = (MineOrderlistResults.MineOrderlistItem) data.get(position);
+                rootView.setTag(item);
+                ILFactory.getLoader().loadNet(avatar, Api.API_PAY_OR_IMAGE_URL + item.game_logo, ILoader.Options.defaultOptions());
+                name.setText(item.game_name);
+                time.setText(item.create_time);
+                account.setText(item.game_account);
+                price.setText(item.amount);
+                if (item.status == 1){
+                    status.setText("未受理");
+                }
+                if (item.status == 2){
+                    status.setText("已受理");
+                }
+                if (item.status == 3){
+                    status.setText("已退单");
+                }
             }
 
             @Override
             public void onClick(View v) {
+                if (v == rootView){
+                    Toast.makeText(getContext(), ((MineOrderlistResults.MineOrderlistItem)rootView.getTag()).game_name, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

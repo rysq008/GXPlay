@@ -49,16 +49,16 @@ public class ProfitListResults extends XBaseModel {
 
     public static class ProfitListItem implements ItemType {
         /*{
-           {
-                "type": 1,
+                     {
                 "recommended": {
-                    "nick_name": "826277"
+                    "nick_name": "帅气的昵称"
                 },
-                "reward": "100.00",
-                "create_time": "2017-11-10 15:45:53"
-            },
+                "create_time": "2017-10-29 15:56:00",
+                "type": "普通充值返利",
+                "reward": "20.00"
+            }
         */
-        public int type;
+        public String type;
         public Recommended recommended;
         public String finish_time;
         public String reward;

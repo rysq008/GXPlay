@@ -37,7 +37,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
-            final ItemType item = data.get(position);
+            /*final ItemType item = data.get(position);
             gameListResultModelHttpResultModel.ListBean itemDate = (GameListResultModel.) data.get(position);
         ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.logothumb),ILoader.ILoader.Options.defaultOptions());
         holder.tvName.setText(itemDate.name);
@@ -45,7 +45,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         holder.tvTypeName.setText(itemDate.type.name);
         holder.tvPackageFilesize.setText(String.valueOf(itemDate.game_package.filesize));
         //holder.ivntro.setText(itemDate.intro);
-            //holder.gameId = itemDate.id;
+            //holder.gameId = itemDate.id;*/
 
             @Override
             public void onClick(View v) {

@@ -57,10 +57,20 @@ public class InvatationResults extends XBaseModel {
             public String nick_name;
             public String signature;
             public User user;
+            public Vip vip_level;
             public String icon;
 
             public static class User implements ItemType {
                 public String date_joined;
+
+                @Override
+                public int itemType() {
+                    return 0;
+                }
+            }
+
+            public static class Vip implements ItemType {
+                public int level;
 
                 @Override
                 public int itemType() {

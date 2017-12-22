@@ -1,7 +1,7 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.droidlover.xrecyclerview.XRecyclerContentLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rc_wallet_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.game.helper.fragments.recharge.RechargeFragment">
-</LinearLayout>
+    android:background="@color/colorWhite"
+    tools:context="com.game.helper.fragments.wallet.WalletListFragment"/>

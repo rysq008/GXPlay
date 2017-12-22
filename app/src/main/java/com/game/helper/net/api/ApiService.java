@@ -11,6 +11,7 @@ import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.DeleteMineGiftResults;
 import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
@@ -28,6 +29,10 @@ import com.game.helper.model.MarketExpectedFlowlistResults;
 import com.game.helper.model.MarketFlowlistResults;
 import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.MineGamelistResults;
+import com.game.helper.model.MineGiftInfoResults;
+import com.game.helper.model.MineGiftlistResults;
+import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
 import com.game.helper.model.ProfitListResults;
@@ -40,11 +45,20 @@ import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
+import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.GamePackageRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
+import com.game.helper.net.model.BannerRequestBody;
+import com.game.helper.net.model.DeleteGiftRequestBody;
+import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.MineGameRequestBody;
+import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
@@ -73,6 +87,7 @@ import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
+import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
@@ -200,6 +215,10 @@ public interface ApiService {
     @POST("/activity/get_red_packet_list/")
     Flowable<HttpResultModel<AvailableRedpackResultModel>> getRedPackInfo(@Body AvailableRedpackRequestBody payRequestBody);
 
+    //获取不可用红包卡券
+    @POST("/activity/get_unavailable_red_packet/")
+    Flowable<HttpResultModel<UnAvailableRedpackResultModel>> getUnuseRedPackInfo(@Body UnAvailableRedpackRequestBody unAvailableRedpackRequestBody);
+
     //重置密码
     @POST("/member/reset_passwd/")
     Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(@Body ResetPasswdRequestBody resetPasswdRequestBody);
@@ -322,4 +341,22 @@ public interface ApiService {
 
     @POST("/marketing/get_expected_flow_list/")//推广预期收益列表
     Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/member/get_my_game_list/")//获取我的游戏列表
+    Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody);
+
+    @POST("/member/get_my_gift_code_list/")//获取我的礼包列表
+    Flowable<HttpResultModel<MineGiftlistResults>> getMineGiftList(@Body MineGameRequestBody mineGameRequestBody);
+
+    @POST("/account/get_game_consume_list/")//获取我的订单列表
+    Flowable<HttpResultModel<MineOrderlistResults>> getMineOrderList(@Body SinglePageRequestBody singlePageRequestBody);
+
+    @POST("/member/delete_my_gift_code/")//删除游戏礼包
+    Flowable<HttpResultModel<DeleteMineGiftResults>> deleteMineGiftCode(@Body DeleteGiftRequestBody deleteGiftRequestBody);
+
+    @POST("/member/delete_my_game/")//删除游戏
+    Flowable<HttpResultModel<NotConcernResults>> deleteMineGame(@Body DeleteGameRequestBody deleteGameRequestBody);
+
+    @POST("/game/get_gift_info/")//游戏礼包详情
+    Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody);
 }

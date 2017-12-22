@@ -3,7 +3,6 @@ package com.game.helper.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -13,18 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
-import com.game.helper.adapters.RechargeCommonAdapter;
+import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.BaseModel.XBaseModel;
-import com.game.helper.model.ConsumeListResults;
-import com.game.helper.model.InvatationResults;
+import com.game.helper.model.MineGamelistResults;
+import com.game.helper.model.MineGamelistResults;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
-import com.game.helper.net.api.ApiService;
+import com.game.helper.net.model.DeleteGameRequestBody;
+import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
@@ -35,8 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.RecyclerAdapter;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
@@ -45,27 +47,25 @@ import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
- * 邀请记录
  */
-public class ExtensionHistoryFragment extends XBaseFragment implements View.OnClickListener{
-    public static final String TAG = ExtensionHistoryFragment.class.getSimpleName();
-
+public class MineGameFragment extends XBaseFragment implements View.OnClickListener{
+    public static final String TAG = MineGameFragment.class.getSimpleName();
     @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
-    @BindView(R.id.rc_extension_list)
+    @BindView(R.id.rc_list)
     XRecyclerContentLayout mContent;
 
-    private ExtensionHistoryAdapter mAdapter;
+    private MineGameAdapter mAdapter;
     private StateView errorView;
     private View loadingView;
 
-    public static ExtensionHistoryFragment newInstance(){
-        return new ExtensionHistoryFragment();
+    public static MineGameFragment newInstance(){
+        return new MineGameFragment();
     }
 
-    public ExtensionHistoryFragment() {
+    public MineGameFragment() {
         // Required empty public constructor
     }
 
@@ -76,13 +76,12 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_extension_history;
+        return R.layout.fragment_mine_single_list;
     }
 
     private void initView(){
-        mHeadTittle.setText(getResources().getString(R.string.common_extension_history));
+        mHeadTittle.setText(getResources().getString(R.string.common_mine_game));
         mHeadBack.setOnClickListener(this);
-
         if (errorView == null) {
             errorView = new StateView(context);
             errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
@@ -99,7 +98,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     private void initList(){
         mAdapter = null;
-        mAdapter = new ExtensionHistoryAdapter(getContext(), null);
+        mAdapter = new MineGameAdapter(getContext(), null);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
@@ -123,11 +122,11 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
      * 获取数据
      * */
     private void getDataFromNet(final int page){
-        Flowable<HttpResultModel<InvatationResults>> fr = DataService.getInvatationList(new SinglePageRequestBody(page));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<InvatationResults>>() {
+        Flowable<HttpResultModel<MineGamelistResults>> fr = DataService.getMineGameList(new MineGameRequestBody(page, RxConstant.PLATFORM_ANDROID));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MineGamelistResults>>() {
             @Override
-            public void accept(HttpResultModel<InvatationResults> invatationResultsHttpResultModel) throws Exception {
-                notifyData(invatationResultsHttpResultModel.data,page);
+            public void accept(HttpResultModel<MineGamelistResults> mineGamelistResultsHttpResultModel) throws Exception {
+                notifyData(mineGamelistResultsHttpResultModel.data,page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -138,7 +137,26 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         });
     }
 
-    private void notifyData(InvatationResults data, int page){
+    /**
+     * 删除游戏
+     * */
+    private void deleteGame(int packageId){
+        Flowable<HttpResultModel<NotConcernResults>> fr = DataService.deleteMineGame(new DeleteGameRequestBody(packageId));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
+            @Override
+            public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
+                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                showError(netError);
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
+    }
+
+    private void notifyData(MineGamelistResults data, int page){
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
@@ -163,11 +181,11 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         return null;
     }
 
-    class ExtensionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class MineGameAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private List data = new ArrayList();
         private Context context;
 
-        public ExtensionHistoryAdapter(Context context, List data) {
+        public MineGameAdapter(Context context, List data) {
             this.context = context;
             if (data != null) this.data = data;
         }
@@ -175,14 +193,14 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View view = inflater.inflate(R.layout.layout_extension_history_item, parent, false);
-            return new ExtensionHistoryHolder(view);
+            View view = inflater.inflate(R.layout.layout_mine_game_list_item, parent, false);
+            return new MineGameAdapter.MineGameHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof ExtensionHistoryHolder){
-                ExtensionHistoryHolder extensionHistoryHolder = (ExtensionHistoryHolder) holder;
+            if (holder instanceof MineGameAdapter.MineGameHolder){
+                MineGameAdapter.MineGameHolder extensionHistoryHolder = (MineGameAdapter.MineGameHolder) holder;
                 extensionHistoryHolder.onBind(position);
             }
         }
@@ -192,7 +210,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             return data.size();
         }
 
-        public void setData(InvatationResults data, boolean clear){
+        public void setData(MineGamelistResults data, boolean clear){
             if (data == null) return;
             List list = data.list;
             if (clear) this.data = list;
@@ -200,38 +218,54 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             notifyDataSetChanged();
         }
 
-        class ExtensionHistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class MineGameHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
             private int position = 0;
             private View rootView;
-            private RoundedImageView avatar;
-            private ImageView vip;
+            private RoundedImageView icon;
             private TextView name;
-            private TextView time;
-            private TextView content;
+            private TextView size;
+            private TextView type;
+            private TextView desc;
+            private ImageView delete;
+            private ImageView launch;
 
-            public ExtensionHistoryHolder(View view) {
+            public MineGameHolder(View view) {
                 super(view);
                 rootView = view;
-                avatar = view.findViewById(R.id.iv_avatar);
-                name = view.findViewById(R.id.tv_name);
-                vip = view.findViewById(R.id.iv_vip_level);
-                time = view.findViewById(R.id.tv_time);
-                content = view.findViewById(R.id.tv_content);
+                icon = view.findViewById(R.id.recommend_item_icon_iv);
+                name = view.findViewById(R.id.recommend_item_name_tv);
+                type = view.findViewById(R.id.recommend_item_type_tv);
+                size = view.findViewById(R.id.recommend_item_size_tv);
+                desc = view.findViewById(R.id.recommend_item_desc_tv);
+                delete = view.findViewById(R.id.recommend_item_delete);
+                launch = view.findViewById(R.id.recommend_item_launch_iv);
+                delete.setOnClickListener(this);
+                launch.setOnClickListener(this);
             }
 
             public void onBind(int position){
                 this.position = position;
                 rootView.setOnClickListener(this);
-                InvatationResults.InvatationListItem item = (InvatationResults.InvatationListItem) data.get(position);
-                Glide.with(context).load(Api.API_BASE_URL+item.member.icon).into(avatar);
-                vip.setImageResource(Utils.getExtensionVipIcon(item.member.vip_level.level));
-                name.setText(item.member.nick_name);
-                time.setText(item.member.user.date_joined);
-                content.setText(item.member.signature);
+                MineGamelistResults.MineGamelistItem item = (MineGamelistResults.MineGamelistItem) data.get(position);
+                ILFactory.getLoader().loadNet(icon,Api.API_PAY_OR_IMAGE_URL + item.game.logo, ILoader.Options.defaultOptions());
+                name.setText(item.game.name);
+                type.setText(item.channel.name);
+                size.setText("");
+                desc.setText(item.name_package);
+                delete.setTag(item);
             }
 
             @Override
             public void onClick(View v) {
+                if (delete.getTag() != null && delete.getTag() instanceof MineGamelistResults.MineGamelistItem){
+                    MineGamelistResults.MineGamelistItem item = (MineGamelistResults.MineGamelistItem) delete.getTag();
+                    if (v == delete){
+                        deleteGame(item.game.id);
+                    }
+                    if (v == launch){
+                        Utils.doStartApplicationWithPackageName(getContext(), item.name_package);
+                    }
+                }
             }
         }
     }
