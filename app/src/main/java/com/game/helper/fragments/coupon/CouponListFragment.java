@@ -7,20 +7,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.adapters.CouponCommonAdapter;
-import com.game.helper.adapters.RechargeCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.BaseModel.XBaseModel;
-import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
-import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.views.widget.StateView;
@@ -122,7 +117,7 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
      * 未使用
      * */
     private void getCanUseCouponListData(final int page) {
-        Flowable<HttpResultModel<AvailableRedpackResultModel>> fr = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page,0));
+        Flowable<HttpResultModel<AvailableRedpackResultModel>> fr = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page,0,"999999.99"));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<AvailableRedpackResultModel>>() {
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> availableRedpackResultModel) throws Exception {

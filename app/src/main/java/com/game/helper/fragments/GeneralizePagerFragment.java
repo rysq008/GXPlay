@@ -122,7 +122,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     }
 
     private void getBannerInfo() {
-        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(1));
+        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(2));
 
         RxLoadingUtils.subscribe(fb, this.bindToLifecycle(), new Consumer<HttpResultModel<BannerResults>>() {
             @Override

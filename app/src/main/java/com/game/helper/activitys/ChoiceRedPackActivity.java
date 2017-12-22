@@ -39,6 +39,7 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
     private View loadingView;
 
     private int option_game_id;
+    private String totalMoney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +52,14 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
         initListeners();
         initView();
         errorView.setLoadDataType(StateView.REFRESH, 1);
-        fetchAvailableRedpackInfo(1,option_game_id);
+        fetchAvailableRedpackInfo(1);
     }
 
     /**
      * 获取可用红包/卡券
      */
-    private void fetchAvailableRedpackInfo(int page,int option_game_id) {
-        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page,option_game_id));
+    private void fetchAvailableRedpackInfo(int page) {
+        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page,option_game_id,totalMoney));
         RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<AvailableRedpackResultModel>>() {
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
@@ -112,13 +113,13 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
             @Override
             public void onRefresh() {
                 errorView.setLoadDataType(StateView.REFRESH, 1);
-                fetchAvailableRedpackInfo(1,option_game_id);
+                fetchAvailableRedpackInfo(1);
             }
 
             @Override
             public void onLoadMore(int page) {
                 errorView.setLoadDataType(StateView.LOADMORE, page);
-                fetchAvailableRedpackInfo(page,option_game_id);
+                fetchAvailableRedpackInfo(page);
             }
         });
 
@@ -148,6 +149,7 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
 
     private void getIntentData(Intent intent) {
         option_game_id = intent.getIntExtra(OrderConfirmActivity.OPTION_GAME_ID,0);
+        totalMoney = intent.getStringExtra(OrderConfirmActivity.RED_PACK_LIMIT);
     }
 
     @Override
