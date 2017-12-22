@@ -14,16 +14,14 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.fragments.VersionInfoFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
@@ -37,8 +35,8 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ResetPasswdFragment extends XBaseFragment implements View.OnClickListener, EditInputView.OnEditInputListener{
-    public static final String TAG = ResetPasswdFragment.class.getSimpleName();
+public class ForgetPasswdFragment extends XBaseFragment implements View.OnClickListener, EditInputView.OnEditInputListener{
+    public static final String TAG = ForgetPasswdFragment.class.getSimpleName();
 
     //ui
     @BindView(R.id.action_bar_tittle)
@@ -64,11 +62,11 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
     @BindView(R.id.tv_goto_login)
     View mGotoLogin;
 
-    public static ResetPasswdFragment newInstance(){
-        return new ResetPasswdFragment();
+    public static ForgetPasswdFragment newInstance(){
+        return new ForgetPasswdFragment();
     }
 
-    public ResetPasswdFragment() {
+    public ForgetPasswdFragment() {
         // Required empty public constructor
     }
 
@@ -83,11 +81,10 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
     }
 
     private void initView(){
-        mTittle.setText(getResources().getString(R.string.reset_tittle));
+        mTittle.setText(getResources().getString(R.string.forget_tittle));
         mBack.setOnClickListener(this);
         mResetPasswd.setSelected(false);
-        mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
-        mAccount.setEditAble(false);
+        mAccount.addOnEditInputListener(this);
         mPassWord.addOnEditInputListener(this);
         mPassWord1.addOnEditInputListener(this);
         mVerrity.addOnEditInputListener(this);
@@ -118,7 +115,7 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
             return;
         }
 
-        Flowable<HttpResultModel<ResetPasswdResults>> fr = DataService.resetPassWord(new ResetPasswdRequestBody(passWord, code));
+        Flowable<HttpResultModel<ResetPasswdResults>> fr = DataService.forgetPassWord(new ForgetPasswdRequestBody(account,passWord, code));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<ResetPasswdResults>>() {
             @Override
             public void accept(HttpResultModel<ResetPasswdResults> resetPasswdResultsHttpResultModel ) throws Exception {

@@ -13,6 +13,7 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
 import com.game.helper.model.FeedbackListResults;
+import com.game.helper.model.ForgetPasswdResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -62,6 +63,7 @@ import com.game.helper.net.model.ConsumeRequestBody;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.DeleteGiftRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -160,7 +162,11 @@ public class DataService {
     }
 
     public static Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(ResetPasswdRequestBody resetPasswdRequestBody) {
-        return Api.CreateApiService().resetPassWord(resetPasswdRequestBody);
+        return Api.CreateApiService().updatePassWord(resetPasswdRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<ResetPasswdResults>> forgetPassWord(ForgetPasswdRequestBody forgetPasswdRequestBody) {
+        return Api.CreateApiService().forgetPassWord(forgetPasswdRequestBody);
     }
 
     public static Flowable<HttpResultModel<PayResultModel>> ApiPay(PayRequestBody payRequestBody) {

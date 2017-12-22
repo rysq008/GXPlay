@@ -188,7 +188,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
             DetailFragmentsActivity.launch(getContext(),null,RegistFragment.newInstance());
         }
         if (v == mForgetPasswd){
-            DetailFragmentsActivity.launch(getContext(),null,ResetPasswdFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null,ForgetPasswdFragment.newInstance());
         }
         if (v == mTabMessage ){
             switchLoginType(LOGIN_TYPE_MESSAGE);

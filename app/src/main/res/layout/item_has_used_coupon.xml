@@ -50,7 +50,7 @@
 
     <ImageView
         android:id="@+id/coinIv"
-        android:src="@drawable/icon_redpack_coin"
+        android:src="@drawable/icon_redpack_coin_enable"
         android:layout_marginTop="25dp"
         android:layout_marginRight="25dp"
         android:layout_height="wrap_content"

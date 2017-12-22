@@ -13,6 +13,7 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
 import com.game.helper.model.FeedbackListResults;
+import com.game.helper.model.ForgetPasswdResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -51,6 +52,7 @@ import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.GamePackageRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
@@ -230,6 +232,14 @@ public interface ApiService {
     //重置密码
     @POST("/member/reset_passwd/")
     Flowable<HttpResultModel<ResetPasswdResults>> resetPassWord(@Body ResetPasswdRequestBody resetPasswdRequestBody);
+
+    //重置密码2
+    @POST("/member/update_passwd/")
+    Flowable<HttpResultModel<ResetPasswdResults>> updatePassWord(@Body ResetPasswdRequestBody resetPasswdRequestBody);
+
+    //忘记密码
+    @POST("/member/forget_passwd/")
+    Flowable<HttpResultModel<ResetPasswdResults>> forgetPassWord(@Body ForgetPasswdRequestBody forgetPasswdRequestBody);
 
     //钱包-消费明细
     @POST("/account/get_consume_list/")
