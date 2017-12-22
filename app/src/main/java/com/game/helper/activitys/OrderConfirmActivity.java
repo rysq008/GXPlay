@@ -2,6 +2,7 @@ package com.game.helper.activitys;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,6 +57,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     public static final String TAG = "OrderConfirmActivity";
     public static final String OPTION_GAME_ID = "option_game_id";
+    public static final String RED_PACK_LIMIT = "red_pack_limit";
     public static final String BUNDLE_GAME_BEAN = "game_bean";
     public static final String BUNDLE_TOTAL_BALANCE = "after_diacount_total_balance";
     public static final String BUNDLE_INPUT_VALUE = "input_value";
@@ -99,7 +101,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     @BindView(R.id.redPackLayout)
     LinearLayout redPackLayout;
     @BindView(R.id.realPay)
-    TextView realPay;
+    TextView realPayTv;
     @BindView(R.id.realPayLayout)
     LinearLayout realPayLayout;
     @BindView(R.id.channelName)
@@ -137,10 +139,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 账户名称
      */
     private String mAccountName;
-    /**
-     * 显示充值页面用户输入的金额
-     */
-    private Double mMoney = 0.0;
     /**
      * 用户选择红包抵用券金额
      */
@@ -254,11 +252,11 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         initIntentData(getIntent());
         initView();
         initListeners();
+        fetchAvailableRedpackInfo(1);
     }
 
     @Override
     protected void onResume() {
-        fetchAvailableRedpackInfo(1, gameAccountId);
         fetchAccountInfo();
         super.onResume();
     }
@@ -449,18 +447,22 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public Double calcNeedPay() {
         double needPay = 0.0;
         if (useCoin) {
-            needPay = mRealPay -mRedpackAmount - mAvailableCoin;
+            needPay = mRealPay - mAvailableCoin;
             if (needPay <= 0) {
                 needPayTv.setText("0.0");
             } else {
-                needPayTv.setText(needPay + "");
+                BigDecimal b = new BigDecimal(needPay + "");
+                String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                needPayTv.setText(result);
             }
         } else {
-            needPay = mRealPay -mRedpackAmount ;
+            needPay = mRealPay;
             if (needPay <= 0) {
                 needPayTv.setText("0.0");
             } else {
-                needPayTv.setText(needPay+"");
+                BigDecimal b = new BigDecimal(needPay + "");
+                String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                needPayTv.setText(result);
             }
 
         }
@@ -470,16 +472,22 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     /**
      * 获取可用红包/卡券
      */
-    private void fetchAvailableRedpackInfo(int page, int option_game_id) {
-        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, option_game_id));
+    private void fetchAvailableRedpackInfo(int page) {
+        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, gameAccountId, inputBalance + ""));
         RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<AvailableRedpackResultModel>>() {
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
                 if (generalizeResultsHttpResultModel.isSucceful()) {
                     if (generalizeResultsHttpResultModel.isNull()) {
+                        redPackNum.setTextColor(getResources().getColor(R.color.black));
                         redPackNum.setText("无可用红包");
+                    } else {
+                        redPackNum.setTextColor(Color.parseColor("#fe4430"));
+                        redPackNum.setText(generalizeResultsHttpResultModel.data.getList().size() + "个可用");
                     }
                     mRedPacks = generalizeResultsHttpResultModel.data;
+                }else{
+
                 }
 
             }
@@ -505,7 +513,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         //分解数据
         mGameName = gameBean.getGame_name();
         mAccountName = gameBean.getGame_account();
-        mMoney = inputBalance;
         mChannel = gameBean.getGame_channel_name();
         gameAccountId = gameBean.getId();
         is_vip = gameBean.isIs_vip();
@@ -516,9 +523,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
         gameName.setText(mGameName);
         accountName.setText(mAccountName);
-        moneyNum.setText(String.valueOf(mMoney));
-        redPackNum.setText(String.valueOf(mRedpackAmount));
-        realPay.setText(String.valueOf(calcRealPay()));
+        moneyNum.setText(String.valueOf(inputBalance));
+        realPayTv.setText(String.valueOf(calcRealPay()));
         channelName.setText(mChannel);
     }
 
@@ -544,6 +550,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             case R.id.redPackLayout://红包
                 intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
                 intent.putExtra(OPTION_GAME_ID, gameAccountId);
+                intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
                 startActivityForResult(intent, 0);
                 break;
             case R.id.suretv://确定
@@ -646,7 +653,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * @return
      */
     public String getRealPayAmount() {
-        return realPay.getText().toString().trim();
+        return realPayTv.getText().toString().trim();
     }
 
     /**
@@ -675,9 +682,10 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mRedpackType = type;
         mRedpackId = red_id;
         //展示红包抵用金额
+        redPackNum.setTextColor(Color.parseColor("#fe4430"));
         redPackNum.setText("-" + mRedpackAmount);
         //重新计算实际支付
-        realPay.setText(String.valueOf(calcRealPay()));
+        realPayTv.setText(String.valueOf(calcRealPay()));
         //计算还需支付
         mNeedPay = calcNeedPay();
     }
@@ -777,7 +785,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * ali支付
      */
     private void aliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id, mNeedPay + "", "1", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "1", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -816,7 +824,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 微信支付
      */
     private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id, mNeedPay + "", "2", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "2", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -862,7 +870,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             @Override
             public void accept(HttpResultModel<FeedbackListResults> checkTradePasswdResultsHttpResultModel) {
 //                if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
-                    Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
+                finish();
 //                } else {
 //                    Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
 //                }

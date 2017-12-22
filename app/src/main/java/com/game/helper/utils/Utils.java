@@ -340,4 +340,5 @@ public class Utils {
             Toast.makeText(context, "无当前应用！", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

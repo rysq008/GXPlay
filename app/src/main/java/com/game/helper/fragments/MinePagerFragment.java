@@ -14,9 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.coupon.CouponFragment;
 import com.game.helper.fragments.login.LoginFragment;
@@ -24,10 +26,12 @@ import com.game.helper.fragments.login.RegistFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.fragments.wallet.WalletFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
@@ -109,7 +113,11 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("ll","onresume");
+        if (getUserVisibleHint()) {
+            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
+        }
+        Log.e("ll", "onresume");
         if (mLoginView == null || mUnLoginView == null)
             return;
         if (Utils.hasLoginInfo(getContext())) {
@@ -122,7 +130,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == mRegist) {
-            DetailFragmentsActivity.launch(getContext(),null, RegistFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
         if (v == mLogin) {
             DetailFragmentsActivity.launch(getContext(),null, LoginFragment.newInstance());
@@ -214,6 +222,11 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
         mVipLevel.setCompoundDrawables(null, null, d, null);
         ILFactory.getLoader().loadNet(mAvatar.getAvatarView(),Api.API_PAY_OR_IMAGE_URL + userData.icon_thumb, ILoader.Options.defaultOptions());
+        if (!StringUtils.isEmpty(userData.icon)) {
+//            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
+            ILFactory.getLoader().loadNet(mAvatar.getAvatarView(), Api.API_BASE_URL.concat(userData.icon),ILoader.Options.defaultOptions());
+//            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, Api.API_PAY_OR_IMAGE_URL + userData.icon));
+        }
     }
 
     class SettingListAdapter extends RecyclerView.Adapter<SettingListHolder> {

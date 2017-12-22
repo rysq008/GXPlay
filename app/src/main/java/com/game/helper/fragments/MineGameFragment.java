@@ -25,6 +25,8 @@ import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.DeleteGameRequestBody;
+import com.game.helper.net.DataService;
+import com.game.helper.net.api.Api;
 import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -253,6 +255,7 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
                 size.setText("");
                 desc.setText(item.name_package);
                 delete.setTag(item);
+
             }
 
             @Override
@@ -265,6 +268,7 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
                     if (v == launch){
                         Utils.doStartApplicationWithPackageName(getContext(), item.name_package);
                     }
+
                 }
             }
         }

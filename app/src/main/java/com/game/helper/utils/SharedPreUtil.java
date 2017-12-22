@@ -6,6 +6,10 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
+import com.game.helper.model.LoginUserInfo;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayInputStream;
@@ -25,6 +29,7 @@ public class SharedPreUtil {
     private static final String SharedPreference_Name = "g9_android_myConfig_lbb";
     private static final String SharedPreference_SessionId = "sessionId";
     private static final String KEY_COOKIES = "cookies";
+    private static final String USER_INFO = "user_info";
 
     private static SharedPreferences sp;
 
@@ -65,6 +70,20 @@ public class SharedPreUtil {
         return sp.getString(KEY_MAC, "");
     }
 
+    public static LoginUserInfo getLoginUserInfo() {
+        return getObject(USER_INFO);
+    }
+
+    public static void saveLoginUserInfo(LoginUserInfo loginUserInfo) {
+        saveObject(USER_INFO, loginUserInfo);
+        BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, loginUserInfo.icon));
+    }
+
+    public static void cleanLoginUserInfo() {
+        sp.edit().remove(USER_INFO).apply();
+        BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, ""));
+    }
+
     //********************************************************************************************************************************************************************************//
     public static String getSessionId() {
         return sp.getString(SharedPreference_SessionId, "");
@@ -77,11 +96,6 @@ public class SharedPreUtil {
     public static void clearSessionId() {
         sp.edit().remove(SharedPreference_SessionId).apply();
     }
-
-//    public static boolean isLogin() {
-//        String id = getSessionId();
-//        return !TextUtils.isEmpty(id);
-//    }
 
     private static <T> T getObject(String key, Class<T> c) {
         if (TextUtils.isEmpty(key)) {

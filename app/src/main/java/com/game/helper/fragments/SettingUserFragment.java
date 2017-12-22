@@ -24,10 +24,13 @@ import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.login.ResetPasswdFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CheckTradePasswdResults;
+import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
@@ -38,6 +41,7 @@ import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
 import com.game.helper.utils.FileUtils;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.UploadUtils;
 import com.game.helper.utils.Utils;
@@ -57,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -229,7 +234,11 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         if (userData.gender.equals("2")) mSex.setText("保密");
         else if (userData.gender.equals("0")) mSex.setText("女");
         else if (userData.gender.equals("1")) mSex.setText("男");
-        ILFactory.getLoader().loadNet(mAvatar.getAvatarView(),Api.API_PAY_OR_IMAGE_URL + userData.icon_thumb, ILoader.Options.defaultOptions());
+        if (!StringUtils.isEmpty(userData.icon)) {
+//            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
+            ILFactory.getLoader().loadNet(mAvatar.getAvatarView(), Api.API_BASE_URL.concat(userData.icon),ILoader.Options.defaultOptions());
+//            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type,RxConstant.Head_Image_Change_Type,Api.API_PAY_OR_IMAGE_URL+userData.icon));
+        }
 
         //安全管理三项状态设置
         if (Utils.getLoginInfo(getContext()).has_passwd) {
@@ -495,18 +504,25 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         dialog.setCancelable(false);
 
-        Flowable<HttpResultModel> ff = DataService.setApiUserIcon(avatar, new UploadUtils.FileUploadProgress() {
+
+        Flowable<HttpResultModel<Object>> ff = DataService.setApiUserIcon(avatar, new UploadUtils.FileUploadProgress() {
             @Override
             public void onProgress(final int progress) {
                 dialog.setProgress(progress);
             }
         });
 
-        RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel>() {
+
+        RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel<Object>>() {
             @Override
-            public void accept(HttpResultModel httpResultModel) throws Exception {
+            public void accept(HttpResultModel<Object> httpResultModel) throws Exception {
                 if(httpResultModel.isSucceful()){
-                    Toast.makeText(getContext(),((Map<String,String>)httpResultModel.data).get("image"),Toast.LENGTH_SHORT).show();
+                    String icon = ((Map<String,String>)httpResultModel.data).get("image");
+                    Toast.makeText(getContext(),icon,Toast.LENGTH_SHORT).show();
+                    LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+                    info.icon = icon;
+                    SharedPreUtil.saveLoginUserInfo(info);
+                    BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type,RxConstant.Head_Image_Change_Type,((Map<String,String>)httpResultModel.data).get("image")));
                 }
             }
         }, new Consumer<NetError>() {

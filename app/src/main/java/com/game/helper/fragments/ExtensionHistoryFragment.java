@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.RecyclerAdapter;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
@@ -223,7 +224,8 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
                 this.position = position;
                 rootView.setOnClickListener(this);
                 InvatationResults.InvatationListItem item = (InvatationResults.InvatationListItem) data.get(position);
-                Glide.with(context).load(Api.API_BASE_URL+item.member.icon).into(avatar);
+//                Glide.with(context).load(Api.API_BASE_URL+item.member.icon).into(avatar);
+                ILFactory.getLoader().loadNet(avatar,Api.API_BASE_URL.concat(item.member.icon),null);
                 vip.setImageResource(Utils.getExtensionVipIcon(item.member.vip_level.level));
                 name.setText(item.member.nick_name);
                 time.setText(item.member.user.date_joined);
