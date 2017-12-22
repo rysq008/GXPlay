@@ -43,6 +43,7 @@ import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
+import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
@@ -50,6 +51,14 @@ import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.GamePackageRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
+import com.game.helper.net.model.BannerRequestBody;
+import com.game.helper.net.model.DeleteGiftRequestBody;
+import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.MineGameRequestBody;
+import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
@@ -81,8 +90,11 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.SpecialDetailRequestBody;
+import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
@@ -194,6 +206,18 @@ public interface ApiService {
     //添加游戏账号
     @POST("/member/add_game_account/")
     Flowable<HttpResultModel<LogoutResults>> addGameAccount(@Body AddGameAccountRequestBody payRequestBody);
+
+    //获取游戏主题列表
+    @POST("/game/get_game_theme_list/")
+    Flowable<HttpResultModel<SpecialResults>> getSpecialMoreList(@Body BaseRequestBody baseRequestBody);
+
+    //获取某个主题游戏列表接口
+    @POST("/game/get_theme_game_list/")
+    Flowable<HttpResultModel<SpecialDetailResults>> getSpecialDetailList(@Body SpecialDetailRequestBody specialDetailRequestBody);
+
+    //获取游戏安装包列表
+    @POST("/game/get_game_package_list/")
+    Flowable<HttpResultModel<GameListResultModel>> getGamePackageList(GamePackageRequestBody getGamePackageList);
 
     //获取可用红包卡券
     @POST("/activity/get_red_packet_list/")
@@ -310,6 +334,7 @@ public interface ApiService {
     @POST("/sys/get_feedback_list/")
     //反馈列表
     Flowable<HttpResultModel<FeedbackListResults>> feedBackList();
+
 
     //消费下单接口
     @POST("/G9game/paymentController.do?consume")
