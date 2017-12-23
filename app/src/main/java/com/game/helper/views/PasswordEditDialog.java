@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.game.helper.R;
 import com.game.helper.utils.ScreenUtils;
 import com.game.helper.utils.StringUtils;
@@ -74,9 +76,12 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
             getDialog().dismiss();
         }
         if (v == confirm) {
-            passWordComplete(passwordEditText.getText().toString());
+            if (passwordEditText.getContnetText().toString().length() < 6){
+                return;
+            }
+            passWordComplete(passwordEditText.getContnetText().toString());
             if (onPassWordEditListener != null){
-                onPassWordEditListener.onConfirmComplete(passwordEditText.getText().toString());
+                onPassWordEditListener.onConfirmComplete(passwordEditText.getContnetText().toString());
             }
         }
     }
