@@ -39,18 +39,30 @@
                     android:layout_marginTop="@dimen/dp_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <TextView
-                    android:text="提现规则"
+                <LinearLayout
                     android:layout_alignParentRight="true"
-                    android:textSize="@dimen/text_size_tiny"
-                    android:textColor="@color/colorWhite"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:id="@+id/ll_help"
                     android:layout_marginRight="@dimen/dp_20"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
-                    android:paddingRight="5dp"
-                    android:paddingLeft="5dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:text="提现规则"
+                        android:textSize="@dimen/text_size_tiny"
+                        android:textColor="@color/colorWhite"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:paddingRight="2dp"
+                        android:paddingLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:src="@mipmap/ic_help"
+                        android:layout_width="@dimen/dp_10"
+                        android:layout_height="@dimen/dp_10" />
+                </LinearLayout>
+
                 <TextView
                     android:text="1金币=1元"
                     android:textSize="@dimen/text_size_tiny"

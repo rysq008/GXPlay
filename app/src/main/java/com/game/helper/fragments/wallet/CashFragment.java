@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.recharge.RechargeSuccFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CashToResults;
 import com.game.helper.model.CheckTradePasswdResults;
@@ -65,6 +67,8 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     TextView mCashValue;
     @BindView(R.id.tv_cash_apply)
     TextView mApply;
+    @BindView(R.id.ll_help)
+    View mHelp;
 
     private MemberInfoResults userInfo;
 
@@ -89,6 +93,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     private void initView(){
         mHeadTittle.setText(getResources().getString(R.string.common_cash));
         mHeadBack.setOnClickListener(this);
+        mHelp.setOnClickListener(this);
 
         userInfo = (MemberInfoResults) getArguments().getSerializable(TAG);
         mTotalValue.setText(StringUtils.isEmpty(userInfo.total_balance) ? "0.00" : userInfo.total_balance);
@@ -96,13 +101,13 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         mBalanceLeft.setText(StringUtils.isEmpty(userInfo.balance) ? "0.00" : userInfo.balance);
         mToggle.setToggleOn();
         mToggle.setOnToggleChanged(this);
-        mCashAccount.setText(userInfo.phone);
+        mCashAccount.setText(Utils.converterSecretPhone(userInfo.phone));
         mAlipay.setChecked(true);
         mApply.setOnClickListener(this);
     }
 
     private void apply(){
-        String account = mCashAccount.getText().toString();
+        String account = userInfo.phone;
         String cashTo = mCashTo.getText().toString();
         final String cashValue = mCashValue.getText().toString();
 
@@ -121,9 +126,9 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         //判断账户总金额／选中充值账户余额状态下的充值状态余额够不够
         if (userInfo == null || Float.parseFloat(userInfo.total_balance) <= 0
                 || (isUseAccountBalance() && Float.parseFloat(userInfo.balance) <= 0) ){
-            Toast.makeText(getContext(), "该账户暂无可提现金额！", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "该账户暂无可提现金额！", Toast.LENGTH_SHORT).show();
             // TODO: 2017/12/15 方便测试，去除对比金额限制，上线请移除
-            return;
+            //return;
         }
 
         PasswordEditDialog dialog = new PasswordEditDialog();
@@ -168,15 +173,22 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     /**
      * 提现
      * */
-    private void applyFromNet(String memberId,String amount,String isAccount,String tradePassword){
-        Flowable<HttpResultModel<CashToResults>> fr = DataService.cashTo(new CashToRequestBody(memberId,amount,isAccount,tradePassword));
+    private void applyFromNet(String memberId, final String amount, String isAccount, String tradePassword){
+        Flowable<HttpResultModel<CashToResults>> fr = DataService.cashTo(new CashToRequestBody(memberId,amount,isAccount+"",tradePassword));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<CashToResults>>() {
             @Override
             public void accept(HttpResultModel<CashToResults> cashToResultsHttpResultModel) throws Exception {
+                if (cashToResultsHttpResultModel.isSucceful()){
+                    DetailFragmentsActivity.launch(getContext(),null, RechargeSuccFragment.newInstance(RechargeSuccFragment.Type_Cash_Succ,Float.parseFloat(amount)));
+                    getActivity().onBackPressed();
+                }else {
+                    Toast.makeText(getContext(), cashToResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
@@ -186,6 +198,23 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     public void onToggle(boolean on) {
         if (userInfo == null || Float.parseFloat(userInfo.balance) <= 0){
             mToggle.setToggleOff(true);
+        }
+        if (mToggle.isToggleOn()){
+            final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm,
+                    getResources().getString(R.string.common_wormheart_hint),
+                    getResources().getString(R.string.common_wormheart_hint_desc));
+            dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+                @Override
+                public void onCancel() {
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onConfirm() {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show(getFragmentManager(),GXPlayDialog.TAG);
         }
     }
 
@@ -207,6 +236,9 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         }
         if (v == mApply){
             apply();
+        }
+        if (v == mHelp){
+
         }
     }
 
