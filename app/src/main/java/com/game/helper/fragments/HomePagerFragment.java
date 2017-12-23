@@ -48,7 +48,6 @@ public class HomePagerFragment extends HomeBasePagerFragment {
                             Bundle bundle = new Bundle();
                             //bundle.putInt("gamepackeId",holder);
                             DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
-                            DetailFragmentsActivity.launch(context, null, GameDetailFragment.newInstance());
                             break;
                         case RxConstant.HomeModeType.Hot_Model_Type:
                             startActivity(new Intent(getActivity(), HotRecommandGameListActivity.class));
