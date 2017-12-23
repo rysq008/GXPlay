@@ -75,6 +75,8 @@
     <string name="common_mine_game">我的游戏</string>
     <string name="common_mine_gift">我的礼包</string>
     <string name="common_mine_order">我的订单</string>
+    <string name="common_wormheart_hint">温馨提示</string>
+    <string name="common_wormheart_hint_desc">亲，启用充值账号余额"可提现金币"会自动加上充值账号的余额。这样就可以将所有平台账户余额全部取出。</string>
 
     <!--我的-->
     <string name="mine_tab_game">我的游戏</string>
@@ -135,9 +137,12 @@
     <string name="login_hint_without_account">请输入手机号码！</string>
     <string name="login_hint_without_code">请输入验证码！</string>
     <string name="login_hint_without_passwd">请输入密码！</string>
+    <string name="login_hint_without_alipay">请输入支付宝账户！</string>
     <string name="login_hint_without_confirm_passwd">请再次输入密码！</string>
+    <string name="login_hint_without_confirm_alipay">请再次输入支付宝账户！</string>
     <string name="login_hint_wrong_code">验证码错误！</string>
     <string name="login_hint_wrong_notequal_passwd">前后密码不一致！</string>
+    <string name="login_hint_wrong_notequal_alipay">前后支付宝账户不一致！</string>
     <string name="login_hint_without_identy">请输入身份证后六位！</string>
     <string name="login_hint_without_name">请输入真实姓名！</string>
 
@@ -161,4 +166,6 @@
     <string name="recharge_vip_discount">VIP会员</string>
     <string name="recharge_member_discount">普通会员</string>
     <string name="recharge_can_use_discount">可用vip账号剩余</string>
+    <string name="recharge_succ_hint">亲，充值成功之后10分钟之内到账哦，请耐心等待。</string>
+    <string name="recharge_cash_hint">亲，提现申请成功后，在3个工作日内到账，请耐心等待。</string>
 </resources>

@@ -6,7 +6,9 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import com.facebook.stetho.Stetho;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
+import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.TotoroToast;
@@ -136,7 +138,8 @@ public class GameMarketApplication extends MultiDexApplication {
             @Override
             public boolean handleError(NetError error) {
                 if (error.getType() == NetError.AuthError) {
-                    TotoroToast.makeText(getApplicationContext(), "goto login !!", 1).show();
+                    TotoroToast.makeText(getApplicationContext(), error.getMessage(), 1).show();
+                    DetailFragmentsActivity.launch(GameMarketApplication.this,null, LoginFragment.newInstance());
                     return true;
                 }
                 return false;

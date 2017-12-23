@@ -19,10 +19,14 @@
     <dimen name="margin_20">20dp</dimen>
     <dimen name="margin_21">21dp</dimen>
     <dimen name="margin_30">30dp</dimen>
+    <dimen name="margin_33">33dp</dimen>
+    <dimen name="margin_38">38dp</dimen>
+    <dimen name="margin_43">43dp</dimen>
     <dimen name="margin_45">45dp</dimen>
     <dimen name="margin_50">50dp</dimen>
     <dimen name="margin_51">51dp</dimen>
     <dimen name="margin_54">54dp</dimen>
+    <dimen name="margin_55">55dp</dimen>
     <dimen name="margin_28">28dp</dimen>
     <dimen name="margin_60">60dp</dimen>
     <dimen name="margin_80">80dp</dimen>
@@ -48,7 +52,11 @@
     <dimen name="simple_text_layout_h">@dimen/margin_60</dimen>
     <dimen name="enter_text_layout_h">@dimen/margin_50</dimen>
     <dimen name="view_59">59dp</dimen>
+    <dimen name="view_16">16dp</dimen>
     <dimen name="view_29">29dp</dimen>
+    <dimen name="view_50">50dp</dimen>
+    <dimen name="view_134">134dp</dimen>
+    <dimen name="view_140">140dp</dimen>
 
 
     <dimen name="space_big">10dip</dimen>
@@ -75,7 +83,10 @@
     <dimen name="dp_30">30dp</dimen>
     <dimen name="dp_37">37dp</dimen>
     <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_45">45dp</dimen>
     <dimen name="dp_50">50dp</dimen>
+    <dimen name="dp_51">51dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
     <dimen name="dp_64">64dp</dimen>
 
     <!--text-->

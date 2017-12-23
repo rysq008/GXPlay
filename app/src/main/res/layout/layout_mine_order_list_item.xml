@@ -10,10 +10,11 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/riv_avatar"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@mipmap/ic_launcher"
         android:scaleType="fitXY"
         app:riv_corner_radius="6dip" />

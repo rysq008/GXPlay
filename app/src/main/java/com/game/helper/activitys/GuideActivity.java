@@ -15,6 +15,7 @@ import android.widget.ImageView.ScaleType;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class GuideActivity extends XBaseActivity implements OnPageChangeListener
         vp.setAdapter(vpAdapter);
         // 绑定回调
         vp.setOnPageChangeListener(this);
-
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
     }
 
     @Override

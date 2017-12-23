@@ -88,6 +88,7 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
         mResetPasswd.setSelected(false);
         mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
         mAccount.setEditAble(false);
+        mGotoLogin.setVisibility(View.GONE);
         mPassWord.addOnEditInputListener(this);
         mPassWord1.addOnEditInputListener(this);
         mVerrity.addOnEditInputListener(this);
@@ -133,6 +134,7 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
             }
         });

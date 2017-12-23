@@ -187,6 +187,17 @@ public class RxLoadingUtils {
                     }
 
                     @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        MainThreadPostUtils.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        });
+                    }
+
+                    @Override
                     protected void onFail(NetError error) {
                         if (onError != null) {
                             try {

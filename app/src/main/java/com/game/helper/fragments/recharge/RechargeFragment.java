@@ -63,7 +63,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     MagicIndicator tabStrip;
     @BindView(R.id.game_detail_viewpager)
     ViewPager viewPager;
-    @BindView(R.id.tv_connect_kefu)
+    @BindView(R.id.ll_connect_kefu)
     View mConnectKefu;
     @BindView(R.id.tv_confirm_order)
     View mConfirmOrder;

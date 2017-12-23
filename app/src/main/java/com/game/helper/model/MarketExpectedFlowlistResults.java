@@ -29,7 +29,7 @@ public class MarketExpectedFlowlistResults extends XBaseModel {
 }
     * */
     @SerializedName("list")
-    public List<MarketFlowlistResults.MarketFlowlistItem> list;
+    public List<MarketExpectedFlowlistItem> list;
 
     public static class MarketExpectedFlowlistItem implements ItemType{
         /*

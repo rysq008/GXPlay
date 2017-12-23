@@ -1,5 +1,6 @@
 package com.game.helper.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.activitys.HotRecommandGameListActivity;
 import com.game.helper.adapters.ChannelListItemAdapter;
 import com.game.helper.adapters.SpecialMoreItemAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameListResultModel;
+import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BaseRequestBody;
@@ -23,6 +26,7 @@ import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,23 +75,13 @@ public class ChannelListFragment extends XBaseFragment {
         xrclChannelList.getRecyclerView().verticalLayoutManager(context);
         if (mAdapter == null) {
             mAdapter = new ChannelListItemAdapter(context);
-            /*mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, SpecialMoreItemAdapter.ViewHolder>() {
-                @Override
-                public void onItemClick(int position, ItemType model, int tag, SpecialMoreItemAdapter.ViewHolder holder) {
-                    super.onItemClick(position, model, tag, holder);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("imagerurl", ((SpecialResults.SpecialItem) model).image);
-                    bundle.putString("content", ((SpecialResults.SpecialItem) model).content);
-                    bundle.putString("name", ((SpecialResults.SpecialItem) model).name);
-                    bundle.putInt("id", ((SpecialResults.SpecialItem) model).id);
-                    DetailFragmentsActivity.launch(context, bundle, SpecialDetailFragment.newInstance());
-                }
-            });*/
+            xrclChannelList.getRecyclerView().setAdapter(mAdapter);
             mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, ChannelListItemAdapter.ViewHolder>() {
                 @Override
                 public void onItemClick(int position, ItemType model, int tag, ChannelListItemAdapter.ViewHolder holder) {
                     super.onItemClick(position, model, tag, holder);
                     //游戏详情
+
                 }
             });
         }
@@ -116,21 +110,10 @@ public class ChannelListFragment extends XBaseFragment {
     }
 
     private void loadAdapterData(int page) {
-        Flowable<HttpResultModel<GameListResultModel>> fr = DataService.getGamePackageList(new GamePackageRequestBody(page, gameId, 1));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameListResultModel>>() {
+        Flowable<HttpResultModel<GamePackageListResult>> fr = DataService.getGamePackageList(new GamePackageRequestBody(page, gameId, 1));
+        RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageListResult>>() {
             @Override
-            public void accept(HttpResultModel<GameListResultModel> specialResultsHttpResultModel) throws Exception {
-
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-
-            }
-        });
-        RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GameListResultModel>>() {
-            @Override
-            public void accept(HttpResultModel<GameListResultModel> gameListResultModelHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<GamePackageListResult> gameListResultModelHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(gameListResultModelHttpResultModel.data.getList());
                 showData(gameListResultModelHttpResultModel.current_page, gameListResultModelHttpResultModel.total_page, list);

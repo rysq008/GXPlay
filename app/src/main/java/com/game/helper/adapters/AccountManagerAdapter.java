@@ -13,6 +13,7 @@ import com.game.helper.R;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.net.api.Api;
+import com.game.helper.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +72,7 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         private int position = -1;
         private View mRootView;
         private ImageView avatar;
+        private ImageView vip;
         private TextView name;
         private TextView platform;
         private TextView accountIdenty;
@@ -81,6 +83,7 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             super(itemView);
             mRootView = itemView;
             avatar = itemView.findViewById(R.id.iv_avatar);
+            vip = itemView.findViewById(R.id.iv_vip_level);
             name = itemView.findViewById(R.id.tv_name);
             platform = itemView.findViewById(R.id.tv_platform);
             accountIdenty = itemView.findViewById(R.id.tv_identy);
@@ -99,6 +102,7 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             platform.setText(item.getGame_channel_name());
             accountIdenty.setText(item.getGame_account());
             creatTime.setText(item.getCreate_time());
+            vip.setImageResource(Utils.getExtensionVipIcon(item.getVip_level()));
         }
 
         @Override

@@ -1,6 +1,5 @@
 package com.game.helper.fragments;
 
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -34,9 +32,7 @@ import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.api.Api;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
-import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
 import com.game.helper.utils.FileUtils;
@@ -48,20 +44,19 @@ import com.game.helper.utils.Utils;
 import com.game.helper.views.AvatarEditDialog;
 import com.game.helper.views.HeadImageView;
 import com.game.helper.views.OptionsPickerView;
-import com.game.helper.views.PasswordEditDialog;
 import com.game.helper.views.widget.TimePickerView;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -169,7 +164,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
 
     /**
      * 初始化性别日期选择框
-    * */
+     */
     private void pickerInit() {
         //time picker
         mTimerPicker = new TimePickerView(getContext(), TimePickerView.Type.YEAR_MONTH_DAY);
@@ -220,7 +215,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
                         break;
                 }
                 mSex.setText(String.valueOf(sex));
-                updateGender(options1+"");
+                updateGender(options1 + "");
             }
         });
     }
@@ -232,11 +227,13 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         if (userData.gender.equals("2")) mSex.setText("保密");
         else if (userData.gender.equals("0")) mSex.setText("女");
         else if (userData.gender.equals("1")) mSex.setText("男");
-        if (!StringUtils.isEmpty(userData.icon)) {
+        if (!StringUtils.isEmpty(userData.icon_thumb)) {
 //            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
+
 //            ILFactory.getLoader().loadNet(mAvatar.getAvatarView(), Api.API_BASE_URL.concat(userData.icon),null);
-            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type,RxConstant.Head_Image_Change_Type,userData.icon));
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, userData.icon_thumb));
         }
+
 
         //安全管理三项状态设置
         if (Utils.getLoginInfo(getContext()).has_passwd) {
@@ -302,21 +299,21 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         if (v == mItemNickname) {
             UpdateNicknameFragment updateNicknameFragment = UpdateNicknameFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putString(UpdateNicknameFragment.TAG,userInfo.nick_name);
+            bundle.putString(UpdateNicknameFragment.TAG, userInfo.nick_name);
             updateNicknameFragment.setArguments(bundle);
             DetailFragmentsActivity.launch(getContext(), bundle, updateNicknameFragment);
         }
         if (v == mItemPhone) {
             UpdatePhoneFragment updatePhoneFragment = UpdatePhoneFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putString(UpdatePhoneFragment.TAG,userInfo.phone);
+            bundle.putString(UpdatePhoneFragment.TAG, userInfo.phone);
             updatePhoneFragment.setArguments(bundle);
             DetailFragmentsActivity.launch(getContext(), bundle, updatePhoneFragment);
         }
         if (v == mItemsign) {
             UpdateSignFragment updateSignFragment = UpdateSignFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putString(UpdateSignFragment.TAG,userInfo.signature);
+            bundle.putString(UpdateSignFragment.TAG, userInfo.signature);
             updateSignFragment.setArguments(bundle);
             DetailFragmentsActivity.launch(getContext(), bundle, updateSignFragment.newInstance());
         }
@@ -336,7 +333,8 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<CheckTradePasswdResults>>() {
             @Override
             public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
-                if (checkTradePasswdResultsHttpResultModel.isSucceful()) goToSetTradePassword(false);
+                if (checkTradePasswdResultsHttpResultModel.isSucceful())
+                    goToSetTradePassword(false);
                 else Toast.makeText(getContext(), "交易密码验证失败！", Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
@@ -357,7 +355,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
      */
     private void goToSetTradePassword(boolean isSetTrade) {
         Bundle bundle = new Bundle();
-        bundle.putBoolean(UpdateTradePasswordFragment.TAG,isSetTrade);
+        bundle.putBoolean(UpdateTradePasswordFragment.TAG, isSetTrade);
         UpdateTradePasswordFragment updateTradePasswordFragment = UpdateTradePasswordFragment.newInstance();
         DetailFragmentsActivity.launch(getContext(), bundle, updateTradePasswordFragment);
     }
@@ -514,20 +512,20 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel<Object>>() {
             @Override
             public void accept(HttpResultModel<Object> httpResultModel) throws Exception {
-                if(httpResultModel.isSucceful()){
-                    String icon = ((Map<String,String>)httpResultModel.data).get("image");
-                    Toast.makeText(getContext(),icon,Toast.LENGTH_SHORT).show();
+                if (httpResultModel.isSucceful()) {
+                    String icon = ((Map<String, String>) httpResultModel.data).get("image");
+                    Toast.makeText(getContext(), icon, Toast.LENGTH_SHORT).show();
                     LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
                     info.icon = icon;
                     SharedPreUtil.saveLoginUserInfo(info);
-                    BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type,RxConstant.Head_Image_Change_Type,((Map<String,String>)httpResultModel.data).get("image")));
+                    BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, ((Map<String, String>) httpResultModel.data).get("image")));
                 }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
                 Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "accept: "+netError.getMessage() );
+                Log.e(TAG, "accept: " + netError.getMessage());
             }
         }, null, false);
     }

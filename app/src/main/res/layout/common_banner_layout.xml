@@ -14,5 +14,6 @@
         app:banner_pointContainerBackground="@android:color/transparent"
         app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
         app:banner_pointTopBottomMargin="10dp"
+        app:banner_indicatorGravity="bottom"
         app:banner_transitionEffect="alpha" />
 </LinearLayout>

@@ -18,6 +18,8 @@ import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GameListResultModel;
+import com.game.helper.model.GamePackageInfo_DetailResult;
+import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
@@ -50,6 +52,7 @@ import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
@@ -67,6 +70,8 @@ import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
+import com.game.helper.net.model.GamePackageInfoRequestBody;
+import com.game.helper.net.model.GamePackageInfo_InfoRequestBody;
 import com.game.helper.net.model.GamePackageRequestBody;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.MineGameRequestBody;
@@ -80,6 +85,7 @@ import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
+import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
@@ -381,10 +387,9 @@ public class DataService {
     public static Flowable<HttpResultModel<FeedbackListResults>> consume(ConsumeRequestBody consumeRequestBody) {
         return Api.CreatePayOrImageApiService().consume(consumeRequestBody);
     }
-    public static Flowable<HttpResultModel<GameListResultModel>> getGamePackageList(GamePackageRequestBody getGamePackageList) {
-        return Api.CreatePayOrImageApiService().getGamePackageList(getGamePackageList);
+    public static Flowable<HttpResultModel<GamePackageListResult>> getGamePackageList(GamePackageRequestBody getGamePackageList) {
+        return Api.CreateApiService().getGamePackageList(getGamePackageList);
     }
-
 
     public static Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody) {
         return Api.CreateApiService().getMineGameList(mineGameRequestBody);
@@ -410,4 +415,12 @@ public class DataService {
         return Api.CreateApiService().getMineGiftCodeInfo(mineGiftInfoRequestBody);
     }
 
+
+    public static Flowable<HttpResultModel<GamePackageInfoResult>> getGamePackageInfo(GamePackageInfoRequestBody gamePackageInfoRequestBody) {
+        return Api.CreateApiService().getGamePackageInfo(gamePackageInfoRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<GamePackageInfo_DetailResult>> getGamePackageInfo_Info(GamePackageInfo_InfoRequestBody gamePackageInfo_infoRequestBody) {
+        return Api.CreateApiService().getGamePackageInfo_Info(gamePackageInfo_infoRequestBody);
+    }
 }

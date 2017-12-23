@@ -1,9 +1,13 @@
 package com.game.helper.fragments;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,6 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
+import cn.droidlover.xstatecontroller.XStateController;
 
 
 public class GameDetailCommunityFragment extends XBaseFragment {
@@ -32,6 +37,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     private void setData() {
 
     }
+
 
     private void initList() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -70,6 +76,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        Log.d(TAG,"----------------==================3");
         initList();
     }
 
@@ -112,4 +119,14 @@ public class GameDetailCommunityFragment extends XBaseFragment {
             }
         }
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(errorView != null){
+            xRecyclerContentLayout.removeView(errorView);
+        }
+    }
+
+
 }

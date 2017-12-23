@@ -29,6 +29,7 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.api.Api;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
@@ -36,6 +37,8 @@ import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -130,30 +133,30 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
             DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
         if (v == mLogin) {
-            DetailFragmentsActivity.launch(getContext(), null, LoginFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null, LoginFragment.newInstance());
         }
         if (v == mEditUserInfo || v == mAvatar) {
-            DetailFragmentsActivity.launch(getContext(), null, SettingUserFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null,SettingUserFragment.newInstance());
         }
-        if (v == mWallet) {
+        if (v == mWallet){
             Bundle bundle = new Bundle();
-            bundle.putSerializable(WalletFragment.TAG, userInfo);
-            DetailFragmentsActivity.launch(getContext(), bundle, WalletFragment.newInstance());
+            bundle.putSerializable(WalletFragment.TAG,userInfo);
+            DetailFragmentsActivity.launch(getContext(),bundle, WalletFragment.newInstance());
         }
         if (v == mMineGame) {
-            DetailFragmentsActivity.launch(getContext(), null, MineGameFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null, MineGameFragment.newInstance());
         }
         if (v == mMineGift) {
-            DetailFragmentsActivity.launch(getContext(), null, MineGiftFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null, MineGiftFragment.newInstance());
         }
         if (v == mMineOrder) {
-            DetailFragmentsActivity.launch(getContext(), null, MineOrderFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null, MineOrderFragment.newInstance());
         }
         if (v == mMineVip) {
-            DetailFragmentsActivity.launch(getContext(), null, CouponFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(),null, CouponFragment.newInstance());
         }
-        if (v == mRecharge) {
-            DetailFragmentsActivity.launch(getContext(), null, RechargeFragment.newInstance());
+        if (v == mRecharge){
+            DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
         }
     }
 
@@ -218,9 +221,9 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         Drawable d = getResources().getDrawable(Utils.getVipLevel(Integer.valueOf(userData.gender)));
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
         mVipLevel.setCompoundDrawables(null, null, d, null);
-        if (!StringUtils.isEmpty(userData.icon)) {
+        if (!StringUtils.isEmpty(userData.icon_thumb)) {
 //            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
-            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, userData.icon));
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, userData.icon_thumb));
         }
     }
 

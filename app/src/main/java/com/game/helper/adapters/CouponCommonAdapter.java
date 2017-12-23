@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 
@@ -94,6 +96,7 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView desc;
         private TextView limit;
         private TextView num;
+        private LinearLayout game;
         private LinearLayout container;
 
         public CanUseCouponHolder(View itemView) {
@@ -103,6 +106,7 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             desc = itemView.findViewById(R.id.redPackDesc);
             limit = itemView.findViewById(R.id.timeLimit);
             num = itemView.findViewById(R.id.redpackNum);
+            game = itemView.findViewById(R.id.ll_has_game);
             container = itemView.findViewById(R.id.game_container);
             rootView.setOnClickListener(this);
         }
@@ -115,6 +119,10 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 limit.setText("有效期至\t"+item.getEnd_date());
                 num.setText(item.getAmount()+"元现金券");
 
+                if (item.getGames().size() <= 0 || item.getType() != 2){
+                    game.setVisibility(View.GONE);
+                    return;
+                }
                 for (int i = 0; i < item.getGames().size(); i++) {
                     inflateGameItem(item.getGames().get(i),i);
                 }
@@ -133,7 +141,8 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             click.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, gameBean.getName()+"/"+position, Toast.LENGTH_SHORT).show();
+                    DetailFragmentsActivity.launch(context,null, RechargeFragment.newInstance());
+                    //Toast.makeText(context, gameBean.getName()+"/"+position, Toast.LENGTH_SHORT).show();
                 }
             });
             container.addView(view);

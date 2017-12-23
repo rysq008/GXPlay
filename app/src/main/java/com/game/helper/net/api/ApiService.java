@@ -18,6 +18,8 @@ import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GameListResultModel;
+import com.game.helper.model.GamePackageInfo_DetailResult;
+import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.HotResults;
@@ -50,15 +52,17 @@ import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.GamePackageInfoRequestBody;
+import com.game.helper.net.model.GamePackageInfo_InfoRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.GamePackageRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.DeleteGiftRequestBody;
-import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
@@ -74,13 +78,11 @@ import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
-import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.ConsumeRequestBody;
-import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -93,8 +95,6 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
-import com.game.helper.net.model.SetTradeRequestBody;
-import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
@@ -221,7 +221,11 @@ public interface ApiService {
 
     //获取游戏安装包列表
     @POST("/game/get_game_package_list/")
-    Flowable<HttpResultModel<GameListResultModel>> getGamePackageList(GamePackageRequestBody getGamePackageList);
+    Flowable<HttpResultModel<GamePackageListResult>> getGamePackageList(@Body GamePackageRequestBody gamePackageRequestBody);
+
+    //获取游戏安装包信息接口
+    @POST("/game/get_game_package_info/")
+    Flowable<HttpResultModel<GamePackageInfoResult>> getGamePackageInfo(@Body GamePackageInfoRequestBody gamePackageInfoRequestBody);
 
     //获取可用红包卡券
     @POST("/activity/get_red_packet_list/")
@@ -292,7 +296,7 @@ public interface ApiService {
     Flowable<HttpResultModel<GameAccountDiscountResults>> getGameAccountDiscount(@Body SingleGameIdRequestBody singleGameIdRequestBody);
 
     //获取vip列表
-    @POST("/member/get_vip_list")
+    @POST("/member/get_vip_list/")
     Flowable<HttpResultModel<VipLevelResults>> getVipLevel();
 
     //获取全部账号信息
@@ -396,5 +400,9 @@ public interface ApiService {
 
     @POST("/game/get_gift_info/")//游戏礼包详情
     Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody);
+
+    //获取游戏详情之详情
+    @POST("/game/get_game_detail/")
+    Flowable<HttpResultModel<GamePackageInfo_DetailResult>> getGamePackageInfo_Info(@Body GamePackageInfo_InfoRequestBody gamePackageInfo_infoRequestBody);
 
 }
