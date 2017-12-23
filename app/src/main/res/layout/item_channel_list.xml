@@ -86,6 +86,7 @@
 
             </LinearLayout>
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -104,11 +105,26 @@
                     android:textSize="@dimen/size_12sp" />
             </LinearLayout>
             <!--点击下载后关闭游戏提供,显示下载进度条-->
-            <ProgressBar
-                android:id="@+id/pb_channel_list"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="50%"
+                    android:textColor="@color/color_999"
+                    android:textSize="@dimen/size_12sp" />
+                <ProgressBar
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_marginTop="@dimen/margin_3"
+                    android:layout_marginBottom="@dimen/margin_3"
+                    android:id="@+id/pb_channel_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="7dp"
+                    android:visibility="visible"
+                    android:progress="50"/>
+            </LinearLayout>
 
         </LinearLayout>
 

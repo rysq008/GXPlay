@@ -8,10 +8,9 @@ package com.game.helper.net.model;
 public class GamePackageRequestBody extends BaseRequestBody {
     public int game_id;
     public int plat_id;
-    public int page;
     public GamePackageRequestBody(int page,int gameId,int platId) {
         super(page);
-        game_id = gameId;
-        plat_id = platId;
+        this.game_id = gameId;
+        this.plat_id = platId;
     }
 }

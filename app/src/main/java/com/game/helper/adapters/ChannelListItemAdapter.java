@@ -1,6 +1,7 @@
 package com.game.helper.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,15 +9,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.game.helper.R;
-import com.game.helper.model.GameListResultModel;
-import com.game.helper.model.SpecialDetailResults;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.GameDetailFragment;
+import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.api.Api;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
+import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -34,19 +36,25 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ItemType item = data.get(position);
-
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            /*final ItemType item = data.get(position);
-            gameListResultModelHttpResultModel.ListBean itemDate = (GameListResultModel.) data.get(position);
-        ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.logothumb),ILoader.ILoader.Options.defaultOptions());
-        holder.tvName.setText(itemDate.name);
-        holder.tvDiscountVip.setText(String.valueOf(itemDate.game_package.discount_vip));
-        holder.tvTypeName.setText(itemDate.type.name);
-        holder.tvPackageFilesize.setText(String.valueOf(itemDate.game_package.filesize));
+        final GamePackageListResult.ListBean itemDate = (GamePackageListResult.ListBean) data.get(position);
+        ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.getGame().getLogothumb()),ILoader.Options.defaultOptions());
+        holder.tvtName.setText(itemDate.getGame().getName());
+        holder.tvDiscountVip.setText(String.valueOf(itemDate.getDiscount_vip()));
+        holder.tvTypeName.setText(itemDate.getGame().getType().getName());
+        holder.tvPackageFilesize.setText(String.valueOf(itemDate.getFilesize())+"M");
+        holder.tvtSource.setText(itemDate.getChannel().getName());
         //holder.ivntro.setText(itemDate.intro);
-            //holder.gameId = itemDate.id;*/
-
+        //holder.gameId = itemDate.id;
+        holder.ivChannelListLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("gamepackeId",itemDate.getId());
+                bundle.putInt("gameId",itemDate.getGame().getId());
+                DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
+            }
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (getRecItemClick() != null) {
@@ -82,16 +90,14 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         @BindView(R.id.tv_channel_list_source)
         TextView tvtSource;
         @BindView(R.id.pb_channel_list)
-        ProgressBar pbChannelList;
+        ProgressBar pbChannel;
         @BindView(R.id.iv_channel_list_load)
         ImageView ivChannelListLoad;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            KnifeKit.bind(this,itemView);
         }
 
-        @OnClick(R.id.iv_channel_list_load)
-        public void onViewClicked() {
-        }
     }
 }
