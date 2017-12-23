@@ -24,6 +24,7 @@ import com.game.helper.fragments.login.ResetPasswdFragment;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.CustomBadgeItem;
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,6 +174,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     @Override
     public void initData(Bundle savedInstanceState) {
         initView();
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
     }
 
     @Override

@@ -221,11 +221,9 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         Drawable d = getResources().getDrawable(Utils.getVipLevel(Integer.valueOf(userData.gender)));
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
         mVipLevel.setCompoundDrawables(null, null, d, null);
-        ILFactory.getLoader().loadNet(mAvatar.getAvatarView(),Api.API_PAY_OR_IMAGE_URL + userData.icon_thumb, ILoader.Options.defaultOptions());
-        if (!StringUtils.isEmpty(userData.icon)) {
+        if (!StringUtils.isEmpty(userData.icon_thumb)) {
 //            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
-            ILFactory.getLoader().loadNet(mAvatar.getAvatarView(), Api.API_BASE_URL.concat(userData.icon),ILoader.Options.defaultOptions());
-//            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, Api.API_PAY_OR_IMAGE_URL + userData.icon));
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, userData.icon_thumb));
         }
     }
 

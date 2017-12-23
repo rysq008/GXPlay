@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.utils.SharedPreUtil;
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import cn.droidlover.xdroidmvp.router.Router;
 
@@ -38,6 +39,7 @@ public class WelcomeActivity extends XBaseActivity {
             }
         };
         countDownTimer.start();
+        SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
     }
 
     @Override
