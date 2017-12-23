@@ -1,6 +1,7 @@
 package com.game.helper.fragments;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.HotRecommandGameListActivity;
@@ -44,7 +45,9 @@ public class HomePagerFragment extends HomeBasePagerFragment {
                     super.onItemClick(position, model, tag, holder);
                     switch (model.itemType()) {
                         case RxConstant.HomeModeType.Recommend_Model_Type:
-                            DetailFragmentsActivity.launch(context, null, GameDetailFragment.newInstance());
+                            Bundle bundle = new Bundle();
+                            //bundle.putInt("gamepackeId",holder);
+                            DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
                             break;
                         case RxConstant.HomeModeType.Hot_Model_Type:
                             startActivity(new Intent(getActivity(), HotRecommandGameListActivity.class));

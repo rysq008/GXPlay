@@ -3,17 +3,25 @@ package com.game.helper.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.GamePackageInfoResult;
+import com.game.helper.net.DataService;
+import com.game.helper.net.api.Api;
+import com.game.helper.net.model.GamePackageInfoRequestBody;
+import com.game.helper.utils.RxLoadingUtils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -28,22 +36,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
+import cn.droidlover.xdroidmvp.net.NetError;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 public class GameDetailFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = GameDetailFragment.class.getSimpleName();
-
+    List<Fragment> list = new ArrayList<Fragment>();
+    @BindView(R.id.action_bar_tittle)
+    TextView mTvTittle;
+    @BindView(R.id.iv_game_detail_logothumb)
+    ImageView ivLogothumb;
+    @BindView(R.id.tv_game_detail_name)
+    TextView tvName;
+    @BindView(R.id.tv_game_detail_discount_vip)
+    TextView tvDiscount;
+    @BindView(R.id.tv_game_detail_type_name)
+    TextView tvTypeName;
+    @BindView(R.id.tv_game_detail_package_filesize)
+    TextView tvPackageFilesize;
+    @BindView(R.id.tv_game_detail_content)
+    TextView tvContent;
+    @BindView(R.id.iv_game_detail_load)
+    ImageView ivLoad;
+    @BindView(R.id.tv_discount_game_detail_common)
+    TextView tvDiscountCommon;
+    @BindView(R.id.tv_discount_game_detail_vip)
+    TextView tvDiscountVip;
     @BindView(R.id.game_detail_tabs)
     MagicIndicator tabStrip;
     @BindView(R.id.game_detail_viewpager)
     ViewPager viewPager;
-    @BindView(R.id.game_detail_bottom_bar)
-    RelativeLayout bottomBar;
-    @BindView(R.id.game_detail_download_tv)
-    TextView downloadTv;
-    @BindView(R.id.game_detail_action_edit)
+    Unbinder unbinder;
+    @BindView(R.id.tv_game_detail_bottom_download)
+    TextView tvBottomDownload;
+    @BindView(R.id.et_game_detail_edit_content)
+    EditText etEditContent;
+    @BindView(R.id.tv_game_detail_edit_send)
+    TextView tvEditSend;
+    @BindView(R.id.ll_game_detail_action_edit)
     LinearLayout etitLayout;
 
-    List<Fragment> list = new ArrayList<Fragment>();
+    private int gamepackeId;
+    private int gameId;
+    private GameDetailInfoFragment gameDetailInfoFragment;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -51,7 +91,23 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        list.add(GameDetailInfoFragment.newInstance());
+        mTvTittle.setText("游戏详情");
+        Bundle arguments = getArguments();
+        tvDiscountCommon.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        tvDiscountVip.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        if (arguments != null) {
+            gamepackeId = arguments.getInt("gamepackeId");
+            gameId = arguments.getInt("gameId");
+            initGamePackage();
+        }
+        if(gameDetailInfoFragment == null){
+            gameDetailInfoFragment = GameDetailInfoFragment.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putInt("gameId",gameId);
+            gameDetailInfoFragment.setArguments(bundle);
+        }
+        list.add(GameDetailRechargeFragment.newInstance());
+        list.add(gameDetailInfoFragment);
         list.add(GameDetailGiftFragment.newInstance());
         list.add(GameDetailCommunityFragment.newInstance());
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
@@ -80,16 +136,21 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        downloadTv.setVisibility(View.VISIBLE);
+                        tvBottomDownload.setVisibility(View.GONE);
                         etitLayout.setVisibility(View.GONE);
                         break;
                     case 1:
-                        downloadTv.setVisibility(View.GONE);
+                        tvBottomDownload.setVisibility(View.VISIBLE);
                         etitLayout.setVisibility(View.GONE);
                         break;
                     case 2:
-                        downloadTv.setVisibility(View.GONE);
+                        tvBottomDownload.setVisibility(View.GONE);
+                        etitLayout.setVisibility(View.GONE);
+                        break;
+                    case 3:
+                        tvBottomDownload.setVisibility(View.GONE);
                         etitLayout.setVisibility(View.VISIBLE);
+                        break;
                 }
             }
 
@@ -100,8 +161,31 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         loadData();
     }
 
+    private void initGamePackage() {
+        Flowable<HttpResultModel<GamePackageInfoResult>> fr = DataService.getGamePackageInfo(new GamePackageInfoRequestBody(gamepackeId));
+        RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageInfoResult>>() {
+            @Override
+            public void accept(HttpResultModel<GamePackageInfoResult> gameInfo) throws Exception {
+                ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(gameInfo.data.getGame().getLogo()), ILoader.Options.defaultOptions());
+                tvName.setText(gameInfo.data.getGame().getName());
+                tvDiscount.setText(String.valueOf(gameInfo.data.getDiscount_vip()));
+                tvTypeName.setText(gameInfo.data.getGame().getType().getName());
+                tvPackageFilesize.setText(String.valueOf(gameInfo.data.getFilesize() + "M"));
+                tvContent.setText(gameInfo.data.getGame().getIntro());
+
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                //showError(netError);
+            }
+        });
+
+    }
+
     public void loadData() {
         CommonNavigator commonNavigator = new CommonNavigator(context);
+        commonNavigator.setAdjustMode(true);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 
             @Override
@@ -117,12 +201,15 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 String title = null;
                 switch (index) {
                     case 0:
-                        title = "详情";
+                        title = "充值";
                         break;
                     case 1:
-                        title = "礼包";
+                        title = "详情";
                         break;
                     case 2:
+                        title = "礼包";
+                        break;
+                    case 3:
                         title = "社区";
                         break;
                 }
@@ -161,5 +248,26 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
 
+    }
+
+    @OnClick(R.id.action_bar_back)
+    public void onClick() {
+        getActivity().finish();
+    }
+
+    @OnClick(R.id.iv_action)
+    public void onShareClick() {
+        //分享
+    }
+
+
+    @OnClick({R.id.tv_game_detail_bottom_download, R.id.tv_game_detail_edit_send})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tv_game_detail_bottom_download:
+                break;
+            case R.id.tv_game_detail_edit_send:
+                break;
+        }
     }
 }

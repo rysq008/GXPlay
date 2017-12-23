@@ -3,9 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GXPlay.iml" filepath="$PROJECT_DIR$/GXPlay.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/GXPlay.iml" filepath="$PROJECT_DIR$/.idea/GXPlay.iml" />
-      <module fileurl="file://D:\GjTzProject\GXPlay\GXPlay.iml" filepath="D:\GjTzProject\GXPlay\GXPlay.iml" />
-      <module fileurl="file://C:\Users\Administrator\Desktop\G9Code\GXPlay\.idea\GXPlay.iml" filepath="C:\Users\Administrator\Desktop\G9Code\GXPlay\.idea\GXPlay.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

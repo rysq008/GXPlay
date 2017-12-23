@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -75,6 +76,7 @@ public class GameDetailGiftFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        Log.d(TAG,"----------------======================2");
         initList();
     }
 
