@@ -170,8 +170,11 @@ public class TotoroToast implements IToast {
 
     private void handleHide() {
         try {
-            hide.invoke(mTN);
-            mQueue.poll();
+            if(null!=hide){
+                hide.invoke(mTN);
+                mQueue.poll();
+            }
+
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
