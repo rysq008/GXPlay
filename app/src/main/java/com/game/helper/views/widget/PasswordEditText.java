@@ -16,6 +16,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.inputmethod.EditorInfo;
 import com.game.helper.R;
+import com.game.helper.utils.StringUtils;
 
 /**
  * 方块格密码输入edittext
@@ -63,12 +64,11 @@ public class PasswordEditText extends AppCompatEditText {
         addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 6 && onEditCompleteListener != null) {
+                if (s.length() == mPasswordNumber && onEditCompleteListener != null) {
                     //Toast.makeText(getContext(), "密码充满", Toast.LENGTH_SHORT).show();
                     onEditCompleteListener.onEditComplete(s.toString());
                 }
@@ -76,7 +76,9 @@ public class PasswordEditText extends AppCompatEditText {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+//                if (s.length() > mPasswordNumber){
+//                    setText(s.subSequence(0,mPasswordNumber));
+//                }
             }
         });
     }
@@ -224,9 +226,14 @@ public class PasswordEditText extends AppCompatEditText {
     public void deleteLastPassword() {
         String currentText = getText().toString().trim();
         if (TextUtils.isEmpty(currentText)) {
+            setText("");
             return;
         }
         currentText = currentText.substring(0, currentText.length() - 1);
         setText(currentText);
+    }
+
+    public String getContnetText(){
+        return StringUtils.isEmpty(getText()) ? "" : getText().toString().substring(0,mPasswordNumber).toString();
     }
 }

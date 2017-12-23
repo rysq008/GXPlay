@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.UpdateTradePasswordFragment;
 import com.game.helper.fragments.recharge.RechargeSuccFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CashToResults;
@@ -38,7 +39,7 @@ import okhttp3.internal.Util;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CashFragment extends XBaseFragment implements View.OnClickListener, ToggleButton.OnToggleChanged, GXPlayDialog.onDialogActionListner {
+public class CashFragment extends XBaseFragment implements View.OnClickListener, ToggleButton.OnToggleChanged {
     public static final String TAG = CashFragment.class.getSimpleName();
     private static final int PAY_ALIPAY = 0;
     private static final int PAY_WECHAT = 1;
@@ -71,6 +72,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     View mHelp;
 
     private MemberInfoResults userInfo;
+    private float totalValue = 0;
 
     public static CashFragment newInstance(){
         return new CashFragment();
@@ -104,12 +106,14 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         mCashAccount.setText(Utils.converterSecretPhone(userInfo.phone));
         mAlipay.setChecked(true);
         mApply.setOnClickListener(this);
+        catulateCashBalnace();
     }
 
     private void apply(){
         String account = userInfo.phone;
         String cashTo = mCashTo.getText().toString();
         final String cashValue = mCashValue.getText().toString();
+        catulateCashBalnace();
 
         if (StringUtils.isEmpty(account) || StringUtils.isEmpty(cashTo) || StringUtils.isEmpty(cashValue)){
             Toast.makeText(getContext(), "请补全提现信息！", Toast.LENGTH_SHORT).show();
@@ -124,17 +128,16 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
             return;
         }
         //判断账户总金额／选中充值账户余额状态下的充值状态余额够不够
-        if (userInfo == null || Float.parseFloat(userInfo.total_balance) <= 0
-                || (isUseAccountBalance() && Float.parseFloat(userInfo.balance) <= 0) ){
-            //Toast.makeText(getContext(), "该账户暂无可提现金额！", Toast.LENGTH_SHORT).show();
-            // TODO: 2017/12/15 方便测试，去除对比金额限制，上线请移除
-            //return;
+        if (totalValue <= 0){
+            Toast.makeText(getContext(), "该账户暂无可提现金额！", Toast.LENGTH_SHORT).show();
+            return;
         }
 
-        PasswordEditDialog dialog = new PasswordEditDialog();
+        final PasswordEditDialog dialog = new PasswordEditDialog();
         dialog.addOnPassWordEditListener(new PasswordEditDialog.OnPassWordEditListener() {
             @Override
             public void onConfirmComplete(String password) {
+                dialog.dismiss();
                 ProvingTradePssword(password,cashValue);
             }
         });
@@ -153,10 +156,21 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
                     applyFromNet(Utils.getLoginInfo(getContext()).member_id+"",cashValue,isUseAccountBalance()+"",password);
                 }else if (checkTradePasswdResultsHttpResultModel.isNoneTradePassword()) {
                     //设置交易密码
-                    GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm,
+                    final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm,
                             getResources().getString(R.string.common_dialog_trade_passwd_hint),
                             getResources().getString(R.string.common_dialog_without_trade_passwd));
-                    dialog.addOnDialogActionListner(CashFragment.this);
+                    dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+                        @Override
+                        public void onCancel() {
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onConfirm() {
+                            dialog.dismiss();
+                            DetailFragmentsActivity.launch(getContext(),null, UpdateTradePasswordFragment.newInstance());
+                        }
+                    });
                     dialog.show(getFragmentManager(),GXPlayDialog.TAG);
                 }else {
                     Toast.makeText(getContext(), "密码错误!", Toast.LENGTH_SHORT).show();
@@ -188,10 +202,23 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
+                if (netError.getMessage().equals("提现成功")){
+                    DetailFragmentsActivity.launch(getContext(),null, RechargeSuccFragment.newInstance(RechargeSuccFragment.Type_Cash_Succ,Float.parseFloat(amount)));
+                    getActivity().onBackPressed();
+                }else {
+                    Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
                 Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
+    }
+
+    private void catulateCashBalnace(){
+        //可提现余额=金币余额（开关打开）+推广账户余额
+        if (userInfo == null) return;
+        float coinValue = Float.parseFloat(StringUtils.isEmpty(userInfo.balance) ? "0.00" : userInfo.balance);//金币余额
+        float marketValue = Float.parseFloat(StringUtils.isEmpty(userInfo.market_balance) ? "0.00" : userInfo.market_balance);//推广账户余额
+        totalValue = isUseAccountBalance() ? coinValue : 0 + marketValue;
     }
 
     @Override
@@ -245,14 +272,5 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     @Override
     public Object newP() {
         return null;
-    }
-
-    @Override
-    public void onCancel() {
-    }
-
-    @Override
-    public void onConfirm() {//跳转设置交易密码
-
     }
 }
