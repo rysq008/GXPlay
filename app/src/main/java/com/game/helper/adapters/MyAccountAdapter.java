@@ -124,14 +124,18 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
             switch (vipLevel){
                 case 0:
 //                    iv_vip_level.setImageResource(R.mipmap.vip0);
+                    iv_vip_level.setVisibility(View.GONE);
                     break;
                 case 1:
+                    iv_vip_level.setVisibility(View.VISIBLE);
                     iv_vip_level.setImageResource(R.mipmap.vip1);
                     break;
                 case 2:
+                    iv_vip_level.setVisibility(View.VISIBLE);
                     iv_vip_level.setImageResource(R.mipmap.vip2);
                     break;
                 case 3:
+                    iv_vip_level.setVisibility(View.VISIBLE);
                     iv_vip_level.setImageResource(R.mipmap.vip3);
                     break;
             }

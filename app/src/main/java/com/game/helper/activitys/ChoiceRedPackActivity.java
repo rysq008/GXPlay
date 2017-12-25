@@ -71,7 +71,7 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                showError(netError);
+//                showError(netError);
             }
         });
     }
