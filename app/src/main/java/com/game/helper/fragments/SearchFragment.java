@@ -1,8 +1,5 @@
 package com.game.helper.fragments;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
+import com.game.helper.adapters.GameItemAdapter;
 import com.game.helper.adapters.SearchListAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -21,9 +19,8 @@ import com.game.helper.model.SearchListResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
-import com.game.helper.utils.FileUtil;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.UploadUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.SearchComponentView;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.XReloadableStateContorller;
@@ -31,20 +28,18 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
-import static android.app.Activity.RESULT_OK;
-
-public class SearchFragment extends XBaseFragment implements View.OnClickListener {
+public class SearchFragment extends XBaseFragment {
     public static final String TAG = SearchFragment.class.getSimpleName();
 
     @BindView(R.id.common_search_view)
@@ -69,7 +64,7 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
     private List<HotWordResults.HotWordItem> hotWordList;
     private List<String> historyWordList;
-    private SearchListAdapter searchListAdapter;
+    private GameItemAdapter searchListAdapter;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -78,7 +73,9 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
     private void initView() {
         hotWordList = new ArrayList<>();
         historyWordList = new ArrayList<>();
-
+        if (!Kits.Empty.check(SharedPreUtil.getSearchHistoryList())) {
+            historyWordList.addAll(SharedPreUtil.getSearchHistoryList());
+        }
         hotFlowlayout.setAdapter(new TagAdapter<HotWordResults.HotWordItem>(hotWordList) {
             @Override
             public View getView(FlowLayout parent, int position, HotWordResults.HotWordItem hotWordItem) {
@@ -92,10 +89,6 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             public boolean onTagClick(View view, int position, FlowLayout parent) {
                 HotWordResults.HotWordItem hot = hotWordList.get(position);
                 Toast.makeText(getActivity(), hot.name, Toast.LENGTH_SHORT).show();
-                if (!historyWordList.contains(hot.name)) {
-                    historyWordList.add(hot.name);
-                    historyFlowlayout.getAdapter().notifyDataChanged();
-                }
                 searchComponentView.setTextContent(hot.name);
                 loadSearchListData(true, 1, hot.name);
                 return true;
@@ -122,7 +115,7 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
         xReloadableRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == searchListAdapter) {
-            searchListAdapter = new SearchListAdapter(context);
+            searchListAdapter = new GameItemAdapter(context);
         }
         xReloadableRecyclerContentLayout.getRecyclerView().setAdapter(searchListAdapter);
         xReloadableRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
@@ -147,15 +140,8 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             case R.id.iv_delete:
                 historyWordList.clear();
                 historyFlowlayout.getAdapter().notifyDataChanged();
-                selectFile(v);
+                SharedPreUtil.saveSearchHistoryList(historyWordList);
                 break;
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == mDelete) {
-//            mHistoryView.clearData();
         }
     }
 
@@ -176,71 +162,19 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
 
     }
 
-    public void selectFile(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, 0);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == 0) {
-                setResult(data);
-            }
-        }
-    }
-
-    private void setResult(Intent data) {
-        Uri uri = data.getData();
-        String path = FileUtil.getPath(context, uri);
-        File f = new File(path);
-
-
-        List<File> list = new ArrayList<File>();
-        File f1 = new File("/storage/sdcard1/wx_camera_1513403845294.jpg");
-        list.add(f);
-        list.add(f1);
-        list.add(f1);
-
-        final ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setTitle("");
-        dialog.setMax(100);
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-
-        Flowable<HttpResultModel<Object>> ff = DataService.uploadApiFilesForSingleResult("/member/set_icon/", list, new UploadUtils.FileUploadProgress() {
-            @Override
-            public void onProgress(final int progress) {
-                dialog.setProgress(progress);
-            }
-        });
-
-        RxLoadingUtils.subscribeWithDialog(dialog, ff, this.bindToLifecycle(), new Consumer<HttpResultModel<Object>>() {
-            @Override
-            public void accept(HttpResultModel<Object> httpResultModel) throws Exception {
-//                if (httpResultModel.isSucceful())
-                {
-//                    Toast.makeText(context, ((Map<String, String>) httpResultModel.data).get("image"), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Toast.makeText(context, netError.getMessage() + "--" + netError.getType(), Toast.LENGTH_SHORT).show();
-            }
-        }, null, true);
-    }
-
     public void loadSearchListData(final boolean showLoading, int page, String word) {
         xReloadableRecyclerContentLayout.setVisibility(View.VISIBLE);
         xReloadableStateContorller.setVisibility(View.GONE);
+        if (!historyWordList.contains(word)) {
+            historyWordList.add(word);
+            historyFlowlayout.getAdapter().notifyDataChanged();
+            SharedPreUtil.saveSearchHistoryList(historyWordList);
+        }
         Flowable<HttpResultModel<SearchListResults>> flowable = DataService.getApiSearchByWordData(new SearchRequestBody(page, word));
         RxLoadingUtils.subscribeWithReload(xReloadableRecyclerContentLayout, flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<SearchListResults>>() {
             @Override
             public void accept(HttpResultModel<SearchListResults> searchListResultsHttpResultModel) throws Exception {
-                ArrayList<SearchListResults.SearchListItem> list = new ArrayList<>();
+                ArrayList<SearchListResults.RecommendItem> list = new ArrayList<>();
                 list.addAll(searchListResultsHttpResultModel.data.list);
                 showData(searchListResultsHttpResultModel.current_page, searchListResultsHttpResultModel.total_page, list);
             }
@@ -299,10 +233,8 @@ public class SearchFragment extends XBaseFragment implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "search !", Toast.LENGTH_SHORT).show();
-                loadSearchListData(true, 1, "倩女幽魂（02）");
-                if (!historyWordList.contains(searchComponentView.getTextContent())) {
-                    historyWordList.add(searchComponentView.getTextContent());
-                }
+                String str = searchComponentView.getTextContent();
+                loadSearchListData(true, 1, str);
             }
         });
     }

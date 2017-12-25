@@ -2,16 +2,16 @@ package com.game.helper.fragments;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.game.helper.R;
-import com.game.helper.adapters.GameItemAdapter;
+import com.game.helper.adapters.SearchListAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -19,7 +19,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.annotations.Nullable;
@@ -33,9 +32,9 @@ import zlc.season.practicalrecyclerview.ItemType;
 public class GameListFragment extends XBaseFragment {
 
     @BindView(R.id.game_list_layout)
-    XRecyclerContentLayout xRecyclerContentLayout;
+    XReloadableRecyclerContentLayout xRecyclerContentLayout;
 
-    GameItemAdapter mAdapter;
+    SearchListAdapter mAdapter;
     private StateView errorView;
     private View loadingView;
     int classical_type = 0, common_type = 0;
@@ -50,55 +49,37 @@ public class GameListFragment extends XBaseFragment {
     @Override
     public void initData(Bundle savedInstanceState) {
         initAdapter();
-        errorView.setLoadDataType(StateView.REFRESH, 1);
-        loadGmaeAdapterData(1, classical_type, common_type);
+//        errorView.setLoadDataType(StateView.REFRESH, 1);
+        loadGmaeAdapterData(true,1, classical_type, common_type);
     }
 
     private void initAdapter() {
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == mAdapter) {
-            mAdapter = new GameItemAdapter(context);
+            mAdapter = new SearchListAdapter(context);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadGmaeAdapterData(1, classical_type, common_type);
+//                errorView.setLoadDataType(StateView.REFRESH, 1);
+                loadGmaeAdapterData(false,1, classical_type, common_type);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.LOADMORE, page);
-                loadGmaeAdapterData(page, classical_type, common_type);
+//                errorView.setLoadDataType(StateView.LOADMORE, page);
+                loadGmaeAdapterData(false,page, classical_type, common_type);
             }
         });
 
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(xRecyclerContentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) {
-            ((ViewGroup) errorView.getParent()).removeView(errorView);
-        }
-        if (loadingView == null) {
-            loadingView = View.inflate(context, R.layout.view_loading, null);
-        }
-        if (null != loadingView.getParent()) {
-            ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        }
-        xRecyclerContentLayout.errorView(errorView);
         xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
-
-        xRecyclerContentLayout.loadingView(loadingView);
         xRecyclerContentLayout.showLoading();
 
     }
 
     public void showError(NetError error) {
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         xRecyclerContentLayout.refreshState(false);
-        xRecyclerContentLayout.showError();
     }
 
     public void showData(int cur_page, int total_page, List model) {
@@ -108,20 +89,15 @@ public class GameListFragment extends XBaseFragment {
             mAdapter.setData(model);
         }
         xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         if (mAdapter.getItemCount() < 1) {
             xRecyclerContentLayout.showEmpty();
-            return;
-        } else {
-            xRecyclerContentLayout.showContent();
-            xRecyclerContentLayout.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
             return;
         }
     }
 
-    public void loadGmaeAdapterData(int page, int class_type_id, int type_id) {
+    public void loadGmaeAdapterData(boolean showloading, int page, int class_type_id, int type_id) {
         Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(page, class_type_id, type_id));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
             @Override
             public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
@@ -133,7 +109,7 @@ public class GameListFragment extends XBaseFragment {
             public void accept(NetError netError) throws Exception {
                 showError(netError);
             }
-        });
+        }, null, showloading);
     }
 
     public static GameListFragment newInstance(int classical_type, int common_type) {

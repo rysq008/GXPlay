@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.game.helper.R;
+import com.game.helper.model.SearchListResults;
 import com.game.helper.views.RecommendView;
 
 import butterknife.BindView;
@@ -55,8 +56,7 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
 
 
         public void setDisplay(ItemType itemType) {
-//            recommondLayout.setData((SearchListResults.SearchListItem) itemType);
-
+            recommondLayout.setData((SearchListResults.RecommendItem) itemType);
         }
 
         public ViewHolder(View itemView) {

@@ -108,7 +108,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:visibility="gone"
-        app:x_emptyLayoutId="@layout/view_error_state"
+        app:x_emptyLayoutId="@layout/view_empty_state"
         app:x_errorLayoutId="@layout/view_error_state"
         app:x_loadingLayoutId="@layout/view_loading" />
 

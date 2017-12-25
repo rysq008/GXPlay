@@ -13,6 +13,8 @@ public class HttpResultModel<T> extends XBaseModel {
 
     @Override
     public boolean isNull() {
+        if (isSucceful())
+            return false;
         if (data instanceof IModel)
             return ((IModel) data).isNull();
         return Kits.Empty.check(data);
@@ -25,7 +27,7 @@ public class HttpResultModel<T> extends XBaseModel {
 
     @Override
     public boolean isSucceful() {
-        return code.equals(StateCode.STATE_0000);
+        return super.isSucceful();
     }
 
     @Override
