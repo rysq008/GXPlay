@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 public class SharedPreUtil {
     private static final String KEY_WX_TOKEN = "wxToken";
@@ -30,6 +31,7 @@ public class SharedPreUtil {
     private static final String SharedPreference_SessionId = "sessionId";
     private static final String KEY_COOKIES = "cookies";
     private static final String USER_INFO = "user_info";
+    private static final String SEARCH_HISTORY_LIST = "search_history_word";
 
     private static SharedPreferences sp;
 
@@ -82,6 +84,14 @@ public class SharedPreUtil {
     public static void cleanLoginUserInfo() {
         sp.edit().remove(USER_INFO).apply();
         BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, ""));
+    }
+
+    public static void saveSearchHistoryList(List list){
+        saveObject(SEARCH_HISTORY_LIST,list);
+    }
+
+    public static List<String> getSearchHistoryList(){
+        return getObject(SEARCH_HISTORY_LIST);
     }
 
     //********************************************************************************************************************************************************************************//
