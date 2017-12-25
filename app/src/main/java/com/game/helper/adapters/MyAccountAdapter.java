@@ -45,8 +45,8 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
             @Override
             public void onClick(View v) {
                 clearStatus();
-                ((GameAccountResultModel.ListBean)item).setSelected(!(((GameAccountResultModel.ListBean) item).isSelected()));
-                recordAccount((GameAccountResultModel.ListBean)item);
+                ((GameAccountResultModel.ListBean) item).setSelected(!(((GameAccountResultModel.ListBean) item).isSelected()));
+                recordAccount((GameAccountResultModel.ListBean) item);
                 notifyDataSetChanged();
             }
         });
@@ -54,6 +54,7 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
 
     /**
      * 记录选中
+     *
      * @param bean
      */
     public void recordAccount(GameAccountResultModel.ListBean bean) {
@@ -64,9 +65,9 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
      * 清除选中状态
      */
     private void clearStatus() {
-            for (ItemType item : data) {
-                ((GameAccountResultModel.ListBean)item).setSelected(false);
-            }
+        for (ItemType item : data) {
+            ((GameAccountResultModel.ListBean) item).setSelected(false);
+        }
     }
 
     @Override
@@ -74,11 +75,11 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
         return R.layout.item_account;
     }
 
-    public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener){
+    public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener) {
         this.onItemCheckListener = onItemCheckListener;
     }
 
-    public interface OnItemCheckListener{
+    public interface OnItemCheckListener {
         void onItemCheked(GameAccountResultModel.ListBean gameBean);
     }
 
@@ -103,7 +104,6 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
         TextView gameName;
 
 
-
         public PhotoViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -121,7 +121,7 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
             gameChannelName.setText(data.getGame_channel_name());
             //vip等级
             int vipLevel = data.getVip_level();
-            switch (vipLevel){
+            switch (vipLevel) {
                 case 0:
 //                    iv_vip_level.setImageResource(R.mipmap.vip0);
                     iv_vip_level.setVisibility(View.GONE);
@@ -138,18 +138,20 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
                     iv_vip_level.setVisibility(View.VISIBLE);
                     iv_vip_level.setImageResource(R.mipmap.vip3);
                     break;
+                default:
+                    break;
             }
 
             //游戏名称
             gameName.setText(data.getGame_name());
 
             //选中
-            if(data.isSelected()){
+            if (data.isSelected()) {
                 checkStatusIv.setVisibility(View.VISIBLE);
-                if (onItemCheckListener != null){
+                if (onItemCheckListener != null) {
                     onItemCheckListener.onItemCheked(data);
                 }
-            }else{
+            } else {
                 checkStatusIv.setVisibility(View.INVISIBLE);
             }
 
