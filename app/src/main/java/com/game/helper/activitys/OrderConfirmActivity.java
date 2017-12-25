@@ -169,6 +169,10 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      */
     private int gameAccountId;
     /**
+     * 游戏 ID
+     */
+    private int gameId;
+    /**
      * 用户选择的支付方式
      * 1:ali支付  2:wx支付
      */
@@ -291,7 +295,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     mNeedPay = calcNeedPay();
                 } else {
                     mAccountAvailableBalance = 0.0;
-                    chargeAccountTv.setText(String.valueOf(mAccountAvailableBalance));
+                    chargeAccountTv.setText(new BigDecimal(String.valueOf(mAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                     mPushAccountAvailableBalance = 0.0;
                     pushAccountTv.setText(String.valueOf(mPushAccountAvailableBalance));
 
@@ -314,7 +318,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             @Override
             public void accept(NetError netError) throws Exception {
                 mAccountAvailableBalance = 0.0;
-                chargeAccountTv.setText(String.valueOf(mAccountAvailableBalance));
+                chargeAccountTv.setText(new BigDecimal(String.valueOf(mAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                 mPushAccountAvailableBalance = 0.0;
                 pushAccountTv.setText(String.valueOf(mPushAccountAvailableBalance));
 
@@ -436,9 +440,10 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     /**
      * 计算实际支付
      */
-    public Double calcRealPay() {
+    public String calcRealPay() {
         mRealPay = totalBalance - mRedpackAmount;
-        return mRealPay;
+        String result = new BigDecimal(String.valueOf(mRealPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+        return result;
     }
 
     /**
@@ -449,7 +454,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         if (useCoin) {
             needPay = mRealPay - mAvailableCoin;
             if (needPay <= 0) {
-                needPayTv.setText("0.0");
+                needPayTv.setText(new BigDecimal(String.valueOf("0.0")).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             } else {
                 BigDecimal b = new BigDecimal(needPay + "");
                 String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
@@ -458,7 +463,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         } else {
             needPay = mRealPay;
             if (needPay <= 0) {
-                needPayTv.setText("0.0");
+                needPayTv.setText(new BigDecimal(String.valueOf("0.0")).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             } else {
                 BigDecimal b = new BigDecimal(needPay + "");
                 String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
@@ -473,7 +478,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 获取可用红包/卡券
      */
     private void fetchAvailableRedpackInfo(int page) {
-        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, gameAccountId, inputBalance + ""));
+        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, gameId, inputBalance + ""));
         RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<AvailableRedpackResultModel>>() {
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
@@ -487,14 +492,16 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     }
                     mRedPacks = generalizeResultsHttpResultModel.data;
                 }else{
-
+                    redPackNum.setTextColor(getResources().getColor(R.color.black));
+                    redPackNum.setText("无可用红包");
                 }
 
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-
+                redPackNum.setTextColor(getResources().getColor(R.color.black));
+                redPackNum.setText("无可用红包");
             }
         });
     }
@@ -515,6 +522,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mAccountName = gameBean.getGame_account();
         mChannel = gameBean.getGame_channel_name();
         gameAccountId = gameBean.getId();
+        gameId = gameBean.getGame_id();
         is_vip = gameBean.isIs_vip();
     }
 
@@ -523,8 +531,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
         gameName.setText(mGameName);
         accountName.setText(mAccountName);
-        moneyNum.setText(String.valueOf(inputBalance));
-        realPayTv.setText(String.valueOf(calcRealPay()));
+        moneyNum.setText(new BigDecimal(String.valueOf(inputBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+        realPayTv.setText(calcRealPay());
         channelName.setText(mChannel);
     }
 
@@ -549,7 +557,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 break;
             case R.id.redPackLayout://红包
                 intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
-                intent.putExtra(OPTION_GAME_ID, gameAccountId);
+                intent.putExtra(OPTION_GAME_ID, gameId);
                 intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
                 startActivityForResult(intent, 0);
                 break;
@@ -683,9 +691,9 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mRedpackId = red_id;
         //展示红包抵用金额
         redPackNum.setTextColor(Color.parseColor("#fe4430"));
-        redPackNum.setText("-" + mRedpackAmount);
+        redPackNum.setText("-" + new BigDecimal(String.valueOf(mRedpackAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         //重新计算实际支付
-        realPayTv.setText(String.valueOf(calcRealPay()));
+        realPayTv.setText(calcRealPay());
         //计算还需支付
         mNeedPay = calcNeedPay();
     }
@@ -856,6 +864,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      */
     private void doConsume(String accountAmount, String marketingAmount) {
         Log.e("nuoyan", "gameAccountId：：：" + gameAccountId + "\r\n"
+                +"gameId：：：" + gameId + "\r\n"
                 + "consumeAmount:::" + inputBalance + "\r\n"
                 + "accountAmount:::" + accountAmount + "\r\n"
                 + "marketingAmount:::" + marketingAmount + "\r\n"
