@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.game.helper.R;
+
 import cn.droidlover.xstatecontroller.XStateController;
 
 
@@ -32,6 +34,18 @@ public class XReloadableStateContorller extends XStateController {
     @Override
     public void onFinishInflate() {
         super.onFinishInflate();
+
+        if (null == getLoadingView()) {
+            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+        }
+        if (null == getErrorView()) {
+//            addView(View.inflate(getContext(), R.layout.view_error_state,null));
+            errorView(View.inflate(getContext(), R.layout.view_error_state, null));
+        }
+        if (null == getEmptyView()) {
+//            addView(View.inflate(getContext(), R.layout.view_empty_state,null));
+            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
+        }
 
 //        if (getLoadingView() != null) {
 //            setDisplayState(STATE_LOADING);

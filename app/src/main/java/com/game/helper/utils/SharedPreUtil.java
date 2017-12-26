@@ -48,7 +48,7 @@ public class SharedPreUtil {
     }
 
     public static boolean isLogin() {
-        String sessionid = sp.getString(KEY_LOGIN_INFO, "");
+        String sessionid = getSessionId();
         return !TextUtils.isEmpty(sessionid);
     }
 

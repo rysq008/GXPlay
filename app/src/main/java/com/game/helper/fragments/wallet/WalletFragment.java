@@ -18,7 +18,11 @@ import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.fragments.recharge.RechargeGoldFragment;
+import com.game.helper.model.AllAccountsResultsModel;
+import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.net.DataService;
+import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -34,6 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.net.NetError;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +66,12 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
     TextView mBalance2;
     @BindView(R.id.tv_balance3)
     TextView mBalance3;
+    @BindView(R.id.tv_balance4)
+    TextView mBalance4;
+    @BindView(R.id.tv_balance5)
+    TextView mBalance5;
+    @BindView(R.id.tv_balance6)
+    TextView mBalance6;
     @BindView(R.id.tv_goto_recharge)
     View mGotoRecharge;
     @BindView(R.id.tv_goto_cash)
@@ -96,10 +109,7 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
             return;
         }
         userInfo = (MemberInfoResults) getArguments().getSerializable(TAG);
-        mBalance.setText(StringUtils.isEmpty(userInfo.total_balance) ? "0.00" : userInfo.total_balance);
-        mBalance1.setText(StringUtils.isEmpty(userInfo.total_balance) ? "0.00" : userInfo.total_balance);
-        mBalance2.setText(StringUtils.isEmpty(userInfo.market_balance) ? "0.00" : userInfo.market_balance);
-        mBalance3.setText(StringUtils.isEmpty(userInfo.balance) ? "0.00" : userInfo.balance);
+        fetchAccountInfo();
 
         list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Consume));
         list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Recharge));
@@ -209,4 +219,32 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
         return null;
     }
 
+    /**
+     * 获取账户信息
+     */
+    private void fetchAccountInfo() {
+        Flowable<HttpResultModel<AllAccountsResultsModel>> flowable = DataService.getAllAccounts();
+        RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<AllAccountsResultsModel>>() {
+            @Override
+            public void accept(HttpResultModel<AllAccountsResultsModel> data) throws Exception {
+                if (data.isSucceful()) {
+                    AllAccountsResultsModel user = data.data;
+                    mBalance.setText(StringUtils.isEmpty(user.total) ? "0.00" : user.total);//账户总额
+                    mBalance1.setText(StringUtils.isEmpty(user.balance) ? "0.00" : user.balance);//账户金币额
+                    mBalance2.setText(StringUtils.isEmpty(user.yue) ? "0.00" : user.yue);//推广账户余额
+                    mBalance3.setText(StringUtils.isEmpty(user.total_consume) ? "0.00" : user.total_consume);//总消费
+                    mBalance4.setText(StringUtils.isEmpty(user.total_recharge) ? "0.00" : user.total_recharge);//总充值
+                    mBalance5.setText(StringUtils.isEmpty(user.total_reflect) ? "0.00" : user.total_reflect);//总提现
+                    mBalance6.setText(StringUtils.isEmpty(user.total_flow) ? "0.00" : user.total_flow);//总收益
+                } else {
+                    Toast.makeText(getContext(), "获取账户信息失败！请重试", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Toast.makeText(getContext(), "获取账户信息失败！请重试", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

@@ -4,12 +4,26 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.game.helper.R;
+
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 
 
 public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
 
     private OnReloadListener onReloadListener;
+
+    public XReloadableRecyclerContentLayout(Context context) {
+        this(context, null);
+    }
+
+    public XReloadableRecyclerContentLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public XReloadableRecyclerContentLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
 
     public interface OnReloadListener {
         /**
@@ -21,40 +35,33 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
         void onReload(XReloadableRecyclerContentLayout reloadableFrameLayout);
     }
 
-    public XReloadableRecyclerContentLayout(Context context) {
-        this(context, null);
-    }
-
-    public XReloadableRecyclerContentLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    /**
+     * set a onReloadListener to listener reload button click event
+     *
+     * @param onReloadListener see #OnReloadListener
+     */
+    public void setOnReloadListener(OnReloadListener onReloadListener) {
+        this.onReloadListener = onReloadListener;
     }
 
     @Override
-    public void onFinishInflate() {
+    protected void onFinishInflate() {
         super.onFinishInflate();
-
-//        if (getLoadingView() != null) {
-//            setDisplayState(STATE_LOADING);
-//        } else {
-        setDisplayState(STATE_CONTENT);
-//        }
-    }
-
-
-    @Override
-    public void showError() {
-        if (null != getErrorView()) {
-            getErrorView().setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (XReloadableRecyclerContentLayout.this.onReloadListener != null) {
-                        showLoading();
-                        XReloadableRecyclerContentLayout.this.onReloadListener.onReload(XReloadableRecyclerContentLayout.this);
-                    }
-                }
-            });
+        if (null == getLoadingView()) {
+            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
         }
-        super.showError();
+        if (null == getErrorView()) {
+//            addView(View.inflate(getContext(), R.layout.view_error_state,null));
+            errorView(View.inflate(getContext(), R.layout.view_error_state, null));
+        }
+        if (null == getEmptyView()) {
+//            addView(View.inflate(getContext(), R.layout.view_empty_state,null));
+            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
+        }
+//        for (int index = 0; index < getChildCount(); index++) {
+//            getChildAt(index).setVisibility(GONE);
+//        }
+        setDisplayState(STATE_CONTENT);
     }
 
     @Override
@@ -73,13 +80,19 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
         super.showEmpty();
     }
 
-    /**
-     * set a onReloadListener to listener reload button click event
-     *
-     * @param onReloadListener see #OnReloadListener
-     */
-    public void setOnReloadListener(OnReloadListener onReloadListener) {
-        this.onReloadListener = onReloadListener;
+    @Override
+    public void showError() {
+        if (null != getErrorView()) {
+            getErrorView().setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (XReloadableRecyclerContentLayout.this.onReloadListener != null) {
+                        showLoading();
+                        XReloadableRecyclerContentLayout.this.onReloadListener.onReload(XReloadableRecyclerContentLayout.this);
+                    }
+                }
+            });
+        }
+        super.showError();
     }
-
 }

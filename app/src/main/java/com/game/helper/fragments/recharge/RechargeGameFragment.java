@@ -198,6 +198,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 这时候点击VIP折扣再执行判断弹窗的逻辑
                 * */
                 if (gameBean == null) return;
+                gameBean.setIs_vip(false);
                 if (gameBean.isIs_xc()){
                     setCheckStatus(-1,true);
                     setCheckStatus(0,false);
@@ -209,6 +210,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                     setCheckStatus(2, false);
                     if (gameBean.isIs_vip()){
                         //当前游戏肯定是vip 默认选中vip折扣 不需要判断vip数量
+                        setCheckStatus(1,true);
                         setChecked(2);
                     }else {
                         mItemDiscount2.performClick();
@@ -259,19 +261,21 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     }
 
     private void setCheckStatus(int position, boolean checkEnable){
-        clearCheck();
         switch (position){
             case 0:
                 mDiscount1.setTextColor(getResources().getColor(checkEnable ? check_disable_color : check_able_color));
                 mCbDiscount1.setEnabled(checkEnable ? true : false);
+                mCbDiscount1.setChecked(false);
                 break;
             case 1:
                 mDiscount2.setTextColor(getResources().getColor(checkEnable ? check_disable_color : check_able_color));
                 mCbDiscount2.setEnabled(checkEnable ? true : false);
+                mCbDiscount2.setChecked(false);
                 break;
             case 2:
                 mDiscount3.setTextColor(getResources().getColor(checkEnable ? check_disable_color : check_able_color));
                 mCbDiscount3.setEnabled(checkEnable ? true : false);
+                mCbDiscount3.setChecked(false);
                 break;
             default:
                 mDiscount1.setTextColor(getResources().getColor(checkEnable ? check_disable_color : check_able_color));
@@ -280,6 +284,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 mCbDiscount1.setEnabled(checkEnable ? true : false);
                 mCbDiscount2.setEnabled(checkEnable ? true : false);
                 mCbDiscount3.setEnabled(checkEnable ? true : false);
+                mCbDiscount1.setChecked(false);
+                mCbDiscount2.setChecked(false);
+                mCbDiscount3.setChecked(false);
                 break;
         }
     }
@@ -336,7 +343,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         }
 
         if (mTotalDiscountValue < 0 || inputVlaue <= 0 ) return;
-        if (mTotalDiscountValue == 0) mTotalDiscountValue = inputVlaue;
+        if (mTotalDiscountValue == 0) mTotalDiscountValue = 10;
         else mTotalBalanceValue = inputVlaue / 10 * mTotalDiscountValue;
 
         mTotalBalance.setText(mTotalBalanceValue+"元");
@@ -358,11 +365,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         }
         if (v == mItemDiscount2){
             setChecked(1);
+            setCheckStatus(0,true);
         }
         if (v == mItemDiscount3){
-            setChecked(2);
-            setCheckStatus(1,true);
-
             if (accountBean == null || mCbDiscount1.isChecked() || mCbDiscount3.isChecked()) return;
             if (accountBean.count == 0){
                 if (accountBean.is_highest_vip){//是最高等级
@@ -373,6 +378,10 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             }else {
                 showVipHintDialog(0);
             }
+
+            setCheckStatus(1, true);
+            setCheckStatus(0,true);
+            setChecked(2);
         }
     }
 
@@ -383,6 +392,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
      * 2：vip最高联系管理员
      * */
     private void showVipHintDialog(final int type){
+        if (mCbDiscount3.isEnabled()){
+            return;
+        }
         String content = "";
         if (type == 0) content = "您当前选择VIP折扣，将会占用1个VIP名额，您确定使用此折扣支付吗？";
         if (type == 1) {
@@ -453,8 +465,10 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             if (!data.hasExtra(TAG)) return;
             if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean){
                 gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
-                setChooseGameData(false);
+                clearCheck();
                 getVipGameAccount();//获取当前平台账户vip信息
+                setChooseGameData(false);
+                mBalance.setText("");
             }
         }
     }

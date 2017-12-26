@@ -10,6 +10,7 @@ import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.adapters.HotRecommandAdapter;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.HotResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.RecommendRequestBody;
@@ -58,13 +59,13 @@ public class HotRecommandGameListActivity extends XBaseActivity implements View.
     }
 
     public void getHomeHot(int page) {
-        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(page, 0, 0));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+        Flowable<HttpResultModel<HotResults>> fr = DataService.getHomeHot(new RecommendRequestBody(page, 0, 0));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<com.game.helper.model.HotResults>>() {
             @Override
-            public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<HotResults> hotResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
-                list.addAll(recommendResultsHttpResultModel.data.list);
-                showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
+                list.addAll(hotResultsHttpResultModel.data.list);
+                showData(hotResultsHttpResultModel.current_page, hotResultsHttpResultModel.total_page, list);
             }
         }, new Consumer<NetError>() {
             @Override

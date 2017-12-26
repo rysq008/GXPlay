@@ -32,8 +32,8 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
         Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(1));
         Flowable<HttpResultModel<NoticeResults>> fn = DataService.getHomeNotice();
         Flowable<HttpResultModel<SpecialResults>> fs = DataService.getHomeSpecial(new BaseRequestBody(1));
-        Flowable<HttpResultModel<HotResults>> fh = DataService.getHomeHot(new BaseRequestBody(1));
-        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(1, 0, 0));
+        Flowable<HttpResultModel<HotResults>> fh = DataService.getHomeHot(new RecommendRequestBody(1, 0, 0));
+        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend((new BaseRequestBody(1)));
 
         final Flowable<HomeAllResultsData> fa = Flowable.zip(fb, fn, fs, fh, fr, new Function5<HttpResultModel<BannerResults>, HttpResultModel<NoticeResults>, HttpResultModel<SpecialResults>, HttpResultModel<HotResults>, HttpResultModel<RecommendResults>, HomeAllResultsData>() {
             @Override
@@ -57,7 +57,6 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
 //                mXBaseModel = recommendResults;
                 HomeAllResultsData homeAllResultsData = new HomeAllResultsData(bannerResults.data, noticeResults.data, specialResults.data, hotResults.data, recommendResults.data);
                 return homeAllResultsData;
-
             }
         });
 
@@ -87,14 +86,14 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
     }
 
     public void loadMoreData(int page) {
-        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(page, 0, 0));
-        RxLoadingUtils.subscribe(fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+        Flowable<HttpResultModel<HotResults>> fr = DataService.getHomeHot(new RecommendRequestBody(page, 0, 0));
+        RxLoadingUtils.subscribe(fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<HotResults>>() {
             @Override
-            public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
-                mXBaseModel = recommendResultsHttpResultModel;
+            public void accept(HttpResultModel<HotResults> hotResultsHttpResultModel) throws Exception {
+                mXBaseModel = hotResultsHttpResultModel;
                 List<ItemType> list = new ArrayList<>();
-                list.addAll(recommendResultsHttpResultModel.data.list);
-                getV().showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
+                list.addAll(hotResultsHttpResultModel.data.list);
+                getV().showData(hotResultsHttpResultModel.current_page, hotResultsHttpResultModel.total_page, list);
             }
         }, new Consumer<NetError>() {
             @Override

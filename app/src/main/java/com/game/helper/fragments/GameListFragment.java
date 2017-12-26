@@ -7,7 +7,7 @@ import com.game.helper.R;
 import com.game.helper.adapters.SearchListAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.RecommendResults;
+import com.game.helper.model.HotResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -50,7 +50,7 @@ public class GameListFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         initAdapter();
 //        errorView.setLoadDataType(StateView.REFRESH, 1);
-        loadGmaeAdapterData(true,1, classical_type, common_type);
+        loadGmaeAdapterData(true, 1, classical_type, common_type);
     }
 
     private void initAdapter() {
@@ -63,13 +63,13 @@ public class GameListFragment extends XBaseFragment {
             @Override
             public void onRefresh() {
 //                errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadGmaeAdapterData(false,1, classical_type, common_type);
+                loadGmaeAdapterData(false, 1, classical_type, common_type);
             }
 
             @Override
             public void onLoadMore(int page) {
 //                errorView.setLoadDataType(StateView.LOADMORE, page);
-                loadGmaeAdapterData(false,page, classical_type, common_type);
+                loadGmaeAdapterData(false, page, classical_type, common_type);
             }
         });
 
@@ -92,17 +92,19 @@ public class GameListFragment extends XBaseFragment {
         if (mAdapter.getItemCount() < 1) {
             xRecyclerContentLayout.showEmpty();
             return;
+        }else{
+            xRecyclerContentLayout.showContent();
         }
     }
 
     public void loadGmaeAdapterData(boolean showloading, int page, int class_type_id, int type_id) {
-        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend(new RecommendRequestBody(page, class_type_id, type_id));
-        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
+        Flowable<HttpResultModel<HotResults>> fr = DataService.getHomeHot(new RecommendRequestBody(page, class_type_id, type_id));
+        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<com.game.helper.model.HotResults>>() {
             @Override
-            public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<HotResults> hotResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
-                list.addAll(recommendResultsHttpResultModel.data.list);
-                showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
+                list.addAll(hotResultsHttpResultModel.data.list);
+                showData(hotResultsHttpResultModel.current_page, hotResultsHttpResultModel.total_page, list);
             }
         }, new Consumer<NetError>() {
             @Override
