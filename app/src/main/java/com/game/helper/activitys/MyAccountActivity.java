@@ -158,6 +158,8 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
                 break;
             case R.id.addAccount://添加账户
                 Intent intent = new Intent(MyAccountActivity.this, AddAccountActivity.class);
+                intent.putExtra(AddAccountActivity.GAME_ID,option_game_id);
+                intent.putExtra(AddAccountActivity.CHANNEL_ID,option_channel_id);
                 startActivity(intent);
                 break;
 

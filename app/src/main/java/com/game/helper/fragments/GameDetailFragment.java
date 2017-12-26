@@ -8,20 +8,32 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.login.LoginFragment;
+import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GamePackageInfoResult;
+import com.game.helper.model.LoginUserInfo;
+import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
+import com.game.helper.utils.Utils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -34,12 +46,15 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
+import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -80,10 +95,18 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     TextView tvEditSend;
     @BindView(R.id.ll_game_detail_action_edit)
     LinearLayout etitLayout;
+    @BindView(R.id.tv_game_detail_plat)
+    TextView tvPlat;
 
     private int gamepackeId;
     private int gameId;
+    private int channelId;
     private GameDetailInfoFragment gameDetailInfoFragment;
+    private RechargeGameFragment rechargeGameFragment;
+    private GameDetailGiftFragment gameDetailGiftFragment;
+    private GameDetailCommunityFragment gameDetailCommunityFragment;
+    private AlertDialog.Builder dialog;
+    private GamePackageInfoResult packageInfo;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -98,18 +121,40 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         if (arguments != null) {
             gamepackeId = arguments.getInt("gamepackeId");
             gameId = arguments.getInt("gameId");
+            channelId = arguments.getInt("channelId");
             initGamePackage();
         }
-        if(gameDetailInfoFragment == null){
+        if (gameDetailInfoFragment == null) {
             gameDetailInfoFragment = GameDetailInfoFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putInt("gameId",gameId);
+            bundle.putInt("gameId", gameId);
             gameDetailInfoFragment.setArguments(bundle);
         }
-        list.add(GameDetailRechargeFragment.newInstance());
+        if (rechargeGameFragment == null) {
+            rechargeGameFragment = RechargeGameFragment.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putString("fromGameDetail", "fromGameDetail");
+            bundle.putInt("gameId", gameId);
+            bundle.putInt("channelId", channelId);
+            bundle.putString("fromGameDetail", "fromGameDetail");
+            rechargeGameFragment.setArguments(bundle);
+        }
+        if (gameDetailGiftFragment == null) {
+            gameDetailGiftFragment = GameDetailGiftFragment.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putInt("gameId", gameId);
+            gameDetailGiftFragment.setArguments(bundle);
+        }
+        if (gameDetailCommunityFragment == null) {
+            gameDetailCommunityFragment = GameDetailCommunityFragment.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putInt("gameId", gameId);
+            gameDetailCommunityFragment.setArguments(bundle);
+        }
+        list.add(rechargeGameFragment);
         list.add(gameDetailInfoFragment);
-        list.add(GameDetailGiftFragment.newInstance());
-        list.add(GameDetailCommunityFragment.newInstance());
+        list.add(gameDetailGiftFragment);
+        list.add(gameDetailCommunityFragment);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -166,12 +211,14 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageInfoResult>>() {
             @Override
             public void accept(HttpResultModel<GamePackageInfoResult> gameInfo) throws Exception {
-                ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(gameInfo.data.getGame().getLogo()), ILoader.Options.defaultOptions());
-                tvName.setText(gameInfo.data.getGame().getName());
-                tvDiscount.setText(String.valueOf(gameInfo.data.getDiscount_vip()));
-                tvTypeName.setText(gameInfo.data.getGame().getType().getName());
-                tvPackageFilesize.setText(String.valueOf(gameInfo.data.getFilesize() + "M"));
-                tvContent.setText(gameInfo.data.getGame().getIntro());
+                packageInfo = gameInfo.data;
+                ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(packageInfo.getGame().getLogo()), ILoader.Options.defaultOptions());
+                tvName.setText(packageInfo.getGame().getName());
+                tvDiscount.setText(String.valueOf(packageInfo.getDiscount_vip()));
+                tvTypeName.setText(packageInfo.getGame().getType().getName());
+                tvPackageFilesize.setText(String.valueOf(packageInfo.getFilesize() + "M"));
+                tvContent.setText(packageInfo.getGame().getIntro());
+                tvPlat.setText(packageInfo.getChannel().getName());
 
             }
         }, new Consumer<NetError>() {
@@ -261,13 +308,170 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     }
 
 
-    @OnClick({R.id.tv_game_detail_bottom_download, R.id.tv_game_detail_edit_send})
+    @OnClick({R.id.tv_game_detail_bottom_download, R.id.tv_game_detail_edit_send,
+            R.id.tv_discount_game_detail_common, R.id.tv_discount_game_detail_vip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tv_game_detail_bottom_download:
+
                 break;
             case R.id.tv_game_detail_edit_send:
+
+                break;
+            case R.id.tv_discount_game_detail_common:
+                createCommonDialog();
+                break;
+            case R.id.tv_discount_game_detail_vip:
+                createVipDialog();
                 break;
         }
     }
+
+
+    public void createVipDialog() {
+        View v = View.inflate(context, R.layout.dialog_vip, null);
+        LinearLayout currentVip = v.findViewById(R.id.ll_current_vip_dialog_game_detail);
+        TextView tvDiscount1 = v.findViewById(R.id.tv_discount1_dialog_game_detail);
+        TextView tvDiscount2 = v.findViewById(R.id.tv_discount2_dialog_game_detail);
+        TextView tvDiscount3 = v.findViewById(R.id.tv_discount3_dialog_game_detail);
+        final TextView tvVip1 = v.findViewById(R.id.tv_vip1_dialog_game_detail);
+        final TextView tvVip2 = v.findViewById(R.id.tv_vip2_dialog_game_detail);
+        final TextView tvVip3 = v.findViewById(R.id.tv_vip3_dialog_game_detail);
+        tvDiscount1.setText(String.valueOf(packageInfo.getZhekou_shouchong()) + "折");
+        tvDiscount2.setText(String.valueOf(packageInfo.getZhekou_shouchong()) + "折");
+        tvDiscount3.setText(String.valueOf(packageInfo.getDiscount_vip()) + "折");
+        boolean b = SharedPreUtil.isLogin();
+        if (SharedPreUtil.isLogin()) {
+            currentVip.setVisibility(View.VISIBLE);
+            final ImageView ivVipLevel = v.findViewById(R.id.iv_vip_level_user_dialog_game_detail);
+            final TextView tvNmaeLevel = v.findViewById(R.id.tv_name_level_user_dialog_game_detail);
+            final TextView tvDiscount = v.findViewById(R.id.tv_discount_level_user_dialog_game_detail);
+            //获取用户的会员级别
+            Flowable<HttpResultModel<MemberInfoResults>> fr = DataService.getMemberInfo();
+            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MemberInfoResults>>() {
+                @Override
+                public void accept(HttpResultModel<MemberInfoResults> memberInfoResultsHttpResultModel) throws Exception {
+                    if (memberInfoResultsHttpResultModel.isSucceful()) {
+                        MemberInfoResults userInfo = memberInfoResultsHttpResultModel.data;
+                        Map<String, String> vip_level = userInfo.vip_level;
+                        String url = vip_level.get("image");
+                        String name = vip_level.get("name");
+                        String descs = vip_level.get("descs" + "折");
+                        String level = vip_level.get("level");
+                        //ILFactory.getLoader().loadNet(ivVipLevel, Api.API_BASE_URL.concat(url), ILoader.Options.defaultOptions());
+                        tvNmaeLevel.setText(name);
+                        tvDiscount.setText(descs);
+                        //根据等级显示升级会员是否可以点击到下一页
+                        if ("0".equals(level)) {
+                            ivVipLevel.setImageResource(R.mipmap.vip0);
+                        } else if ("1".equals(level)) {
+                            ivVipLevel.setImageResource(R.mipmap.vip1);
+                            tvVip1.setClickable(false);
+                            tvVip1.setTextColor(getResources().getColor(R.color.color_666));
+                        } else if ("2".equals(level)) {
+                            ivVipLevel.setImageResource(R.mipmap.vip2);
+                            tvVip1.setClickable(false);
+                            tvVip1.setTextColor(getResources().getColor(R.color.color_666));
+                            tvVip2.setClickable(false);
+                            tvVip2.setTextColor(getResources().getColor(R.color.color_666));
+
+                        } else if ("3".equals(level)) {
+                            ivVipLevel.setImageResource(R.mipmap.vip3);
+                            tvVip1.setClickable(false);
+                            tvVip1.setTextColor(getResources().getColor(R.color.color_666));
+                            tvVip2.setClickable(false);
+                            tvVip2.setTextColor(getResources().getColor(R.color.color_666));
+                            tvVip3.setClickable(false);
+                            tvVip3.setTextColor(getResources().getColor(R.color.color_666));
+                        }
+                    } else {
+                        Toast.makeText(getContext(), memberInfoResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, new Consumer<NetError>() {
+                @Override
+                public void accept(NetError netError) throws Exception {
+                    Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                }
+            });
+        }
+        tvVip1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        tvVip2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        tvVip3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        if (dialog == null) {
+            dialog = new AlertDialog.Builder(context);// 创建自定义样式dialog
+        }
+        //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
+
+        // 不可以用“返回键”取消
+        dialog.setCancelable(true);
+        dialog.setView(v);// 设置布局
+        dialog.show();
+
+    }
+
+
+    public void createCommonDialog() {
+        View v = View.inflate(context, R.layout.dialog_common_discount, null);
+        TextView tvDiscountFirst = v.findViewById(R.id.tv_first_recharge_discount_common_dialog);
+        TextView goFirstCharge = v.findViewById(R.id.tv_first_go_recharge_common_dialog);
+        TextView tvDiscountAdd = v.findViewById(R.id.tv_add_recharge_discount_common_dialog);
+        TextView goAddCharge = v.findViewById(R.id.tv_add_go_recharge_common_dialog);
+        tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getZhekou_shouchong() + "折)");
+        tvDiscountAdd.setText(+packageInfo.getZhekou_xuchong() + "折");
+        if (dialog == null) {
+            dialog = new AlertDialog.Builder(context);// 创建自定义样式dialog
+        }
+        goFirstCharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+//                bundle.putString("packagename",packageInfo.getGame().getName());
+                //               bundle.putString("channelname",packageInfo.getChannel().getName());
+                // DetailFragmentsActivity.launch(context, bundle, RechargeGameFragment.newInstance());
+            }
+        });
+        goAddCharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                //bundle.putString("packagename",packageInfo.getGame().getName());
+                //bundle.putString("channelname",packageInfo.getChannel().getName());
+                //DetailFragmentsActivity.launch(context, bundle, RechargeGameFragment.newInstance());
+            }
+        });
+        //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
+        // 不可以用“返回键”取消
+        dialog.setCancelable(true);
+        dialog.setView(v);// 设置布局
+        dialog.show();
+    }
+
+
+    public void progressDismiss() {
+        if (dialog != null) {
+            try {
+                dialog.create().dismiss();
+                dialog = null;
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
 }

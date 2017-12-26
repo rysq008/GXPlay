@@ -13,6 +13,7 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.GameDetailFragment;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.api.Api;
+import com.game.helper.utils.SPUtils;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
@@ -51,6 +52,9 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 Bundle bundle = new Bundle();
                 bundle.putInt("gamepackeId",itemDate.getId());
                 bundle.putInt("gameId",itemDate.getGame().getId());
+                bundle.putInt("channelId",itemDate.getChannel().getId());
+                SPUtils.putString(context,SPUtils.CHANNEL_NAME,itemDate.getChannel().getName());
+                SPUtils.putString(context,SPUtils.GAME_NAME,itemDate.getGame().getName());
                 DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
             }
         });

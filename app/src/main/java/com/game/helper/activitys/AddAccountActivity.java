@@ -17,6 +17,7 @@ import com.game.helper.model.LogoutResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SimpleTextWatcher;
 import com.game.helper.views.widget.ChannelPopupWindow;
 import com.game.helper.views.widget.GamePopupWindow;
@@ -31,6 +32,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     public static final String TAG = "AddAccountActivity";
     public static final String GAME_ID = "game_id";
     public static final String CHANNEL_ID = "channel_id";
+
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -64,7 +66,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 
     @Override
     public void initData(Bundle savedInstanceState) {
-//        initIntentData(getIntent());
+        initIntentData(getIntent());
         initView();
 
         mGameWindow = new GamePopupWindow(AddAccountActivity.this);
@@ -72,15 +74,12 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     }
 
     private void initIntentData(Intent intent) {
-        mGameId = intent.getStringExtra(GAME_ID);
-        if (null == mGameId || TextUtils.isEmpty(mGameId)) {
-            mGameId = "0";
-        }
-
-        mChannelId = intent.getStringExtra(CHANNEL_ID);
-        if (null == mChannelId || TextUtils.isEmpty(mChannelId)) {
-            mChannelId = "0";
-        }
+        mGameId = String.valueOf(intent.getIntExtra(GAME_ID,0));
+        mChannelId = String.valueOf(intent.getIntExtra(CHANNEL_ID,0));
+        String gameName = SPUtils.getString(context,SPUtils.GAME_NAME,"");
+        gameEdit.setText(gameName);
+        String channelName = SPUtils.getString(context,SPUtils.CHANNEL_NAME,"");
+        channelEdit.setText(channelName);
 
 //        if(!TextUtils.isEmpty(mGameId) && !TextUtils.isEmpty(mChannelId)){
 //            canEdit = false;
