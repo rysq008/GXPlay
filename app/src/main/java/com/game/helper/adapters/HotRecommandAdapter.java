@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.GameDetailFragment;
+import com.game.helper.model.HotResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -81,7 +82,7 @@ public class HotRecommandAdapter extends SimpleRecAdapter<ItemType, HotRecommand
         }
 
         public void setDisplay(ItemType itemType, final Activity activity, final int position) {
-            final RecommendResults.RecommendItem data = (RecommendResults.RecommendItem) itemType;
+            final HotResults.HotItem data = (HotResults.HotItem) itemType;
 
             ILFactory.getLoader().loadNet(recommendItemIconIv, Api.API_PAY_OR_IMAGE_URL.concat(data.logo), ILoader.Options.defaultOptions());
             recommendItemNameTv.setText(data.name.replace(" ", ""));

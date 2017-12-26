@@ -13,11 +13,11 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
 import com.game.helper.model.FeedbackListResults;
-import com.game.helper.model.ForgetPasswdResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GameListResultModel;
+import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.model.GamePackageInfo_DetailResult;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
@@ -52,7 +52,6 @@ import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
-import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
@@ -85,12 +84,9 @@ import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
-import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
-import com.game.helper.net.model.UnAvailableRedpackRequestBody;
-import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
 import com.game.helper.net.model.UpdateNicknameRequestBody;
@@ -122,11 +118,11 @@ public class DataService {
         return Api.CreateApiService().getApiSpecialData(baseRequestBody);
     }
 
-    public static Flowable<HttpResultModel<HotResults>> getHomeHot(BaseRequestBody baseRequestBody) {
+    public static Flowable<HttpResultModel<HotResults>> getHomeHot(RecommendRequestBody baseRequestBody) {
         return Api.CreateApiService().getApiHotData(baseRequestBody);
     }
 
-    public static Flowable<HttpResultModel<RecommendResults>> getHomeRecommend(RecommendRequestBody requestBody) {
+    public static Flowable<HttpResultModel<RecommendResults>> getHomeRecommend(BaseRequestBody requestBody) {
         return Api.CreateApiService().getApiRecommendData(requestBody);
     }
 
@@ -358,8 +354,8 @@ public class DataService {
         return Api.CreateApiService().feedBackList();
     }
 
-    public static Flowable<HttpResultModel<SpecialResults>> getSpecialMoreList(BaseRequestBody baseRequestBody){
-        return  Api.CreateApiService().getSpecialMoreList(baseRequestBody);
+    public static Flowable<HttpResultModel<SpecialResults>> getSpecialMoreList(BaseRequestBody baseRequestBody) {
+        return Api.CreateApiService().getSpecialMoreList(baseRequestBody);
     }
 
 
@@ -374,10 +370,10 @@ public class DataService {
     public static Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody) {
         return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
     }
+
     public static Flowable<HttpResultModel<SpecialDetailResults>> getSpecialDetailList(@Body SpecialDetailRequestBody specialDetailRequestBody) {
         return Api.CreateApiService().getSpecialDetailList(specialDetailRequestBody);
     }
-
 
 
     public static Flowable<HttpResultModel<AllAccountsResultsModel>> getAllAccounts() {
@@ -387,6 +383,7 @@ public class DataService {
     public static Flowable<HttpResultModel<FeedbackListResults>> consume(ConsumeRequestBody consumeRequestBody) {
         return Api.CreatePayOrImageApiService().consume(consumeRequestBody);
     }
+
     public static Flowable<HttpResultModel<GamePackageListResult>> getGamePackageList(GamePackageRequestBody getGamePackageList) {
         return Api.CreateApiService().getGamePackageList(getGamePackageList);
     }
