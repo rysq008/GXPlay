@@ -16,6 +16,8 @@ import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.GameCommentListResult;
+import com.game.helper.model.GameGiftListResult;
 import com.game.helper.model.GameListResultModel;
 import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.model.GamePackageInfo_DetailResult;
@@ -68,6 +70,8 @@ import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.GameInfoCommentListRequestBody;
+import com.game.helper.net.model.GameInfoGiftListRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.net.model.GamePackageInfo_InfoRequestBody;
@@ -423,5 +427,13 @@ public class DataService {
 
     public static Flowable<HttpResultModel<NotConcernResults>> deleteGameAccount(SingleGameIdRequestBody singleGameIdRequestBody) {
         return Api.CreateApiService().deleteGameAccount(singleGameIdRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<GameGiftListResult>> getGameGiftList(GameInfoGiftListRequestBody gameInfoGiftListRequestBody) {
+        return Api.CreateApiService().getGameGiftList(gameInfoGiftListRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<GameCommentListResult>> getGameCommentList(GameInfoCommentListRequestBody gameInfoCommentListRequestBody) {
+        return Api.CreateApiService().getGameCommentList(gameInfoCommentListRequestBody);
     }
 }
