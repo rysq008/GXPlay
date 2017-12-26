@@ -62,8 +62,8 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
     CheckBox mAlipay;
     @BindView(R.id.tv_cash)
     TextView mCashAccount;
-    @BindView(R.id.et_cash_to)
-    TextView mCashTo;
+//    @BindView(R.id.et_cash_to)
+//    TextView mCashTo;
     @BindView(R.id.et_cash_value)
     TextView mCashValue;
     @BindView(R.id.tv_cash_apply)
@@ -111,11 +111,11 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
 
     private void apply(){
         String account = userInfo.phone;
-        String cashTo = mCashTo.getText().toString();
+//        String cashTo = mCashTo.getText().toString();
         final String cashValue = mCashValue.getText().toString();
         catulateCashBalnace();
 
-        if (StringUtils.isEmpty(account) || StringUtils.isEmpty(cashTo) || StringUtils.isEmpty(cashValue)){
+        if (StringUtils.isEmpty(account) /*|| StringUtils.isEmpty(cashTo)*/ || StringUtils.isEmpty(cashValue)){
             Toast.makeText(getContext(), "请补全提现信息！", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -130,6 +130,10 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         //判断账户总金额／选中充值账户余额状态下的充值状态余额够不够
         if (totalValue <= 0){
             Toast.makeText(getContext(), "该账户暂无可提现金额！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Integer.parseInt(cashValue) > totalValue){
+            Toast.makeText(getContext(), "余额不足！", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -218,14 +222,14 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         if (userInfo == null) return;
         float coinValue = Float.parseFloat(StringUtils.isEmpty(userInfo.balance) ? "0.00" : userInfo.balance);//金币余额
         float marketValue = Float.parseFloat(StringUtils.isEmpty(userInfo.market_balance) ? "0.00" : userInfo.market_balance);//推广账户余额
-        totalValue = isUseAccountBalance() ? coinValue : 0 + marketValue;
+        totalValue = isUseAccountBalance() ? coinValue : ( 0 + marketValue );
     }
 
     @Override
     public void onToggle(boolean on) {
-        if (userInfo == null || Float.parseFloat(userInfo.balance) <= 0){
-            mToggle.setToggleOff(true);
-        }
+//        if (userInfo == null || Float.parseFloat(userInfo.balance) <= 0){
+//            mToggle.setToggleOff(true);
+//        }
         if (mToggle.isToggleOn()){
             final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm,
                     getResources().getString(R.string.common_wormheart_hint),

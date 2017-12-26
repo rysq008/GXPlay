@@ -216,7 +216,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
 
     private void setUserData(MemberInfoResults userData) {
         mName.setText(userData.nick_name);
-        mMoney.setText("¥" + userData.balance);
+        mMoney.setText("¥" + userData.total_balance);
         mVipLevel.setCompoundDrawablePadding(Utils.dip2px(getContext(), 5));
         Drawable d = getResources().getDrawable(Utils.getVipLevel(Integer.valueOf(userData.gender)));
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
