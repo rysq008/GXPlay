@@ -85,13 +85,26 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/margin_5"
                         android:layout_marginRight="@dimen/margin_5"
-                        android:background="@color/color_999" />
+                        android:background="@color/colorDivider" />
 
                     <TextView
                         android:id="@+id/tv_game_detail_package_filesize"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="221M"
+                        android:textColor="@color/color_999"
+                        android:textSize="@dimen/size_12sp" />
+                    <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/margin_5"
+                        android:layout_marginRight="@dimen/margin_5"
+                        android:background="@color/colorDivider" />
+                    <TextView
+                        android:id="@+id/tv_game_detail_plat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="乐友瑞"
                         android:textColor="@color/color_999"
                         android:textSize="@dimen/size_12sp" />
 
@@ -164,19 +177,20 @@
                     android:layout_marginLeft="@dimen/margin_43">
 
                     <TextView
-                        android:id="@+id/tv_discount_game_detail_common"
+                        android:id="@+id/tv_discount_game_detail_vip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/common_discount_putong"
+                        android:text="@string/common_discount_member"
                         android:textColor="@color/color_00aeff"
                         android:textSize="@dimen/text_size_medium" />
 
                     <TextView
-                        android:id="@+id/tv_discount_game_detail_vip"
+                        android:id="@+id/tv_discount_game_detail_common"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/dp_10"
-                        android:text="@string/common_discount_member"
+                        android:text="@string/common_discount_putong"
+
                         android:textColor="@color/color_00aeff"
                         android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>

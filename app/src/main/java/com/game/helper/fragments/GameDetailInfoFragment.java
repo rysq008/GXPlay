@@ -86,4 +86,7 @@ public class GameDetailInfoFragment extends XBaseFragment {
         return null;
     }
 
+
+
+
 }
