@@ -13,12 +13,13 @@ import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
+import com.game.helper.views.XReloadableStateContorller;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.droidlover.xdroidmvp.mvp.XPresent;
-import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function5;
@@ -28,7 +29,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
     protected static final int PAGE_SIZE = 10;
     protected XBaseModel mXBaseModel;
 
-    public void onRefreshData() {
+    public void onRefreshData(XReloadableStateContorller reloadableStateContorller, boolean showLoading) {
         Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(1));
         Flowable<HttpResultModel<NoticeResults>> fn = DataService.getHomeNotice();
         Flowable<HttpResultModel<SpecialResults>> fs = DataService.getHomeSpecial(new BaseRequestBody(1));
@@ -60,7 +61,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
             }
         });
 
-        RxLoadingUtils.subscribe(fa, getV().<HomeAllResultsData>bindToLifecycle(), new Consumer<HomeAllResultsData>() {
+        RxLoadingUtils.subscribeWithReload(reloadableStateContorller, fa, getV().<HomeAllResultsData>bindToLifecycle(), new Consumer<HomeAllResultsData>() {
             @Override
             public void accept(HomeAllResultsData homeAllResultsData) throws Exception {
                 List<ItemType> list = new ArrayList<>();
@@ -76,31 +77,21 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
                 }
 //                getV().showSearchView(true);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-//                getV().showSearchView(false);
-                getV().showError(netError);
-            }
-        });
+        }, null, null, showLoading);
     }
 
-    public void loadMoreData(int page) {
-        Flowable<HttpResultModel<HotResults>> fr = DataService.getHomeHot(new RecommendRequestBody(page, 0, 0));
-        RxLoadingUtils.subscribe(fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<HotResults>>() {
+    public void loadMoreData(XReloadableRecyclerContentLayout reloadableRecyclerContentLayout, int page) {
+//        Flowable<HttpResultModel<HotResults>> fr = DataService.getHomeHot(new RecommendRequestBody(page, 0, 0));
+        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend((new BaseRequestBody(page)));
+        RxLoadingUtils.subscribeWithReload(reloadableRecyclerContentLayout, fr, getV().bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
             @Override
-            public void accept(HttpResultModel<HotResults> hotResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<RecommendResults> hotResultsHttpResultModel) throws Exception {
                 mXBaseModel = hotResultsHttpResultModel;
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(hotResultsHttpResultModel.data.list);
                 getV().showData(hotResultsHttpResultModel.current_page, hotResultsHttpResultModel.total_page, list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                getV().showError(netError);
-            }
-        });
+        }, null, null, false);
     }
 
 
