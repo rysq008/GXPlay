@@ -27,6 +27,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
 import butterknife.BindView;
@@ -198,7 +199,6 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 这时候点击VIP折扣再执行判断弹窗的逻辑
                 * */
                 if (gameBean == null) return;
-                gameBean.setIs_vip(false);
                 if (gameBean.isIs_xc()){
                     setCheckStatus(-1,true);
                     setCheckStatus(0,false);
@@ -346,6 +346,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         if (mTotalDiscountValue == 0) mTotalDiscountValue = 10;
         else mTotalBalanceValue = inputVlaue / 10 * mTotalDiscountValue;
 
+        mTotalBalanceValue = Utils.m2(mTotalBalanceValue);
         mTotalBalance.setText(mTotalBalanceValue+"元");
     }
 

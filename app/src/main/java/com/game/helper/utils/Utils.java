@@ -25,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -341,4 +342,12 @@ public class Utils {
         }
     }
 
+    /**
+     * DecimalFormat转换最简便
+     */
+    public static float m2(float arg) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        Log.e(TAG, "m2: "+arg+"/"+df.format(arg));
+        return Float.parseFloat(df.format(arg));
+    }
 }

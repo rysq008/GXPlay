@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
@@ -26,7 +27,7 @@ import cn.droidlover.xdroidmvp.imageloader.ILoader;
  */
 public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = AccountManagerAdapter.class.getSimpleName();
-
+    private OnActionListener onActionListener;
     private List data = new ArrayList();
     private Context context;
 
@@ -102,13 +103,44 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             platform.setText(item.getGame_channel_name());
             accountIdenty.setText(item.getGame_account());
             creatTime.setText(item.getCreate_time());
-            vip.setImageResource(Utils.getExtensionVipIcon(item.getVip_level()));
+            if (item.getVip_level() == 0){
+                vip.setVisibility(View.GONE);
+            }else {
+                vip.setImageResource(Utils.getExtensionVipIcon(item.getVip_level()));
+            }
+            if (item.isIs_successed()){
+                action.setImageResource(R.mipmap.ic_jingzhi);
+            }else {
+                action.setImageResource(R.mipmap.ic_delete);
+            }
+            action.setTag(item.isIs_successed());
+            action.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (v == mRootView) {
             }
+            if (v == action){
+                if (action.getTag() instanceof Boolean){
+                    boolean isSuccess = (boolean) action.getTag();
+                    if (isSuccess) {
+                        Toast.makeText(context, "该账号不可删除！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (onActionListener != null){
+                        onActionListener.onDelete(((GameAccountResultModel.ListBean)data.get(position)).getId() );
+                    }
+                }
+            }
         }
+    }
+
+    public void addOnActionListener (OnActionListener onActionListener){
+        this.onActionListener = onActionListener;
+    }
+
+    public interface OnActionListener{
+        void onDelete(int gameid);
     }
 }

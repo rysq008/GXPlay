@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +20,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MineGamelistResults;
 import com.game.helper.model.MineGamelistResults;
@@ -31,6 +37,7 @@ import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -147,6 +154,7 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
             @Override
             public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
+                if (notConcernResultsHttpResultModel.isSucceful()) getDataFromNet(1);
                 Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
@@ -251,9 +259,12 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
                 MineGamelistResults.MineGamelistItem item = (MineGamelistResults.MineGamelistItem) data.get(position);
                 ILFactory.getLoader().loadNet(icon,Api.API_PAY_OR_IMAGE_URL + item.game.logo, ILoader.Options.defaultOptions());
                 name.setText(item.game.name);
-                type.setText(item.channel.name);
-                size.setText("");
-                desc.setText(item.name_package);
+                type.setText(item.game.type);
+                size.setText(item.game_package_filesize+"M");
+                SpannableStringBuilder ss = new SpannableStringBuilder("游戏平台："+item.channel.name);
+                ss.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)), 5, ("游戏平台"+item.channel.name).length()+1,
+                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                desc.setText(ss);
                 delete.setTag(item);
 
             }
@@ -261,12 +272,25 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 if (delete.getTag() != null && delete.getTag() instanceof MineGamelistResults.MineGamelistItem){
-                    MineGamelistResults.MineGamelistItem item = (MineGamelistResults.MineGamelistItem) delete.getTag();
+                    final MineGamelistResults.MineGamelistItem item = (MineGamelistResults.MineGamelistItem) delete.getTag();
                     if (v == delete){
-                        deleteGame(item.game.id);
+                        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Full_Confirm,"","确定要删除该游戏吗？");
+                        dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+                            @Override
+                            public void onCancel() {
+                                dialog.dismiss();
+                            }
+
+                            @Override
+                            public void onConfirm() {
+                                deleteGame(item.id);
+                            }
+                        });
+                        dialog.show(getActivity().getSupportFragmentManager(),GXPlayDialog.TAG);
                     }
                     if (v == launch){
-                        Utils.doStartApplicationWithPackageName(getContext(), item.name_package);
+                        DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
+                        //Utils.doStartApplicationWithPackageName(getContext(), item.name_package);
                     }
 
                 }

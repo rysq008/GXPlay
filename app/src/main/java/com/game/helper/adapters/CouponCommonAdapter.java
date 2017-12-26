@@ -15,9 +15,13 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.UnAvailableRedpackResultModel;
+import com.game.helper.net.api.Api;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.ILoader;
 
 /**
  * Created by sung on 2017/12/21.
@@ -123,19 +127,22 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     game.setVisibility(View.GONE);
                     return;
                 }
+                container.removeAllViews();
                 for (int i = 0; i < item.getGames().size(); i++) {
-                    inflateGameItem(item.getGames().get(i),i);
+                    inflateGameItem(item.getGames().get(i),i,item.getGames().size());
                 }
             }
         }
 
-        private void inflateGameItem(final AvailableRedpackResultModel.ListBean.GameBean gameBean, final int position){
+        private void inflateGameItem(final AvailableRedpackResultModel.ListBean.GameBean gameBean, final int position, int totalSize){
+            if (container.getChildCount() >= totalSize) return;
             View view = LayoutInflater.from(context).inflate(R.layout.item_can_use_coupon_game_item, null, false);
             view.setTag(position);
             ImageView icon = view.findViewById(R.id.game_icon);
             TextView name = view.findViewById(R.id.game_name);
 
             name.setText(gameBean.getName());
+            ILFactory.getLoader().loadNet(icon, Api.API_PAY_OR_IMAGE_URL + gameBean.getLogo(), ILoader.Options.defaultOptions());
 
             View click = view.findViewById(R.id.game_click);
             click.setOnClickListener(new View.OnClickListener() {

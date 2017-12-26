@@ -420,4 +420,8 @@ public class DataService {
     public static Flowable<HttpResultModel<GamePackageInfo_DetailResult>> getGamePackageInfo_Info(GamePackageInfo_InfoRequestBody gamePackageInfo_infoRequestBody) {
         return Api.CreateApiService().getGamePackageInfo_Info(gamePackageInfo_infoRequestBody);
     }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> deleteGameAccount(SingleGameIdRequestBody singleGameIdRequestBody) {
+        return Api.CreateApiService().deleteGameAccount(singleGameIdRequestBody);
+    }
 }
