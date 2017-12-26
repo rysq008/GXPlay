@@ -198,7 +198,6 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 这时候点击VIP折扣再执行判断弹窗的逻辑
                 * */
                 if (gameBean == null) return;
-                gameBean.setIs_vip(false);
                 if (gameBean.isIs_xc()){
                     setCheckStatus(-1,true);
                     setCheckStatus(0,false);
