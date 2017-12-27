@@ -483,7 +483,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
                 if (generalizeResultsHttpResultModel.isSucceful()) {
-                    if (generalizeResultsHttpResultModel.isNull()) {
+                    if (generalizeResultsHttpResultModel.data.getList().isEmpty()) {
                         redPackNum.setTextColor(getResources().getColor(R.color.black));
                         redPackNum.setText("无可用红包");
                     } else {
