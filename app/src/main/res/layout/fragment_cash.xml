@@ -239,6 +239,7 @@
                 android:background="@color/colorDivider"/>
             <LinearLayout
                 android:padding="@dimen/dp_10"
+                android:visibility="gone"
                 android:background="@color/colorWhite"
                 android:orientation="horizontal"
                 android:gravity="center"

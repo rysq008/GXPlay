@@ -512,7 +512,7 @@ public class RxLoadingUtils {
                         }
                         if (finishWhenFirstOnNext && !finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
-                            reloadableFrameLayout.showContent();
+//                            reloadableFrameLayout.showContent();
                             finishReload[0] = true;
                         }
                     }
@@ -556,7 +556,7 @@ public class RxLoadingUtils {
                                                               final Action onComplete, final boolean finishWhenFirstOnNext) {
         if (reloadableLayout == null) return;
 
-        if(finishWhenFirstOnNext){
+        if (finishWhenFirstOnNext) {
             reloadableLayout.showLoading();
         }
         reloadableLayout.setOnReloadListener(new XReloadableRecyclerContentLayout.OnReloadListener() {
@@ -592,8 +592,15 @@ public class RxLoadingUtils {
                         }
                         if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
-                            reloadableLayout.showContent();
                             finishReload[0] = true;
+//                            HttpResultModel resultModel = (HttpResultModel) t;
+//                            if (resultModel.isSucceful()) {
+//                                if (!Kits.Empty.check(resultModel.data) && resultModel.data instanceof List && ((List) resultModel.data).size() != 0) {
+//                                    reloadableLayout.showEmpty();
+//                                } else {
+//                                    reloadableLayout.showContent();
+//                                }
+//                            }
                         }
                     }
 

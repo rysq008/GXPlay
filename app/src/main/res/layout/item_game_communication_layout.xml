@@ -8,12 +8,12 @@
         android:padding="@dimen/dp_15"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <ImageView
             android:padding="1dp"
-            android:id="@+id/iv_avatar"
-            android:background="@drawable/bg_gradient_radius_circle"
+            android:id="@+id/iv_avatar_game_communication"
             android:src="@mipmap/debug_mine_avatar"
             android:layout_width="@dimen/game_detail_fragment_icon_avatar"
             android:layout_height="@dimen/game_detail_fragment_icon_avatar" />
@@ -27,13 +27,13 @@
 
             <TextView
                 android:text="大话西游"
-                android:id="@+id/tv_name"
+                android:id="@+id/tv_member_name_game_communication"
                 android:textSize="@dimen/text_size_large"
                 android:textColor="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
-                android:id="@+id/tv_content"
+                android:id="@+id/tv_content_game_communication"
                 android:layout_marginTop="@dimen/dp_5"
                 android:text=""
                 android:textSize="@dimen/text_size_small"
@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <TextView
-                android:id="@+id/tv_time"
+                android:id="@+id/tv_time_game_communication"
                 android:layout_marginTop="@dimen/dp_10"
                 android:textSize="@dimen/text_size_tiny"
                 android:textColor="@color/colorShadow"

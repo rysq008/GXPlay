@@ -19,10 +19,7 @@
         android:id="@+id/common_search_reload_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        app:x_emptyLayoutId="@layout/view_error_state"
-        app:x_errorLayoutId="@layout/view_error_state"
-        app:x_loadingLayoutId="@layout/view_loading">
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/common_search_word_layout"
@@ -107,9 +104,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:visibility="gone"
-        app:x_emptyLayoutId="@layout/view_empty_state"
-        app:x_errorLayoutId="@layout/view_error_state"
-        app:x_loadingLayoutId="@layout/view_loading" />
+        android:visibility="gone" />
 
 </LinearLayout>
