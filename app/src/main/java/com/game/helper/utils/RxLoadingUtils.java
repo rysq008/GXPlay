@@ -477,8 +477,9 @@ public class RxLoadingUtils {
                                                               final Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
                                                               final Action onComplete, final boolean finishWhenFirstOnNext) {
         if (reloadableFrameLayout == null) return;
-
-        reloadableFrameLayout.showLoading();
+        if (finishWhenFirstOnNext) {
+            reloadableFrameLayout.showLoading();
+        }
         reloadableFrameLayout.setOnReloadListener(new XReloadableStateContorller.OnReloadListener() {
             @Override
             public void onReload(XReloadableStateContorller reloadableFrameLayout) {
@@ -510,7 +511,7 @@ public class RxLoadingUtils {
                                 e.printStackTrace();
                             }
                         }
-                        if (finishWhenFirstOnNext && !finishReload[0]) {
+                        if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
 //                            reloadableFrameLayout.showContent();
                             finishReload[0] = true;
@@ -545,7 +546,7 @@ public class RxLoadingUtils {
                         }
                         if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
-                            reloadableFrameLayout.showContent();
+                            reloadableFrameLayout.showError();
                         }
                     }
                 });
