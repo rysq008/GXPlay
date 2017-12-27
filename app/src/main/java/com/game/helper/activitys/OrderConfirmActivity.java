@@ -483,7 +483,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
                 if (generalizeResultsHttpResultModel.isSucceful()) {
-                    if (generalizeResultsHttpResultModel.isNull()) {
+                    if (generalizeResultsHttpResultModel.data.getList().isEmpty()) {
                         redPackNum.setTextColor(getResources().getColor(R.color.black));
                         redPackNum.setText("无可用红包");
                     } else {
@@ -491,7 +491,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                         redPackNum.setText(generalizeResultsHttpResultModel.data.getList().size() + "个可用");
                     }
                     mRedPacks = generalizeResultsHttpResultModel.data;
-                }else{
+                } else {
                     redPackNum.setTextColor(getResources().getColor(R.color.black));
                     redPackNum.setText("无可用红包");
                 }
@@ -793,7 +793,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * ali支付
      */
     private void aliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "1", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id + "", mNeedPay + "", "1", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -832,7 +832,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 微信支付
      */
     private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "2", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id + "", mNeedPay + "", "2", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -864,7 +864,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      */
     private void doConsume(String accountAmount, String marketingAmount) {
         Log.e("nuoyan", "gameAccountId：：：" + gameAccountId + "\r\n"
-                +"gameId：：：" + gameId + "\r\n"
+                + "gameId：：：" + gameId + "\r\n"
                 + "consumeAmount:::" + inputBalance + "\r\n"
                 + "accountAmount:::" + accountAmount + "\r\n"
                 + "marketingAmount:::" + marketingAmount + "\r\n"
@@ -878,12 +878,12 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FeedbackListResults>>() {
             @Override
             public void accept(HttpResultModel<FeedbackListResults> checkTradePasswdResultsHttpResultModel) {
-//                if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
-                Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
-                finish();
-//                } else {
-//                    Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
-//                }
+                if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
+                    Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
+                }
             }
         }, new Consumer<NetError>() {
             @Override
