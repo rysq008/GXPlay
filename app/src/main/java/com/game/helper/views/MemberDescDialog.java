@@ -142,6 +142,7 @@ public class MemberDescDialog extends android.support.v4.app.DialogFragment impl
         super.onResume();
         if (getDialog() == null) return;
         if (!getDialog().isShowing()) return;
+        getDialog().setCanceledOnTouchOutside(false);
         Window dialogWindow = getDialog().getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         dialogWindow.setGravity(Gravity.CENTER);

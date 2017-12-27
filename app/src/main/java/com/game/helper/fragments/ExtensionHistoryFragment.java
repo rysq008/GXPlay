@@ -228,7 +228,8 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
                 ILFactory.getLoader().loadNet(avatar,Api.API_BASE_URL.concat(item.member.icon),null);
                 vip.setImageResource(Utils.getExtensionVipIcon(item.member.vip_level.level));
                 name.setText(item.member.nick_name);
-                time.setText(item.member.user.date_joined);
+                String[] split = item.member.user.date_joined.split(" ");
+                time.setText(split[0]);
                 content.setText(item.member.signature);
             }
 

@@ -17,6 +17,7 @@ import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.api.ApiService;
+import com.game.helper.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +209,7 @@ public class RechargeCommonAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             if (!(data.get(position) instanceof CashListResults.CashListItem)) return;
             CashListResults.CashListItem cashListItem = (CashListResults.CashListItem) data.get(position);
             value.setText("+"+cashListItem.amount);
-            recharge.setText("支付宝："+cashListItem.apliy_account);
+            recharge.setText("支付宝："+ Utils.converterSecretPhone(cashListItem.apliy_account));
             time.setText(cashListItem.finish_time);
         }
 

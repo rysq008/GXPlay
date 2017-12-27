@@ -40,15 +40,16 @@ public class MineGamelistResults extends XBaseModel {
     public List<MineGamelistItem> list;
 
     public static class MineGamelistItem implements ItemType{
-        public String name_package;
+        public int game_package_id;
+        public String game_package_filesize;
         public Game game;
         public int id;
         public Channel channel;
 
         public class Game implements ItemType {
             public String logo;
+            public String type;
             public int id;
-            public String logothumb;
             public String name;
             @Override
             public int itemType() {

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.adapters.AccountManagerAdapter;
@@ -15,10 +16,13 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.MarketFlowlistResults;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -31,7 +35,7 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
-public class AccountManageFragment extends XBaseFragment implements View.OnClickListener{
+public class AccountManageFragment extends XBaseFragment implements View.OnClickListener,AccountManagerAdapter.OnActionListener{
     private static final String TAG = AccountManageFragment.class.getSimpleName();
 
     @BindView(R.id.action_bar_back)
@@ -89,6 +93,7 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
     private void initList(){
         mAdapter = null;
         mAdapter = new AccountManagerAdapter(getContext(), null);
+        mAdapter.addOnActionListener(this);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
@@ -123,6 +128,22 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
         });
     }
 
+    private void deleteGameAccountInfo(int id) {
+        Flowable<HttpResultModel<NotConcernResults>> fr = DataService.deleteGameAccount(new SingleGameIdRequestBody(id));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
+            @Override
+            public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
+                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                if (notConcernResultsHttpResultModel.isSucceful()) getGameAccountInfo(1);
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void notifyData(XBaseModel data, int page){
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
@@ -146,5 +167,22 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
     @Override
     public Object newP() {
         return null;
+    }
+
+    @Override
+    public void onDelete(final int gameid) {
+        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Full_Confirm,"","确定要删除该游戏账号吗？");
+        dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+            @Override
+            public void onCancel() {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onConfirm() {
+                deleteGameAccountInfo(gameid);
+            }
+        });
+        dialog.show(getActivity().getSupportFragmentManager(),GXPlayDialog.TAG);
     }
 }

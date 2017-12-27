@@ -139,9 +139,8 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<ResetAlipayResults>>() {
             @Override
             public void accept(HttpResultModel<ResetAlipayResults> resetAlipayResultsHttpResultModel) throws Exception {
-                String hint = "修改支付宝账号失败！请重试";
+                String hint = resetAlipayResultsHttpResultModel.getResponseMsg();
                 if (resetAlipayResultsHttpResultModel.isSucceful()) {
-                    hint = "修改支付宝账号成功！";
                     Utils.updateUserAlipayStatus(getContext(),true);
                 }
                 final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Single_Confirm,"",hint);

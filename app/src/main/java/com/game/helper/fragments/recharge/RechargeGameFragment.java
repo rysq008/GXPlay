@@ -12,13 +12,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.MyAccountActivity;
-import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
@@ -29,10 +27,10 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -40,15 +38,11 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RechargeGameFragment extends XBaseFragment implements View.OnClickListener, CheckBox.OnCheckedChangeListener {
+public class RechargeGameFragment extends XBaseFragment implements View.OnClickListener,CheckBox.OnCheckedChangeListener {
     public static final String TAG = RechargeGameFragment.class.getSimpleName();
 
     private static final int check_able_color = R.color.colorBlack;
     private static final int check_disable_color = R.color.colorShadow;
-    @BindView(R.id.ll_game_detail_kefu_and_recharge)
-    LinearLayout llGameDetailKefuAndRecharge;
-    @BindView(R.id.ll_game_detail_increase_space)
-    LinearLayout llGameDetailIncreaseSpace;
     private String discount_high_vip;
     private String discount_vip;
     private String discount_member;
@@ -102,10 +96,8 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     public static final int REQUEST_CODE = 99;
     public static final int RESULT_CODE = 98;
-    private int gameId;
-    private int channelId;
 
-    public static RechargeGameFragment newInstance() {
+    public static RechargeGameFragment newInstance(){
         return new RechargeGameFragment();
     }
 
@@ -123,20 +115,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         return R.layout.fragment_recharge_game;
     }
 
-    private void initView() {
-        setCheckStatus(-1, true);
-        if (getArguments() != null) {
-            setChooseGameData(true);
-            Bundle arguments = getArguments();
-            if ("fromGameDetail".equals(arguments.getString("fromGameDetail"))) {
-                mItemGame.setVisibility(View.GONE);
-                mItemPlatfrom.setVisibility(View.GONE);
-                llGameDetailIncreaseSpace.setVisibility(View.VISIBLE);
-                llGameDetailKefuAndRecharge.setVisibility(View.VISIBLE);
-                gameId = arguments.getInt("gameId");
-                channelId = arguments.getInt("channelId");
-            }
-        }
+    private void initView(){
+        setCheckStatus(-1,true);
+        if (getArguments() != null) setChooseGameData(true);
         //getVipLevel();//获取最高vip
 
         discount_high_vip = getResources().getString(R.string.recharge_high_vip_discount);
@@ -162,7 +143,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String inputValue = s.toString().trim();
-                if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue)) <= 0) return;
+                if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue))<=0) return;
                 getCheckDiscount();
             }
 
@@ -176,12 +157,10 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     /**
      * 根据拿到的游戏bean设置ui
-     *
      * @param isArguments 是否一开始就传过来的bean
-     */
-    private void setChooseGameData(boolean isArguments) {
-        if (isArguments)
-            gameBean = (GameAccountResultModel.ListBean) getArguments().getSerializable(RechargeGameFragment.TAG);
+     * */
+    private void setChooseGameData(boolean isArguments){
+        if (isArguments) gameBean = (GameAccountResultModel.ListBean) getArguments().getSerializable(RechargeGameFragment.TAG);
         if (gameBean == null) {
             Toast.makeText(getContext(), "获取数据失败！请重试", Toast.LENGTH_SHORT).show();
             return;
@@ -191,25 +170,25 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         mGame.setText(gameBean.getGame_name());
         mPlatfrom.setText(gameBean.getGame_channel_name());
         if (gameBean.isIs_xc()) {
-            setCheckStatus(-1, true);
-            setCheckStatus(0, false);
+            setCheckStatus(-1,true);
+            setCheckStatus(0,false);
             mItemDiscount1.performClick();
         }
         getGameAccountDiscount(gameBean.getId());
     }
 
-    private void setVipHint(int count) {
-        if (count != 0) {
+    private void setVipHint(int count){
+        if (count != 0){
             mDiscountHint3.setVisibility(View.VISIBLE);
-            mDiscountHint3.setText(getResources().getString(R.string.recharge_can_use_discount) + count + "个");
+            mDiscountHint3.setText(getResources().getString(R.string.recharge_can_use_discount)+count+"个");
         }
     }
 
-    private void getVipGameAccount() {
+    private void getVipGameAccount(){
         Flowable<HttpResultModel<VipGameAccountResults>> fr = DataService.getVipGameAccount();
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VipGameAccountResults>>() {
             @Override
-            public void accept(HttpResultModel<VipGameAccountResults> vipGameAccountResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<VipGameAccountResults> vipGameAccountResultsHttpResultModel ) throws Exception {
                 accountBean = vipGameAccountResultsHttpResultModel.data;
                 /*
                 进来页面选完游戏账号 先判断游戏首充
@@ -220,75 +199,69 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 这时候点击VIP折扣再执行判断弹窗的逻辑
                 * */
                 if (gameBean == null) return;
-                if (gameBean.isIs_xc()) {
-                    setCheckStatus(-1, true);
-                    setCheckStatus(0, false);
-                    gameBean.setIs_vip(false);
-                    if (gameBean.isIs_xc()) {
-                        setCheckStatus(-1, true);
-                        setCheckStatus(0, false);
-                        mItemDiscount1.performClick();
-                    } else {
-                        //打开普通会员选择
-                        setCheckStatus(1, false);
-                        //打开vip会员选择
-                        setCheckStatus(2, false);
-                        if (gameBean.isIs_vip()) {
-                            //当前游戏肯定是vip 默认选中vip折扣 不需要判断vip数量
-                            setCheckStatus(1, true);
-                            setChecked(2);
-                        } else {
-                            mItemDiscount2.performClick();
-                        }
+                if (gameBean.isIs_xc()){
+                    setCheckStatus(-1,true);
+                    setCheckStatus(0,false);
+                    mItemDiscount1.performClick();
+                }else {
+                    //打开普通会员选择
+                    setCheckStatus(1, false);
+                    //打开vip会员选择
+                    setCheckStatus(2, false);
+                    if (gameBean.isIs_vip()){
+                        //当前游戏肯定是vip 默认选中vip折扣 不需要判断vip数量
+                        setCheckStatus(1,true);
+                        setChecked(2);
+                    }else {
+                        mItemDiscount2.performClick();
                     }
-                    //打开vip剩余数量提示
-                    setVipHint(accountBean.count);
                 }
+                //打开vip剩余数量提示
+                setVipHint(accountBean.count);
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
             }
         });
     }
 
-    private void getGameAccountDiscount(int gameAccountId) {
+    private void getGameAccountDiscount(int gameAccountId){
         Flowable<HttpResultModel<GameAccountDiscountResults>> fr = DataService.getGameAccountDiscount(new SingleGameIdRequestBody(gameAccountId));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountDiscountResults>>() {
             @Override
-            public void accept(HttpResultModel<GameAccountDiscountResults> gameAccountDiscountResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<GameAccountDiscountResults> gameAccountDiscountResultsHttpResultModel ) throws Exception {
                 discountList = gameAccountDiscountResultsHttpResultModel.data;
-                mDiscount1.setText(discount_high_vip + discountList.high_vip_discount + "折");
-                mDiscount2.setText(discount_member + discountList.member_discount + "折");
-                mDiscount3.setText(discount_vip + discountList.vip_discount + "折");
+                mDiscount1.setText(discount_high_vip+discountList.high_vip_discount+"折");
+                mDiscount2.setText(discount_member+discountList.member_discount+"折");
+                mDiscount3.setText(discount_vip+discountList.vip_discount+"折");
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
             }
         });
     }
 
-    private void getVipLevel() {
+    private void getVipLevel(){
         Flowable<HttpResultModel<VipLevelResults>> fr = DataService.getVipLevel();
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VipLevelResults>>() {
             @Override
-            public void accept(HttpResultModel<VipLevelResults> vipLevelResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<VipLevelResults> vipLevelResultsHttpResultModel ) throws Exception {
                 //vipList = vipLevelResultsHttpResultModel.data;
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
             }
         });
     }
 
-    private void setCheckStatus(int position, boolean checkEnable) {
-        clearCheck();
-        switch (position) {
+    private void setCheckStatus(int position, boolean checkEnable){
+        switch (position){
             case 0:
                 mDiscount1.setTextColor(getResources().getColor(checkEnable ? check_disable_color : check_able_color));
                 mCbDiscount1.setEnabled(checkEnable ? true : false);
@@ -316,18 +289,16 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 mCbDiscount3.setChecked(false);
                 break;
         }
-
-
     }
 
-    private void clearCheck() {
+    private void clearCheck(){
         mCbDiscount1.setChecked(false);
         mCbDiscount2.setChecked(false);
         mCbDiscount3.setChecked(false);
     }
 
-    private void setChecked(int position) {
-        switch (position) {
+    private void setChecked(int position){
+        switch (position){
             case 0:
                 if (mCbDiscount1.isEnabled()) return;
                 clearCheck();
@@ -346,92 +317,83 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         }
     }
 
-    private void getCheckDiscount() {
+    private void getCheckDiscount(){
         if (discountList == null) {
             caculateBalanceVlue();
             return;
         }
-        if (mCbDiscount1.isChecked()) {
+        if (mCbDiscount1.isChecked()){
             mTotalDiscountValue = discountList.high_vip_discount;
-        } else if (mCbDiscount2.isChecked()) {
+        }
+        else if (mCbDiscount2.isChecked()){
             mTotalDiscountValue = discountList.member_discount;
-        } else if (mCbDiscount3.isChecked()) {
+        }
+        else if (mCbDiscount3.isChecked()){
             mTotalDiscountValue = discountList.vip_discount;
         }
-        mTotalDiscount.setText(mTotalDiscountValue + "折");
+        mTotalDiscount.setText(mTotalDiscountValue+"折");
         caculateBalanceVlue();
     }
 
-    private void caculateBalanceVlue() {
+    private void caculateBalanceVlue(){
         int inputVlaue = 0;
         try {
             inputVlaue = Integer.parseInt(mBalance.getText().toString());
-        } catch (NumberFormatException e) {
+        }catch (NumberFormatException e){
         }
 
-        if (mTotalDiscountValue < 0 || inputVlaue <= 0) return;
-        if (mTotalDiscountValue == 0) mTotalDiscountValue = inputVlaue;
-        if (mTotalDiscountValue < 0 || inputVlaue <= 0) return;
+        if (mTotalDiscountValue < 0 || inputVlaue <= 0 ) return;
         if (mTotalDiscountValue == 0) mTotalDiscountValue = 10;
         else mTotalBalanceValue = inputVlaue / 10 * mTotalDiscountValue;
 
-        mTotalBalance.setText(mTotalBalanceValue + "元");
+        mTotalBalanceValue = Utils.m2(mTotalBalanceValue);
+        mTotalBalance.setText(mTotalBalanceValue+"元");
     }
 
     @Override
     public void onClick(View v) {
-        if (v == mItemAccount) {
-            Intent intent = new Intent(getActivity(), MyAccountActivity.class);
-            intent.putExtra(MyAccountActivity.OPTION_GAME_ID,gameId);
-            intent.putExtra(MyAccountActivity.OPTION_CHANNEL_ID,channelId);
-            startActivityForResult(intent, REQUEST_CODE);
+        if (v == mItemAccount){
+            startActivityForResult(new Intent(getActivity(), MyAccountActivity.class),REQUEST_CODE);
         }
-        if (v == mItemGame) {
+        if (v == mItemGame){
 
         }
-        if (v == mItemPlatfrom) {
+        if (v == mItemPlatfrom){
 
         }
-        if (v == mItemDiscount1) {
+        if (v == mItemDiscount1){
             setChecked(0);
         }
-        if (v == mItemDiscount2) {
+        if (v == mItemDiscount2){
             setChecked(1);
-            setCheckStatus(0, true);
+            setCheckStatus(0,true);
         }
-        if (v == mItemDiscount3) {
-            setChecked(2);
-            setCheckStatus(1, true);
-
-            if (v == mItemDiscount3) {
-                if (accountBean == null || mCbDiscount1.isChecked() || mCbDiscount3.isChecked())
-                    return;
-                if (accountBean.count == 0) {
-                    if (accountBean.is_highest_vip) {//是最高等级
-                        showVipHintDialog(2);
-                    } else {
-                        showVipHintDialog(1);
-                    }
-                } else {
-                    showVipHintDialog(0);
+        if (v == mItemDiscount3){
+            if (accountBean == null || mCbDiscount1.isChecked() || mCbDiscount3.isChecked()) return;
+            if (accountBean.count == 0){
+                if (accountBean.is_highest_vip){//是最高等级
+                    showVipHintDialog(2);
+                }else {
+                    showVipHintDialog(1);
                 }
-
-                setCheckStatus(1, true);
-                setCheckStatus(0, true);
-                setChecked(2);
+            }else {
+                showVipHintDialog(0);
             }
+
+            setCheckStatus(1, true);
+            setCheckStatus(0,true);
+            setChecked(2);
         }
     }
 
-        /**
-         * type
-         * 0：仅提示消耗vip数量
-         * 1：升级vip
-         * 2：vip最高联系管理员
-         */
-
-    private void showVipHintDialog(final int type) {
-        if (mCbDiscount3.isEnabled()) {
+    /**
+     * type
+     * 0：仅提示消耗vip数量
+     * 1：升级vip
+     * 2：vip最高联系管理员
+     * */
+    private void showVipHintDialog(final int type){
+        if (mCbDiscount3.isEnabled()){
             return;
         }
         String content = "";
@@ -441,7 +403,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             return;
         }
         if (type == 2) content = "您的VIP账户名额已用完，并且是皇冠会员，已无法再升级会员，若您仍想绑定该账号为VIP账号，请联系客服！";
-        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", content);
+        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm,"温馨提示",content);
         dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
             @Override
             public void onCancel() {
@@ -455,18 +417,17 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 if (type == 2) goToKefu();
             }
         });
-        dialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
+        dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
     }
 
     // TODO: 2017/12/18 补全跳转
-
-    private void goToVipLevel() {
+    private void goToVipLevel(){
         //跳转vip升级页面
         mItemDiscount2.performClick();
         Toast.makeText(getContext(), "可用数量为0，跳转vip升级", Toast.LENGTH_SHORT).show();
     }
 
-    private void goToKefu() {
+    private void goToKefu(){
         //跳转客服
         mItemDiscount2.performClick();
         Toast.makeText(getContext(), "最高等级vip，跳转客服", Toast.LENGTH_SHORT).show();
@@ -482,7 +443,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     public double getInputValue() {
         String inputValue = mBalance.getText().toString().trim();
-        if (TextUtils.isEmpty(inputValue)) {
+        if(TextUtils.isEmpty(inputValue)){
             inputValue = "0.0";
         }
         return Double.parseDouble(inputValue);
@@ -501,55 +462,15 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_CODE && data != null) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_CODE && data != null){
             if (!data.hasExtra(TAG)) return;
-            if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean) {
+            if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean){
                 gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
                 clearCheck();
                 getVipGameAccount();//获取当前平台账户vip信息
                 setChooseGameData(false);
                 mBalance.setText("");
             }
-        }
-    }
-
-    //用于在游戏详情界面里用客服和重置功能
-    @OnClick({R.id.ll_game_detail_connect_kefu, R.id.tv_game_detail_confirm_order})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.ll_game_detail_connect_kefu:
-                break;
-            case R.id.tv_game_detail_confirm_order:
-                confirmOrder();
-                break;
-        }
-    }
-
-
-    private void confirmOrder() {
-        GameAccountResultModel.ListBean gameBean = getGameBean();
-        double totalBalanceValue = getTotalBalanceValue();
-        double inputValue = getInputValue();
-        if (gameBean == null || totalBalanceValue <= 0 || inputValue <= 0) {
-            Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
-        } else {
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
-//                bundle.putDouble(ConfirmOrderFragment.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
-//                ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance();
-//                confirmOrderFragment.setArguments(bundle);
-//                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
-
-            //订单确认页面用OrderConfirmActivity
-            Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(OrderConfirmActivity.BUNDLE_GAME_BEAN, gameBean);
-            bundle.putDouble(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
-            bundle.putDouble(OrderConfirmActivity.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
-            bundle.putString(OrderConfirmActivity.PAYPURPOSE, "1");
-            bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
-            intent.putExtra(OrderConfirmActivity.TAG, bundle);
-            startActivity(intent);
         }
     }
 }

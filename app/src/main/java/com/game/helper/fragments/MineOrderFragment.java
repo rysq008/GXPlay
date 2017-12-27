@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -199,7 +200,7 @@ public class MineOrderFragment extends XBaseFragment implements View.OnClickList
             private TextView time;
             private TextView account;
             private TextView price;
-            private TextView status;
+            private ImageView status;
 
             public MineOrderHolder(View view) {
                 super(view);
@@ -209,7 +210,7 @@ public class MineOrderFragment extends XBaseFragment implements View.OnClickList
                 time = view.findViewById(R.id.tv_time);
                 account = view.findViewById(R.id.tv_account);
                 price = view.findViewById(R.id.tv_price);
-                status = view.findViewById(R.id.tv_status);
+                status = view.findViewById(R.id.iv_status);
                 rootView.setOnClickListener(this);
             }
 
@@ -223,13 +224,13 @@ public class MineOrderFragment extends XBaseFragment implements View.OnClickList
                 account.setText(item.game_account);
                 price.setText(item.amount);
                 if (item.status == 1){
-                    status.setText("未受理");
+                    status.setImageResource(R.mipmap.ic_mine_order_undo);
                 }
                 if (item.status == 2){
-                    status.setText("已受理");
+                    status.setImageResource(R.mipmap.ic_mine_order_finish);
                 }
                 if (item.status == 3){
-                    status.setText("已退单");
+                    status.setImageResource(R.mipmap.ic_mine_order_fail);
                 }
             }
 

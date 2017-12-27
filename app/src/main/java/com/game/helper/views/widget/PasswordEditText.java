@@ -234,6 +234,12 @@ public class PasswordEditText extends AppCompatEditText {
     }
 
     public String getContnetText(){
+        if (getText().toString().length() < mPasswordNumber){
+            return "";
+        }
+        if (getText().toString().length() == mPasswordNumber){
+            return getText().toString();
+        }
         return StringUtils.isEmpty(getText()) ? "" : getText().toString().substring(0,mPasswordNumber).toString();
     }
 }

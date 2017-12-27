@@ -425,6 +425,10 @@ public class DataService {
         return Api.CreateApiService().getGamePackageInfo_Info(gamePackageInfo_infoRequestBody);
     }
 
+    public static Flowable<HttpResultModel<NotConcernResults>> deleteGameAccount(SingleGameIdRequestBody singleGameIdRequestBody) {
+        return Api.CreateApiService().deleteGameAccount(singleGameIdRequestBody);
+    }
+
     public static Flowable<HttpResultModel<GameGiftListResult>> getGameGiftList(GameInfoGiftListRequestBody gameInfoGiftListRequestBody) {
         return Api.CreateApiService().getGameGiftList(gameInfoGiftListRequestBody);
     }
