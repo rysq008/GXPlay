@@ -94,6 +94,8 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     private float mTotalDiscountValue = 0;
     private float mTotalBalanceValue = 0;
 
+    private boolean is_vip;
+
     public static final int REQUEST_CODE = 99;
     public static final int RESULT_CODE = 98;
 
@@ -303,16 +305,19 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 if (mCbDiscount1.isEnabled()) return;
                 clearCheck();
                 mCbDiscount1.setChecked(true);
+                is_vip = false;
                 break;
             case 1:
                 if (mCbDiscount2.isEnabled()) return;
                 clearCheck();
                 mCbDiscount2.setChecked(true);
+                is_vip = false;
                 break;
             case 2:
                 if (mCbDiscount3.isEnabled()) return;
                 clearCheck();
                 mCbDiscount3.setChecked(true);
+                is_vip = true;
                 break;
         }
     }
@@ -439,6 +444,10 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     public double getTotalBalanceValue() {
         return mTotalBalanceValue;
+    }
+
+    public boolean getIs_VIP() {
+        return is_vip;
     }
 
     public double getInputValue() {

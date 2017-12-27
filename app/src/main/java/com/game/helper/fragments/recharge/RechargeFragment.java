@@ -186,6 +186,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             GameAccountResultModel.ListBean gameBean = rechargeGameFragment.getGameBean();
             double totalBalanceValue = rechargeGameFragment.getTotalBalanceValue();
             double inputValue = rechargeGameFragment.getInputValue();
+            boolean is_vip = rechargeGameFragment.getIs_VIP();
             if (gameBean == null || totalBalanceValue <= 0 || inputValue <= 0) {
                 Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
             } else {
@@ -204,6 +205,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                 bundle.putDouble(OrderConfirmActivity.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
                 bundle.putString(OrderConfirmActivity.PAYPURPOSE, "1");
                 bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
+                bundle.putBoolean(OrderConfirmActivity.IS_VIP, is_vip);
                 intent.putExtra(OrderConfirmActivity.TAG, bundle);
                 startActivity(intent);
             }

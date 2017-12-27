@@ -66,6 +66,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public static final String RED_PACK_ID = "input_value_id";
     public static final String PAYPURPOSE = "payPurpose";
     public static final String VIPLEVEL = "vipLevel";
+    public static final String IS_VIP = "is_vip";
 
 
     @BindView(R.id.action_bar_back)
@@ -514,7 +515,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             inputBalance = bundle.getDouble(BUNDLE_INPUT_VALUE);
             payPurpose = bundle.getString(PAYPURPOSE);
             vipLevel = bundle.getString(VIPLEVEL);
-
+            is_vip = bundle.getBoolean(IS_VIP);
         }
 
         //分解数据
@@ -523,7 +524,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mChannel = gameBean.getGame_channel_name();
         gameAccountId = gameBean.getId();
         gameId = gameBean.getGame_id();
-        is_vip = gameBean.isIs_vip();
     }
 
     private void initView() {
@@ -737,34 +737,35 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         if (useCoin) {//使用可用金币
             if (usePushAccount) {//使用推广账户余额
                 if (mAccountAvailableBalance >= mRealPay) {//先判断充值账户余额够不够,充值账户余额够
-                    accountAmount = String.valueOf(mRealPay);
-                    marketingAmount = "0";
+                    accountAmount = new BigDecimal(String.valueOf(mRealPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    marketingAmount = "0.00";
 
                 } else {//充值账户余额不够
-                    accountAmount = String.valueOf(mAccountAvailableBalance);
+                    accountAmount = new BigDecimal(String.valueOf(mAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 
                     if (mPushAccountAvailableBalance >= (mRealPay - mAccountAvailableBalance)) {//推广账户余额足够
-                        marketingAmount = String.valueOf((mRealPay - mAccountAvailableBalance));
+                        marketingAmount = new BigDecimal(String.valueOf((mRealPay - mAccountAvailableBalance))).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                     } else {
-                        marketingAmount = String.valueOf(mPushAccountAvailableBalance);
+                        marketingAmount = new BigDecimal(String.valueOf(mPushAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                     }
 
 
                 }
             } else {//不使用推广账户余额，只使用充值账户余额
                 if (mAccountAvailableBalance >= mRealPay) {//充值账户余额够
-                    accountAmount = String.valueOf(mRealPay);
+                    accountAmount = new BigDecimal(String.valueOf(mRealPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+
                 } else {//充值账户余额不够
-                    accountAmount = String.valueOf(mAccountAvailableBalance);
+                    accountAmount = new BigDecimal(String.valueOf(mAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                 }
-                marketingAmount = "0";
+                marketingAmount = "0.00";
 
             }
 
         } else {
             //不使用可用金币
-            accountAmount = "0";
-            marketingAmount = "0";
+            accountAmount = "0.00";
+            marketingAmount = "0.00";
         }
 
         //如果还需支付>0,先去微信或支付宝充值，否则直接消费
