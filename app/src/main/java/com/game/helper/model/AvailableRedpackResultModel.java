@@ -138,7 +138,17 @@ public class AvailableRedpackResultModel extends XBaseModel {
                 this.name = name;
             }
 
+            public String getLogo() {
+                return logo;
+            }
+
+            public void setLogo(String logo) {
+                this.logo = logo;
+            }
+
             private String name;
+
+            private String logo;
 
         }
 

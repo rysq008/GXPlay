@@ -77,6 +77,7 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
         }
         if (v == confirm) {
             if (passwordEditText.getContnetText().toString().length() < 6){
+                Toast.makeText(getContext(), "输入密码不足6位！", Toast.LENGTH_SHORT).show();
                 return;
             }
             passWordComplete(passwordEditText.getContnetText().toString());

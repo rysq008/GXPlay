@@ -69,7 +69,7 @@ public class GiftDescDialog extends android.support.v4.app.DialogFragment implem
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         content = view.findViewById(R.id.tv_content);
-        time = view.findViewById(R.id.tv_time);
+        time = view.findViewById(R.id.tv_end_time);
         close = view.findViewById(R.id.iv_close);
 
         close.setOnClickListener(this);

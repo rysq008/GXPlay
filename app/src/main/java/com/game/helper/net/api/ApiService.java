@@ -433,6 +433,9 @@ public interface ApiService {
     @POST("/game/get_game_detail/")
     Flowable<HttpResultModel<GamePackageInfo_DetailResult>> getGamePackageInfo_Info(@Body GamePackageInfo_InfoRequestBody gamePackageInfo_infoRequestBody);
 
+    //删除游戏账号
+    @POST("/member/delete_game_account/")
+    Flowable<HttpResultModel<NotConcernResults>> deleteGameAccount(@Body SingleGameIdRequestBody singleGameIdRequestBody);
     //获取游戏礼包列表接口
     @POST("/game/get_game_gift_list/")
     Flowable<HttpResultModel<GameGiftListResult>> getGameGiftList(@Body GameInfoGiftListRequestBody gameInfoGiftListRequestBody);
