@@ -3,8 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/layout_action_bar"/>
-    <cn.droidlover.xrecyclerview.XRecyclerContentLayout
-        android:id="@+id/special_more_XRecyclerContentLayout"
+    <com.game.helper.views.XReloadableRecyclerContentLayout
+        android:id="@+id/special_more_XReloadableRecyclerContentLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>

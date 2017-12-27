@@ -18,6 +18,7 @@ import com.game.helper.net.api.Api;
 import com.game.helper.net.model.SpecialDetailRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class SpecialDetailFragment extends XBaseFragment{
     private StateView errorView;
 
     @BindView(R.id.xrcl_special_detail)
-    XRecyclerContentLayout mXRv;
+    XReloadableRecyclerContentLayout mXRv;
 
     @BindView(R.id.action_bar_tittle)
     TextView mTvTittle;
@@ -90,8 +91,7 @@ public class SpecialDetailFragment extends XBaseFragment{
             mTvContent.setText(content);
         }
         initAdapter();
-        errorView.setLoadDataType(StateView.REFRESH,1);
-        loadAdapterData(1,mSpecialId);
+        loadAdapterData(1,mSpecialId,true);
     }
 
     @Override
@@ -123,64 +123,39 @@ public class SpecialDetailFragment extends XBaseFragment{
         mXRv.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH,1);
-                loadAdapterData(1,mSpecialId);
+                loadAdapterData(1,mSpecialId,false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.REFRESH,page);
-                loadAdapterData(page,mSpecialId);
+                loadAdapterData(page,mSpecialId,false);
             }
         });
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mXRv.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-
-        mXRv.errorView(errorView);
-        mXRv.getRecyclerView().useDefLoadMoreView();
-        mXRv.loadingView(View.inflate(context, R.layout.view_loading, null));
-        mXRv.showLoading();
     }
 
-    private void loadAdapterData(int page,int specialId) {
+    private void loadAdapterData(int page,int specialId,boolean showLoading) {
         Flowable<HttpResultModel<SpecialDetailResults>> fr = DataService.getSpecialDetailList(new SpecialDetailRequestBody(specialId,page));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<SpecialDetailResults>>() {
+        RxLoadingUtils.subscribeWithReload(mXRv,fr, bindToLifecycle(), new Consumer<HttpResultModel<SpecialDetailResults>>() {
             @Override
             public void accept(HttpResultModel<SpecialDetailResults> specialDetailResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(specialDetailResultsHttpResultModel.data.list);
                 showData(specialDetailResultsHttpResultModel.current_page, specialDetailResultsHttpResultModel.total_page, list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-            }
-        });
-    }
-
-    public void showError(NetError error) {
-        mXRv.getLoadingView().setVisibility(View.GONE);
-        mXRv.refreshState(false);
-        mXRv.showError();
+        },null,null,showLoading);
     }
 
     public void showData(int cur_page, int total_page, List model) {
-        //mXRv.getLoadingView().setVisibility(View.GONE);
         if (model.size() < 1) {
             mXRv.showEmpty();
 
         } else {
-            //mXRv.showContent();
             if (cur_page > 1) {
                 mAdapter.addData(model);
             } else {
                 mAdapter.setData(model);
             }
             mXRv.getRecyclerView().setPage(cur_page, total_page);
-            //mXRv.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
         }
     }
 }
