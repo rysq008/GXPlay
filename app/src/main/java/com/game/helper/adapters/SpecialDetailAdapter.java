@@ -48,7 +48,7 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ItemType item = data.get(position);
         SpecialDetailResults.ListBean itemDate = (SpecialDetailResults.ListBean) data.get(position);
-        ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.logothumb), ILoader.Options.defaultOptions());
+        ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.logo), ILoader.Options.defaultOptions());
         holder.ivName.setText(itemDate.name);
         holder.ivDiscountVip.setText(String.valueOf(itemDate.game_package.discount_vip));
         holder.ivTypeName.setText(itemDate.type.name);

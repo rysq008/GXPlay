@@ -109,7 +109,6 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
             return;
         }
         userInfo = (MemberInfoResults) getArguments().getSerializable(TAG);
-        fetchAccountInfo();
 
         list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Consume));
         list.add(WalletListFragment.newInstance(RechargeCommonAdapter.Type_Account_Recharge));
@@ -146,6 +145,12 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
             }
         });
         loadData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchAccountInfo();
     }
 
     public void loadData() {

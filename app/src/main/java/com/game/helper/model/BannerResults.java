@@ -26,6 +26,7 @@ public class BannerResults extends XBaseModel {
         public String create_time;
         public int id;
         public int game_package_id;//: 0,
+        public int game_id;//: 0,
         public int type;//banner 类型(1为H5界面，2为游戏): 1,
 
         @Override

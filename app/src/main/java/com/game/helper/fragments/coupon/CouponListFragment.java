@@ -122,6 +122,7 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> availableRedpackResultModel) throws Exception {
                 notifyData(availableRedpackResultModel.data.getList(),page);
+                mContent.getRecyclerView().setPage(availableRedpackResultModel.current_page,availableRedpackResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -140,6 +141,7 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<UnAvailableRedpackResultModel> unAvailableRedpackResultModel) throws Exception {
                 notifyData(unAvailableRedpackResultModel.data.list,page);
+                mContent.getRecyclerView().setPage(unAvailableRedpackResultModel.current_page,unAvailableRedpackResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -158,6 +160,7 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<UnAvailableRedpackResultModel> unAvailableRedpackResultModel) throws Exception {
                 notifyData(unAvailableRedpackResultModel.data.list,page);
+                mContent.getRecyclerView().setPage(unAvailableRedpackResultModel.current_page,unAvailableRedpackResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

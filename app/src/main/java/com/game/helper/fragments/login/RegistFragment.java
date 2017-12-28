@@ -132,7 +132,7 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
                     if (mOnRegistListener != null){
                         mOnRegistListener.onRegistSuccessful(userInfo);
                     }
-                    Toast.makeText(getContext(), registResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "注册成功！", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
 
 //                    if (!registResultsHttpResultModel.data.has_passwd){

@@ -8,10 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.activitys.MyAccountActivity;
 import com.game.helper.activitys.RankingListActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
@@ -22,17 +22,16 @@ import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.LoginUserInfo;
+import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.model.model.MemberBean;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BannerRequestBody;
-import com.game.helper.share.UMengShare;
+import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.BannerView;
 import com.game.helper.views.HeadImageView;
 import com.game.helper.views.widget.StateView;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
@@ -45,9 +44,9 @@ import io.reactivex.functions.Consumer;
  * Created by zr on 2017-10-13.
  */
 
-public class GeneralizePagerFragment extends XBaseFragment implements View.OnClickListener{
+public class GeneralizePagerFragment extends XBaseFragment implements View.OnClickListener {
 
-    public static final String TAG ="GeneralizePagerFragment" ;
+    public static final String TAG = "GeneralizePagerFragment";
     @BindView(R.id.generalize_root_layout)
     XStateController xStateController;
     @BindView(R.id.swipeRefreshLayout)
@@ -185,37 +184,13 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         return new GeneralizePagerFragment();
     }
 
-    private void umShare() {
-        UMengShare share = new UMengShare(getActivity());
-        share.shareLinkWithBoard(new UMShareListener() {
-            @Override
-            public void onStart(SHARE_MEDIA share_media) {
-
-            }
-
-            @Override
-            public void onResult(SHARE_MEDIA share_media) {
-
-            }
-
-            @Override
-            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-
-            }
-
-            @Override
-            public void onCancel(SHARE_MEDIA share_media) {
-
-            }
-        });
-    }
 
     @Override
     public void onClick(View view) {
         Intent intent = new Intent();
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.rangeTv://排行榜
-                intent.setClass(getActivity(),RankingListActivity.class);
+                intent.setClass(getActivity(), RankingListActivity.class);
                 startActivity(intent);
                 break;
             case R.id.mallTv://商城
@@ -232,17 +207,40 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
 //                startActivity(intent);
                 break;
             case R.id.shareIncome://分享收益
+                fetchShareIncomeUrl();
                 break;
             case R.id.shareDiscount://分享折扣
-                intent.setClass(getActivity(),MyAccountActivity.class);
-                startActivity(intent);
+//                intent.setClass(getActivity(), MyAccountActivity.class);
+//                startActivity(intent);
                 //TODO
                 break;
             case R.id.loginTv://登录
-                DetailFragmentsActivity.launch(getContext(),null, LoginFragment.newInstance());
+                DetailFragmentsActivity.launch(getContext(), null, LoginFragment.newInstance());
                 break;
 
         }
+    }
+
+    private void fetchShareIncomeUrl() {
+        Flowable<HttpResultModel<ShareIncomeResultsModel>> fr = DataService.getShareIncomeUrl(new BaseRequestBody(1));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<ShareIncomeResultsModel>>() {
+            @Override
+            public void accept(HttpResultModel<ShareIncomeResultsModel> notConcernResultsHttpResultModel) throws Exception {
+                if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getMarket_url())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WebviewFragment.PARAM_URL,notConcernResultsHttpResultModel.data.getMarket_url());
+                    bundle.putString(WebviewFragment.PARAM_TITLE,"分享收益");
+                    DetailFragmentsActivity.launch(getContext(),bundle, WebviewFragment.newInstance());
+                } else {
+                    Toast.makeText(getContext(), notConcernResultsHttpResultModel.message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -257,13 +255,13 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     @Override
     protected void onResumeLazy() {
         super.onResumeLazy();
-        Log.e("ttttttttt","onresume");
+        Log.e("ttttttttt", "onresume");
         if (loginRl == null || loginLayout == null)
             return;
-        if(!TextUtils.isEmpty(SharedPreUtil.getSessionId())){
+        if (!TextUtils.isEmpty(SharedPreUtil.getSessionId())) {
             loginRl.setVisibility(View.GONE);
             loginLayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             loginRl.setVisibility(View.VISIBLE);
             loginLayout.setVisibility(View.GONE);
         }

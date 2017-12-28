@@ -119,6 +119,7 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
             @Override
             public void accept(HttpResultModel<GameAccountResultModel> gameAccountResultModelHttpResultModel) throws Exception {
                 notifyData(gameAccountResultModelHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(gameAccountResultModelHttpResultModel.current_page,gameAccountResultModelHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

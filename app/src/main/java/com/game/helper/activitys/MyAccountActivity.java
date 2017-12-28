@@ -16,6 +16,7 @@ import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SPUtils;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -59,15 +60,13 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        initIntentData(getIntent());
+        //initIntentData(getIntent());
         initView();
         initAdapter();
         errorView.setLoadDataType(StateView.REFRESH, 1);
     }
 
     private void initIntentData(Intent intent) {
-        option_game_id = intent.getIntExtra(OPTION_GAME_ID, 0);
-        option_channel_id = intent.getIntExtra(OPTION_CHANNEL_ID, 0);
     }
 
     private void initView() {
@@ -158,8 +157,6 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
                 break;
             case R.id.addAccount://添加账户
                 Intent intent = new Intent(MyAccountActivity.this, AddAccountActivity.class);
-                intent.putExtra(AddAccountActivity.GAME_ID,option_game_id);
-                intent.putExtra(AddAccountActivity.CHANNEL_ID,option_channel_id);
                 startActivity(intent);
                 break;
 

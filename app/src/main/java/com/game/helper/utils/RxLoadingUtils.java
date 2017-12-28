@@ -11,6 +11,7 @@ import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.HotWordResults;
+import com.game.helper.model.SpecialResults;
 import com.game.helper.views.ReloadableFrameLayout;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.XReloadableStateContorller;
@@ -119,8 +120,8 @@ public class RxLoadingUtils {
                 finishWhenFirstOnNext);
     }
 
-    public static <T extends IModel> void subscribeWithReload(final ReloadableFrameLayout reloadableFrameLayout,
-                                                              Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext) {
+    public static <T extends IModel> void subscribeWithReload(final XReloadableRecyclerContentLayout reloadableFrameLayout,
+                                                              Flowable<HttpResultModel<SpecialResults>> Flowable, final FlowableTransformer transformer, final Consumer<HttpResultModel<SpecialResults>> onNext) {
         subscribeWithReload(reloadableFrameLayout, Flowable, transformer, onNext, null, null, false);
     }
 
@@ -477,8 +478,9 @@ public class RxLoadingUtils {
                                                               final Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
                                                               final Action onComplete, final boolean finishWhenFirstOnNext) {
         if (reloadableFrameLayout == null) return;
-
-        reloadableFrameLayout.showLoading();
+        if (finishWhenFirstOnNext) {
+            reloadableFrameLayout.showLoading();
+        }
         reloadableFrameLayout.setOnReloadListener(new XReloadableStateContorller.OnReloadListener() {
             @Override
             public void onReload(XReloadableStateContorller reloadableFrameLayout) {
@@ -510,7 +512,7 @@ public class RxLoadingUtils {
                                 e.printStackTrace();
                             }
                         }
-                        if (finishWhenFirstOnNext && !finishReload[0]) {
+                        if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
 //                            reloadableFrameLayout.showContent();
                             finishReload[0] = true;
@@ -545,7 +547,7 @@ public class RxLoadingUtils {
                         }
                         if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
-                            reloadableFrameLayout.showContent();
+//                            reloadableFrameLayout.showError();
                         }
                     }
                 });
@@ -602,6 +604,7 @@ public class RxLoadingUtils {
 //                                }
 //                            }
                         }
+                        reloadableLayout.refreshState(false);
                     }
 
                     @Override
@@ -618,6 +621,7 @@ public class RxLoadingUtils {
 //                            reloadableFrameLayout.needReload(getDisplayMessage(error, true));
                             reloadableLayout.showError();
                         }
+                        reloadableLayout.refreshState(false);
                     }
 
                     @Override
@@ -632,7 +636,7 @@ public class RxLoadingUtils {
                         }
                         if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
-                            reloadableLayout.showError();
+//                            reloadableLayout.showError();
                         }
                     }
                 });

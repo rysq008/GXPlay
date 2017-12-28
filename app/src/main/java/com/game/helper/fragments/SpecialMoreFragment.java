@@ -18,6 +18,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.SCommonItemDecoration;
 import com.game.helper.views.widget.StateView;
 
@@ -44,10 +45,9 @@ public class SpecialMoreFragment extends XBaseFragment{
     public static SpecialMoreFragment newInstance() {
         return new SpecialMoreFragment();
     }
-    private StateView errorView;
 
-    @BindView(R.id.special_more_XRecyclerContentLayout)
-    XRecyclerContentLayout mXRv;
+    @BindView(R.id.special_more_XReloadableRecyclerContentLayout)
+    XReloadableRecyclerContentLayout mXRv;
 
     @BindView(R.id.action_bar_tittle)
     TextView mTvTittle;
@@ -58,8 +58,7 @@ public class SpecialMoreFragment extends XBaseFragment{
     @Override
     public void initData(Bundle savedInstanceState) {
         initAdapter();
-        errorView.setLoadDataType(StateView.REFRESH,1);
-        loadAdapterData(1);
+        loadAdapterData(true,1);
     }
 
     private void initAdapter() {
@@ -91,42 +90,28 @@ public class SpecialMoreFragment extends XBaseFragment{
         mXRv.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH,1);
-                loadAdapterData(1);
+                loadAdapterData(false,1);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.REFRESH,page);
-                loadAdapterData(page);
+                loadAdapterData(false,page);
             }
         });
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mXRv.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
 
         mXRv.getRecyclerView().useDefLoadMoreView();
-        mXRv.errorView(errorView);
-        mXRv.loadingView(View.inflate(context, R.layout.view_loading, null));
-        mXRv.showLoading();
     }
 
-    private void loadAdapterData(int page) {
+    private void loadAdapterData(boolean showLoading,int page) {
         Flowable<HttpResultModel<SpecialResults>> fr = DataService.getSpecialMoreList(new BaseRequestBody(page));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<SpecialResults>>() {
+        RxLoadingUtils.subscribeWithReload(mXRv,fr, bindToLifecycle(), new Consumer<HttpResultModel<SpecialResults>>() {
             @Override
             public void accept(HttpResultModel<SpecialResults> specialResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(specialResultsHttpResultModel.data.list);
                 showData(specialResultsHttpResultModel.current_page, specialResultsHttpResultModel.total_page, list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-            }
-        });
+        }, null,null,showLoading);
     }
 
     @Override
@@ -139,27 +124,19 @@ public class SpecialMoreFragment extends XBaseFragment{
         return null;
     }
 
-    public void showError(NetError error) {
-        mXRv.getLoadingView().setVisibility(View.GONE);
-        mXRv.refreshState(false);
-        mXRv.showError();
-    }
 
     public void showData(int cur_page, int total_page, List model) {
 
-        //mXRv.getLoadingView().setVisibility(View.GONE);
         if (model.size() < 1) {
             mXRv.showEmpty();
 
         } else {
-            //mXRv.showContent();
             if (cur_page > 1) {
                 mAdapter.addData(model);
             } else {
                 mAdapter.setData(model);
             }
             mXRv.getRecyclerView().setPage(cur_page, total_page);
-            //mXRv.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
         }
     }
 

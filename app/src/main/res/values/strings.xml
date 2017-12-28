@@ -27,7 +27,7 @@
     <!--tab-->
     <string name="home_tab_index">主页</string>
     <string name="home_tab_game">游戏</string>
-    <string name="home_tab_extension">推广</string>
+    <string name="home_tab_extension">社区</string>
     <string name="home_tab_mine">我的</string>
 
     <!--common-->
@@ -50,6 +50,7 @@
     <string name="common_setting_user_info">个人信息</string>
     <string name="common_setting_system">设置</string>
     <string name="common_about_us">关于我们</string>
+    <string name="common_account_desc">账号明细</string>
     <string name="common_about_version">版本发展</string>
     <string name="common_extension_history">邀请记录</string>
     <string name="common_extension_profit">推广收益</string>

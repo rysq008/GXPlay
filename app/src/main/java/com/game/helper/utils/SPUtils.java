@@ -13,7 +13,9 @@ public class SPUtils {
     private static SharedPreferences sp;
 
     public static final String CHANNEL_NAME = "channel_name";
+    public static final String CHANNEL_ID = "channel_id";
     public static final String GAME_NAME = "game_name";
+    public static final String GAME_ID = "game_id";
 
     // 保存boolean值
     public static void putBoolean(Context context, String key, boolean value) {

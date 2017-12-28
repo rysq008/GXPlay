@@ -120,6 +120,7 @@ public class MineOrderFragment extends XBaseFragment implements View.OnClickList
             @Override
             public void accept(HttpResultModel<MineOrderlistResults> invatationResultsHttpResultModel) throws Exception {
                 notifyData(invatationResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(invatationResultsHttpResultModel.current_page,invatationResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

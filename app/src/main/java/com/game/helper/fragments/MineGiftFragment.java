@@ -125,6 +125,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public void accept(HttpResultModel<MineGiftlistResults> mineGiftlistResultsHttpResultModel) throws Exception {
                 notifyData(mineGiftlistResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(mineGiftlistResultsHttpResultModel.current_page,mineGiftlistResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

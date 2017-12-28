@@ -24,6 +24,8 @@ import com.game.helper.model.GamePackageInfo_DetailResult;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
+import com.game.helper.model.H5Results;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.HotWordResults;
 import com.game.helper.model.IncomeResultModel;
@@ -34,6 +36,7 @@ import com.game.helper.model.MarketExpectedFlowlistResults;
 import com.game.helper.model.MarketFlowlistResults;
 import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.MineGameDesclistResults;
 import com.game.helper.model.MineGamelistResults;
 import com.game.helper.model.MineGiftInfoResults;
 import com.game.helper.model.MineGiftlistResults;
@@ -57,12 +60,14 @@ import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GameInfoCommentListRequestBody;
 import com.game.helper.net.model.GameInfoGiftListRequestBody;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.net.model.GamePackageInfo_InfoRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.GamePackageRequestBody;
+import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
@@ -80,6 +85,7 @@ import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
+import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
@@ -94,6 +100,8 @@ import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.GameInfoCommentListRequestBody;
+import com.game.helper.net.model.GameInfoGiftListRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.net.model.GamePackageInfo_InfoRequestBody;
@@ -143,6 +151,10 @@ public interface ApiService {
     //首页通告
     @POST("/sys/get_notification_list/")
     Flowable<HttpResultModel<NoticeResults>> getApiNoticeData();
+
+    //首页H5
+    @POST("/sys/get_h5_url_list/")
+    Flowable<HttpResultModel<H5Results>> getApiH5Data();
 
     //首页专题
     //    @HTTP(method = "",path = "/user/delete",hasBody = true)
@@ -443,4 +455,25 @@ public interface ApiService {
     //获取游戏评论列表接口
     @POST("/game/get_game_comment_list/")
     Flowable<HttpResultModel<GameCommentListResult>> getGameCommentList(@Body GameInfoCommentListRequestBody gameInfoCommentListRequestBody);
+
+    //游戏评论
+    @POST("/game/add_game_comment/")
+    Flowable<HttpResultModel<Object>> sendCommentContent(@Body GameDetailSendCommentContentRequestBody gameDetailSendCommentContentRequestBody);
+
+    //获取h5的url列表
+    @POST("/sys/get_h5_url_list/")
+    Flowable<HttpResultModel<H5UrlListResults>> getH5UrlList();
+
+    //获取分享收益H5地址
+    @POST("/sys/get_h5_url_list/")
+    Flowable<HttpResultModel<ShareIncomeResultsModel>> getShareIncomeUrl(@Body BaseRequestBody shareIncomeRequestBody);
+
+    //领取游戏礼包接口
+    @POST("/game/receive_gift_code/")
+    Flowable<HttpResultModel<Object>> receiveGift(@Body ReceiveGiftRequestBody receiveGiftRequestBody);
+
+    //获取游戏账号消费详情
+    @POST("/account/get_game_account_consume_list/")
+    Flowable<HttpResultModel<MineGameDesclistResults>> getMineGameDescList(@Body SingleGameIdRequestBody singleGameIdRequestBody);
+
 }

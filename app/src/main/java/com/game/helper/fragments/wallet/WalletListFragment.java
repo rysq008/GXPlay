@@ -83,6 +83,11 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
         mContent.loadingView(loadingView);
         mContent.showLoading();
         initList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         getDataFromNet(1);
     }
 
@@ -127,6 +132,7 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<ConsumeListResults> consumeListResultsHttpResultModel) throws Exception {
                 notifyData(consumeListResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(consumeListResultsHttpResultModel.current_page,consumeListResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -146,6 +152,7 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<RechargeListResults> rechargeListResultsHttpResultModel) throws Exception {
                 notifyData(rechargeListResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(rechargeListResultsHttpResultModel.current_page,rechargeListResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -165,6 +172,7 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<CashListResults> cashListResultsHttpResultModel) throws Exception {
                 notifyData(cashListResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(cashListResultsHttpResultModel.current_page,cashListResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -184,6 +192,7 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<ProfitListResults> profitListResultsHttpResultModel) throws Exception {
                 notifyData(profitListResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(profitListResultsHttpResultModel.current_page,profitListResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

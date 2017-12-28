@@ -1,11 +1,13 @@
 package com.game.helper.activitys;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,7 +68,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        initIntentData(getIntent());
+        //initIntentData(getIntent());
         initView();
 
         mGameWindow = new GamePopupWindow(AddAccountActivity.this);
@@ -76,10 +78,6 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     private void initIntentData(Intent intent) {
         mGameId = String.valueOf(intent.getIntExtra(GAME_ID,0));
         mChannelId = String.valueOf(intent.getIntExtra(CHANNEL_ID,0));
-        String gameName = SPUtils.getString(context,SPUtils.GAME_NAME,"");
-        gameEdit.setText(gameName);
-        String channelName = SPUtils.getString(context,SPUtils.CHANNEL_NAME,"");
-        channelEdit.setText(channelName);
 
 //        if(!TextUtils.isEmpty(mGameId) && !TextUtils.isEmpty(mChannelId)){
 //            canEdit = false;

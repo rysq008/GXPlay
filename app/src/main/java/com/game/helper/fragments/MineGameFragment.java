@@ -136,6 +136,7 @@ public class MineGameFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public void accept(HttpResultModel<MineGamelistResults> mineGamelistResultsHttpResultModel) throws Exception {
                 notifyData(mineGamelistResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(mineGamelistResultsHttpResultModel.current_page,mineGamelistResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

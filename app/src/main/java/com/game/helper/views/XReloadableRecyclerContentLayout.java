@@ -58,7 +58,7 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
 //            addView(View.inflate(getContext(), R.layout.view_empty_state,null));
             emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
         }
-//        for (int index = 0; index < getChildCount(); index++) {
+        //        for (int index = 0; index < getChildCount(); index++) {
 //            getChildAt(index).setVisibility(GONE);
 //        }
         setDisplayState(STATE_CONTENT);

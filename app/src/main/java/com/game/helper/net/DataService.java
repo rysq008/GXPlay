@@ -24,6 +24,7 @@ import com.game.helper.model.GamePackageInfo_DetailResult;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
+import com.game.helper.model.H5Results;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.HotWordResults;
 import com.game.helper.model.IncomeResultModel;
@@ -34,6 +35,7 @@ import com.game.helper.model.MarketExpectedFlowlistResults;
 import com.game.helper.model.MarketFlowlistResults;
 import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.MemberInfoResults;
+import com.game.helper.model.MineGameDesclistResults;
 import com.game.helper.model.MineGamelistResults;
 import com.game.helper.model.MineGiftInfoResults;
 import com.game.helper.model.MineGiftlistResults;
@@ -54,7 +56,9 @@ import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.model.PayResultModel;
+import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
@@ -70,6 +74,7 @@ import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GameInfoCommentListRequestBody;
 import com.game.helper.net.model.GameInfoGiftListRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -80,6 +85,7 @@ import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.net.model.PayRequestBody;
+import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
@@ -110,12 +116,18 @@ import retrofit2.http.Body;
 public class DataService {
 
 
+    private static Flowable<HttpResultModel<H5UrlListResults>> h5UrlList;
+
     public static Flowable<HttpResultModel<BannerResults>> getHomeBanner(BannerRequestBody bannerRequestBody) {
         return Api.CreateApiService().getApiBannerData(bannerRequestBody);
     }
 
     public static Flowable<HttpResultModel<NoticeResults>> getHomeNotice() {
         return Api.CreateApiService().getApiNoticeData();
+    }
+
+    public static Flowable<HttpResultModel<H5Results>> getH5Data() {
+        return Api.CreateApiService().getApiH5Data();
     }
 
     public static Flowable<HttpResultModel<SpecialResults>> getHomeSpecial(BaseRequestBody baseRequestBody) {
@@ -435,5 +447,27 @@ public class DataService {
 
     public static Flowable<HttpResultModel<GameCommentListResult>> getGameCommentList(GameInfoCommentListRequestBody gameInfoCommentListRequestBody) {
         return Api.CreateApiService().getGameCommentList(gameInfoCommentListRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<Object>> sendCommentContent(GameDetailSendCommentContentRequestBody gameDetailSendCommentContentRequestBody) {
+
+        return Api.CreateApiService().sendCommentContent(gameDetailSendCommentContentRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<H5UrlListResults>> getH5UrlList() {
+        return Api.CreateApiService().getH5UrlList();
+    }
+
+    public static Flowable<HttpResultModel<ShareIncomeResultsModel>> getShareIncomeUrl(BaseRequestBody shareIncomeRequestBody) {
+        return Api.CreateApiService().getShareIncomeUrl(shareIncomeRequestBody);
+    }
+
+
+    public static Flowable<HttpResultModel<Object>> receiveGift(ReceiveGiftRequestBody receiveGiftRequestBody) {
+        return Api.CreateApiService().receiveGift(receiveGiftRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<MineGameDesclistResults>> getMineGameDescList(SingleGameIdRequestBody singleGameIdRequestBody) {
+        return Api.CreateApiService().getMineGameDescList(singleGameIdRequestBody);
     }
 }

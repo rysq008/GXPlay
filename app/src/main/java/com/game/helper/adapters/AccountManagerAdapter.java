@@ -1,6 +1,7 @@
 package com.game.helper.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.AccountDescFragment;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.net.api.Api;
@@ -115,11 +118,19 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             }
             action.setTag(item.isIs_successed());
             action.setOnClickListener(this);
+            mRootView.setTag(item);
+            mRootView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             if (v == mRootView) {
+                if (mRootView.getTag() == null) return;
+                AccountDescFragment fragment = AccountDescFragment.newInstance();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(AccountDescFragment.TAG,(GameAccountResultModel.ListBean) mRootView.getTag());
+                fragment.setArguments(bundle);
+                DetailFragmentsActivity.launch(context,bundle,fragment);
             }
             if (v == action){
                 if (action.getTag() instanceof Boolean){

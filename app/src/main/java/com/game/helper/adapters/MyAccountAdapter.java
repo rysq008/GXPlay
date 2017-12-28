@@ -3,7 +3,7 @@ package com.game.helper.adapters;
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.game.helper.R;
@@ -24,7 +24,6 @@ import zlc.season.practicalrecyclerview.ItemType;
 public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapter.PhotoViewHolder> {
 
     private Activity mActivity;
-    private GameAccountResultModel.ListBean bean;
     private OnItemCheckListener onItemCheckListener;
 
     public MyAccountAdapter(Activity context) {
@@ -44,22 +43,14 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearStatus();
-                ((GameAccountResultModel.ListBean) item).setSelected(!(((GameAccountResultModel.ListBean) item).isSelected()));
-                recordAccount((GameAccountResultModel.ListBean) item);
-                notifyDataSetChanged();
+                //选中
+                if (onItemCheckListener != null) {
+                    onItemCheckListener.onItemCheked((GameAccountResultModel.ListBean)item);
+                }
             }
         });
     }
 
-    /**
-     * 记录选中
-     *
-     * @param bean
-     */
-    public void recordAccount(GameAccountResultModel.ListBean bean) {
-        this.bean = bean;
-    }
 
     /**
      * 清除选中状态
@@ -90,19 +81,19 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
      * @author ButterKnifeZelezny, plugin for Android Studio by Avast Developers (http://github.com/avast)
      */
     public class PhotoViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.iv_avatar)
         RoundedImageView ivAvatar;
         @BindView(R.id.iv_vip_level)
-        RoundedImageView iv_vip_level;
-        @BindView(R.id.gameAccountName)
-        TextView gameAccountName;
-        @BindView(R.id.gameChannelName)
-        TextView gameChannelName;
-        @BindView(R.id.checkStatusIv)
-        ImageView checkStatusIv;
+        RoundedImageView ivVipLevel;
+        @BindView(R.id.gameAccountNameTv)
+        TextView gameAccountNameTv;
         @BindView(R.id.gameName)
         TextView gameName;
-
+        @BindView(R.id.nameLayout)
+        LinearLayout nameLayout;
+        @BindView(R.id.channelName)
+        TextView channelName;
 
         public PhotoViewHolder(View itemView) {
             super(itemView);
@@ -116,44 +107,34 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
             ILFactory.getLoader().loadNet(ivAvatar, Api.API_PAY_OR_IMAGE_URL.concat(data.getGame_logo()), ILoader.Options.defaultOptions());
 
             //游戏账号
-            gameAccountName.setText(data.getGame_account());
+            gameAccountNameTv.setText(data.getGame_account());
+            //游戏名称
+            gameName.setText(data.getGame_name());
             //游戏渠道名
-            gameChannelName.setText(data.getGame_channel_name());
+            channelName.setText(data.getGame_channel_name());
             //vip等级
             int vipLevel = data.getVip_level();
             switch (vipLevel) {
                 case 0:
 //                    iv_vip_level.setImageResource(R.mipmap.vip0);
-                    iv_vip_level.setVisibility(View.GONE);
+                    ivVipLevel.setVisibility(View.GONE);
                     break;
                 case 1:
-                    iv_vip_level.setVisibility(View.VISIBLE);
-                    iv_vip_level.setImageResource(R.mipmap.vip1);
+                    ivVipLevel.setVisibility(View.VISIBLE);
+                    ivVipLevel.setImageResource(R.drawable.vip1_with_white_bg);
                     break;
                 case 2:
-                    iv_vip_level.setVisibility(View.VISIBLE);
-                    iv_vip_level.setImageResource(R.mipmap.vip2);
+                    ivVipLevel.setVisibility(View.VISIBLE);
+                    ivVipLevel.setImageResource(R.drawable.vip2_with_white_bg);
                     break;
                 case 3:
-                    iv_vip_level.setVisibility(View.VISIBLE);
-                    iv_vip_level.setImageResource(R.mipmap.vip3);
+                    ivVipLevel.setVisibility(View.VISIBLE);
+                    ivVipLevel.setImageResource(R.drawable.vip3_with_white_bg);
                     break;
                 default:
                     break;
             }
 
-            //游戏名称
-            gameName.setText(data.getGame_name());
-
-            //选中
-            if (data.isSelected()) {
-                checkStatusIv.setVisibility(View.VISIBLE);
-                if (onItemCheckListener != null) {
-                    onItemCheckListener.onItemCheked(data);
-                }
-            } else {
-                checkStatusIv.setVisibility(View.INVISIBLE);
-            }
 
         }
     }

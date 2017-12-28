@@ -223,7 +223,8 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
         if (userInfo == null) return;
         float coinValue = Float.parseFloat(StringUtils.isEmpty(userInfo.balance) ? "0.00" : userInfo.balance);//金币余额
         float marketValue = Float.parseFloat(StringUtils.isEmpty(userInfo.market_balance) ? "0.00" : userInfo.market_balance);//推广账户余额
-        totalValue = isUseAccountBalance() ? coinValue : ( 0 + marketValue );
+        totalValue = isUseAccountBalance() ? (coinValue + marketValue) : marketValue;
+        mTotalValue.setText(totalValue+"");
     }
 
     @Override
@@ -248,6 +249,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
             });
             dialog.show(getFragmentManager(),GXPlayDialog.TAG);
         }
+        catulateCashBalnace();
     }
 
     private boolean isUseAccountBalance(){

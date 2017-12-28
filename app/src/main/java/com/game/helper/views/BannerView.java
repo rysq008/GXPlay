@@ -1,6 +1,7 @@
 package com.game.helper.views;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -8,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.BannerH5Fragment;
+import com.game.helper.fragments.GameDetailFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.net.api.Api;
 
@@ -93,6 +97,19 @@ public class BannerView extends LinearLayout {
         mBanner.setOnItemClickListener(new BGABanner.OnItemClickListener() {
             @Override
             public void onBannerItemClick(BGABanner banner, View view, Object model, int position) {
+                BannerResults.BannerItem item = (BannerResults.BannerItem) model;
+                if(item.type == 1){
+                    //H5界面
+                    Bundle bundle = new Bundle();
+                    bundle.putString("h5url",item.url);
+                    DetailFragmentsActivity.launch(getContext(),bundle, BannerH5Fragment.newInstance());
+                }else if(item.type == 2){
+                    //2为游戏
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("gamepackeId",item.game_package_id);
+                    bundle.putInt("gameId",item.game_id);
+                    DetailFragmentsActivity.launch(getContext(),bundle, GameDetailFragment.newInstance());
+                }
 
             }
         });

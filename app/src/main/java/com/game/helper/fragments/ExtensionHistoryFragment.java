@@ -129,6 +129,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             @Override
             public void accept(HttpResultModel<InvatationResults> invatationResultsHttpResultModel) throws Exception {
                 notifyData(invatationResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(invatationResultsHttpResultModel.current_page,invatationResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

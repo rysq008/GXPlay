@@ -1,10 +1,15 @@
 package com.game.helper.fragments;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,24 +17,26 @@ import com.game.helper.R;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameCommentListResult;
-import com.game.helper.model.GameGiftListResult;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
+import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GameInfoCommentListRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.views.widget.StateView;
+import com.game.helper.utils.ToastUtil;
+import com.game.helper.views.HeadImageView;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.RecyclerItemCallback;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -40,11 +47,9 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     private static final String TAG = GameDetailCommunityFragment.class.getSimpleName();
 
     @BindView(R.id.common_recycler_view_layout)
-    XRecyclerContentLayout xRecyclerContentLayout;
-    private StateView errorView;
+    XReloadableRecyclerContentLayout xRecyclerContentLayout;
     private CommunityAdapter mAdapter;
     private int gameId;
-    private View loadView;
 
     public static GameDetailCommunityFragment newInstance() {
         GameDetailCommunityFragment fragment = new GameDetailCommunityFragment();
@@ -54,8 +59,8 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     private void initAdapter() {
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (mAdapter == null) {
-            mAdapter = new GameDetailCommunityFragment.CommunityAdapter(context);
-            mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, GameDetailCommunityFragment.CommunityAdapter.CommunityHolder>() {
+            mAdapter = new CommunityAdapter(context);
+            mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, CommunityAdapter.CommunityHolder>() {
                 @Override
                 public void onItemClick(int position, ItemType model, int tag, CommunityAdapter.CommunityHolder holder) {
                     super.onItemClick(position, model, tag, holder);
@@ -66,67 +71,38 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadAdapterData(1, gameId);
+                loadAdapterData(1, gameId, false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.REFRESH, page);
-                loadAdapterData(page, gameId);
+                loadAdapterData(page, gameId, false);
             }
         });
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(xRecyclerContentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-
-        xRecyclerContentLayout.errorView(errorView);
-        //xRecyclerContentLayout.emptyView(errorView);
-        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
-        loadView = View.inflate(context, R.layout.view_loading, null);
-        xRecyclerContentLayout.loadingView(loadView);
-        xRecyclerContentLayout.showLoading();
     }
 
-    private void loadAdapterData(int page, int gameId) {
+    public void loadAdapterData(int page, int gameId, boolean showLoading) {
         Flowable<HttpResultModel<GameCommentListResult>> fr = DataService.getGameCommentList(new GameInfoCommentListRequestBody(page, gameId));
-        RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GameCommentListResult>>() {
+        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout, fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GameCommentListResult>>() {
             @Override
             public void accept(HttpResultModel<GameCommentListResult> gameListResultModelHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(gameListResultModelHttpResultModel.data.getList());
                 showData(gameListResultModelHttpResultModel.current_page, gameListResultModelHttpResultModel.total_page, list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-            }
-        });
-    }
-
-    public void showError(NetError error) {
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
-        xRecyclerContentLayout.refreshState(false);
-        xRecyclerContentLayout.showError();
+        }, null, null, showLoading);
     }
 
     public void showData(int cur_page, int total_page, List model) {
-        //mXRv.getLoadingView().setVisibility(View.GONE);
         if (model.size() < 1 || model == null) {
-            //xRecyclerContentLayout.showEmpty();
-            xRecyclerContentLayout.showError();
-
+            xRecyclerContentLayout.showEmpty();
         } else {
-            //mXRv.showContent();
             if (cur_page > 1) {
                 mAdapter.addData(model);
             } else {
                 mAdapter.setData(model);
             }
             xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
-            //mXRv.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
         }
     }
 
@@ -135,17 +111,17 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         Log.d(TAG, "----------------==================3");
         initAdapter();
-        errorView.setLoadDataType(StateView.REFRESH, 1);
         Bundle arguments = getArguments();
-        if (arguments != null ) {
+        if (arguments != null) {
             gameId = arguments.getInt("gameId");
-            if(gameId > 0){
-                loadAdapterData(1, gameId);
-            }else{
-                xRecyclerContentLayout.showError();
+            if (gameId > 0) {
+                loadAdapterData(1, gameId, true);
+            } else {
+                xRecyclerContentLayout.showEmpty();
             }
         }
     }
+
 
     @Override
     public int getLayoutId() {
@@ -158,9 +134,8 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     }
 
 
+
     public class CommunityAdapter extends SimpleRecAdapter<ItemType, CommunityAdapter.CommunityHolder> {
-
-
 
 
         public CommunityAdapter(Context context) {
@@ -181,7 +156,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         public void onBindViewHolder(CommunityHolder holder, int position) {
             final ItemType item = data.get(position);
             final GameCommentListResult.ListBean itemDate = (GameCommentListResult.ListBean) data.get(position);
-            ILFactory.getLoader().loadNet(holder.ivAvatar, Api.API_BASE_URL.concat(itemDate.getMember().getIcon_thumb()), ILoader.Options.defaultOptions());
+            ILFactory.getLoader().loadNet(holder.ivAvatar.getAvatarView(), Api.API_BASE_URL.concat(itemDate.getMember().getIcon_thumb()), ILoader.Options.defaultOptions());
             holder.tvMemberName.setText(itemDate.getMember().getNick_name());
             holder.tvContent.setText(itemDate.getContent());
             holder.tvTime.setText(String.valueOf(itemDate.getCreate_time()));
@@ -191,13 +166,14 @@ public class GameDetailCommunityFragment extends XBaseFragment {
 
         class CommunityHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.iv_avatar_game_communication)
-            ImageView ivAvatar;
+            HeadImageView ivAvatar;
             @BindView(R.id.tv_member_name_game_communication)
             TextView tvMemberName;
             @BindView(R.id.tv_content_game_communication)
             TextView tvContent;
             @BindView(R.id.tv_time_game_communication)
             TextView tvTime;
+
             public CommunityHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
@@ -205,14 +181,14 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         }
     }
 
-    @Override
+    /*@Override
     public void onPause() {
         super.onPause();
         if (errorView != null) {
             xRecyclerContentLayout.removeView(errorView);
             xRecyclerContentLayout.removeView(loadView);
         }
-    }
+    }*/
 
 
 }

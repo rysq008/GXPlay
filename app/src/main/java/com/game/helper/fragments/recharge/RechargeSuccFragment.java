@@ -23,6 +23,8 @@ public class RechargeSuccFragment extends XBaseFragment implements View.OnClickL
     private int type = 0;
     private float value = 0;
 
+    @BindView(R.id.action_bar_tittle)
+    TextView mHeadTittle;
     @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.rl_confirm)
@@ -62,11 +64,13 @@ public class RechargeSuccFragment extends XBaseFragment implements View.OnClickL
         mHeadBack.setOnClickListener(this);
 
         if (type == Type_Cash_Succ){
+            mHeadTittle.setText("提现成功");
             mType.setText("本次提现");
             mHint.setText(getResources().getString(R.string.recharge_cash_hint));
         }
 
         if (type == Type_Recharge_Succ){
+            mHeadTittle.setText("充值成功");
             mType.setText("本次充值");
             mHint.setText(getResources().getString(R.string.recharge_succ_hint));
         }

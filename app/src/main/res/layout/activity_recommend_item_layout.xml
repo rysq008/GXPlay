@@ -22,11 +22,11 @@
         android:id="@+id/recommend_item_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/recommend_item_icon_iv"
+        android:layout_alignTop="@id/recommend_item_icon_iv"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/recommend_item_icon_iv"
-        android:layout_toRightOf="@+id/recommend_item_icon_iv"
+        android:layout_toEndOf="@id/recommend_item_icon_iv"
+        android:layout_toRightOf="@id/recommend_item_icon_iv"
         android:gravity="center_vertical"
 
         android:text="游戏名称"
@@ -37,11 +37,11 @@
         android:id="@+id/recommend_item_discount_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/recommend_item_name_tv"
+        android:layout_alignBottom="@id/recommend_item_name_tv"
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
-        android:layout_toEndOf="@+id/recommend_item_name_tv"
-        android:layout_toRightOf="@+id/recommend_item_name_tv"
+        android:layout_toEndOf="@id/recommend_item_name_tv"
+        android:layout_toRightOf="@id/recommend_item_name_tv"
         android:text="4.7折"
         android:textColor="@color/colorOrangeDepth" />
 
@@ -49,8 +49,8 @@
         android:id="@+id/recommend_item_type_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/recommend_item_name_tv"
-        android:layout_alignStart="@+id/recommend_item_name_tv"
+        android:layout_alignLeft="@id/recommend_item_name_tv"
+        android:layout_alignStart="@id/recommend_item_name_tv"
         android:layout_centerVertical="true"
         android:text="游戏类型" />
 
@@ -58,10 +58,10 @@
         android:id="@+id/recommend_item_size_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/recommend_item_type_tv"
-        android:layout_alignBottom="@+id/recommend_item_type_tv"
-        android:layout_toEndOf="@+id/recommend_item_type_tv"
-        android:layout_toRightOf="@+id/recommend_item_type_tv"
+        android:layout_alignBaseline="@id/recommend_item_type_tv"
+        android:layout_alignBottom="@id/recommend_item_type_tv"
+        android:layout_toEndOf="@id/recommend_item_type_tv"
+        android:layout_toRightOf="@id/recommend_item_type_tv"
         android:layout_marginLeft="@dimen/dp_15"
         android:text="安装包大小" />
 
@@ -69,25 +69,25 @@
         android:id="@+id/recommend_item_desc_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/recommend_item_type_tv"
+        android:layout_alignLeft="@id/recommend_item_type_tv"
         android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/recommend_item_type_tv"
-        android:layout_below="@+id/recommend_item_type_tv"
+        android:layout_alignStart="@id/recommend_item_type_tv"
+        android:layout_below="@id/recommend_item_type_tv"
         android:layout_marginTop="5dp"
-        android:layout_toLeftOf="@+id/recommend_item_launch_iv"
-        android:layout_toStartOf="@+id/recommend_item_launch_iv"
+        android:layout_toLeftOf="@id/recommend_item_launch_iv"
+        android:layout_toStartOf="@id/recommend_item_launch_iv"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="游戏描述游戏描述游戏描述游戏描述游戏描述游戏描述游戏描述" />
 
     <ImageView
         android:id="@+id/recommend_item_launch_iv"
-        android:layout_width="90dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/view_59"
+        android:layout_height="@dimen/view_29"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
-        android:src="@mipmap/bg_game_list_item_install" />
+        android:src="@mipmap/iv_btn_jr" />
 
     <View
         android:layout_width="match_parent"

@@ -2,11 +2,12 @@ package com.game.helper.fragments.BaseFragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 import com.game.helper.R;
 import com.game.helper.present.HomeFragmentPresent;
 import com.game.helper.views.SearchComponentView;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
+import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.StateView;
 import com.nineoldandroids.animation.ObjectAnimator;
 
@@ -15,9 +16,7 @@ import java.util.List;
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
-import cn.droidlover.xstatecontroller.XStateController;
 
 /**
  * Created by wanglei on 2016/12/31.
@@ -26,9 +25,9 @@ import cn.droidlover.xstatecontroller.XStateController;
 public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPresent> {
 
     @BindView(R.id.home_root_layout)
-    XStateController xStateController;
+    XReloadableStateContorller xStateController;
     @BindView(R.id.contentLayout)
-    XRecyclerContentLayout contentLayout;//content
+    XReloadableRecyclerContentLayout contentLayout;//content
     StateView errorView;
     @BindView(R.id.common_search_view)
     SearchComponentView searchComponentView;
@@ -41,7 +40,7 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
     @Override
     public void initData(Bundle savedInstanceState) {
         initAdapter();
-        getP().onRefreshData();
+        getP().onRefreshData(xStateController, true);
     }
 
     private void initAdapter() {
@@ -50,30 +49,17 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         contentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH, 1);
-                getP().onRefreshData();
+                getP().onRefreshData(xStateController, false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.LOADMORE, page);
-                getP().loadMoreData(page);
+                getP().loadMoreData(contentLayout, page);
             }
         });
 
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(contentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-
-        xStateController.errorView(errorView);
-        xStateController.loadingView(View.inflate(getContext(), R.layout.view_loading, null));
-
         xStateController.showLoading();
-        errorView.setLoadDataType(StateView.REFRESH, 1);
-
         contentLayout.getRecyclerView().useDefLoadMoreView();
-
         contentLayout.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -118,8 +104,6 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
     public abstract String getType();
 
     public void showError(NetError error) {
-        xStateController.showError();
-        xStateController.getLoadingView().setVisibility(View.GONE);
     }
 
     public void showData(int cur_page, int total_page, List model) {
@@ -128,14 +112,15 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         } else {
             getAdapter().setData(model);
         }
+        contentLayout.refreshState(false);
         contentLayout.getRecyclerView().setPage(cur_page, total_page);
-        xStateController.getLoadingView().setVisibility(View.GONE);
-
         if (getAdapter().getItemCount() < 1) {
             xStateController.showEmpty();
+            contentLayout.showEmpty();
             return;
         } else {
             xStateController.showContent();
+            contentLayout.showContent();
             return;
         }
     }

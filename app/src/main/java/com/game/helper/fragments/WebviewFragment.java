@@ -12,8 +12,10 @@ import android.webkit.WebViewClient;
 
 import com.game.helper.R;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xstatecontroller.XStateController;
 
 public class WebviewFragment extends XBaseFragment {
@@ -40,12 +42,14 @@ public class WebviewFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        url = (String) getArguments().getString(PARAM_URL, "");
-        title = getArguments().getString(PARAM_TITLE, "");
-
+        if (!Kits.Empty.check(getArguments())) {
+            url = (String) getArguments().getString(PARAM_URL, "");
+            title = getArguments().getString(PARAM_TITLE, "");
+        }
         initContentLayout();
         initRefreshLayout();
         initWebView();
+        SwipeBackHelper.getCurrentPage(getActivity()).setDisallowInterceptTouchEvent(true);
     }
 
     private void initContentLayout() {
@@ -68,6 +72,7 @@ public class WebviewFragment extends XBaseFragment {
     }
 
     private void initWebView() {
+        webView.loadDataWithBaseURL("", "", "text/html", "utf-8", "");
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
@@ -111,6 +116,7 @@ public class WebviewFragment extends XBaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        webView.clearCache(true);
         if (webView != null) {
             ViewGroup parent = (ViewGroup) webView.getParent();
             if (parent != null) {

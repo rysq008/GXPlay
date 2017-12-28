@@ -38,7 +38,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ItemType item = data.get(position);
         final GamePackageListResult.ListBean itemDate = (GamePackageListResult.ListBean) data.get(position);
-        ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.getGame().getLogothumb()),ILoader.Options.defaultOptions());
+        ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.getGame().getLogo()),ILoader.Options.defaultOptions());
         holder.tvtName.setText(itemDate.getGame().getName());
         holder.tvDiscountVip.setText(String.valueOf(itemDate.getDiscount_vip()));
         holder.tvTypeName.setText(itemDate.getGame().getType().getName());
@@ -49,18 +49,17 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         holder.ivChannelListLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("gamepackeId",itemDate.getId());
-                bundle.putInt("gameId",itemDate.getGame().getId());
-                bundle.putInt("channelId",itemDate.getChannel().getId());
-                SPUtils.putString(context,SPUtils.CHANNEL_NAME,itemDate.getChannel().getName());
-                SPUtils.putString(context,SPUtils.GAME_NAME,itemDate.getGame().getName());
-                DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
+
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("gamepackeId",itemDate.getId());
+                bundle.putInt("gameId",itemDate.getGame().getId());
+                bundle.putInt("channelId",itemDate.getChannel().getId());
+                DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
                 if (getRecItemClick() != null) {
                     getRecItemClick().onItemClick(position, item, TAG_VIEW, holder);
                 }

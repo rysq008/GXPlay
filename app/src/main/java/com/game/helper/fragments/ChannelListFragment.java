@@ -22,6 +22,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.GamePackageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -57,17 +58,14 @@ public class ChannelListFragment extends XBaseFragment {
     @BindView(R.id.action_bar_tittle)
     TextView actionBarTittle;
     @BindView(R.id.xrcl_channel_list)
-    XRecyclerContentLayout xrclChannelList;
-    Unbinder unbinder;
+    XReloadableRecyclerContentLayout xrclChannelList;
     private ChannelListItemAdapter mAdapter;
-    private StateView errorView;
     @Override
     public void initData(Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         gameId = arguments.getInt("gameId");
         initAdapter();
-        errorView.setLoadDataType(StateView.REFRESH, 1);
-        loadAdapterData(1);
+        loadAdapterData(1,true);
     }
 
     private void initAdapter() {
@@ -75,7 +73,6 @@ public class ChannelListFragment extends XBaseFragment {
         xrclChannelList.getRecyclerView().verticalLayoutManager(context);
         if (mAdapter == null) {
             mAdapter = new ChannelListItemAdapter(context);
-            xrclChannelList.getRecyclerView().setAdapter(mAdapter);
             mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, ChannelListItemAdapter.ViewHolder>() {
                 @Override
                 public void onItemClick(int position, ItemType model, int tag, ChannelListItemAdapter.ViewHolder holder) {
@@ -85,67 +82,43 @@ public class ChannelListFragment extends XBaseFragment {
                 }
             });
         }
+        xrclChannelList.getRecyclerView().setAdapter(mAdapter);
         xrclChannelList.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadAdapterData(1);
+                loadAdapterData(1,false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.REFRESH, page);
-                loadAdapterData(page);
+                loadAdapterData(page,false);
             }
         });
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(xrclChannelList.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-
-        xrclChannelList.errorView(errorView);
-        xrclChannelList.getRecyclerView().useDefLoadMoreView();
-        xrclChannelList.loadingView(View.inflate(context, R.layout.view_loading, null));
-        xrclChannelList.showLoading();
     }
 
-    private void loadAdapterData(int page) {
+    private void loadAdapterData(int page,boolean showLoading) {
         Flowable<HttpResultModel<GamePackageListResult>> fr = DataService.getGamePackageList(new GamePackageRequestBody(page, gameId, 1));
-        RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageListResult>>() {
+        RxLoadingUtils.subscribeWithReload(xrclChannelList,fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageListResult>>() {
             @Override
             public void accept(HttpResultModel<GamePackageListResult> gameListResultModelHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(gameListResultModelHttpResultModel.data.getList());
                 showData(gameListResultModelHttpResultModel.current_page, gameListResultModelHttpResultModel.total_page, list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-            }
-        });
-    }
-
-    public void showError(NetError error) {
-        xrclChannelList.getLoadingView().setVisibility(View.GONE);
-        xrclChannelList.refreshState(false);
-        xrclChannelList.showError();
+        }, null,null,showLoading);
     }
 
     public void showData(int cur_page, int total_page, List model) {
-        //mXRv.getLoadingView().setVisibility(View.GONE);
         if (model.size() < 1 || model == null) {
             xrclChannelList.showEmpty();
 
         } else {
-            //mXRv.showContent();
             if (cur_page > 1) {
                 mAdapter.addData(model);
             } else {
                 mAdapter.setData(model);
             }
             xrclChannelList.getRecyclerView().setPage(cur_page, total_page);
-            //mXRv.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
         }
     }
 

@@ -10,6 +10,8 @@ import zlc.season.practicalrecyclerview.ItemType;
 
 public class NoticeResults extends XBaseModel {
 
+    public H5Results h5Results;
+
     @SerializedName("list")
     public List<NoticeItem> list;
 

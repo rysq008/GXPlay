@@ -1,13 +1,18 @@
 package com.game.helper.views;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.ChannelListFragment;
+import com.game.helper.fragments.GameDetailFragment;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -17,6 +22,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
+
+import static com.umeng.socialize.utils.DeviceConfig.context;
 
 /**
  * Created by zr on 2017-10-13.
@@ -61,11 +68,8 @@ public class RecommendView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.recommend_item_launch_iv)
-    public void onClick() {
-    }
 
-    public void setData(RecommendResults.RecommendItem data) {
+    public void setData(final RecommendResults.RecommendItem data) {
 
         ILFactory.getLoader().loadNet(roundedIv, Api.API_PAY_OR_IMAGE_URL.concat(data.logo), ILoader.Options.defaultOptions());
         nameTv.setText(data.name.replace(" ", ""));
@@ -73,5 +77,13 @@ public class RecommendView extends LinearLayout {
         typeTv.setText(data.type.get("name").replace(" ", ""));
         sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
         descTv.setText(data.intro.replace(" ", ""));
+        launchIv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("gameId",data.id);
+                DetailFragmentsActivity.launch(getContext(),bundle, ChannelListFragment.newInstance());
+            }
+        });
     }
 }

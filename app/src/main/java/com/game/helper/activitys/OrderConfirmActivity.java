@@ -67,6 +67,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public static final String RED_PACK_ID = "input_value_id";
     public static final String PAYPURPOSE = "payPurpose";
     public static final String VIPLEVEL = "vipLevel";
+    public static final String IS_VIP = "is_vip";
 
 
     @BindView(R.id.action_bar_back)
@@ -472,6 +473,16 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             }
 
         }
+
+        if(needPay <= 0){
+            aliPayCb.setChecked(false);
+            wxPayCb.setChecked(false);
+            aliPayCb.setEnabled(false);
+            wxPayCb.setEnabled(false);
+        }else{
+            aliPayCb.setEnabled(true);
+            wxPayCb.setEnabled(true);
+        }
         return needPay;
     }
 
@@ -484,7 +495,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
                 if (generalizeResultsHttpResultModel.isSucceful()) {
-                    if (generalizeResultsHttpResultModel.isNull()) {
+                    if (generalizeResultsHttpResultModel.data.getList().isEmpty()) {
                         redPackNum.setTextColor(getResources().getColor(R.color.black));
                         redPackNum.setText("无可用红包");
                     } else {
@@ -492,7 +503,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                         redPackNum.setText(generalizeResultsHttpResultModel.data.getList().size() + "个可用");
                     }
                     mRedPacks = generalizeResultsHttpResultModel.data;
-                }else{
+                } else {
                     redPackNum.setTextColor(getResources().getColor(R.color.black));
                     redPackNum.setText("无可用红包");
                 }
@@ -738,34 +749,35 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         if (useCoin) {//使用可用金币
             if (usePushAccount) {//使用推广账户余额
                 if (mAccountAvailableBalance >= mRealPay) {//先判断充值账户余额够不够,充值账户余额够
-                    accountAmount = String.valueOf(mRealPay);
-                    marketingAmount = "0";
+                    accountAmount = new BigDecimal(String.valueOf(mRealPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                    marketingAmount = "0.00";
 
                 } else {//充值账户余额不够
-                    accountAmount = String.valueOf(mAccountAvailableBalance);
+                    accountAmount = new BigDecimal(String.valueOf(mAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
 
                     if (mPushAccountAvailableBalance >= (mRealPay - mAccountAvailableBalance)) {//推广账户余额足够
-                        marketingAmount = String.valueOf((mRealPay - mAccountAvailableBalance));
+                        marketingAmount = new BigDecimal(String.valueOf((mRealPay - mAccountAvailableBalance))).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                     } else {
-                        marketingAmount = String.valueOf(mPushAccountAvailableBalance);
+                        marketingAmount = new BigDecimal(String.valueOf(mPushAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                     }
 
 
                 }
             } else {//不使用推广账户余额，只使用充值账户余额
                 if (mAccountAvailableBalance >= mRealPay) {//充值账户余额够
-                    accountAmount = String.valueOf(mRealPay);
+                    accountAmount = new BigDecimal(String.valueOf(mRealPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+
                 } else {//充值账户余额不够
-                    accountAmount = String.valueOf(mAccountAvailableBalance);
+                    accountAmount = new BigDecimal(String.valueOf(mAccountAvailableBalance)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                 }
-                marketingAmount = "0";
+                marketingAmount = "0.00";
 
             }
 
         } else {
             //不使用可用金币
-            accountAmount = "0";
-            marketingAmount = "0";
+            accountAmount = "0.00";
+            marketingAmount = "0.00";
         }
 
         //如果还需支付>0,先去微信或支付宝充值，否则直接消费
@@ -865,7 +877,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      */
     private void doConsume(String accountAmount, String marketingAmount) {
         Log.e("nuoyan", "gameAccountId：：：" + gameAccountId + "\r\n"
-                +"gameId：：：" + gameId + "\r\n"
+                + "gameId：：：" + gameId + "\r\n"
                 + "consumeAmount:::" + inputBalance + "\r\n"
                 + "accountAmount:::" + accountAmount + "\r\n"
                 + "marketingAmount:::" + marketingAmount + "\r\n"
@@ -879,12 +891,12 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FeedbackListResults>>() {
             @Override
             public void accept(HttpResultModel<FeedbackListResults> checkTradePasswdResultsHttpResultModel) {
-//                if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
-                Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
-                finish();
-//                } else {
-//                    Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
-//                }
+                if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
+                    Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
+                }
             }
         }, new Consumer<NetError>() {
             @Override

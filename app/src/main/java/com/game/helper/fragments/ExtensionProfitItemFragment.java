@@ -159,6 +159,7 @@ public class ExtensionProfitItemFragment extends XBaseFragment implements View.O
             @Override
             public void accept(HttpResultModel<MarketFlowlistResults> marketFlowlistResultsHttpResultModel) throws Exception {
                 notifyData(marketFlowlistResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(marketFlowlistResultsHttpResultModel.current_page,marketFlowlistResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -178,6 +179,7 @@ public class ExtensionProfitItemFragment extends XBaseFragment implements View.O
             @Override
             public void accept(HttpResultModel<MarketExpectedFlowlistResults> marketExpectedFlowlistResultsHttpResultModel) throws Exception {
                 notifyData(marketExpectedFlowlistResultsHttpResultModel.data,page);
+                mContent.getRecyclerView().setPage(marketExpectedFlowlistResultsHttpResultModel.current_page,marketExpectedFlowlistResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override

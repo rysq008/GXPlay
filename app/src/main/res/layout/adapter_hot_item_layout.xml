@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="80dp"
     android:layout_height="wrap_content"
-    android:paddingLeft="10dp">
+    android:paddingLeft="0dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/hot_item_iv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="63dp"
+        android:layout_height="63dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:background="@mipmap/debug_game_icon" />
 
     <TextView
@@ -22,11 +23,18 @@
 
     <TextView
         android:id="@+id/hot_item_tv_name"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/hot_item_iv"
-        android:layout_marginTop="8dp"
-        android:text="神龙游戏"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:text="神龙游戏神龙游戏"
         android:textColor="@color/app_color"
         android:visibility="visible" />
 </RelativeLayout>

@@ -94,6 +94,8 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     private float mTotalDiscountValue = 0;
     private float mTotalBalanceValue = 0;
 
+    private boolean is_vip;
+
     public static final int REQUEST_CODE = 99;
     public static final int RESULT_CODE = 98;
 
@@ -210,6 +212,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                     setCheckStatus(2, false);
                     if (gameBean.isIs_vip()){
                         //当前游戏肯定是vip 默认选中vip折扣 不需要判断vip数量
+                        setCheckStatus(0,true);
                         setCheckStatus(1,true);
                         setChecked(2);
                     }else {
@@ -303,16 +306,19 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 if (mCbDiscount1.isEnabled()) return;
                 clearCheck();
                 mCbDiscount1.setChecked(true);
+                is_vip = false;
                 break;
             case 1:
                 if (mCbDiscount2.isEnabled()) return;
                 clearCheck();
                 mCbDiscount2.setChecked(true);
+                is_vip = false;
                 break;
             case 2:
                 if (mCbDiscount3.isEnabled()) return;
                 clearCheck();
                 mCbDiscount3.setChecked(true);
+                is_vip = true;
                 break;
         }
     }
@@ -362,14 +368,16 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
         }
         if (v == mItemDiscount1){
+            if (mCbDiscount1.isEnabled()) return;
             setChecked(0);
         }
         if (v == mItemDiscount2){
-            setChecked(1);
+            if (mCbDiscount2.isEnabled()) return;
             setCheckStatus(0,true);
+            setChecked(1);
         }
         if (v == mItemDiscount3){
-            if (accountBean == null || mCbDiscount1.isChecked() || mCbDiscount3.isChecked()) return;
+            if (accountBean == null || mCbDiscount1.isChecked() || mCbDiscount3.isEnabled() || mCbDiscount3.isChecked()) return;
             if (accountBean.count == 0){
                 if (accountBean.is_highest_vip){//是最高等级
                     showVipHintDialog(2);
@@ -380,7 +388,6 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 showVipHintDialog(0);
             }
 
-            setCheckStatus(1, true);
             setCheckStatus(0,true);
             setChecked(2);
         }
@@ -439,6 +446,10 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     public double getTotalBalanceValue() {
         return mTotalBalanceValue;
+    }
+
+    public boolean getIs_VIP() {
+        return is_vip;
     }
 
     public double getInputValue() {
