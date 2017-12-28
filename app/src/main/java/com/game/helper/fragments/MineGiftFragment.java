@@ -116,6 +116,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
         mContent.getRecyclerView().useDefLoadMoreView();
     }
 
+
     /**
      * 获取数据
      * */
