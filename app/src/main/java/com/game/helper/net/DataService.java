@@ -55,6 +55,7 @@ import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.model.PayResultModel;
+import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
@@ -436,4 +437,11 @@ public class DataService {
     public static Flowable<HttpResultModel<GameCommentListResult>> getGameCommentList(GameInfoCommentListRequestBody gameInfoCommentListRequestBody) {
         return Api.CreateApiService().getGameCommentList(gameInfoCommentListRequestBody);
     }
+
+    public static Flowable<HttpResultModel<ShareIncomeResultsModel>> getShareIncomeUrl(BaseRequestBody shareIncomeRequestBody) {
+        return Api.CreateApiService().getShareIncomeUrl(shareIncomeRequestBody);
+    }
+
+
+
 }

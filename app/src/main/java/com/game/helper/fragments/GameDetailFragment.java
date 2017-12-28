@@ -10,9 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,18 +20,15 @@ import android.widget.Toast;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GamePackageInfoResult;
-import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.utils.Utils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -49,12 +44,10 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
-import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -305,6 +298,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     @OnClick(R.id.iv_action)
     public void onShareClick() {
         //分享
+        if(getActivity() instanceof DetailFragmentsActivity){
+            ((DetailFragmentsActivity)getActivity()).umShare();
+        }
+
     }
 
 

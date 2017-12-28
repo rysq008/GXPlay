@@ -472,6 +472,16 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             }
 
         }
+
+        if(needPay <= 0){
+            aliPayCb.setChecked(false);
+            wxPayCb.setChecked(false);
+            aliPayCb.setEnabled(false);
+            wxPayCb.setEnabled(false);
+        }else{
+            aliPayCb.setEnabled(true);
+            wxPayCb.setEnabled(true);
+        }
         return needPay;
     }
 

@@ -18,7 +18,7 @@ import com.game.helper.utils.SharedPreUtil;
  * Created by zr on 2017-10-13.
  */
 
-class iWebView extends WebView {
+public class iWebView extends WebView {
     public iWebView(Context context) {
         super(context);
     }

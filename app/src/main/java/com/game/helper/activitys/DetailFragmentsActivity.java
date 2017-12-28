@@ -5,12 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.game.helper.activitys.BaseActivity.XDetailBaseActivity;
+import com.game.helper.share.UMengShare;
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 public class DetailFragmentsActivity extends XDetailBaseActivity {
+    public static final String TAG = "DetailFragmentsActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +62,40 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
     public void onDestroy() {
         super.onDestroy();
         currentFragment = null;
+        //内存泄露处理方法
+        UMShareAPI.get(this).release();
+    }
+
+    public void umShare() {
+        UMengShare share = new UMengShare(this);
+        share.shareLinkWithBoard(new UMShareListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+                Log.e(TAG, "onStart: umShare");
+            }
+
+            @Override
+            public void onResult(SHARE_MEDIA share_media) {
+                Log.e(TAG, "onResult: umShare");
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                Log.e(TAG, "onError: umShare");
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media) {
+                Log.e(TAG, "onCancel: umShare");
+            }
+        });
+    }
+
+    //注意onActivityResult不可在fragment中实现，如果在fragment中调用登录或分享，需要在fragment依赖的Activity中实现
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
 }

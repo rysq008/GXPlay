@@ -36,13 +36,13 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ItemType item = data.get(position);
-        holder.setDisplay(item,mActivity,position);
+        holder.setDisplay(item, mActivity, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearStatus();
-                ((AvailableRedpackResultModel.ListBean)item).setSelect(!(((AvailableRedpackResultModel.ListBean) item).isSelect()));
-                recordAccount((AvailableRedpackResultModel.ListBean)item);
+                ((AvailableRedpackResultModel.ListBean) item).setSelect(!(((AvailableRedpackResultModel.ListBean) item).isSelect()));
+                recordAccount((AvailableRedpackResultModel.ListBean) item);
                 notifyDataSetChanged();
             }
         });
@@ -53,11 +53,11 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
         return R.layout.item_available_redpack;
     }
 
-    public interface OnItemCheckListener{
+    public interface OnItemCheckListener {
         void onItemCheked(AvailableRedpackResultModel.ListBean bean);
     }
 
-    public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener){
+    public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener) {
         this.onItemCheckListener = onItemCheckListener;
     }
 
@@ -85,24 +85,24 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
             ButterKnife.bind(this, itemView);
         }
 
-        public void setDisplay(ItemType itemType, final Activity activity,final int position) {
-            final AvailableRedpackResultModel.ListBean data = (AvailableRedpackResultModel.ListBean)itemType;
+        public void setDisplay(ItemType itemType, final Activity activity, final int position) {
+            final AvailableRedpackResultModel.ListBean data = (AvailableRedpackResultModel.ListBean) itemType;
 
             //名字
             redPackName.setText(data.getName());
-            //描述
-            redPackDesc.setText(redPackName.getContext().getString(R.string.redpack_limit,data.getMoney_limit()));
-            //推广人数
-            recpackNum.setText(redPackName.getContext().getString(R.string.redpack_amount,data.getAmount()));
+            //使用限制
+            redPackDesc.setText(redPackName.getContext().getString(R.string.redpack_limit, data.getMoney_limit()));
+            //红包金额
+            recpackNum.setText(redPackName.getContext().getString(R.string.redpack_amount, data.getAmount()));
             //到期时间
-            timeLimit.setText(data.getEnd_date());
+            timeLimit.setText("有效期至" + data.getEnd_date());
 
-            if(data.isSelect()){
+            if (data.isSelect()) {
                 rootRl.setSelected(true);
-                if (onItemCheckListener != null){
+                if (onItemCheckListener != null) {
                     onItemCheckListener.onItemCheked(data);
                 }
-            }else{
+            } else {
                 rootRl.setSelected(false);
             }
 
@@ -114,12 +114,13 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
      */
     private void clearStatus() {
         for (ItemType item : data) {
-            ((AvailableRedpackResultModel.ListBean)item).setSelect(false);
+            ((AvailableRedpackResultModel.ListBean) item).setSelect(false);
         }
     }
 
     /**
      * 记录选中
+     *
      * @param bean
      */
     public void recordAccount(AvailableRedpackResultModel.ListBean bean) {
