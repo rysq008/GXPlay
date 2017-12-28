@@ -17,6 +17,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GameInfoCommentListRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -40,11 +41,9 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     private static final String TAG = GameDetailCommunityFragment.class.getSimpleName();
 
     @BindView(R.id.common_recycler_view_layout)
-    XRecyclerContentLayout xRecyclerContentLayout;
-    private StateView errorView;
+    XReloadableRecyclerContentLayout xRecyclerContentLayout;
     private CommunityAdapter mAdapter;
     private int gameId;
-    private View loadView;
 
     public static GameDetailCommunityFragment newInstance() {
         GameDetailCommunityFragment fragment = new GameDetailCommunityFragment();
@@ -66,67 +65,38 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadAdapterData(1, gameId);
+                loadAdapterData(1, gameId,false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.REFRESH, page);
-                loadAdapterData(page, gameId);
+                loadAdapterData(page, gameId,false);
             }
         });
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(xRecyclerContentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-
-        xRecyclerContentLayout.errorView(errorView);
-        //xRecyclerContentLayout.emptyView(errorView);
-        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
-        loadView = View.inflate(context, R.layout.view_loading, null);
-        xRecyclerContentLayout.loadingView(loadView);
-        xRecyclerContentLayout.showLoading();
     }
 
-    private void loadAdapterData(int page, int gameId) {
+    private void loadAdapterData(int page, int gameId,boolean showLoading) {
         Flowable<HttpResultModel<GameCommentListResult>> fr = DataService.getGameCommentList(new GameInfoCommentListRequestBody(page, gameId));
-        RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GameCommentListResult>>() {
+        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout,fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GameCommentListResult>>() {
             @Override
             public void accept(HttpResultModel<GameCommentListResult> gameListResultModelHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(gameListResultModelHttpResultModel.data.getList());
                 showData(gameListResultModelHttpResultModel.current_page, gameListResultModelHttpResultModel.total_page, list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-            }
-        });
-    }
-
-    public void showError(NetError error) {
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
-        xRecyclerContentLayout.refreshState(false);
-        xRecyclerContentLayout.showError();
+        },null,null,showLoading);
     }
 
     public void showData(int cur_page, int total_page, List model) {
-        //mXRv.getLoadingView().setVisibility(View.GONE);
         if (model.size() < 1 || model == null) {
-            //xRecyclerContentLayout.showEmpty();
-            xRecyclerContentLayout.showError();
-
+            xRecyclerContentLayout.showEmpty();
         } else {
-            //mXRv.showContent();
             if (cur_page > 1) {
                 mAdapter.addData(model);
             } else {
                 mAdapter.setData(model);
             }
             xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
-            //mXRv.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
         }
     }
 
@@ -135,14 +105,13 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         Log.d(TAG, "----------------==================3");
         initAdapter();
-        errorView.setLoadDataType(StateView.REFRESH, 1);
         Bundle arguments = getArguments();
         if (arguments != null ) {
             gameId = arguments.getInt("gameId");
             if(gameId > 0){
-                loadAdapterData(1, gameId);
+                loadAdapterData(1, gameId,true);
             }else{
-                xRecyclerContentLayout.showError();
+                xRecyclerContentLayout.showEmpty();
             }
         }
     }
@@ -205,14 +174,14 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         }
     }
 
-    @Override
+    /*@Override
     public void onPause() {
         super.onPause();
         if (errorView != null) {
             xRecyclerContentLayout.removeView(errorView);
             xRecyclerContentLayout.removeView(loadView);
         }
-    }
+    }*/
 
 
 }

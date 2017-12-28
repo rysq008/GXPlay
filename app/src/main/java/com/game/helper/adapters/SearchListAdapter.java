@@ -1,12 +1,15 @@
 package com.game.helper.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.ChannelListFragment;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.net.api.Api;
@@ -53,6 +56,14 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
                 }
             }
         });
+        holder.launchIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("gameId",((HotResults.HotItem) item).id);
+                DetailFragmentsActivity.launch(context,bundle, ChannelListFragment.newInstance());
+            }
+        });
 
     }
 
@@ -77,9 +88,7 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
         ImageView launchIv;
 
 
-
         public void setDisplay(ItemType itemType) {
-//            recommondLayout.setData((HotResults.RecommendItem) itemType);
             HotResults.HotItem data = (HotResults.HotItem) itemType;
             ILFactory.getLoader().loadNet(roundedIv, Api.API_PAY_OR_IMAGE_URL.concat(data.logo), ILoader.Options.defaultOptions());
             nameTv.setText(data.name.replace(" ", ""));
@@ -87,6 +96,7 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
             typeTv.setText(data.type.get("name").replace(" ", ""));
             sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
             descTv.setText(data.intro.replace(" ", ""));
+
         }
 
         public ViewHolder(View itemView) {

@@ -190,6 +190,14 @@
             android:name=".activitys.CommonWebviewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/activityTheme02" />
+        <activity
+            android:name=".activitys.GameDetailMyAccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/activityTheme02" />
+        <activity
+            android:name=".activitys.GameDetailAddAccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/activityTheme02" />
     </application>
 
 </manifest>

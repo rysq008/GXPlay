@@ -49,7 +49,6 @@ public class GameListFragment extends XBaseFragment {
     @Override
     public void initData(Bundle savedInstanceState) {
         initAdapter();
-//        errorView.setLoadDataType(StateView.REFRESH, 1);
         loadGmaeAdapterData(true, 1, classical_type, common_type);
     }
 
@@ -62,13 +61,11 @@ public class GameListFragment extends XBaseFragment {
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-//                errorView.setLoadDataType(StateView.REFRESH, 1);
                 loadGmaeAdapterData(false, 1, classical_type, common_type);
             }
 
             @Override
             public void onLoadMore(int page) {
-//                errorView.setLoadDataType(StateView.LOADMORE, page);
                 loadGmaeAdapterData(false, page, classical_type, common_type);
             }
         });

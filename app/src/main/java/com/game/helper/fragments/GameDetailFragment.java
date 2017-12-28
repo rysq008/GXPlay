@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +29,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -95,7 +97,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private int gameId;
     private int channelId;
     private GameDetailInfoFragment gameDetailInfoFragment;
-    private RechargeGameFragment rechargeGameFragment;
+    private GameDetailRechargeFragment rechargeGameFragment;
     private GameDetailGiftFragment gameDetailGiftFragment;
     private GameDetailCommunityFragment gameDetailCommunityFragment;
     private AlertDialog.Builder dialog;
@@ -124,12 +126,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             gameDetailInfoFragment.setArguments(bundle);
         }
         if (rechargeGameFragment == null) {
-            rechargeGameFragment = RechargeGameFragment.newInstance();
+            rechargeGameFragment = GameDetailRechargeFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putString("fromGameDetail", "fromGameDetail");
-            bundle.putInt("gameId", gameId);
-            bundle.putInt("channelId", channelId);
-            bundle.putString("fromGameDetail", "fromGameDetail");
+
             rechargeGameFragment.setArguments(bundle);
         }
         if (gameDetailGiftFragment == null) {
@@ -155,13 +154,13 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             }
 
             @Override
-            public int getItemPosition(Object object) {
-                return POSITION_NONE;
+            public int getCount() {
+                return list.size();
             }
 
             @Override
-            public int getCount() {
-                return list.size();
+            public int getItemPosition(Object object) {
+                return POSITION_NONE;
             }
         });
         viewPager.setOffscreenPageLimit(2);
@@ -212,6 +211,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 tvPackageFilesize.setText(String.valueOf(packageInfo.getFilesize() + "M"));
                 tvContent.setText(packageInfo.getGame().getIntro());
                 tvPlat.setText(packageInfo.getChannel().getName());
+                SPUtils.putString(context,SPUtils.CHANNEL_NAME,packageInfo.getChannel().getName());
+                SPUtils.putString(context,SPUtils.GAME_NAME,packageInfo.getGame().getName());
+                SPUtils.putInt(context,SPUtils.CHANNEL_ID,packageInfo.getChannel().getId());
+                SPUtils.putInt(context,SPUtils.GAME_ID,packageInfo.getGame().getId());
 
             }
         }, new Consumer<NetError>() {
@@ -470,5 +473,6 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             }
         }
     }
+
 
 }

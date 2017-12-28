@@ -27,9 +27,9 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
-public class AddAccountActivity extends XBaseActivity implements View.OnClickListener {
+public class GameDetailAddAccountActivity extends XBaseActivity implements View.OnClickListener {
 
-    public static final String TAG = "AddAccountActivity";
+    public static final String TAG = "GameDetailAddAccountActivity";
     public static final String GAME_ID = "game_id";
     public static final String CHANNEL_ID = "channel_id";
 
@@ -38,17 +38,17 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
-    @BindView(R.id.accountEdit)
+    @BindView(R.id.accountEdit_add_account_game_detail)
     EditText accountEdit;
-    @BindView(R.id.gameEdit)
+    @BindView(R.id.gameEdit_add_account_game_detail)
     EditText gameEdit;
-    @BindView(R.id.selectGame)
+    @BindView(R.id.selectGame_add_account_game_detail)
     TextView selectGame;
-    @BindView(R.id.channelEdit)
+    @BindView(R.id.channelEdit_add_account_game_detail)
     EditText channelEdit;
-    @BindView(R.id.selectChannel)
+    @BindView(R.id.selectChannel_add_account_game_detail)
     TextView selectChannel;
-    @BindView(R.id.submitTv)
+    @BindView(R.id.submitTv_add_account_game_detail)
     TextView submitTv;
 
     private String mGameId = "16";
@@ -66,16 +66,20 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        //initIntentData(getIntent());
+        initIntentData(getIntent());
         initView();
 
-        mGameWindow = new GamePopupWindow(AddAccountActivity.this);
-        mChannelWindow = new ChannelPopupWindow(AddAccountActivity.this);
+        mGameWindow = new GamePopupWindow(GameDetailAddAccountActivity.this);
+        mChannelWindow = new ChannelPopupWindow(GameDetailAddAccountActivity.this);
     }
 
     private void initIntentData(Intent intent) {
         mGameId = String.valueOf(intent.getIntExtra(GAME_ID,0));
         mChannelId = String.valueOf(intent.getIntExtra(CHANNEL_ID,0));
+        String gameName = SPUtils.getString(context,SPUtils.GAME_NAME,"");
+        gameEdit.setText(gameName);
+        String channelName = SPUtils.getString(context,SPUtils.CHANNEL_NAME,"");
+        channelEdit.setText(channelName);
 
 //        if(!TextUtils.isEmpty(mGameId) && !TextUtils.isEmpty(mChannelId)){
 //            canEdit = false;
@@ -87,14 +91,8 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 
     private void initView() {
         mHeadTittle.setText("账户绑定");
-        if (!canEdit) {
-            gameEdit.setEnabled(false);
-            channelEdit.setEnabled(false);
-        } else {
-            gameEdit.setEnabled(true);
-            channelEdit.setEnabled(true);
-        }
-
+        gameEdit.setEnabled(false);
+        channelEdit.setEnabled(false);
         mHeadBack.setOnClickListener(this);
         selectGame.setOnClickListener(this);
         selectChannel.setOnClickListener(this);
@@ -135,10 +133,10 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
             @Override
             public void accept(HttpResultModel<LogoutResults> recommendResultsHttpResultModel) throws Exception {
                 if (recommendResultsHttpResultModel.isSucceful()) {
-                    Toast.makeText(AddAccountActivity.this, "添加账户成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameDetailAddAccountActivity.this, "添加账户成功", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(AddAccountActivity.this, "添加账户失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameDetailAddAccountActivity.this, "添加账户失败", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
@@ -170,7 +168,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
         gameEdit.setText(name);
         gameEdit.setSelection(getGameName().length());
         this.mGameId = String.valueOf(game_id);
-        Toast.makeText(AddAccountActivity.this, "游戏Id：" + game_id, Toast.LENGTH_SHORT).show();
+        Toast.makeText(GameDetailAddAccountActivity.this, "游戏Id：" + game_id, Toast.LENGTH_SHORT).show();
     }
 
     //选择平台
@@ -181,13 +179,13 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
         channelEdit.setText(name);
         channelEdit.setSelection(getChannelName().length());
         this.mChannelId = String.valueOf(channel_id);
-        Toast.makeText(AddAccountActivity.this, "平台Id：" + channel_id, Toast.LENGTH_SHORT).show();
+        Toast.makeText(GameDetailAddAccountActivity.this, "平台Id：" + channel_id, Toast.LENGTH_SHORT).show();
     }
 
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_add_account;
+        return R.layout.activity_add_account_game_detail;
     }
 
     @Override
@@ -202,7 +200,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
             case R.id.action_bar_back:
                 onBackPressed();
                 break;
-            case R.id.selectGame:
+           /* case R.id.selectGame_add_account_game_detail:
 //                if(canEdit){
                 if (!TextUtils.isEmpty(getGameName())) {
                     mGameWindow.init(getGameName());
@@ -211,25 +209,25 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 //                }
 
                 break;
-            case R.id.selectChannel:
+            case R.id.selectChannel_add_account_game_detail:
 //                if(canEdit){
                 if (!TextUtils.isEmpty(getGameName())) {
                     mChannelWindow.init(Integer.parseInt(mGameId));
                     mChannelWindow.showAsDropDown(selectChannel);
                 }
 //                }
-                break;
-            case R.id.submitTv:
+                break;*/
+            case R.id.submitTv_add_account_game_detail:
                 if (TextUtils.isEmpty(getAccountname())) {
-                    Toast.makeText(AddAccountActivity.this, "请填写账号", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameDetailAddAccountActivity.this, "请填写账号", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(getGameName())) {
-                    Toast.makeText(AddAccountActivity.this, "请填写游戏名称", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameDetailAddAccountActivity.this, "请填写游戏名称", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (TextUtils.isEmpty(getChannelName())) {
-                    Toast.makeText(AddAccountActivity.this, "请填写平台名称", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameDetailAddAccountActivity.this, "请填写平台名称", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
