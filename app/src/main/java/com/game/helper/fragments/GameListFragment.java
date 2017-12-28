@@ -35,8 +35,6 @@ public class GameListFragment extends XBaseFragment {
     XReloadableRecyclerContentLayout xRecyclerContentLayout;
 
     SearchListAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
     int classical_type = 0, common_type = 0;
 
     @Override

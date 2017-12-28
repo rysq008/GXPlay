@@ -24,6 +24,7 @@ import com.game.helper.model.GamePackageInfo_DetailResult;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
+import com.game.helper.model.H5Results;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.HotWordResults;
 import com.game.helper.model.IncomeResultModel;
@@ -121,6 +122,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<NoticeResults>> getHomeNotice() {
         return Api.CreateApiService().getApiNoticeData();
+    }
+
+    public static Flowable<HttpResultModel<H5Results>> getH5Data() {
+        return Api.CreateApiService().getApiH5Data();
     }
 
     public static Flowable<HttpResultModel<SpecialResults>> getHomeSpecial(BaseRequestBody baseRequestBody) {

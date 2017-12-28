@@ -27,7 +27,7 @@
     <!--tab-->
     <string name="home_tab_index">主页</string>
     <string name="home_tab_game">游戏</string>
-    <string name="home_tab_extension">推广</string>
+    <string name="home_tab_extension">社区</string>
     <string name="home_tab_mine">我的</string>
 
     <!--common-->

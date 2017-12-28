@@ -37,6 +37,7 @@
         android:layout_weight="1">
 
         <LinearLayout
+            android:id="@+id/notice_vip_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/tabbar_divider_height"
@@ -86,6 +87,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/notice_rechange_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/tabbar_divider_height"
@@ -117,7 +119,7 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:text="推广赚钱"
+                    android:text="快速充值"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold" />
@@ -128,7 +130,7 @@
                     android:layout_marginTop="@dimen/dp_10"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="邀请好友赚现金"
+                    android:text="直接给游戏帐户充值"
                     android:textColor="@color/colorShadow"
                     android:textSize="@dimen/text_size_small" />
             </LinearLayout>

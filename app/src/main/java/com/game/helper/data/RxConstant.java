@@ -33,6 +33,7 @@ public final class RxConstant {
         public static final int Special_Model_Type = 2;
         public static final int Recommend_Model_Type = 3;
         public static final int Hot_Model_Type = 4;
+        public static final int H5_Model_Type = 5;
     }
 
     public static final class GameModeType {//游戏模块数据类型

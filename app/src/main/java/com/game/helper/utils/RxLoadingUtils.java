@@ -547,7 +547,7 @@ public class RxLoadingUtils {
                         }
                         if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
-                            reloadableFrameLayout.showError();
+//                            reloadableFrameLayout.showError();
                         }
                     }
                 });
@@ -634,7 +634,7 @@ public class RxLoadingUtils {
                         }
                         if (!finishReload[0]) {
 //                            reloadableFrameLayout.finishReload();
-                            reloadableLayout.showError();
+//                            reloadableLayout.showError();
                         }
                     }
                 });

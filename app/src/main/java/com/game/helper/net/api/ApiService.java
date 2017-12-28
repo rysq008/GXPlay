@@ -24,6 +24,7 @@ import com.game.helper.model.GamePackageInfo_DetailResult;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
+import com.game.helper.model.H5Results;
 import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.HotWordResults;
@@ -148,6 +149,10 @@ public interface ApiService {
     //首页通告
     @POST("/sys/get_notification_list/")
     Flowable<HttpResultModel<NoticeResults>> getApiNoticeData();
+
+    //首页H5
+    @POST("/sys/get_h5_url_list/")
+    Flowable<HttpResultModel<H5Results>> getApiH5Data();
 
     //首页专题
     //    @HTTP(method = "",path = "/user/delete",hasBody = true)

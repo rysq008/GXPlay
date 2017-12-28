@@ -67,7 +67,7 @@ public class SpecialView extends LinearLayout {
         //如果可以确定每个item的高度是固定的，设置这个选项可以提高性能
         bannerViewPager.setHasFixedSize(true);
         bannerViewPager.setAdapter(new SpecialAdapter(data));
-//        bannerViewPager.addOnScrollListener(new CenterScrollListener());
+        bannerViewPager.addOnScrollListener(new CenterScrollListener());
     }
 
     public class SpecialAdapter extends RecyclerView.Adapter<SpecialAdapter.SViewHolder> {
