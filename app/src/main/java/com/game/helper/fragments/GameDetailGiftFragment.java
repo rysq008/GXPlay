@@ -17,7 +17,10 @@ import com.game.helper.model.GameGiftListResult;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GameInfoGiftListRequestBody;
+import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.ToastUtil;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -43,7 +46,7 @@ public class GameDetailGiftFragment extends XBaseFragment {
     private static final String TAG = GameDetailGiftFragment.class.getSimpleName();
 
     @BindView(R.id.gift_game_detail_recycler_view_layout)
-    XRecyclerContentLayout xRecyclerContentLayout;
+    XReloadableRecyclerContentLayout xRecyclerContentLayout;
     private GiftAdapter mAdapter;
 
     public static GameDetailGiftFragment newInstance() {
@@ -76,12 +79,24 @@ public class GameDetailGiftFragment extends XBaseFragment {
                 loadAdapterData(page);
             }
         });*/
+        mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, GiftAdapter.GiftHolder>() {
+            @Override
+            public void onItemClick(int position, ItemType model, int tag, GiftAdapter.GiftHolder holder) {
+                super.onItemClick(position, model, tag, holder);
+                holder.tvGameGiftGain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+            }
+        });
 
     }
 
     private void loadAdapterData(int page, int gameId,boolean showLoading) {
         Flowable<HttpResultModel<GameGiftListResult>> fr = DataService.getGameGiftList(new GameInfoGiftListRequestBody(page, gameId, 1));
-        RxLoadingUtils.subscribe(fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GameGiftListResult>>() {
+        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout,fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GameGiftListResult>>() {
             @Override
             public void accept(HttpResultModel<GameGiftListResult> gameListResultModelHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
@@ -91,10 +106,9 @@ public class GameDetailGiftFragment extends XBaseFragment {
         }, null,null,showLoading);
     }
 
-    public void showData(int cur_page, int total_page, List model) {
-        if (model.size() < 1 || model == null) {
+    public void showData(int cur_page, int total_page, List<ItemType> model) {
+        if (model.size() < 1 ) {
             xRecyclerContentLayout.showEmpty();
-
         } else {
             if (cur_page > 1) {
                 mAdapter.addData(model);
@@ -112,7 +126,7 @@ public class GameDetailGiftFragment extends XBaseFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             int gameId = arguments.getInt("gameId");
-            loadAdapterData(1, gameId,true);
+            loadAdapterData(1, 47,true);
         }
     }
 
@@ -147,7 +161,7 @@ public class GameDetailGiftFragment extends XBaseFragment {
         }
 
         @Override
-        public void onBindViewHolder(GiftHolder holder, int position) {
+        public void onBindViewHolder(final GiftHolder holder, final int position) {
             final ItemType item = data.get(position);
             final GameGiftListResult.ListBean itemDate = (GameGiftListResult.ListBean) data.get(position);
             ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.getGame().getLogo()), ILoader.Options.defaultOptions());
@@ -159,10 +173,25 @@ public class GameDetailGiftFragment extends XBaseFragment {
             holder.tvGameGiftGain.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    /*Bundle bundle = new Bundle();
-                    bundle.putInt("gamepackeId", itemDate.getId());
-                    bundle.putInt("gameId", itemDate.getGame().getId());
-                    DetailFragmentsActivity.launch(context, bundle, GameDetailFragment.newInstance());*/
+                    Flowable<HttpResultModel<Object>> fr = DataService.receiveGift(new ReceiveGiftRequestBody(itemDate.getId()));
+                    RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<Object>>() {
+                        @Override
+                        public void accept(HttpResultModel<Object> gameListResult) throws Exception {
+                            if(gameListResult.isSucceful()){
+                                ToastUtil.showToast("领取成功");
+                                loadAdapterData(1,47,false);
+                            }
+                        }
+                    }, null);
+
+                }
+            });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getRecItemClick() != null) {
+                        getRecItemClick().onItemClick(position, item, 0, holder);
+                    }
                 }
             });
         }

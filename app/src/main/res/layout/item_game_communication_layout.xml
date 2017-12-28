@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <ImageView
+        <com.game.helper.views.HeadImageView
             android:padding="1dp"
             android:id="@+id/iv_avatar_game_communication"
             android:src="@mipmap/debug_mine_avatar"
