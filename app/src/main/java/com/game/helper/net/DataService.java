@@ -54,6 +54,7 @@ import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.net.api.Api;
@@ -71,6 +72,7 @@ import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GameInfoCommentListRequestBody;
 import com.game.helper.net.model.GameInfoGiftListRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -110,6 +112,8 @@ import retrofit2.http.Body;
 
 public class DataService {
 
+
+    private static Flowable<HttpResultModel<H5UrlListResults>> h5UrlList;
 
     public static Flowable<HttpResultModel<BannerResults>> getHomeBanner(BannerRequestBody bannerRequestBody) {
         return Api.CreateApiService().getApiBannerData(bannerRequestBody);
@@ -436,6 +440,15 @@ public class DataService {
 
     public static Flowable<HttpResultModel<GameCommentListResult>> getGameCommentList(GameInfoCommentListRequestBody gameInfoCommentListRequestBody) {
         return Api.CreateApiService().getGameCommentList(gameInfoCommentListRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<Object>> sendCommentContent(GameDetailSendCommentContentRequestBody gameDetailSendCommentContentRequestBody) {
+
+        return Api.CreateApiService().sendCommentContent(gameDetailSendCommentContentRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<H5UrlListResults>> getH5UrlList() {
+        return Api.CreateApiService().getH5UrlList();
     }
 
     public static Flowable<HttpResultModel<ShareIncomeResultsModel>> getShareIncomeUrl(BaseRequestBody shareIncomeRequestBody) {

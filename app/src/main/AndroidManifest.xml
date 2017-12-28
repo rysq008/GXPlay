@@ -125,6 +125,7 @@
         <activity
             android:name=".activitys.DetailFragmentsActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/activityTheme02" />
 
         <receiver

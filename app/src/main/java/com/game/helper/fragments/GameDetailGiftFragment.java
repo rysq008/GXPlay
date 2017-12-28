@@ -42,11 +42,9 @@ import zlc.season.practicalrecyclerview.ItemType;
 public class GameDetailGiftFragment extends XBaseFragment {
     private static final String TAG = GameDetailGiftFragment.class.getSimpleName();
 
-    @BindView(R.id.common_recycler_view_layout)
+    @BindView(R.id.gift_game_detail_recycler_view_layout)
     XRecyclerContentLayout xRecyclerContentLayout;
-    private StateView errorView;
     private GiftAdapter mAdapter;
-    private View loadView;
 
     public static GameDetailGiftFragment newInstance() {
         GameDetailGiftFragment fragment = new GameDetailGiftFragment();
@@ -120,7 +118,7 @@ public class GameDetailGiftFragment extends XBaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.common_game_detail_recycler_layout;
+        return R.layout.fragment_gift_game_detail;
     }
 
     @Override
@@ -189,14 +187,5 @@ public class GameDetailGiftFragment extends XBaseFragment {
 
         }
 
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (errorView != null) {
-            xRecyclerContentLayout.removeView(errorView);
-            xRecyclerContentLayout.removeView(loadView);
-        }
     }
 }

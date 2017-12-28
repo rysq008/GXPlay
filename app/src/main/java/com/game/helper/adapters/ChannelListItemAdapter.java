@@ -49,16 +49,17 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         holder.ivChannelListLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("gamepackeId",itemDate.getId());
-                bundle.putInt("gameId",itemDate.getGame().getId());
-                bundle.putInt("channelId",itemDate.getChannel().getId());
-                DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
+
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("gamepackeId",itemDate.getId());
+                bundle.putInt("gameId",itemDate.getGame().getId());
+                bundle.putInt("channelId",itemDate.getChannel().getId());
+                DetailFragmentsActivity.launch(context,bundle, GameDetailFragment.newInstance());
                 if (getRecItemClick() != null) {
                     getRecItemClick().onItemClick(position, item, TAG_VIEW, holder);
                 }
