@@ -112,6 +112,7 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         } else {
             getAdapter().setData(model);
         }
+        contentLayout.refreshState(false);
         contentLayout.getRecyclerView().setPage(cur_page, total_page);
         if (getAdapter().getItemCount() < 1) {
             xStateController.showEmpty();

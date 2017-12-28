@@ -604,6 +604,7 @@ public class RxLoadingUtils {
 //                                }
 //                            }
                         }
+                        reloadableLayout.refreshState(false);
                     }
 
                     @Override
@@ -620,6 +621,7 @@ public class RxLoadingUtils {
 //                            reloadableFrameLayout.needReload(getDisplayMessage(error, true));
                             reloadableLayout.showError();
                         }
+                        reloadableLayout.refreshState(false);
                     }
 
                     @Override

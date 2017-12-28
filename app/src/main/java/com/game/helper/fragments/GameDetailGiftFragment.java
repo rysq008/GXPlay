@@ -35,6 +35,7 @@ import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.RecyclerItemCallback;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import zlc.season.practicalrecyclerview.ItemType;
@@ -66,19 +67,17 @@ public class GameDetailGiftFragment extends XBaseFragment {
             });
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
-        /*xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+        xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadAdapterData(1);
+                loadAdapterData(1,47,false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.REFRESH, page);
-                loadAdapterData(page);
+                loadAdapterData(page,47,false);
             }
-        });*/
+        });
         mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, GiftAdapter.GiftHolder>() {
             @Override
             public void onItemClick(int position, ItemType model, int tag, GiftAdapter.GiftHolder holder) {
