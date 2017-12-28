@@ -65,6 +65,7 @@ import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.net.model.GamePackageInfo_InfoRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.GamePackageRequestBody;
+import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
@@ -461,4 +462,7 @@ public interface ApiService {
     @POST("/sys/get_h5_url_list/")
     Flowable<HttpResultModel<ShareIncomeResultsModel>> getShareIncomeUrl(@Body BaseRequestBody shareIncomeRequestBody);
 
+    //领取游戏礼包接口
+    @POST("/game/receive_gift_code/")
+    Flowable<HttpResultModel<Object>> receiveGift(@Body ReceiveGiftRequestBody receiveGiftRequestBody);
 }

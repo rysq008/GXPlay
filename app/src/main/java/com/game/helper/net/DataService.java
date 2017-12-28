@@ -83,6 +83,7 @@ import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.net.model.PayRequestBody;
+import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
@@ -456,5 +457,7 @@ public class DataService {
     }
 
 
-
+    public static Flowable<HttpResultModel<Object>> receiveGift(ReceiveGiftRequestBody receiveGiftRequestBody) {
+        return Api.CreateApiService().receiveGift(receiveGiftRequestBody);
+    }
 }

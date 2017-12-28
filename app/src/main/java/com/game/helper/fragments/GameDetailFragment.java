@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -336,8 +337,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     @OnClick(R.id.iv_action)
     public void onShareClick() {
         //分享
-        if(getActivity() instanceof DetailFragmentsActivity){
-            ((DetailFragmentsActivity)getActivity()).umShare();
+        if (getActivity() instanceof DetailFragmentsActivity) {
+            ((DetailFragmentsActivity) getActivity()).umShare();
         }
 
     }
@@ -368,7 +369,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             case R.id.ll_discount_navigation_game_detail:
                 Bundle bundle = new Bundle();
                 bundle.putString(WebviewFragment.PARAM_URL, "http://www.baidu.com");
-                bundle.putString(WebviewFragment.PARAM_TITLE,mTvTittle.getText().toString());
+                bundle.putString(WebviewFragment.PARAM_TITLE, mTvTittle.getText().toString());
                 DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
                 break;
         }
@@ -498,13 +499,13 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
     }
 
-    private void VipPassage(){
+    private void VipPassage() {
         Bundle bundle = new Bundle();
-        bundle.putString(WebviewFragment.PARAM_TITLE,mTvTittle.getText().toString());
-        if(mH5UrlList != null){
-            bundle.putString(WebviewFragment.PARAM_URL,mH5UrlList.getVip_url());
+        bundle.putString(WebviewFragment.PARAM_TITLE, mTvTittle.getText().toString());
+        if (mH5UrlList != null) {
+            bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.getVip_url());
         }
-        DetailFragmentsActivity.launch(getContext(),bundle, WebviewFragment.newInstance());
+        DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
     }
 
 
@@ -529,24 +530,18 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
-                Bundle bundle = new Bundle();
-//                bundle.putString("packagename",packageInfo.getGame().getName());
-                //               bundle.putString("channelname",packageInfo.getChannel().getName());
-                // DetailFragmentsActivity.launch(context, bundle, RechargeGameFragment.newInstance());
+                viewPager.setCurrentItem(0);
+
             }
         });
         goAddCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
-                Bundle bundle = new Bundle();
-                //bundle.putString("packagename",packageInfo.getGame().getName());
-                //bundle.putString("channelname",packageInfo.getChannel().getName());
-                //DetailFragmentsActivity.launch(context, bundle, RechargeGameFragment.newInstance());
+                viewPager.setCurrentItem(0);
             }
         });
     }
-
 
 
 }
