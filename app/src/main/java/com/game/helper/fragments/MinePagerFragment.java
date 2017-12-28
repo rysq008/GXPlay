@@ -120,7 +120,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         Log.e("ll", "onresume");
         if (mLoginView == null || mUnLoginView == null)
             return;
-        if (Utils.hasLoginInfo(getContext())) {
+        if (SharedPreUtil.isLogin()) {
             loginInit();
         } else {
             unloginInit();

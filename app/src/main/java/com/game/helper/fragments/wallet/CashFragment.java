@@ -24,6 +24,7 @@ import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
@@ -157,7 +158,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
             @Override
             public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
                 if (checkTradePasswdResultsHttpResultModel.isSucceful()){
-                    applyFromNet(Utils.getLoginInfo(getContext()).member_id+"",cashValue,isUseAccountBalance()+"",password);
+                    applyFromNet(SharedPreUtil.getLoginUserInfo().member_id+"",cashValue,isUseAccountBalance()+"",password);
                 }else if (checkTradePasswdResultsHttpResultModel.isNoneTradePassword()) {
                     //设置交易密码
                     final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm,

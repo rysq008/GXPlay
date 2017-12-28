@@ -27,6 +27,7 @@ import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.utils.WXPayUtils;
 
@@ -229,7 +230,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private void AliPay(float amount) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                Utils.getLoginInfo(getContext()).member_id+"",
+                SharedPreUtil.getLoginUserInfo().member_id+"",
                 amount + "",
                 "1",
                 "1",
@@ -269,7 +270,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private void weixinPay(float amount) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                Utils.getLoginInfo(getContext()).member_id+"",
+                SharedPreUtil.getLoginUserInfo().member_id+"",
                 amount + "",
                 "2",
                 "1",

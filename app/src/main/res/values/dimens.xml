@@ -161,7 +161,7 @@
     <dimen name="game_detail_fragment_icon_avatar">40dp</dimen>
 
     <!--login-->
-    <dimen name="login_tab_width">90dp</dimen>
+    <dimen name="login_tab_width">95dp</dimen>
 
     <!--picker-->
     <dimen name="pickerview_topbar_paddingleft">10dp</dimen>

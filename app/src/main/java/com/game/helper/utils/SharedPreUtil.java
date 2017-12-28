@@ -47,21 +47,12 @@ public class SharedPreUtil {
         return sp.edit().putBoolean(KEY_FIRST_OPEN_APP, false).commit();
     }
 
-    public static boolean isLogin() {
-        String sessionid = getSessionId();
-        return !TextUtils.isEmpty(sessionid);
-    }
-
     public static String getCookies() {
         return sp.getString(KEY_COOKIES, "");
     }
 
     public static boolean saveCookies(String cookies) {
         return sp.edit().putString(KEY_COOKIES, cookies).commit();
-    }
-
-    public static boolean saveLoginStatus(String sessionid) {
-        return sp.edit().putString(KEY_LOGIN_INFO, sessionid).commit();
     }
 
     public static void saveMac(String mac) {
@@ -72,20 +63,6 @@ public class SharedPreUtil {
         return sp.getString(KEY_MAC, "");
     }
 
-    public static LoginUserInfo getLoginUserInfo() {
-        return getObject(USER_INFO);
-    }
-
-    public static void saveLoginUserInfo(LoginUserInfo loginUserInfo) {
-        saveObject(USER_INFO, loginUserInfo);
-        BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, loginUserInfo.icon));
-    }
-
-    public static void cleanLoginUserInfo() {
-        sp.edit().remove(USER_INFO).apply();
-        BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, ""));
-    }
-
     public static void saveSearchHistoryList(List list){
         saveObject(SEARCH_HISTORY_LIST,list);
     }
@@ -94,7 +71,50 @@ public class SharedPreUtil {
         return getObject(SEARCH_HISTORY_LIST);
     }
 
-    //********************************************************************************************************************************************************************************//
+
+    /*****************************          login about start                 ******************************/
+
+    /**
+     * 保存sessionid
+     * */
+    public static boolean saveLoginStatus(String sessionid) {
+        return sp.edit().putString(KEY_LOGIN_INFO, sessionid).commit();
+    }
+
+    /**
+     * 是否登陆
+     * */
+    public static boolean isLogin() {
+        String sessionid = getSessionId();
+        return !TextUtils.isEmpty(sessionid);
+    }
+
+    /**
+     * 获取登陆用户
+     * */
+    public static LoginUserInfo getLoginUserInfo() {
+        return getObject(USER_INFO);
+    }
+
+    /**
+     * 保存登陆用户
+     * */
+    public static void saveLoginUserInfo(LoginUserInfo loginUserInfo) {
+        saveObject(USER_INFO, loginUserInfo);
+        BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, loginUserInfo.icon));
+    }
+
+    /**
+     * 清除登陆
+     * */
+    public static void cleanLoginUserInfo() {
+        sp.edit().remove(USER_INFO).apply();
+        BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, ""));
+    }
+
+    /**
+     * session id
+     * */
     public static String getSessionId() {
         return sp.getString(SharedPreference_SessionId, "");
     }
@@ -106,6 +126,42 @@ public class SharedPreUtil {
     public static void clearSessionId() {
         sp.edit().remove(SharedPreference_SessionId).apply();
     }
+
+    /**
+     * 更新登陆账户密码设置状态
+     * */
+    public static void updateUserPasswdStatus(Context context, boolean hasPasswd){
+        LoginUserInfo savedUser = getLoginUserInfo();
+        savedUser.has_passwd = hasPasswd;
+        cleanLoginUserInfo();
+        saveLoginUserInfo(savedUser);
+    }
+
+    /**
+     * 更新登陆账户交易密码设置状态
+     * */
+    public static void updateUserTradePasswdStatus(Context context, boolean hasTradePasswd){
+        LoginUserInfo savedUser = getLoginUserInfo();
+        savedUser.has_trade_passwd = hasTradePasswd;
+        cleanLoginUserInfo();
+        saveLoginUserInfo(savedUser);
+    }
+
+    /**
+     * 更新登陆账户支付宝设置状态
+     * */
+    public static void updateUserAlipayStatus(Context context, boolean hasAlipay){
+        LoginUserInfo savedUser = getLoginUserInfo();
+        savedUser.has_alipay_account = hasAlipay;
+        cleanLoginUserInfo();
+        saveLoginUserInfo(savedUser);
+    }
+
+    /*****************************          login about end                 ******************************/
+
+
+
+    /*****************************          public method start                 ******************************/
 
     private static <T> T getObject(String key, Class<T> c) {
         if (TextUtils.isEmpty(key)) {
@@ -162,5 +218,6 @@ public class SharedPreUtil {
         }
         return t;
     }
+    /*****************************          public method end                 ******************************/
 
 }

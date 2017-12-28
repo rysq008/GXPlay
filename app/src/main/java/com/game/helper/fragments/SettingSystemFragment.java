@@ -81,7 +81,8 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             public void accept(HttpResultModel<LogoutResults> logoutResultsHttpResultModel) throws Exception {
                 if (logoutResultsHttpResultModel.isSucceful()) {
                         SharedPreUtil.cleanLoginUserInfo();
-                    Utils.clearLoginInfo(getContext());
+                    SharedPreUtil.cleanLoginUserInfo();
+                    SharedPreUtil.clearSessionId();
                     SharedPreUtil.saveSessionId("");
                     getActivity().onBackPressed();
                 }else {

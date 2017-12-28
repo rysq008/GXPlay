@@ -67,6 +67,8 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     TextView debugHint;
     @BindView(R.id.tv_left_time)
     CountDownText mCountDownText;
+    @BindView(R.id.iv_code)
+    ImageView mIvCode;
 
     //args
     private int Login_Type = 1;
@@ -125,7 +127,6 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
             public void accept(HttpResultModel<LoginResults> loginResultsHttpResultModel) throws Exception {
                 if (loginResultsHttpResultModel.isSucceful()) {
                     LoginUserInfo userInfo = new LoginUserInfo(loginResultsHttpResultModel.data);
-                    Utils.writeLoginInfo(getContext(), userInfo);
                     SharedPreUtil.saveLoginUserInfo(userInfo);
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginSuccessful(userInfo);
@@ -211,6 +212,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         mTabMessage.setTextColor(getResources().getColor(message_login ? R.color.colorPrimary : R.color.colorWhite));
         mTabPasswd.setSelected(message_login ? true : false);
         mTabMessage.setSelected(message_login ? false : true);
+        mIvCode.setImageResource(message_login ? R.mipmap.login_ic_secret : R.mipmap.login_ic_code);
 
         Login_Type = type;
         mPassWord.setText("");

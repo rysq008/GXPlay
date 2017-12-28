@@ -41,6 +41,7 @@ import com.game.helper.net.model.ConsumeRequestBody;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.utils.AliPayResultUtils;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.utils.WXPayUtils;
 import com.game.helper.views.PasswordEditDialog;
@@ -569,7 +570,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 }
 
                 //是否设置了交易密码
-                if (Utils.getLoginInfo(OrderConfirmActivity.this).has_trade_passwd) {
+                if (SharedPreUtil.getLoginUserInfo().has_trade_passwd) {
                     final PasswordEditDialog dialog = new PasswordEditDialog();
                     dialog.addOnPassWordEditListener(new PasswordEditDialog.OnPassWordEditListener() {
                         @Override
@@ -793,7 +794,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * ali支付
      */
     private void aliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "1", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id+"", mNeedPay + "", "1", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -832,7 +833,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 微信支付
      */
     private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(Utils.getLoginInfo(OrderConfirmActivity.this).member_id+"", mNeedPay + "", "2", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id+"", mNeedPay + "", "2", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {

@@ -128,11 +128,11 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
             public void accept(HttpResultModel<RegistResults> registResultsHttpResultModel) throws Exception {
                 if (registResultsHttpResultModel.isSucceful()) {
                     LoginUserInfo userInfo = new LoginUserInfo(registResultsHttpResultModel.data);
-                    Utils.writeLoginInfo(getContext(),userInfo);
                     SharedPreUtil.saveLoginUserInfo(userInfo);
                     if (mOnRegistListener != null){
                         mOnRegistListener.onRegistSuccessful(userInfo);
                     }
+                    Toast.makeText(getContext(), registResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
 
 //                    if (!registResultsHttpResultModel.data.has_passwd){

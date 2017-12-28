@@ -86,7 +86,7 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
         mTittle.setText(getResources().getString(R.string.reset_tittle));
         mBack.setOnClickListener(this);
         mResetPasswd.setSelected(false);
-        mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
+        mAccount.setText(Utils.converterSecretPhone(SharedPreUtil.getLoginUserInfo().phone));
         mAccount.setEditAble(false);
         mGotoLogin.setVisibility(View.GONE);
         mPassWord.addOnEditInputListener(this);
@@ -125,7 +125,7 @@ public class ResetPasswdFragment extends XBaseFragment implements View.OnClickLi
             public void accept(HttpResultModel<ResetPasswdResults> resetPasswdResultsHttpResultModel ) throws Exception {
                 if (resetPasswdResultsHttpResultModel.isSucceful()) {
                     Toast.makeText(getContext(), "修改密码成功！", Toast.LENGTH_SHORT).show();
-                    Utils.updateUserPasswdStatus(getContext(),true);
+                    SharedPreUtil.updateUserPasswdStatus(getContext(),true);
                     getActivity().onBackPressed();
                 }else {
                     Toast.makeText(getContext(), resetPasswdResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();

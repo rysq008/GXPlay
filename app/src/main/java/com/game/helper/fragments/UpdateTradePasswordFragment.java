@@ -24,6 +24,7 @@ import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
@@ -92,7 +93,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
         mHeadBack.setOnClickListener(this);
 
         mResetPasswd.setSelected(false);
-        mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
+        mAccount.setText(Utils.converterSecretPhone(SharedPreUtil.getLoginUserInfo().phone));
         mPassWord.addOnEditInputListener(this);
         mPassWord1.addOnEditInputListener(this);
         mVerrity.addOnEditInputListener(this);
@@ -105,7 +106,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     }
 
     private void resetTradePassword(){
-        String account = Utils.getLoginInfo(getContext()).phone;
+        String account = SharedPreUtil.getLoginUserInfo().phone;
         String passWord = mPassWord.getText().toString().trim();
         String passWord1 = mPassWord1.getText().toString().trim();
         String code = mVerrity.getText().toString().trim();
@@ -133,7 +134,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
                 String hint = "修改交易密码失败！请重试";
                 if (resetTradeResultsHttpResultModel.isSucceful()) {
                     hint = "修改交易密码成功！";
-                    Utils.updateUserTradePasswdStatus(getContext(),true);
+                    SharedPreUtil.updateUserTradePasswdStatus(getContext(),true);
                 }
                 final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Single_Confirm,"",hint);
                 dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
@@ -158,7 +159,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     }
 
     private void setTradePassword(){
-        String account = Utils.getLoginInfo(getContext()).phone;
+        String account = SharedPreUtil.getLoginUserInfo().phone;
         String passWord = mPassWord.getText().toString().trim();
         String passWord1 = mPassWord1.getText().toString().trim();
         String code = mVerrity.getText().toString().trim();
@@ -186,7 +187,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
                 String hint = "修改交易密码失败！请重试";
                 if (resetTradeResultsHttpResultModel.isSucceful()) {
                     hint = "修改交易密码成功！";
-                    Utils.updateUserTradePasswdStatus(getContext(),true);
+                    SharedPreUtil.updateUserTradePasswdStatus(getContext(),true);
                 }
                 final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Single_Confirm,"",hint);
                 dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
@@ -211,7 +212,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     }
 
     private void getVerify(){
-        String account = Utils.getLoginInfo(getContext()).phone;
+        String account = SharedPreUtil.getLoginUserInfo().phone;
 
         if (StringUtils.isEmpty(account)){
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
@@ -241,7 +242,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
             getActivity().onBackPressed();
         }
         if (v == mCountDownText){
-            String account = Utils.getLoginInfo(getContext()).phone;
+            String account = SharedPreUtil.getLoginUserInfo().phone;
             if (StringUtils.isEmpty(account)) return;
             mCountDownText.setCountDownTimer(60 * 1000,1000);
             mCountDownText.startTimer();

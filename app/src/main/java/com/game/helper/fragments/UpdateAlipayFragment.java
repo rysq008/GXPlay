@@ -22,6 +22,7 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
@@ -94,7 +95,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
         mHeadBack.setOnClickListener(this);
 
         mResetPasswd.setSelected(false);
-        mAccount.setText(Utils.converterSecretPhone(Utils.getLoginInfo(getContext()).phone));
+        mAccount.setText(Utils.converterSecretPhone(SharedPreUtil.getLoginUserInfo().phone));
         mOldAlipay.addOnEditInputListener(this);
         mAlipayAccount.addOnEditInputListener(this);
         mAlipayAccount1.addOnEditInputListener(this);
@@ -111,7 +112,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
     }
 
     private void resetAlipayAccount(){
-        String account = Utils.getLoginInfo(getContext()).phone;
+        String account = SharedPreUtil.getLoginUserInfo().phone;
         String oldAlipay = mOldAlipay.getText().toString().trim();
         String passWord = mAlipayAccount.getText().toString().trim();
         String passWord1 = mAlipayAccount1.getText().toString().trim();
@@ -141,7 +142,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
             public void accept(HttpResultModel<ResetAlipayResults> resetAlipayResultsHttpResultModel) throws Exception {
                 String hint = resetAlipayResultsHttpResultModel.getResponseMsg();
                 if (resetAlipayResultsHttpResultModel.isSucceful()) {
-                    Utils.updateUserAlipayStatus(getContext(),true);
+                    SharedPreUtil.updateUserAlipayStatus(getContext(),true);
                 }
                 final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Single_Confirm,"",hint);
                 dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
@@ -167,7 +168,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
     }
 
     private void getVerify(){
-        String account = Utils.getLoginInfo(getContext()).phone;
+        String account = SharedPreUtil.getLoginUserInfo().phone;
 
         if (StringUtils.isEmpty(account)){
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
@@ -197,7 +198,7 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
             getActivity().onBackPressed();
         }
         if (v == mCountDownText){
-            String account = Utils.getLoginInfo(getContext()).phone;
+            String account = SharedPreUtil.getLoginUserInfo().phone;
             if (StringUtils.isEmpty(account)) return;
             mCountDownText.setCountDownTimer(60 * 1000,1000);
             mCountDownText.startTimer();

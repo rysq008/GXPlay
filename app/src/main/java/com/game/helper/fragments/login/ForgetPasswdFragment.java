@@ -22,6 +22,7 @@ import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
@@ -121,7 +122,7 @@ public class ForgetPasswdFragment extends XBaseFragment implements View.OnClickL
             public void accept(HttpResultModel<ResetPasswdResults> resetPasswdResultsHttpResultModel ) throws Exception {
                 if (resetPasswdResultsHttpResultModel.isSucceful()) {
                     Toast.makeText(getContext(), "修改密码成功！", Toast.LENGTH_SHORT).show();
-                    Utils.updateUserPasswdStatus(getContext(),true);
+                    SharedPreUtil.updateUserPasswdStatus(getContext(),true);
                     getActivity().onBackPressed();
                 }else {
                     Toast.makeText(getContext(), resetPasswdResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();

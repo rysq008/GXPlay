@@ -236,21 +236,21 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
 
 
         //安全管理三项状态设置
-        if (Utils.getLoginInfo(getContext()).has_passwd) {
+        if (SharedPreUtil.getLoginUserInfo().has_passwd) {
             mPasswordStatus.setText(getResources().getString(R.string.setting_password_status_exist));
             mPasswordStatus.setTextColor(getResources().getColor(R.color.colorShadow));
         } else {
             mPasswordStatus.setText(getResources().getString(R.string.setting_password_status_none));
             mPasswordStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
-        if (Utils.getLoginInfo(getContext()).has_trade_passwd) {
+        if (SharedPreUtil.getLoginUserInfo().has_trade_passwd) {
             mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_exist));
             mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorShadow));
         } else {
             mOrderPasswordStatus.setText(getResources().getString(R.string.setting_password_status_none));
             mOrderPasswordStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
-        if (Utils.getLoginInfo(getContext()).has_alipay_account) {
+        if (SharedPreUtil.getLoginUserInfo().has_alipay_account) {
             mAlipayStatus.setText(getResources().getString(R.string.setting_password_status_exist));
             mAlipayStatus.setTextColor(getResources().getColor(R.color.colorShadow));
         } else {
@@ -276,7 +276,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         }
         if (v == mItemOrderPassword) {
             goToSetTradePassword(true);
-            /*if (!(Utils.getLoginInfo(getContext()).has_trade_passwd)) {
+            /*if (!(SharedPreUtil.getLoginUserInfo().has_trade_passwd)) {
                 goToSetTradePassword(true);
                 return;
             }
@@ -366,7 +366,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     private void goToSetAlipay() {
         UpdateAlipayFragment updateAlipayFragment = UpdateAlipayFragment.newInstance();
         Bundle bundle = new Bundle();
-        bundle.putBoolean(UpdateAlipayFragment.TAG, Utils.getLoginInfo(getContext()).has_alipay_account);
+        bundle.putBoolean(UpdateAlipayFragment.TAG, SharedPreUtil.getLoginUserInfo().has_alipay_account);
         updateAlipayFragment.setArguments(bundle);
         DetailFragmentsActivity.launch(getContext(), bundle, updateAlipayFragment);
     }
@@ -432,7 +432,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
      * 创建img uri
      */
     private Uri createCoverUri(String type) {
-        String filename = Utils.getLoginInfo(getContext()).member_id + type + ".jpg";
+        String filename = SharedPreUtil.getLoginUserInfo().member_id + type + ".jpg";
         File outputImage = new File(Utils.getRootDir(), filename);
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
