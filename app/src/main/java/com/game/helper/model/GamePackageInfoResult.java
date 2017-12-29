@@ -101,6 +101,16 @@ public class GamePackageInfoResult extends XBaseModel {
         private int id;
         private String name;
 
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        private String url;
+
         public ClassTypeBean getClass_type() {
             return class_type;
         }

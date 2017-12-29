@@ -57,35 +57,7 @@ import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
-import com.game.helper.model.GamePackageInfoResult;
-import com.game.helper.net.model.DeleteGameRequestBody;
-import com.game.helper.net.model.FeedbackRequestBody;
-import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
-import com.game.helper.net.model.GameInfoCommentListRequestBody;
-import com.game.helper.net.model.GameInfoGiftListRequestBody;
-import com.game.helper.net.model.GamePackageInfoRequestBody;
-import com.game.helper.net.model.GamePackageInfo_InfoRequestBody;
-import com.game.helper.net.model.ForgetPasswdRequestBody;
-import com.game.helper.net.model.GamePackageRequestBody;
-import com.game.helper.net.model.ReceiveGiftRequestBody;
-import com.game.helper.net.model.SetTradeRequestBody;
-import com.game.helper.net.model.SingleGameIdRequestBody;
-import com.game.helper.net.model.BannerRequestBody;
-import com.game.helper.net.model.DeleteGiftRequestBody;
-import com.game.helper.net.model.MineGameRequestBody;
-import com.game.helper.net.model.MineGiftInfoRequestBody;
-import com.game.helper.net.model.SetTradeRequestBody;
-import com.game.helper.net.model.SingleGameIdRequestBody;
-import com.game.helper.net.model.BannerRequestBody;
-import com.game.helper.net.model.DeleteGiftRequestBody;
-import com.game.helper.net.model.FeedbackRequestBody;
-import com.game.helper.net.model.MineGameRequestBody;
-import com.game.helper.net.model.MineGiftInfoRequestBody;
-import com.game.helper.net.model.SetTradeRequestBody;
-import com.game.helper.net.model.SingleGameIdRequestBody;
-import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.model.model.PayResultModel;
-import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
@@ -100,6 +72,7 @@ import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
+import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GameInfoCommentListRequestBody;
 import com.game.helper.net.model.GameInfoGiftListRequestBody;
 import com.game.helper.net.model.GameListRequestBody;
@@ -110,6 +83,7 @@ import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.net.model.PayRequestBody;
+import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
@@ -463,10 +437,6 @@ public interface ApiService {
     //获取h5的url列表
     @POST("/sys/get_h5_url_list/")
     Flowable<HttpResultModel<H5UrlListResults>> getH5UrlList();
-
-    //获取分享收益H5地址
-    @POST("/sys/get_h5_url_list/")
-    Flowable<HttpResultModel<ShareIncomeResultsModel>> getShareIncomeUrl(@Body BaseRequestBody shareIncomeRequestBody);
 
     //领取游戏礼包接口
     @POST("/game/receive_gift_code/")

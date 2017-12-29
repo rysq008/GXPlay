@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.game.helper.activitys.BaseActivity.XDetailBaseActivity;
+import com.game.helper.model.CommonShareResults;
+import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.share.UMengShare;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.umeng.socialize.UMShareAPI;
@@ -66,9 +68,13 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         UMShareAPI.get(this).release();
     }
 
-    public void umShare() {
+    public void umShare(GamePackageInfoResult packageInfo) {
+        if(null == packageInfo){
+            return;
+        }
+
         UMengShare share = new UMengShare(this);
-        share.shareLinkWithBoard(new UMShareListener() {
+        share.shareLinkWithBoard(parseToShareModel(packageInfo),new UMShareListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
                 Log.e(TAG, "onStart: umShare");
@@ -89,6 +95,15 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
                 Log.e(TAG, "onCancel: umShare");
             }
         });
+    }
+
+    private CommonShareResults parseToShareModel(GamePackageInfoResult packageInfo) {
+        CommonShareResults model = new CommonShareResults();
+        model.setDesc(packageInfo.getGame().getIntro());
+        model.setLogo(packageInfo.getGame().getLogo());
+        model.setTitle(packageInfo.getGame().getName());
+        model.setUrl(packageInfo.getGame().getUrl());
+        return model;
     }
 
     //注意onActivityResult不可在fragment中实现，如果在fragment中调用登录或分享，需要在fragment依赖的Activity中实现
