@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -244,26 +243,26 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (getUserVisibleHint()) {
-            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
-            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
-        }
-    }
-
-    @Override
     protected void onResumeLazy() {
         super.onResumeLazy();
-        Log.e("ttttttttt", "onresume");
         if (loginRl == null || loginLayout == null)
             return;
         if (!TextUtils.isEmpty(SharedPreUtil.getSessionId())) {
             loginRl.setVisibility(View.GONE);
             loginLayout.setVisibility(View.VISIBLE);
+            refreshData();
         } else {
             loginRl.setVisibility(View.VISIBLE);
             loginLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
         }
     }
 }
