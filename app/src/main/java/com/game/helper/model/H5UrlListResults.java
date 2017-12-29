@@ -15,6 +15,7 @@ public class H5UrlListResults extends XBaseModel {
 
     private String market_url;
     private String vip_url;
+    private String account_guide_url;
 
     public String getMarket_url() {
         return market_url;
@@ -30,5 +31,13 @@ public class H5UrlListResults extends XBaseModel {
 
     public void setVip_url(String vip_url) {
         this.vip_url = vip_url;
+    }
+
+    public String getAccount_guide_url() {
+        return account_guide_url;
+    }
+
+    public void setAccount_guide_url(String account_guide_url) {
+        this.account_guide_url = account_guide_url;
     }
 }

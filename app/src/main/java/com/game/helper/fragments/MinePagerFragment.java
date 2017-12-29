@@ -54,6 +54,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     @BindView(R.id.layout_unlogin)
     View mUnLoginView;
     //login
+    @BindView(R.id.iv_messagea)
+    ImageView mMessage;
     @BindView(R.id.tv_name)
     TextView mName;
     @BindView(R.id.tv_vip_level)
@@ -158,6 +160,9 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         if (v == mRecharge){
             DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
         }
+        if (v == mMessage){
+            DetailFragmentsActivity.launch(getContext(),null, MessageFragment.newInstance());
+        }
     }
 
     /*****************    unlogin ui start   *******************/
@@ -180,6 +185,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         mMineOrder.setOnClickListener(this);
         mMineVip.setOnClickListener(this);
         mRecharge.setOnClickListener(this);
+        mMessage.setOnClickListener(this);
         initLoginData();
         initLoginView();
         getMemberInfo();

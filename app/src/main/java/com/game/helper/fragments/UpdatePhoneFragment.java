@@ -21,6 +21,7 @@ import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
 import com.game.helper.views.widget.CountDownText;
 
@@ -73,13 +74,13 @@ public class UpdatePhoneFragment extends XBaseFragment implements View.OnClickLi
         mHeadBack.setOnClickListener(this);
         mleftTime.setOnClickListener(this);
         mSubmit.setOnClickListener(this);
-        getData();
+        //getData();
     }
 
     private void getData() {
         if (getArguments() == null) return;
         String phone = getArguments().getString(TAG);
-        if (phone != null && phone.length() != 0) mPhone.setText(phone);
+        if (phone != null && phone.length() != 0) mPhone.setText(Utils.converterSecretPhone(phone));
     }
 
     @Override
@@ -88,8 +89,6 @@ public class UpdatePhoneFragment extends XBaseFragment implements View.OnClickLi
             getActivity().onBackPressed();
         }
         if (v == mleftTime){
-            mleftTime.setCountDownTimer(60 * 1000,1000);
-            mleftTime.startTimer();
             getVerify();
         }
         if (v == mSubmit){
@@ -104,6 +103,9 @@ public class UpdatePhoneFragment extends XBaseFragment implements View.OnClickLi
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
+
+        mleftTime.setCountDownTimer(60 * 1000,1000);
+        mleftTime.startTimer();
 
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_LOGIN));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {

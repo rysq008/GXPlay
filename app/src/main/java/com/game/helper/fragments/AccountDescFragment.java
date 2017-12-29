@@ -24,6 +24,7 @@ import com.game.helper.net.api.Api;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,8 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
+import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
@@ -60,13 +63,16 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
     TextView identy;
     @BindView(R.id.tv_timea)
     TextView time;
-    @BindView(R.id.rc_lista)
-    RecyclerView list;
     @BindView(R.id.tv_value_lefta)
     TextView payValue;
     @BindView(R.id.tv_value_righta)
     TextView freeValue;
 
+    @BindView(R.id.rc_lista)
+    XRecyclerContentLayout mContent;
+
+    private StateView errorView;
+    private View loadingView;
     private GameDescAdapter adapter;
     private GameAccountResultModel.ListBean game;
     private List<MineGameDesclistResults.MineGameDesclistItem> data = new ArrayList<>();
@@ -114,37 +120,83 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
             vip.setImageResource(Utils.getExtensionVipIcon(game.getVip_level()));
         }
 
-        list.setHasFixedSize(true);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
-        list.setItemAnimator(new DefaultItemAnimator());
+
+        if (errorView == null) {
+            errorView = new StateView(context);
+            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
+        }
+        if (null != errorView.getParent()) ((ViewGroup) errorView.getParent()).removeView(errorView);
+        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
+        if (null != loadingView.getParent()) ((ViewGroup) loadingView.getParent()).removeView(loadingView);
+        mContent.errorView(errorView);
+        mContent.loadingView(loadingView);
+        mContent.showLoading();
+        initList();
+    }
+
+    private void initList(){
+        adapter = null;
         adapter = new GameDescAdapter();
-        list.setAdapter(adapter);
+        mContent.getLoadingView().setVisibility(View.GONE);
+        mContent.getRecyclerView().setHasFixedSize(true);
+        mContent.getRecyclerView().verticalLayoutManager(context);
+        mContent.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
+        mContent.getRecyclerView().setAdapter(adapter);
+        mContent.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+            @Override
+            public void onRefresh() {
+                getMineGameDescList(game.getId(),1);
+            }
+
+            @Override
+            public void onLoadMore(int page) {
+                getMineGameDescList(game.getId(),page);
+            }
+        });
+        mContent.getRecyclerView().useDefLoadMoreView();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getMineGameDescList(game.getId());
+        getMineGameDescList(game.getId(),1);
     }
 
-    private void getMineGameDescList(int id) {
-        Flowable<HttpResultModel<MineGameDesclistResults>> fr = DataService.getMineGameDescList(new SingleGameIdRequestBody(id));
+    private void getMineGameDescList(int gameid, final int page) {
+        Flowable<HttpResultModel<MineGameDesclistResults>> fr = DataService.getMineGameDescList(new SingleGameIdRequestBody(gameid));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MineGameDesclistResults>>() {
             @Override
             public void accept(HttpResultModel<MineGameDesclistResults> mineGameDesclistResultsHttpResultModel) throws Exception {
                 if (mineGameDesclistResultsHttpResultModel.isSucceful()) {
-                    data = mineGameDesclistResultsHttpResultModel.data.list;
-                    adapter.notifyDataSetChanged();
+                    if (page == 1){
+                        data.clear();
+                    }
+                    data.addAll(mineGameDesclistResultsHttpResultModel.data.list);
+                    notifyData();
+                    mContent.getRecyclerView().setPage(mineGameDesclistResultsHttpResultModel.current_page,mineGameDesclistResultsHttpResultModel.total_page);
                 }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
+                showError(netError);
                 Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void notifyData(){
+        adapter.notifyDataSetChanged();
+        mContent.getLoadingView().setVisibility(View.GONE);
+        mContent.refreshState(false);
+        mContent.showContent();
+    }
+
+    public void showError(NetError error) {
+        mContent.getLoadingView().setVisibility(View.GONE);
+        mContent.refreshState(false);
+        mContent.showError();
+    }
 
     @Override
     public void onClick(View v) {

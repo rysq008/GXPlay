@@ -5,6 +5,7 @@
     android:background="@mipmap/bg_mine_info">
 
     <ImageView
+        android:id="@+id/iv_messagea"
         android:layout_alignParentRight="true"
         android:layout_margin="@dimen/dp_10"
         android:src="@mipmap/ic_message"

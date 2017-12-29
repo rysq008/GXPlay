@@ -26,6 +26,7 @@ import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.RedPackEvent;
 import com.game.helper.fragments.UpdateTradePasswordFragment;
+import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -893,6 +894,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             public void accept(HttpResultModel<FeedbackListResults> checkTradePasswdResultsHttpResultModel) {
                 if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
                     Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();

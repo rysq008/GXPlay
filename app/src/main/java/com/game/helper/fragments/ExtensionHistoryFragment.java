@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
@@ -53,6 +54,12 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
+    @BindView(R.id.action_bar_setting)
+    View mSetting;
+    @BindView(R.id.iv_action)
+    View mIcon;
+    @BindView(R.id.tv_action)
+    TextView mAction;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
     @BindView(R.id.rc_extension_list)
@@ -81,8 +88,13 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
     }
 
     private void initView(){
+        mSetting.setVisibility(View.VISIBLE);
+        mIcon.setVisibility(View.GONE);
+        mAction.setVisibility(View.VISIBLE);
+        mAction.setText("去邀请");
         mHeadTittle.setText(getResources().getString(R.string.common_extension_history));
         mHeadBack.setOnClickListener(this);
+        mAction.setOnClickListener(this);
 
         if (errorView == null) {
             errorView = new StateView(context);
@@ -157,6 +169,10 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
     public void onClick(View v) {
         if (v == mHeadBack){
             getActivity().onBackPressed();
+        }
+        if (v == mAction){
+            // TODO: 2017/12/29 补全跳转
+            Toast.makeText(getContext(), "去邀请", Toast.LENGTH_SHORT).show();
         }
     }
 

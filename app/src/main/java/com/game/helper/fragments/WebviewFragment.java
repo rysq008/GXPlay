@@ -3,6 +3,7 @@ package com.game.helper.fragments;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -35,7 +36,6 @@ public class WebviewFragment extends XBaseFragment {
     public static final String PARAM_URL = "url";
     public static final String PARAM_TITLE = "title";
 
-
     public static WebviewFragment newInstance() {
         return new WebviewFragment();
     }
@@ -45,6 +45,7 @@ public class WebviewFragment extends XBaseFragment {
         if (!Kits.Empty.check(getArguments())) {
             url = (String) getArguments().getString(PARAM_URL, "");
             title = getArguments().getString(PARAM_TITLE, "");
+            Log.d(TAG, "h5 : url = " + url + " / tittle = " + title);
         }
         initContentLayout();
         initRefreshLayout();

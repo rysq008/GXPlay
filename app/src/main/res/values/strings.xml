@@ -122,7 +122,7 @@
 
     <!--反馈-->
     <string name="feedback_tittle">意见反馈</string>
-    <string name="feedback_list_tittle">我的反馈</string>
+    <string name="feedback_list_tittle">我的意见反馈</string>
     <string name="feedback_edit_contnet_tittle">请描述您的问题或者建议</string>
     <string name="feedback_edit_content_hint">您的声音，我们倾听....</string>
     <string name="feedback_edit_phone_hint">您的联系方式（选填）</string>

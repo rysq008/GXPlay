@@ -158,6 +158,9 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
             return;
         }
 
+        mCountDownText.setCountDownTimer(60 * 1000,1000);
+        mCountDownText.startTimer();
+
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_REGIST));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
@@ -188,8 +191,6 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
             DetailFragmentsActivity.launch(getContext(),null,LoginFragment.newInstance());
         }
         if (v == mCountDownText){
-            mCountDownText.setCountDownTimer(60 * 1000,1000);
-            mCountDownText.startTimer();
             getVerify();
         }
     }

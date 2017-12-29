@@ -92,6 +92,8 @@
         android:gravity="center"
         android:id="@+id/ll_balance"
         android:layout_marginTop="@dimen/tabbar_divider_height"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

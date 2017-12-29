@@ -156,11 +156,11 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-        <android.support.v7.widget.RecyclerView
+        <cn.droidlover.xrecyclerview.XRecyclerContentLayout
             android:id="@+id/rc_lista"
-            android:background="@color/colorWhite"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@color/colorWhite" />
     </LinearLayout>
     <LinearLayout
         android:padding="@dimen/dp_10"

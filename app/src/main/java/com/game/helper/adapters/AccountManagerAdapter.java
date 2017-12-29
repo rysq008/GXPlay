@@ -106,10 +106,9 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             platform.setText(item.getGame_channel_name());
             accountIdenty.setText(item.getGame_account());
             creatTime.setText(item.getCreate_time());
-            if (item.getVip_level() == 0){
-                vip.setVisibility(View.GONE);
-            }else {
+            if (item.getVip_level() != 0){
                 vip.setImageResource(Utils.getExtensionVipIcon(item.getVip_level()));
+                vip.setVisibility(View.VISIBLE);
             }
             if (item.isIs_successed()){
                 action.setImageResource(R.mipmap.ic_jingzhi);
