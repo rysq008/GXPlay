@@ -25,6 +25,7 @@ import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.H5Results;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.HotWordResults;
 import com.game.helper.model.IncomeResultModel;
@@ -58,9 +59,7 @@ import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
-import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.model.PayResultModel;
-import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
@@ -458,10 +457,6 @@ public class DataService {
 
     public static Flowable<HttpResultModel<H5UrlListResults>> getH5UrlList() {
         return Api.CreateApiService().getH5UrlList();
-    }
-
-    public static Flowable<HttpResultModel<ShareIncomeResultsModel>> getShareIncomeUrl(BaseRequestBody shareIncomeRequestBody) {
-        return Api.CreateApiService().getShareIncomeUrl(shareIncomeRequestBody);
     }
 
 

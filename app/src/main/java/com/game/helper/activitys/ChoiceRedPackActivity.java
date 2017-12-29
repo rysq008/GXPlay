@@ -3,7 +3,6 @@ package com.game.helper.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.game.helper.R;
@@ -14,13 +13,12 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.views.widget.StateView;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 
 import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -32,11 +30,9 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
     @BindView(R.id.game_adapter_layout)
-    XRecyclerContentLayout xRecyclerContentLayout;
+    XReloadableRecyclerContentLayout XReloadableRecyclerContentLayout;
 
     AvailableRedpackAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
 
     private int option_game_id;
     private String totalMoney;
@@ -51,7 +47,6 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
         getIntentData(getIntent());
         initListeners();
         initView();
-        errorView.setLoadDataType(StateView.REFRESH, 1);
         fetchAvailableRedpackInfo(1);
     }
 
@@ -85,66 +80,43 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
         } else {
             mAdapter.setData(model);
         }
-        xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
-        xRecyclerContentLayout.refreshState(false);
+        XReloadableRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
         if (mAdapter.getItemCount() < 1) {
-            xRecyclerContentLayout.showEmpty();
+            XReloadableRecyclerContentLayout.showEmpty();
             return;
-        } else {
-            xRecyclerContentLayout.showContent();
-            xRecyclerContentLayout.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
-            return;
+        }else{
+            XReloadableRecyclerContentLayout.showContent();
         }
     }
 
+
     public void showError(NetError error) {
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
-        xRecyclerContentLayout.refreshState(false);
-        xRecyclerContentLayout.showError();
+        XReloadableRecyclerContentLayout.refreshState(false);
     }
 
     private void initView() {
         mHeadTittle.setText("可使用卡券");
 
-        xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
+        XReloadableRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == mAdapter) {
             mAdapter = new AvailableRedpackAdapter(context);
             mAdapter.addOnItemCheckListener(this);
         }
-        xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
-        xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
+        XReloadableRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
+        XReloadableRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                errorView.setLoadDataType(StateView.REFRESH, 1);
                 fetchAvailableRedpackInfo(1);
             }
 
             @Override
             public void onLoadMore(int page) {
-                errorView.setLoadDataType(StateView.LOADMORE, page);
                 fetchAvailableRedpackInfo(page);
             }
         });
 
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(xRecyclerContentLayout.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) {
-            ((ViewGroup) errorView.getParent()).removeView(errorView);
-        }
-        if (loadingView == null) {
-            loadingView = View.inflate(context, R.layout.view_loading, null);
-        }
-        if (null != loadingView.getParent()) {
-            ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        }
-        xRecyclerContentLayout.errorView(errorView);
-        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
-
-        xRecyclerContentLayout.loadingView(loadingView);
-        xRecyclerContentLayout.showLoading();
+        XReloadableRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
+        XReloadableRecyclerContentLayout.showLoading();
     }
 
     private void initListeners() {

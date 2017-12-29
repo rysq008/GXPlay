@@ -43,7 +43,6 @@ import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.utils.AliPayResultUtils;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.utils.Utils;
 import com.game.helper.utils.WXPayUtils;
 import com.game.helper.views.PasswordEditDialog;
 
@@ -223,6 +222,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     String accountAmount = "";//使用充值账户金额
     String marketingAmount = "";//使用推广账户金额
+
+    private boolean hasRedPack;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -475,12 +476,12 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
         }
 
-        if(needPay <= 0){
+        if (needPay <= 0) {
             aliPayCb.setChecked(false);
             wxPayCb.setChecked(false);
             aliPayCb.setEnabled(false);
             wxPayCb.setEnabled(false);
-        }else{
+        } else {
             aliPayCb.setEnabled(true);
             wxPayCb.setEnabled(true);
         }
@@ -499,12 +500,15 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     if (generalizeResultsHttpResultModel.data.getList().isEmpty()) {
                         redPackNum.setTextColor(getResources().getColor(R.color.black));
                         redPackNum.setText("无可用红包");
+                        hasRedPack = false;
                     } else {
                         redPackNum.setTextColor(Color.parseColor("#fe4430"));
                         redPackNum.setText(generalizeResultsHttpResultModel.data.getList().size() + "个可用");
+                        hasRedPack = true;
                     }
                     mRedPacks = generalizeResultsHttpResultModel.data;
                 } else {
+                    hasRedPack = false;
                     redPackNum.setTextColor(getResources().getColor(R.color.black));
                     redPackNum.setText("无可用红包");
                 }
@@ -515,6 +519,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             public void accept(NetError netError) throws Exception {
                 redPackNum.setTextColor(getResources().getColor(R.color.black));
                 redPackNum.setText("无可用红包");
+                hasRedPack = false;
             }
         });
     }
@@ -569,10 +574,12 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 onBackPressed();
                 break;
             case R.id.redPackLayout://红包
-                intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
-                intent.putExtra(OPTION_GAME_ID, gameId);
-                intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
-                startActivityForResult(intent, 0);
+                if (hasRedPack) {
+                    intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
+                    intent.putExtra(OPTION_GAME_ID, gameId);
+                    intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
+                    startActivityForResult(intent, 0);
+                }
                 break;
             case R.id.suretv://确定
                 //1.先判断页面信息是否填写完整
@@ -595,11 +602,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 } else {
                     goToSetTradePassword();
                 }
-
-//                weixinPay();
-
                 break;
-
             default:
                 break;
         }
@@ -807,7 +810,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * ali支付
      */
     private void aliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id+"", mNeedPay + "", "1", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "", mNeedPay + "", "1", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -846,7 +849,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 微信支付
      */
     private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id+"", mNeedPay + "", "2", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "", mNeedPay + "", "2", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {

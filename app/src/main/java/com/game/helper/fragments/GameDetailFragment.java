@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebViewFragment;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,23 +23,15 @@ import android.widget.Toast;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.fragments.recharge.RechargeFragment;
-import com.game.helper.model.BannerResults;
-import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameDetailAllResults;
 import com.game.helper.model.GamePackageInfoResult;
-import com.game.helper.model.HotResults;
-import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.H5UrlListResults;
-import com.game.helper.model.NoticeResults;
-import com.game.helper.model.RecommendResults;
-import com.game.helper.model.SpecialResults;
+import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
-import com.game.helper.present.HomeFragmentPresent;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
@@ -67,9 +58,6 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
-import io.reactivex.functions.Function5;
 
 public class GameDetailFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = GameDetailFragment.class.getSimpleName();
@@ -338,7 +326,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     public void onShareClick() {
         //分享
         if (getActivity() instanceof DetailFragmentsActivity) {
-            ((DetailFragmentsActivity) getActivity()).umShare();
+            ((DetailFragmentsActivity) getActivity()).umShare(packageInfo);
         }
 
     }

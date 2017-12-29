@@ -3,6 +3,8 @@ package com.game.helper.share;
 import android.app.Activity;
 
 import com.game.helper.R;
+import com.game.helper.model.CommonShareResults;
+import com.game.helper.net.api.Api;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -29,18 +31,19 @@ public class UMengShare {
     }
 
     //指定默认面板顺序
-    public UMengShare(Activity activity,SHARE_MEDIA[] media) {
+    public UMengShare(Activity activity, SHARE_MEDIA[] media) {
         this.mActivity = activity;
         this.mMedia = media;
     }
 
     /*----------------------分享文本   begin---------------------------*/
+
     /**
      * 分享文本   不使用UMeng默认面板
      * qq不支持单纯分享文本
      * 回调集中处理
      */
-    public void shareTextWithOutBoard(SHARE_MEDIA platform,String shareText,UMShareListener umShareListener){
+    public void shareTextWithOutBoard(SHARE_MEDIA platform, String shareText, UMShareListener umShareListener) {
         new ShareAction(mActivity)
                 .setPlatform(platform)//传入平台
                 .withText(shareText)//分享内容
@@ -53,7 +56,7 @@ public class UMengShare {
      * qq不支持单纯分享文本
      * 回调单独处理
      */
-    public void shareTextWithOutBoard(SHARE_MEDIA platform,String shareText){
+    public void shareTextWithOutBoard(SHARE_MEDIA platform, String shareText) {
         new ShareAction(mActivity)
                 .setPlatform(platform)//传入平台
                 .withText(shareText)//分享内容
@@ -105,11 +108,11 @@ public class UMengShare {
      * 分享图片    不使用UMeng默认面板
      * 回调集中处理
      */
-    public void shareImgWithOutBoard(SHARE_MEDIA platform,String shareText,UMShareListener umShareListener){
+    public void shareImgWithOutBoard(SHARE_MEDIA platform, String shareText, UMShareListener umShareListener) {
         new ShareAction(mActivity)
                 .setPlatform(platform)//传入平台
                 .withText(shareText)//分享内容
-                .withMedia(new UMImage(mActivity,R.mipmap.ic_mine_game))
+                .withMedia(new UMImage(mActivity, R.mipmap.ic_mine_game))
                 .setCallback(umShareListener)//回调监听器
                 .share();
     }
@@ -118,11 +121,11 @@ public class UMengShare {
      * 分享图片   不使用UMeng默认面板
      * 回调单独处理
      */
-    public void shareImgWithOutBoard(SHARE_MEDIA platform,String shareText){
+    public void shareImgWithOutBoard(SHARE_MEDIA platform, String shareText) {
         new ShareAction(mActivity)
                 .setPlatform(platform)//传入平台
                 .withText(shareText)//分享内容
-                .withMedia(new UMImage(mActivity,R.mipmap.ic_mine_game))
+                .withMedia(new UMImage(mActivity, R.mipmap.ic_mine_game))
                 .setCallback(new UMShareListener() {
                     @Override
                     public void onStart(SHARE_MEDIA share_media) {
@@ -152,15 +155,16 @@ public class UMengShare {
 
 
     /*----------------------分享链接  begin---------------------------*/
+
     /**
      * 分享链接   不使用UMeng默认面板
      * 回调集中处理
      */
-    public void shareLinkWithOutBoard(SHARE_MEDIA platform,UMShareListener umShareListener){
+    public void shareLinkWithOutBoard(SHARE_MEDIA platform, UMShareListener umShareListener) {
 
         UMWeb web = new UMWeb("http://www.baidu.com");
         web.setTitle("This is music title");//标题
-        web.setThumb(new UMImage(mActivity,R.mipmap.ic_mine_game));  //缩略图
+        web.setThumb(new UMImage(mActivity, R.mipmap.ic_mine_game));  //缩略图
         web.setDescription("my description");//描述
 
         new ShareAction(mActivity)
@@ -174,11 +178,11 @@ public class UMengShare {
      * 分享链接      不使用UMeng默认面板
      * 回调单独处理
      */
-    public void shareLinkWithOutBoard(SHARE_MEDIA platform){
+    public void shareLinkWithOutBoard(SHARE_MEDIA platform) {
 
         UMWeb web = new UMWeb("http://www.baidu.com");
         web.setTitle("This is music title");//标题
-        web.setThumb(new UMImage(mActivity,R.mipmap.ic_mine_game));  //缩略图
+        web.setThumb(new UMImage(mActivity, R.mipmap.ic_mine_game));  //缩略图
         web.setDescription("my description");//描述
 
         new ShareAction(mActivity)
@@ -225,7 +229,7 @@ public class UMengShare {
      * qq不支持单纯分享文本
      * 回调集中处理
      */
-    public void shareTextWithBoard(String shareText,UMShareListener umShareListener){
+    public void shareTextWithBoard(String shareText, UMShareListener umShareListener) {
         new ShareAction(mActivity)
                 .withText(shareText)
                 .setDisplayList(mMedia)
@@ -238,7 +242,7 @@ public class UMengShare {
      * qq不支持单纯分享文本
      * 回调集中处理
      */
-    public void shareTextWithBoard(String shareText){
+    public void shareTextWithBoard(String shareText) {
         new ShareAction(mActivity)
                 .withText(shareText)
                 .setDisplayList(mMedia)
@@ -269,14 +273,15 @@ public class UMengShare {
     /*----------------------分享文本   end---------------------------*/
 
     /*----------------------分享图片   begin---------------------------*/
+
     /**
      * 分享图片  使用UMeng自带默认面板
      * 回调集中处理
      */
-    public void shareImgWithBoard(String shareText,UMShareListener umShareListener){
+    public void shareImgWithBoard(String shareText, UMShareListener umShareListener) {
         new ShareAction(mActivity)
                 .withText(shareText)
-                .withMedia(new UMImage(mActivity,R.mipmap.ic_mine_game))
+                .withMedia(new UMImage(mActivity, R.mipmap.ic_mine_game))
                 .setDisplayList(mMedia)
                 .setCallback(umShareListener)
                 .open();
@@ -286,10 +291,10 @@ public class UMengShare {
      * 分享图片  使用UMeng自带默认面板
      * 回调集中处理
      */
-    public void shareImgWithBoard(String shareText){
+    public void shareImgWithBoard(String shareText) {
         new ShareAction(mActivity)
                 .withText(shareText)
-                .withMedia(new UMImage(mActivity,R.mipmap.ic_mine_game))
+                .withMedia(new UMImage(mActivity, R.mipmap.ic_mine_game))
                 .setDisplayList(mMedia)
                 .setCallback(new UMShareListener() {
                     @Override
@@ -321,14 +326,15 @@ public class UMengShare {
 
     /**
      * 分享链接  使用UMeng自带默认面板
-     * 回调集中处理
+     * 回调单独处理
      */
-    public void shareLinkWithBoard(UMShareListener umShareListener){
+    public void shareLinkWithBoard(CommonShareResults commonShareResults, UMShareListener umShareListener) {
 
-        UMWeb web = new UMWeb("http://www.baidu.com");
-        web.setTitle("This is music title");//标题
-        web.setThumb(new UMImage(mActivity,R.mipmap.ic_mine_game));  //缩略图
-        web.setDescription("my description");//描述
+        UMWeb web = new UMWeb(commonShareResults.getUrl());
+        web.setTitle(commonShareResults.getTitle());//标题
+        web.setThumb(new UMImage(mActivity, Api.API_BASE_URL + commonShareResults.getLogo()));  //缩略图
+        web.setDescription(commonShareResults.getDesc());//描述
+//        web.setThumb(new UMImage(mActivity,R.mipmap.ic_alipay));  //缩略图
 
         new ShareAction(mActivity)
                 .withMedia(web)
@@ -341,10 +347,10 @@ public class UMengShare {
      * 分享链接  使用UMeng自带默认面板
      * 回调集中处理
      */
-    public void shareLinkWithBoard(){
+    public void shareLinkWithBoard() {
         UMWeb web = new UMWeb("http://www.baidu.com");
         web.setTitle("This is music title");//标题
-        web.setThumb(new UMImage(mActivity,R.mipmap.ic_mine_game));  //缩略图
+        web.setThumb(new UMImage(mActivity, R.mipmap.ic_mine_game));  //缩略图
         web.setDescription("my description");//描述
 
         new ShareAction(mActivity)

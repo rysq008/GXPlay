@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,12 +20,11 @@ import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GeneralizeResults;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.LoginUserInfo;
-import com.game.helper.model.ShareIncomeResultsModel;
 import com.game.helper.model.model.MemberBean;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BannerRequestBody;
-import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.BannerView;
@@ -207,9 +205,10 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
 //                startActivity(intent);
                 break;
             case R.id.shareIncome://分享收益
-                fetchShareIncomeUrl();
+                fetchShareIncomeUrl("1");
                 break;
             case R.id.shareDiscount://分享折扣
+                fetchShareIncomeUrl("2");
 //                intent.setClass(getActivity(), MyAccountActivity.class);
 //                startActivity(intent);
                 //TODO
@@ -221,19 +220,35 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         }
     }
 
-    private void fetchShareIncomeUrl() {
-        Flowable<HttpResultModel<ShareIncomeResultsModel>> fr = DataService.getShareIncomeUrl(new BaseRequestBody(1));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<ShareIncomeResultsModel>>() {
+    /**
+     *
+     * @param type 1:分享推广收益  2：分享折扣
+     */
+    private void fetchShareIncomeUrl(final String type) {
+        Flowable<HttpResultModel<H5UrlListResults>> fr = DataService.getH5UrlList();
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<H5UrlListResults>>() {
             @Override
-            public void accept(HttpResultModel<ShareIncomeResultsModel> notConcernResultsHttpResultModel) throws Exception {
-                if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getMarket_url())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(WebviewFragment.PARAM_URL,notConcernResultsHttpResultModel.data.getMarket_url());
-                    bundle.putString(WebviewFragment.PARAM_TITLE,"分享收益");
-                    DetailFragmentsActivity.launch(getContext(),bundle, WebviewFragment.newInstance());
-                } else {
-                    Toast.makeText(getContext(), notConcernResultsHttpResultModel.message, Toast.LENGTH_SHORT).show();
+            public void accept(HttpResultModel<H5UrlListResults> notConcernResultsHttpResultModel) throws Exception {
+                if("1".equals(type)){
+                    if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getMarket_url())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(WebviewFragment.PARAM_URL,notConcernResultsHttpResultModel.data.getMarket_url());
+                        bundle.putString(WebviewFragment.PARAM_TITLE,"分享收益");
+                        DetailFragmentsActivity.launch(getContext(),bundle, WebviewFragment.newInstance());
+                    } else {
+                        Toast.makeText(getContext(), notConcernResultsHttpResultModel.message, Toast.LENGTH_SHORT).show();
+                    }
+                }else if("2".equals(type)){
+                    if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getShare_discount_url())) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(WebviewFragment.PARAM_URL,notConcernResultsHttpResultModel.data.getShare_discount_url());
+                        bundle.putString(WebviewFragment.PARAM_TITLE,"分享超低折扣");
+                        DetailFragmentsActivity.launch(getContext(),bundle, WebviewFragment.newInstance());
+                    } else {
+                        Toast.makeText(getContext(), notConcernResultsHttpResultModel.message, Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             }
         }, new Consumer<NetError>() {
             @Override
@@ -244,26 +259,26 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (getUserVisibleHint()) {
-            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
-            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
-        }
-    }
-
-    @Override
     protected void onResumeLazy() {
         super.onResumeLazy();
-        Log.e("ttttttttt", "onresume");
         if (loginRl == null || loginLayout == null)
             return;
         if (!TextUtils.isEmpty(SharedPreUtil.getSessionId())) {
             loginRl.setVisibility(View.GONE);
             loginLayout.setVisibility(View.VISIBLE);
+            refreshData();
         } else {
             loginRl.setVisibility(View.VISIBLE);
             loginLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getUserVisibleHint()) {
+            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
+            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
         }
     }
 }
