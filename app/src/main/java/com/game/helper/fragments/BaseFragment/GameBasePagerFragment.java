@@ -65,7 +65,6 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     }
 
     public void showData(List<ItemType> model) {
-        xStateController.removeView(xStateController.getLoadingView());
         if (Kits.Empty.check(model)) {
             xStateController.showEmpty();
         } else {

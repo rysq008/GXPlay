@@ -28,7 +28,6 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
     XReloadableStateContorller xStateController;
     @BindView(R.id.contentLayout)
     XReloadableRecyclerContentLayout contentLayout;//content
-    StateView errorView;
     @BindView(R.id.common_search_view)
     SearchComponentView searchComponentView;
 
@@ -110,10 +109,9 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         } else {
             getAdapter().setData(model);
         }
-        contentLayout.refreshState(false);
         contentLayout.getRecyclerView().setPage(cur_page, total_page);
-        contentLayout.removeView(contentLayout.getLoadingView());
-        xStateController.removeView(xStateController.getLoadingView());
+//        contentLayout.removeView(contentLayout.getLoadingView());
+//        xStateController.removeView(xStateController.getLoadingView());
         if (getAdapter().getItemCount() < 1) {
             xStateController.showEmpty();
             contentLayout.showEmpty();

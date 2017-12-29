@@ -40,11 +40,13 @@
                     android:background="@mipmap/ic_default_avatar_circle"
                     android:layout_width="@dimen/dp_40"
                     android:layout_height="@dimen/dp_40" />
+
                 <ImageView
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:src="@mipmap/ic_arrow_right"
+                    android:id="@+id/head_back_iv"
                     android:layout_width="@dimen/dp_10"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:src="@mipmap/ic_arrow_right" />
             </LinearLayout>
 
             <LinearLayout

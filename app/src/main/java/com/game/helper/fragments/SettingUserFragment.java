@@ -1,24 +1,14 @@
 package com.game.helper.fragments;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
@@ -35,8 +25,8 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
-import com.game.helper.utils.FileUtils;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.RxPhotoTool;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.UploadUtils;
@@ -54,9 +44,6 @@ import java.util.Date;
 import java.util.Map;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.imageloader.ILFactory;
-import cn.droidlover.xdroidmvp.imageloader.ILFactory;
-import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -116,12 +103,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
 
     //avatar
     private AvatarEditDialog dialog;
-    private static final int CAPTURE_IMAGE_CAMERA = 100;
-    private static final int IMAGE_STORE = 200;
-    private static final int CROP_CHOOSE = 10;
-    private Uri mIconUrl;
-    private Uri mIconCrop;
-
+    
     public static SettingUserFragment newInstance() {
         return new SettingUserFragment();
     }
@@ -383,35 +365,28 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
      */
     @Override
     public void onTakePhoto() {
-        Intent intent_photo = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        mIconUrl = createCoverUri("_icon");
-        intent_photo.putExtra(MediaStore.EXTRA_OUTPUT, mIconUrl);
-        startActivityForResult(intent_photo, CAPTURE_IMAGE_CAMERA);
+        RxPhotoTool.openCameraImage(this);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CAPTURE_IMAGE_CAMERA:
-            case IMAGE_STORE:
-                if (resultCode != RESULT_OK) {
-                    return;
-                }
-                if (null == data) {
-                    return;
-                }
-                startPhotoZoom(data.getData());
+            case RxPhotoTool.GET_IMAGE_FROM_PHONE:
+                RxPhotoTool.cropImage(this, data.getData());
                 break;
-            case CROP_CHOOSE:
+            case RxPhotoTool.GET_IMAGE_BY_CAMERA:
+                RxPhotoTool.cropImage(this, RxPhotoTool.imageUriFromCamera);
+                break;
+            case RxPhotoTool.CROP_IMAGE:
                 if (resultCode != RESULT_OK) {
                     Toast.makeText(getContext(), "数据错误，请重试！", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (mIconCrop != null) {
-                    Log.d(TAG, "avatar uri: " + mIconCrop.toString());
-                    mAvatar.getAvatarView().setImageURI(mIconCrop);
-                    updateAvatar(FileUtils.getFileByPath(mIconCrop.getPath()));
+                if (RxPhotoTool.cropImageUri != null) {
+                    Log.d(TAG, "avatar uri: " + RxPhotoTool.cropImageUri.toString());
+                    File file = new File(RxPhotoTool.getImageAbsolutePath(context, RxPhotoTool.cropImageUri));
+                    updateAvatar(file);
                 }
                 break;
         }
@@ -422,51 +397,8 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
      */
     @Override
     public void onChoosePic() {
-        mIconUrl = createCoverUri("_select_icon");
-        Intent intent_album = new Intent(Intent.ACTION_PICK);
-        intent_album.setType("image/*");
-        startActivityForResult(intent_album, IMAGE_STORE);
+        RxPhotoTool.openLocalImage(this);
     }
-
-    /**
-     * 创建img uri
-     */
-    private Uri createCoverUri(String type) {
-        String filename = SharedPreUtil.getLoginUserInfo().member_id + type + ".jpg";
-        File outputImage = new File(Utils.getRootDir(), filename);
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RxConstant.WRITE_PERMISSION_REQ_CODE);
-            return null;
-        }
-        FileUtils.createFileByDeleteOldFile(outputImage);
-        Uri uri = Uri.fromFile(outputImage);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !type.contains("crop")) {
-            uri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileProvider", outputImage);
-            getContext().grantUriPermission(BuildConfig.APPLICATION_ID, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        }
-        return uri;
-    }
-
-    /**
-     * 缩放
-     */
-    public void startPhotoZoom(Uri uri) {
-        mIconCrop = createCoverUri("_icon_crop");
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", 30);
-        intent.putExtra("aspectY", 30);
-        intent.putExtra("outputX", 640);
-        intent.putExtra("outputY", 640);
-        intent.putExtra("return-data", false);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, mIconCrop);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        startActivityForResult(intent, CROP_CHOOSE);
-    }
-    /**************************         avatar edit about end        ***************************/
 
 
     /**************************         setting internet       ***************************/

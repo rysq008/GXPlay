@@ -61,7 +61,7 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
         //        for (int index = 0; index < getChildCount(); index++) {
 //            getChildAt(index).setVisibility(GONE);
 //        }
-        setDisplayState(STATE_LOADING);
+//        setDisplayState(STATE_LOADING);
     }
 
     @Override
@@ -71,9 +71,9 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
                 @Override
                 public void onClick(View v) {
                     if (XReloadableRecyclerContentLayout.this.onReloadListener != null) {
-                        if (null == getLoadingView()) {
-                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
-                        }
+//                        if (null == getLoadingView()) {
+//                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+//                        }
 //                        if (null == getEmptyView()) {
 //                            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
 //                        }
@@ -82,7 +82,7 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
                     }
                 }
             });
-        }else{
+        } else {
             return;
         }
         super.showEmpty();
@@ -95,9 +95,9 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
                 @Override
                 public void onClick(View v) {
                     if (XReloadableRecyclerContentLayout.this.onReloadListener != null) {
-                        if (null == getLoadingView()) {
-                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
-                        }
+//                        if (null == getLoadingView()) {
+//                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+//                        }
 //                        if (null == getEmptyView()) {
 //                            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
 //                        }
@@ -109,9 +109,5 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
         }
         super.showError();
     }
-
-    @Override
-    public void showLoading() {
-        super.showLoading();
-    }
+    
 }
