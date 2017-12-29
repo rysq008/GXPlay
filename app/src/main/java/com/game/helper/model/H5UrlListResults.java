@@ -8,6 +8,13 @@ import com.game.helper.model.BaseModel.XBaseModel;
 
 public class H5UrlListResults extends XBaseModel {
 
+
+    /**
+     * market_url : http://60.205.204.218:8080/G9/promotion_sy.html
+     * vip_url : http://60.205.204.218:8080/G9/vip.html
+     * account_guide_url : http://60.205.204.218:8080/G9/acount_guide.html
+     */
+
     public String getMarket_url() {
         return market_url;
     }
@@ -29,13 +36,6 @@ public class H5UrlListResults extends XBaseModel {
     public String account_guide_url;//自动折扣攻略url
     public String share_discount_url;//	分享超低折扣url
 
-    public String getAccount_guide_url() {
-        return account_guide_url;
-    }
-
-    public void setAccount_guide_url(String account_guide_url) {
-        this.account_guide_url = account_guide_url;
-    }
 
     public String getShare_discount_url() {
         return share_discount_url;
@@ -43,5 +43,13 @@ public class H5UrlListResults extends XBaseModel {
 
     public void setShare_discount_url(String share_discount_url) {
         this.share_discount_url = share_discount_url;
+    }
+
+    public String getAccount_guide_url() {
+        return account_guide_url;
+    }
+
+    public void setAccount_guide_url(String account_guide_url) {
+        this.account_guide_url = account_guide_url;
     }
 }

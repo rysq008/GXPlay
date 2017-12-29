@@ -1,6 +1,7 @@
 package com.game.helper.adapters;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.ChannelListFragment;
 import com.game.helper.fragments.GameDetailFragment;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.RecommendResults;
@@ -46,7 +48,11 @@ public class HotRecommandAdapter extends SimpleRecAdapter<ItemType, HotRecommand
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DetailFragmentsActivity.launch(context,null, GameDetailFragment.newInstance());
+
+                Bundle bundle = new Bundle();
+                int id = ((HotResults.HotItem) item).id;
+                bundle.putInt(ChannelListFragment.GAME_ID,id);
+                DetailFragmentsActivity.launch(context,bundle, ChannelListFragment.newInstance());
             }
         });
     }

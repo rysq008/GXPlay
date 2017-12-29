@@ -356,7 +356,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 break;
             case R.id.ll_discount_navigation_game_detail:
                 Bundle bundle = new Bundle();
-                bundle.putString(WebviewFragment.PARAM_URL, "http://www.baidu.com");
+                bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.getAccount_guide_url());
                 bundle.putString(WebviewFragment.PARAM_TITLE, mTvTittle.getText().toString());
                 DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
                 break;
@@ -503,7 +503,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         TextView goFirstCharge = v.findViewById(R.id.tv_first_go_recharge_common_dialog);
         TextView tvDiscountAdd = v.findViewById(R.id.tv_add_recharge_discount_common_dialog);
         TextView goAddCharge = v.findViewById(R.id.tv_add_go_recharge_common_dialog);
-        tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getZhekou_shouchong() + "折)");
+        tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getDiscount_vip() + "折)");
         tvDiscountAdd.setText(+packageInfo.getZhekou_xuchong() + "折");
         if (builder == null) {
             builder = new AlertDialog.Builder(context);// 创建自定义样式dialog

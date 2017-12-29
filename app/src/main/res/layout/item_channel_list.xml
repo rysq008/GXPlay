@@ -19,7 +19,6 @@
             android:layout_height="@dimen/dp_64"
             android:layout_marginLeft="@dimen/margin_10"
             android:layout_marginRight="@dimen/margin_9"
-            android:background="@mipmap/guide1"
             android:scaleType="fitXY" />
 
         <LinearLayout
@@ -128,7 +127,7 @@
 
         </LinearLayout>
 
-        <ImageView
+        <Button
             android:id="@+id/iv_channel_list_load"
             android:layout_width="@dimen/view_59"
             android:layout_height="@dimen/view_29"

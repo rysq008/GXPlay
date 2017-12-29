@@ -48,6 +48,7 @@
     <dimen name="size_12sp">12sp</dimen>
     <dimen name="size_11sp">11sp</dimen>
     <dimen name="size_10sp">10sp</dimen>
+    <dimen name="size_9sp">9sp</dimen>
     <!--控件的一般大小-->
     <dimen name="simple_text_layout_h">@dimen/margin_60</dimen>
     <dimen name="enter_text_layout_h">@dimen/margin_50</dimen>
@@ -77,16 +78,19 @@
 
     <!--common dp-->
     <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
     <dimen name="dp_10">10dp</dimen>
     <dimen name="dp_15">15dp</dimen>
     <dimen name="dp_17">17dp</dimen>
     <dimen name="dp_20">20dp</dimen>
     <dimen name="dp_22">22dp</dimen>
+    <dimen name="dp_25">25dp</dimen>
     <dimen name="dp_30">30dp</dimen>
     <dimen name="dp_37">37dp</dimen>
     <dimen name="dp_40">40dp</dimen>
     <dimen name="dp_45">45dp</dimen>
     <dimen name="dp_50">50dp</dimen>
+    <dimen name="dp_55">55dp</dimen>
     <dimen name="dp_51">51dp</dimen>
     <dimen name="dp_60">60dp</dimen>
     <dimen name="dp_64">64dp</dimen>
