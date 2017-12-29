@@ -24,6 +24,7 @@
 
                 <TextView
                     android:text="可提现金额(元)"
+                    android:id="@+id/tv_value_hint"
                     android:layout_above="@+id/tv_value"
                     android:textSize="@dimen/text_size_small"
                     android:layout_centerHorizontal="true"
@@ -40,10 +41,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <LinearLayout
+                    android:layout_alignBottom="@+id/tv_value_hint"
                     android:layout_alignParentRight="true"
                     android:orientation="horizontal"
                     android:gravity="center"
                     android:id="@+id/ll_help"
+                    android:layout_marginBottom="-3dp"
                     android:layout_marginRight="@dimen/dp_20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -52,12 +55,14 @@
                         android:textSize="@dimen/text_size_tiny"
                         android:textColor="@color/colorWhite"
                         android:paddingTop="3dp"
+                        android:gravity="center"
                         android:paddingBottom="3dp"
                         android:paddingRight="2dp"
                         android:paddingLeft="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <ImageView
+                        android:layout_marginLeft="2dp"
                         android:src="@mipmap/ic_help"
                         android:layout_width="@dimen/dp_10"
                         android:layout_height="@dimen/dp_10" />
@@ -274,6 +279,8 @@
                 android:background="@color/colorWhite"
                 android:orientation="horizontal"
                 android:gravity="center"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView

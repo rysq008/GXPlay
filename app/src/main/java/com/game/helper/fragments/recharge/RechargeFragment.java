@@ -11,15 +11,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.WxPayInfoBean;
@@ -49,6 +52,8 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -57,6 +62,10 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
+    @BindView(R.id.action_bar_setting)
+    View mHeadAction;
+    @BindView(R.id.iv_action)
+    ImageView mIvAction;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
 
@@ -74,6 +83,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private RechargeGameFragment rechargeGameFragment;
     private RechargeGoldFragment rechargeGoldFragment;
     private ProgressDialog dialog;
+    public static final int Reset_Ui_Code = 11;
 
     public static RechargeFragment newInstance() {
         return new RechargeFragment();
@@ -95,6 +105,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
 
     private void initView() {
         mHeadTittle.setText(getResources().getString(R.string.common_recharge));
+        mHeadAction.setVisibility(View.VISIBLE);
+        mIvAction.setImageResource(R.mipmap.ic_help);
+        mHeadAction.setOnClickListener(this);
         mHeadBack.setOnClickListener(this);
         mConfirmOrder.setOnClickListener(this);
         mConnectKefu.setOnClickListener(this);
@@ -208,7 +221,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                 bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
                 bundle.putBoolean(OrderConfirmActivity.IS_VIP, is_vip);
                 intent.putExtra(OrderConfirmActivity.TAG, bundle);
-                startActivity(intent);
+                startActivityForResult(intent,Reset_Ui_Code);
             }
         }
         if (current_page == 1) {
@@ -328,12 +341,23 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             confirmOrder();
         }
         if (v == mConnectKefu) {
-
+            // TODO: 2017/12/29 补全跳转
+            Toast.makeText(getContext(), "跳转客服", Toast.LENGTH_SHORT).show();
+        }
+        if (v == mHeadAction){
+            // TODO: 2017/12/29 补全跳转
+            Toast.makeText(getContext(), "跳转说明", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public Object newP() {
         return null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (rechargeGameFragment != null) rechargeGameFragment.resetFragment();
     }
 }

@@ -33,6 +33,10 @@ public class SharedPreUtil {
     private static final String USER_INFO = "user_info";
     private static final String SEARCH_HISTORY_LIST = "search_history_word";
 
+    public static final String H5_URL_MARKET = "market_url";
+    public static final String H5_URL_VIP = "vip_url";
+    public static final String H5_URL_ACCOUNT_GUIDE = "account_guide_url";
+
     private static SharedPreferences sp;
 
     public static void init(Context context) {
@@ -63,27 +67,57 @@ public class SharedPreUtil {
         return sp.getString(KEY_MAC, "");
     }
 
-    public static void saveSearchHistoryList(List list){
-        saveObject(SEARCH_HISTORY_LIST,list);
+    public static void saveSearchHistoryList(List list) {
+        saveObject(SEARCH_HISTORY_LIST, list);
     }
 
-    public static List<String> getSearchHistoryList(){
+    public static List<String> getSearchHistoryList() {
         return getObject(SEARCH_HISTORY_LIST);
     }
+
+
+    /*****************************          h5 url list start                 ******************************/
+
+    /**
+     * 存
+     * */
+    public static boolean saveH5Url(String key, String url) {
+        if(sp.contains(key)){
+            return updateH5Url(key, url);
+        }
+        return sp.edit().putString(key,url).commit();
+    }
+
+    /**
+     * 取
+     * */
+    public static String getH5url(String key){
+        return sp.getString(key,"");
+    }
+
+    /**
+     * 更新
+     * */
+    public static boolean updateH5Url (String key, String url) {
+        sp.edit().remove(key).commit();
+        return saveH5Url(key,url);
+    }
+
+    /*****************************          h5 url list end                 ******************************/
 
 
     /*****************************          login about start                 ******************************/
 
     /**
      * 保存sessionid
-     * */
+     */
     public static boolean saveLoginStatus(String sessionid) {
         return sp.edit().putString(KEY_LOGIN_INFO, sessionid).commit();
     }
 
     /**
      * 是否登陆
-     * */
+     */
     public static boolean isLogin() {
         String sessionid = getSessionId();
         return !TextUtils.isEmpty(sessionid);
@@ -91,14 +125,14 @@ public class SharedPreUtil {
 
     /**
      * 获取登陆用户
-     * */
+     */
     public static LoginUserInfo getLoginUserInfo() {
         return getObject(USER_INFO);
     }
 
     /**
      * 保存登陆用户
-     * */
+     */
     public static void saveLoginUserInfo(LoginUserInfo loginUserInfo) {
         saveObject(USER_INFO, loginUserInfo);
         BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, loginUserInfo.icon));
@@ -106,7 +140,7 @@ public class SharedPreUtil {
 
     /**
      * 清除登陆
-     * */
+     */
     public static void cleanLoginUserInfo() {
         sp.edit().remove(USER_INFO).apply();
         BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, ""));
@@ -114,7 +148,7 @@ public class SharedPreUtil {
 
     /**
      * session id
-     * */
+     */
     public static String getSessionId() {
         return sp.getString(SharedPreference_SessionId, "");
     }
@@ -129,8 +163,8 @@ public class SharedPreUtil {
 
     /**
      * 更新登陆账户密码设置状态
-     * */
-    public static void updateUserPasswdStatus(Context context, boolean hasPasswd){
+     */
+    public static void updateUserPasswdStatus(Context context, boolean hasPasswd) {
         LoginUserInfo savedUser = getLoginUserInfo();
         savedUser.has_passwd = hasPasswd;
         cleanLoginUserInfo();
@@ -139,8 +173,8 @@ public class SharedPreUtil {
 
     /**
      * 更新登陆账户交易密码设置状态
-     * */
-    public static void updateUserTradePasswdStatus(Context context, boolean hasTradePasswd){
+     */
+    public static void updateUserTradePasswdStatus(Context context, boolean hasTradePasswd) {
         LoginUserInfo savedUser = getLoginUserInfo();
         savedUser.has_trade_passwd = hasTradePasswd;
         cleanLoginUserInfo();
@@ -149,8 +183,8 @@ public class SharedPreUtil {
 
     /**
      * 更新登陆账户支付宝设置状态
-     * */
-    public static void updateUserAlipayStatus(Context context, boolean hasAlipay){
+     */
+    public static void updateUserAlipayStatus(Context context, boolean hasAlipay) {
         LoginUserInfo savedUser = getLoginUserInfo();
         savedUser.has_alipay_account = hasAlipay;
         cleanLoginUserInfo();
@@ -158,7 +192,6 @@ public class SharedPreUtil {
     }
 
     /*****************************          login about end                 ******************************/
-
 
 
     /*****************************          public method start                 ******************************/

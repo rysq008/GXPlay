@@ -2,15 +2,24 @@ package com.game.helper.activitys;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.H5UrlListResults;
+import com.game.helper.net.DataService;
+import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.jude.swipbackhelper.SwipeBackHelper;
 
+import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xdroidmvp.router.Router;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 public class WelcomeActivity extends XBaseActivity {
+    private static final String TAG = WelcomeActivity.class.getSimpleName();
 
 
     @Override
@@ -51,4 +60,5 @@ public class WelcomeActivity extends XBaseActivity {
     public Object newP() {
         return null;
     }
+
 }

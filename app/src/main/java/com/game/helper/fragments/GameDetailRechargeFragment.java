@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.GameDetailMyAccountActivity;
 import com.game.helper.activitys.MyAccountActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
@@ -37,6 +38,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.utils.WXPayUtils;
@@ -430,13 +432,16 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     private void goToVipLevel() {
         //跳转vip升级页面
         mItemDiscount2.performClick();
-        Toast.makeText(getContext(), "可用数量为0，跳转vip升级", Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putString(WebviewFragment.PARAM_TITLE,"升级VIP");
+        bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
+        DetailFragmentsActivity.launch(getContext(),bundle,WebviewFragment.newInstance());
     }
 
     private void goToKefu() {
         //跳转客服
         mItemDiscount2.performClick();
-        Toast.makeText(getContext(), "最高等级vip，跳转客服", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "跳转客服", Toast.LENGTH_SHORT).show();
     }
 
     public GameAccountResultModel.ListBean getGameBean() {

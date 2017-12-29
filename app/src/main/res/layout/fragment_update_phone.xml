@@ -46,6 +46,7 @@
             android:layout_alignParentRight="true"
             android:id="@+id/tv_left_time"
             android:text="获取验证码"
+            android:layout_marginRight="@dimen/dp_10"
             android:textSize="@dimen/text_size_medium"
             android:textColor="@color/colorShadow"
             android:layout_width="wrap_content"

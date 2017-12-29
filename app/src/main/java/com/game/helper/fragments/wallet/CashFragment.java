@@ -272,7 +272,8 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
             apply();
         }
         if (v == mHelp){
-
+            // TODO: 2017/12/29 补全跳转
+            Toast.makeText(getContext(), "提现规则", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -175,6 +175,9 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
             return;
         }
 
+        mCountDownText.setCountDownTimer(60 * 1000,1000);
+        mCountDownText.startTimer();
+
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_LOGIN));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
@@ -200,8 +203,6 @@ public class UpdateAlipayFragment extends XBaseFragment implements View.OnClickL
         if (v == mCountDownText){
             String account = SharedPreUtil.getLoginUserInfo().phone;
             if (StringUtils.isEmpty(account)) return;
-            mCountDownText.setCountDownTimer(60 * 1000,1000);
-            mCountDownText.startTimer();
             getVerify();
         }
         if (v == mResetPasswd){

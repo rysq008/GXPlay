@@ -105,18 +105,19 @@ public class Utils {
      * @param level 等级
      * */
     public static int getExtensionVipIcon(int level){
+        int res = 0;
         switch (level){
-            case 0:
-                return R.mipmap.vip_0;
             case 1:
-                return R.mipmap.vip_1;
+                res = R.drawable.vip1_with_white_bg;
+                break;
             case 2:
-                return R.mipmap.vip_2;
+                res = R.drawable.vip2_with_white_bg;
+                break;
             case 3:
-                return R.mipmap.vip_3;
-            default:
-                return R.mipmap.vip_0;
+                res = R.drawable.vip3_with_white_bg;
+                break;
         }
+        return res;
     }
 
     /**

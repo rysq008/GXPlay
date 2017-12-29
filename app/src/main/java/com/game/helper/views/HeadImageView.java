@@ -62,7 +62,7 @@ public class HeadImageView extends FrameLayout {
                     return;
                 if (msgEvent.getType() == RxConstant.Head_Image_Change_Type) {
                     if (Kits.Empty.check(msgEvent.getMsg())) {
-                        ILFactory.getLoader().loadResource(riv, R.mipmap.debug_mine_avatar, null);
+                        ILFactory.getLoader().loadResource(riv, R.mipmap.ic_default_avatar_circle, null);
                     } else {
                         ILFactory.getLoader().loadNet(riv, Api.API_BASE_URL.concat(msgEvent.getMsg()), null);
                     }

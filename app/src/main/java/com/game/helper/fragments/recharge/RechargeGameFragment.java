@@ -93,6 +93,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     //private VipLevelResults vipList;//vip列表
     private float mTotalDiscountValue = 0;
     private float mTotalBalanceValue = 0;
+    private GXPlayDialog dialog;
 
     private boolean is_vip;
 
@@ -405,12 +406,15 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         }
         String content = "";
         if (type == 0) content = "您当前选择VIP折扣，将会占用1个VIP名额，您确定使用此折扣支付吗？";
-        if (type == 1) {
-            goToVipLevel();
-            return;
-        }
+        if (type == 1) content = "您的VIP账户名额不足，升级会员等级可增加VIP账户名额，是否去升级VIP？";
         if (type == 2) content = "您的VIP账户名额已用完，并且是皇冠会员，已无法再升级会员，若您仍想绑定该账号为VIP账号，请联系客服！";
-        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm,"温馨提示",content);
+        dialog = null;
+        if (type ==2 || type == 0) {
+            dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", content);
+        }
+        if (type == 1){
+            dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, "温馨提示", content);
+        }
         dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
             @Override
             public void onCancel() {
@@ -422,6 +426,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             public void onConfirm() {
                 dialog.dismiss();
                 if (type == 2) goToKefu();
+                if (type == 1) goToVipLevel();
             }
         });
         dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
@@ -483,5 +488,23 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 mBalance.setText("");
             }
         }
+    }
+
+    public void resetFragment(){
+        gameBean = null;
+        discountList = null;
+        accountBean = null;
+        mTotalDiscountValue = 0;
+        mTotalBalanceValue = 0;
+        initView();
+        mAccount.setText("");
+        mGame.setText("");
+        mPlatfrom.setText("");
+        mBalance.setText("");
+        mTotalDiscount.setText("0.0折");
+        mDiscount1.setText(discount_high_vip);
+        mDiscount2.setText(discount_member);
+        mDiscount3.setText(discount_vip);
+        caculateBalanceVlue();
     }
 }

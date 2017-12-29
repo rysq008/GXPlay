@@ -43,6 +43,7 @@ import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
@@ -53,6 +54,7 @@ import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
+import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
@@ -446,4 +448,11 @@ public interface ApiService {
     @POST("/account/get_game_account_consume_list/")
     Flowable<HttpResultModel<MineGameDesclistResults>> getMineGameDescList(@Body SingleGameIdRequestBody singleGameIdRequestBody);
 
+    //获取平台消息
+    @POST("/sys/get_not_deleted_message/")
+    Flowable<HttpResultModel<PlatformMessageResults>> getPlatformMessage(@Body SinglePageRequestBody singlePageRequestBody);
+
+    //获取系统消息
+    @POST("/sys/get_article_list/")
+    Flowable<HttpResultModel<SystemMessageResults>> getSystemMessage(@Body SinglePageRequestBody singlePageRequestBody);
 }

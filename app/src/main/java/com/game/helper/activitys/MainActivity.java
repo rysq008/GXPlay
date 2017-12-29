@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -21,7 +22,11 @@ import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
 import com.game.helper.fragments.MinePagerFragment;
 import com.game.helper.fragments.login.ResetPasswdFragment;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.LoginUserInfo;
+import com.game.helper.net.DataService;
+import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.CustomBadgeItem;
@@ -31,10 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.net.NetError;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import okhttp3.internal.Util;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
-
+    public static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.fragmentViewpager)
     ViewPager fragmentsViewPager;
     @BindView(R.id.bottom_bar)
@@ -176,6 +184,9 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     public void initData(Bundle savedInstanceState) {
         initView();
         SwipeBackHelper.getCurrentPage(this).setSwipeBackEnable(false);
+
+        //h5
+        getH5UrlFromNet();
     }
 
     @Override
@@ -215,5 +226,30 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         GAME,
         GENERALIZE,
         MINE,
+    }
+
+    /**
+     * h5
+     * */
+    private void getH5UrlFromNet(){
+        Flowable<HttpResultModel<H5UrlListResults>> fr = DataService.getH5UrlList();
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<H5UrlListResults>>() {
+            @Override
+            public void accept(HttpResultModel<H5UrlListResults> h5UrlListResultsHttpResultModel) throws Exception {
+                if (h5UrlListResultsHttpResultModel.isSucceful()) {
+                    String market_url = h5UrlListResultsHttpResultModel.data.getMarket_url();
+                    String vip_url = h5UrlListResultsHttpResultModel.data.getVip_url();
+                    String account_guide_url = h5UrlListResultsHttpResultModel.data.getAccount_guide_url();
+                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_MARKET, market_url);
+                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_VIP, vip_url);
+                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_ACCOUNT_GUIDE, account_guide_url);
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
     }
 }

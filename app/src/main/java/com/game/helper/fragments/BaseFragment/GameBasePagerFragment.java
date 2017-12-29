@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.game.helper.R;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.present.GameFragmentPresent;
 import com.game.helper.views.SearchComponentView;
-import com.game.helper.views.widget.StateView;
+import com.game.helper.views.XReloadableStateContorller;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -30,7 +29,6 @@ import java.util.List;
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xstatecontroller.XStateController;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -40,51 +38,23 @@ import zlc.season.practicalrecyclerview.ItemType;
 public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPresent> {
 
     @BindView(R.id.game_root_layout)
-    XStateController xStateController;
+    XReloadableStateContorller xStateController;
     @BindView(R.id.game_viewpager)
     ViewPager viewPager;//content
     @BindView(R.id.common_search_view)
     SearchComponentView searchComponentView;
     @BindView(R.id.game_tabs)
     MagicIndicator tabStrip;
-    StateView errorView;
 
     List<ItemType> list = new ArrayList<ItemType>();
-    private View loadingView;
 
     @Override
     public void initData(Bundle savedInstanceState) {
         initAdapter();
-        getP().onInitData();
+        getP().onInitData(xStateController, true);
     }
 
     private void initAdapter() {
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setCustomClickListener(new StateView.StateViewClickListener() {
-                @Override
-                public void doAction() {
-                    xStateController.loadingView(loadingView);
-                    getP().onInitData();
-                }
-            });
-        }
-
-        if (errorView.getParent() != null) {
-            ((ViewGroup) errorView.getParent()).removeView(errorView);
-        }
-        xStateController.errorView(errorView);
-
-        if (loadingView == null) {
-            loadingView = View.inflate(context, R.layout.view_loading, null);
-        }
-        if (null != loadingView.getParent()) {
-            ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        }
-        xStateController.loadingView(loadingView);
-
-        xStateController.showLoading();
-
         viewPager.setAdapter(getPageAdapter(list));
         viewPager.setOffscreenPageLimit(2);
     }
@@ -92,12 +62,10 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     public abstract PagerAdapter getPageAdapter(List<ItemType> list);
 
     public void showError(NetError error) {
-        xStateController.showError();
-        xStateController.getLoadingView().setVisibility(View.GONE);
     }
 
     public void showData(List<ItemType> model) {
-        xStateController.getLoadingView().setVisibility(View.GONE);
+        xStateController.removeView(xStateController.getLoadingView());
         if (Kits.Empty.check(model)) {
             xStateController.showEmpty();
         } else {

@@ -156,6 +156,9 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
             return;
         }
 
+        mCountDownText.setCountDownTimer(60 * 1000, 1000);
+        mCountDownText.startTimer();
+
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_LOGIN));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
@@ -183,8 +186,6 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
             login(Login_Type);
         }
         if (v == mCountDownText) {
-            mCountDownText.setCountDownTimer(60 * 1000, 1000);
-            mCountDownText.startTimer();
             getVerify();
         }
         if (v == mGotoRegist) {

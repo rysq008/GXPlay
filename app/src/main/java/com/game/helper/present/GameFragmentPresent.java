@@ -7,6 +7,7 @@ import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
 import com.game.helper.net.DataService;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableStateContorller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import zlc.season.practicalrecyclerview.ItemType;
 
 public class GameFragmentPresent extends XPresent<GameBasePagerFragment> {
 
-    public void onInitData() {
+    public void onInitData(XReloadableStateContorller reloadableStateContorller, boolean showloading) {
         Flowable<HttpResultModel<ClassicalResults>> fb = DataService.getGameClassical();
         Flowable<HttpResultModel<CommonResults>> fn = DataService.getGameCommon();
 
@@ -37,7 +38,7 @@ public class GameFragmentPresent extends XPresent<GameBasePagerFragment> {
             }
         });
 
-        RxLoadingUtils.subscribe(fa, getV().<GameAllResultsData>bindToLifecycle(), new Consumer<GameAllResultsData>() {
+        RxLoadingUtils.subscribeWithReload(reloadableStateContorller, fa, getV().<GameAllResultsData>bindToLifecycle(), new Consumer<GameAllResultsData>() {
             @Override
             public void accept(GameAllResultsData gameAllResultsData) throws Exception {
                 List<ItemType> list = new ArrayList<>();
@@ -45,12 +46,7 @@ public class GameFragmentPresent extends XPresent<GameBasePagerFragment> {
                 list.addAll(gameAllResultsData.commonResults.list);
                 getV().showData(list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                getV().showError(netError);
-            }
-        });
+        }, null, null, showloading);
     }
 
     public class GameAllResultsData extends XBaseModel {
