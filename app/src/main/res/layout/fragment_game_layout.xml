@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cn.droidlover.xstatecontroller.XStateController xmlns:android="http://schemas.android.com/apk/res/android"
+<com.game.helper.views.XReloadableStateContorller xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/game_root_layout"
     android:layout_width="match_parent"
@@ -30,4 +30,4 @@
             app:recyclerScrollbarNone="true"
             app:recyclerScrollbarStyle="outsideOverlay" />
     </LinearLayout>
-</cn.droidlover.xstatecontroller.XStateController>
+</com.game.helper.views.XReloadableStateContorller>

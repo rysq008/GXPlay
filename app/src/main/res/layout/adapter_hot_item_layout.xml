@@ -1,37 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="80dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="0dp">
+    tools:ignore="NamespaceTypo">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/hot_item_iv"
-        android:layout_width="63dp"
-        android:layout_height="63dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="@mipmap/debug_game_icon" />
+    <android.support.v7.widget.CardView
+        android:id="@+id/rv_item_hot"
+        android:layout_width="@dimen/dp_55"
+        android:layout_height="@dimen/dp_55"
+        app:cardCornerRadius="@dimen/dp_10">
 
-    <TextView
-        android:id="@+id/hot_item_tv_discount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/holo_red_light"
-        android:text="4.7折"
-        android:textColor="@android:color/white" />
+        <RelativeLayout
+
+            android:layout_width="@dimen/dp_55"
+            android:layout_height="@dimen/dp_55"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/shape_dialog_round_rect">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/hot_item_iv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/debug_game_icon" />
+
+            <jp.shts.android.library.TriangleLabelView
+                android:id="@+id/tlv__discount_item_hot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:backgroundColor="#ff0000"
+                app:corner="leftTop"
+                app:labelBottomPadding="3dp"
+                app:labelCenterPadding="0dp"
+                app:labelTopPadding="8dp"
+                app:primaryText="4.5折"
+                app:primaryTextColor="@color/white"
+                app:primaryTextSize="@dimen/size_9sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
 
     <TextView
         android:id="@+id/hot_item_tv_name"
-        android:layout_width="80dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/hot_item_iv"
+        android:layout_below="@id/rv_item_hot"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_10"
         android:ellipsize="marquee"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:gravity="center"
         android:marqueeRepeatLimit="marquee_forever"
+        android:maxLength="4"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:text="神龙游戏神龙游戏"

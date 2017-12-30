@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,7 +14,8 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.GameDetailFragment;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.api.Api;
-import com.game.helper.utils.SPUtils;
+
+import org.reactivestreams.Subscription;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
@@ -21,6 +23,7 @@ import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import zlc.season.practicalrecyclerview.ItemType;
+import zlc.season.rxdownload2.RxDownload;
 
 /**
  * Created by Tian on 2017/12/21.
@@ -65,6 +68,8 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 }
             }
         });
+
+
     }
 
     @Override
@@ -95,7 +100,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         @BindView(R.id.pb_channel_list)
         ProgressBar pbChannel;
         @BindView(R.id.iv_channel_list_load)
-        ImageView ivChannelListLoad;
+        Button ivChannelListLoad;
 
         public ViewHolder(View itemView) {
             super(itemView);

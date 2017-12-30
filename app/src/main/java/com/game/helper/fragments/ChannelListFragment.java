@@ -47,6 +47,7 @@ import zlc.season.practicalrecyclerview.ItemType;
 
 public class ChannelListFragment extends XBaseFragment {
     public static final String TAG = SpecialDetailFragment.class.getSimpleName();
+    public static final String GAME_ID = "gameId";
     private int gameId;
 
     public static ChannelListFragment newInstance() {
@@ -63,7 +64,7 @@ public class ChannelListFragment extends XBaseFragment {
     @Override
     public void initData(Bundle savedInstanceState) {
         Bundle arguments = getArguments();
-        gameId = arguments.getInt("gameId");
+        gameId = arguments.getInt(GAME_ID);
         initAdapter();
         loadAdapterData(1,true);
     }

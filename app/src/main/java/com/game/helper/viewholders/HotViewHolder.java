@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.imageloader.LoadCallback;
+import jp.shts.android.library.TriangleLabelView;
 import zlc.season.practicalrecyclerview.AbstractViewHolder;
 
 /**
@@ -84,8 +85,8 @@ public class HotViewHolder extends AbstractViewHolder<HotResults> {
         }
 
         class HViewHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.hot_item_tv_discount)
-            TextView discount;
+            @BindView(R.id.tlv__discount_item_hot)
+            TriangleLabelView discount;
             @BindView(R.id.hot_item_iv)
             RoundedImageView riv;
 

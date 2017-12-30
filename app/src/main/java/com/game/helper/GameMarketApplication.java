@@ -100,7 +100,7 @@ public class GameMarketApplication extends MultiDexApplication {
                         CookieSyncManager.createInstance(getApplicationContext());
                         CookieManager cm = CookieManager.getInstance();
                         cm.setAcceptCookie(true);
-                        cm.removeSessionCookie();//移除    
+//                        cm.removeSessionCookie();//移除    
                         cm.setCookie(Api.API_BASE_URL, cookes);
                         CookieSyncManager.getInstance().sync();
 

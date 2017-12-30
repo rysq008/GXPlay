@@ -28,14 +28,12 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
     XReloadableStateContorller xStateController;
     @BindView(R.id.contentLayout)
     XReloadableRecyclerContentLayout contentLayout;//content
-    StateView errorView;
     @BindView(R.id.common_search_view)
     SearchComponentView searchComponentView;
 
     protected static final int MAX_PAGE = 10;
     private ObjectAnimator mAnimator;
     private boolean mShow = true;
-
 
     @Override
     public void initData(Bundle savedInstanceState) {
@@ -58,7 +56,6 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
             }
         });
 
-        xStateController.showLoading();
         contentLayout.getRecyclerView().useDefLoadMoreView();
         contentLayout.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -112,8 +109,9 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         } else {
             getAdapter().setData(model);
         }
-        contentLayout.refreshState(false);
         contentLayout.getRecyclerView().setPage(cur_page, total_page);
+//        contentLayout.removeView(contentLayout.getLoadingView());
+//        xStateController.removeView(xStateController.getLoadingView());
         if (getAdapter().getItemCount() < 1) {
             xStateController.showEmpty();
             contentLayout.showEmpty();
@@ -121,6 +119,8 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         } else {
             xStateController.showContent();
             contentLayout.showContent();
+//            xStateController.removeView(xStateController.getEmptyView());
+//            contentLayout.removeView(contentLayout.getEmptyView());
             return;
         }
     }
@@ -134,6 +134,5 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
     public HomeFragmentPresent newP() {
         return new HomeFragmentPresent();
     }
-
 
 }
