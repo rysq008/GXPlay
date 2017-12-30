@@ -17,16 +17,36 @@ public class PlatformMessageResults extends XBaseModel {
     "data": {
         "list": [
             {
-                "discount": 5,
-                "amount": "100.00",
-                "consume_amount": "50.00",
-                "create_time": "2017-12-07 11:39:52"
+                "is_read": 1,
+                "title": "提现成功",
+                "content": "尊敬的用户您好:订单号:GRE2017112111100148032的订单已提现成功。祝您游戏愉快，心想事成。遇到任何问题请联系客服处理，为您的游戏体验保驾护航。",
+                "create_time": "2017-11-21 11:15:33",
+                "type": "1",
+                "id": 34
             },
             {
-                "discount": 5,
-                "amount": "100.00",
-                "consume_amount": "50.00",
-                "create_time": "2017-12-07 11:21:50"
+                "is_read": 1,
+                "title": "群3",
+                "content": "单位各 爱我的 ",
+                "create_time": "2017-11-14 14:08:57",
+                "type": "2",
+                "id": 3
+            },
+            {
+                "is_read": 1,
+                "title": "群2",
+                "content": "asdagwafg",
+                "create_time": "2017-11-14 11:00:17",
+                "type": "2",
+                "id": 2
+            },
+            {
+                "is_read": 1,
+                "title": "群1",
+                "content": "11234",
+                "create_time": "2017-11-13 19:14:54",
+                "type": "2",
+                "id": 1
             }
         ]
     },
@@ -35,13 +55,15 @@ public class PlatformMessageResults extends XBaseModel {
 }
     * */
     @SerializedName("list")
-    public List<MineGameDesclistItem> list;
+    public List<PlatformMessageItem> list;
 
-    public static class MineGameDesclistItem implements ItemType{
-        public float discount;
-        public String amount;
-        public String consume_amount;
+    public static class PlatformMessageItem implements ItemType{
+        public int is_read;
+        public int id;
+        public String title;
+        public String content;
         public String create_time;
+        public String type;
 
         @Override
         public int itemType() {

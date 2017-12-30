@@ -11,22 +11,22 @@ import zlc.season.practicalrecyclerview.ItemType;
  * */
 public class SystemMessageResults extends XBaseModel {
     /*
-  {
+ {
     "message": "成功",
     "code": "0000",
     "data": {
         "list": [
             {
-                "discount": 5,
-                "amount": "100.00",
-                "consume_amount": "50.00",
-                "create_time": "2017-12-07 11:39:52"
+                "content": "送送送送送送送送送送送送送送送送送送送送送送送送送送送送送送",
+                "create_time": "2017-12-27 14:31:58",
+                "id": 2,
+                "title": "新年送好礼"
             },
             {
-                "discount": 5,
-                "amount": "100.00",
-                "consume_amount": "50.00",
-                "create_time": "2017-12-07 11:21:50"
+                "content": "送送送",
+                "create_time": "2017-12-27 13:55:53",
+                "id": 1,
+                "title": "元旦送好礼"
             }
         ]
     },
@@ -35,12 +35,12 @@ public class SystemMessageResults extends XBaseModel {
 }
     * */
     @SerializedName("list")
-    public List<MineGameDesclistItem> list;
+    public List<SystemMessageItem> list;
 
-    public static class MineGameDesclistItem implements ItemType{
-        public float discount;
-        public String amount;
-        public String consume_amount;
+    public static class SystemMessageItem implements ItemType{
+        public String content;
+        public int id;
+        public String title;
         public String create_time;
 
         @Override

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -21,6 +22,7 @@ import com.game.helper.model.SystemMessageResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.StringUtils;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -127,10 +129,11 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         if (type == Type_Platform){
             type = Type_System;
         }
-        if (type == Type_System){
+        else if (type == Type_System){
             type = Type_Platform;
         }
         setmAdapter();
+        getDataFromNet(1);
     }
 
     /**
@@ -152,6 +155,12 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
                 @Override
                 public void accept(HttpResultModel<PlatformMessageResults> platformMessageResultsHttpResultModel) throws Exception {
+                    if (!platformMessageResultsHttpResultModel.isSucceful()) {
+                        Toast.makeText(getContext(), platformMessageResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (page == 1) mData = platformMessageResultsHttpResultModel.data.list;
+                    else mData.addAll(platformMessageResultsHttpResultModel.data.list);
                     notifyData();
                     mContent.getRecyclerView().setPage(platformMessageResultsHttpResultModel.current_page, platformMessageResultsHttpResultModel.total_page);
                 }
@@ -170,6 +179,12 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<SystemMessageResults>>() {
                 @Override
                 public void accept(HttpResultModel<SystemMessageResults> systemMessageResultsHttpResultModel) throws Exception {
+                    if (!systemMessageResultsHttpResultModel.isSucceful()) {
+                        Toast.makeText(getContext(), systemMessageResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (page == 1) mData = systemMessageResultsHttpResultModel.data.list;
+                    else mData.addAll(systemMessageResultsHttpResultModel.data.list);
                     notifyData();
                     mContent.getRecyclerView().setPage(systemMessageResultsHttpResultModel.current_page, systemMessageResultsHttpResultModel.total_page);
                 }
@@ -230,7 +245,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
     }
 
     class MessageAdapter extends RecyclerView.Adapter {
-        private int mode = Type_Platform;
+        private int mode;
 
         public MessageAdapter(int type) {
             mode = type;
@@ -240,9 +255,9 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             if (mode == Type_Platform){
-                return new PlatformMessageHolder(inflater.inflate(R.layout.item_game_desc,parent,false));
+                return new PlatformMessageHolder(inflater.inflate(R.layout.item_message_platform,parent,false));
             }
-            return new SystemMessageHolder(inflater.inflate(R.layout.item_game_desc,parent,false));
+            return new SystemMessageHolder(inflater.inflate(R.layout.item_message_system,parent,false));
         }
 
         @Override
@@ -263,25 +278,65 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         }
     }
 
-    class PlatformMessageHolder extends RecyclerView.ViewHolder {
+    class PlatformMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private View rootView;
+        public TextView mTittle;
+        public TextView mTime;
 
         public PlatformMessageHolder(View itemView) {
             super(itemView);
+            mTittle = itemView.findViewById(R.id.tv_tittle);
+            mTime = itemView.findViewById(R.id.tv_time);
+            rootView = itemView;
         }
 
         void onBind(int position){
+            PlatformMessageResults.PlatformMessageItem results = (PlatformMessageResults.PlatformMessageItem) mData.get(position);
+            rootView.setOnClickListener(this);
+            mTittle.setText(results.title);
+            mTime.setText(results.create_time);
+        }
 
+        @Override
+        public void onClick(View v) {
+            if (v == rootView){
+
+            }
         }
     }
 
-    class SystemMessageHolder extends RecyclerView.ViewHolder {
+    class SystemMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        private View rootView;
+        public View contentView;
+        public TextView mTittle;
+        //public TextView mTime;
+        public TextView mContent;
+        public ImageView mArrow;
 
         public SystemMessageHolder(View itemView) {
             super(itemView);
+            rootView = itemView;
+            mTittle = itemView.findViewById(R.id.tv_tittle);
+            //mTime = itemView.findViewById(R.id.tv_time);
+            mContent = itemView.findViewById(R.id.tv_content);
+            contentView = itemView.findViewById(R.id.ll_content);
+            mArrow = itemView.findViewById(R.id.iv_arrow);
         }
 
         void onBind(int position){
+            SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mData.get(position);
+            rootView.setOnClickListener(this);
+            mTittle.setText(results.title);
+            //mTime.setText(StringUtils.isEmpty(results.create_time) ? "" : results.create_time);
+            mContent.setText(results.content);
+        }
 
+        @Override
+        public void onClick(View v) {
+            if (v == rootView){
+                mArrow.setSelected(!mArrow.isSelected());
+                contentView.setVisibility(mArrow.isSelected() ? View.VISIBLE : View.GONE);
+            }
         }
     }
 }
