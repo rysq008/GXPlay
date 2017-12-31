@@ -46,8 +46,6 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
-    @BindView(R.id.action_bar_setting)
-    View mHeadShare;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
 
@@ -97,9 +95,7 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
 
     private void initView(){
         mHeadTittle.setText(getResources().getString(R.string.common_account_desc));
-        mHeadShare.setVisibility(View.VISIBLE);
         mHeadBack.setOnClickListener(this);
-        mHeadShare.setOnClickListener(this);
 
         if (getArguments() == null){
             Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
@@ -203,9 +199,6 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
         if (v == mHeadBack){
             getActivity().onBackPressed();
         }
-        if (v == mHeadShare){
-            Toast.makeText(getContext(), "share", Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -252,7 +245,7 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
             MineGameDesclistResults.MineGameDesclistItem item = data.get(position);
             if (item== null) return;
             time.setText(item.create_time.split(" ")[0]);
-            value.setText(item.consume_amount);
+            value.setText(item.amount);
             disccount.setText(Utils.m2(item.discount)+"");
             pay.setText(item.consume_amount);
         }

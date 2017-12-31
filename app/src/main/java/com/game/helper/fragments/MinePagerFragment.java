@@ -58,8 +58,12 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     ImageView mMessage;
     @BindView(R.id.tv_name)
     TextView mName;
+    @BindView(R.id.ll_vip)
+    View mVip;
     @BindView(R.id.tv_vip_level)
     TextView mVipLevel;
+    @BindView(R.id.iv_vip_level)
+    ImageView mVipIcon;
     @BindView(R.id.tv_money)
     TextView mMoney;
     @BindView(R.id.ll_wallet)
@@ -92,6 +96,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     private int[] resName;
 
     private MemberInfoResults userInfo;
+    private boolean enable_click = false;//防止多重点击
 
     public static MinePagerFragment newInstance() {
         return new MinePagerFragment();
@@ -115,6 +120,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
+        enable_click = false;
         if (getUserVisibleHint()) {
             LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
             BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
@@ -131,6 +137,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+        if (enable_click) return;
+        enable_click = true;
         if (v == mRegist) {
             DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
@@ -163,6 +171,12 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         if (v == mMessage){
             DetailFragmentsActivity.launch(getContext(),null, MessageFragment.newInstance());
         }
+        if (v == mVip){
+            Bundle bundle = new Bundle();
+            bundle.putString(WebviewFragment.PARAM_TITLE,"VIP");
+            bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
+            DetailFragmentsActivity.launch(getContext(),bundle,WebviewFragment.newInstance());
+        }
     }
 
     /*****************    unlogin ui start   *******************/
@@ -186,6 +200,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         mMineVip.setOnClickListener(this);
         mRecharge.setOnClickListener(this);
         mMessage.setOnClickListener(this);
+        mVip.setOnClickListener(this);
         initLoginData();
         initLoginView();
         getMemberInfo();
@@ -227,6 +242,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         Drawable d = getResources().getDrawable(Utils.getVipLevel(Integer.valueOf(userData.gender)));
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
         mVipLevel.setCompoundDrawables(null, null, d, null);
+        mVipIcon.setImageResource(Utils.getMineVipLevel(Integer.valueOf(userData.gender)));
         if (!StringUtils.isEmpty(userData.icon_thumb)) {
 //            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
             BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, userData.icon_thumb));
@@ -288,6 +304,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
 
         @Override
         public void onClick(View v) {//intent
+            if (enable_click) return;
+            enable_click = true;
             if (v.getTag() != null) {
                 int res = (int) v.getTag();
                 Fragment fra = null;

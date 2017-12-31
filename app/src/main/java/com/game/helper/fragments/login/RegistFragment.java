@@ -53,8 +53,8 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
     EditInputView mPassWord1;
     @BindView(R.id.et_verity)
     EditInputView mVerrity;
-    @BindView(R.id.et_invatation)
-    EditInputView mInvatation;
+//    @BindView(R.id.et_invatation)
+//    EditInputView mInvatation;
     @BindView(R.id.tv_regist)
     View mRegist;
     @BindView(R.id.tv_debug)
@@ -104,7 +104,7 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
         String passWord = mPassWord.getText().toString().trim();
         String passWord1 = mPassWord1.getText().toString().trim();
         String code = mVerrity.getText().toString().trim();
-        String marketNum = mInvatation.getText().toString().trim();
+//        String marketNum = mInvatation.getText().toString().trim();
 
         String errorMsg = null;
         if (StringUtils.isEmpty(account)) errorMsg = getResources().getString(R.string.login_hint_without_account);
@@ -118,11 +118,11 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
             return;
         }
 
-        if (StringUtils.isEmpty(marketNum)){
-            marketNum = "";
-        }
+//        if (StringUtils.isEmpty(marketNum)){
+//            marketNum = "";
+//        }
 
-        Flowable<HttpResultModel<RegistResults>> fr = DataService.regist(new RegistRequestBody(account,passWord,code,marketNum));
+        Flowable<HttpResultModel<RegistResults>> fr = DataService.regist(new RegistRequestBody(account,passWord,code,""));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<RegistResults>>() {
             @Override
             public void accept(HttpResultModel<RegistResults> registResultsHttpResultModel) throws Exception {

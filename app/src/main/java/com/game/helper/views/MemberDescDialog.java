@@ -116,22 +116,22 @@ public class MemberDescDialog extends android.support.v4.app.DialogFragment impl
 
     private void setData(){
         if (vipList == null) return;
-        ILFactory.getLoader().loadNet(icon0, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(0).image, ILoader.Options.defaultOptions());
+        //ILFactory.getLoader().loadNet(icon0, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(0).image, ILoader.Options.defaultOptions());
         name0.setText(vipList.list.get(0).name+"会员");
         value0.setText(vipList.list.get(0).vip_re_amount+"元");
         bili0.setText((int)(Float.parseFloat(vipList.list.get(0).no_re_rate) * 100) + "%");
 
-        ILFactory.getLoader().loadNet(icon1, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(1).image, ILoader.Options.defaultOptions());
+        //ILFactory.getLoader().loadNet(icon1, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(1).image, ILoader.Options.defaultOptions());
         name1.setText(vipList.list.get(1).name+"会员");
         value1.setText(vipList.list.get(1).vip_re_amount+"元");
         bili1.setText((int)(Float.parseFloat(vipList.list.get(1).no_re_rate) * 100) + "%");
 
-        ILFactory.getLoader().loadNet(icon2, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(2).image, ILoader.Options.defaultOptions());
+        //ILFactory.getLoader().loadNet(icon2, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(2).image, ILoader.Options.defaultOptions());
         name2.setText(vipList.list.get(2).name+"会员");
         value2.setText(vipList.list.get(2).vip_re_amount+"元");
         bili2.setText((int)(Float.parseFloat(vipList.list.get(2).no_re_rate) * 100) + "%");
 
-        ILFactory.getLoader().loadNet(icon3, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(3).image, ILoader.Options.defaultOptions());
+        //ILFactory.getLoader().loadNet(icon3, Api.API_PAY_OR_IMAGE_URL + vipList.list.get(3).image, ILoader.Options.defaultOptions());
         name3.setText(vipList.list.get(3).name+"会员");
         value3.setText(vipList.list.get(3).vip_re_amount+"元");
         bili3.setText((int)(Float.parseFloat(vipList.list.get(3).no_re_rate) * 100) + "%");

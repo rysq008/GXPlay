@@ -158,7 +158,7 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
             @Override
             public void accept(HttpResultModel<CheckTradePasswdResults> checkTradePasswdResultsHttpResultModel) throws Exception {
                 if (checkTradePasswdResultsHttpResultModel.isSucceful()){
-                    applyFromNet(SharedPreUtil.getLoginUserInfo().member_id+"",cashValue,isUseAccountBalance()+"",password);
+                    applyFromNet(SharedPreUtil.getLoginUserInfo().member_id+"",cashValue,isUseAccountBalance() ? "1" : "0",password);
                 }else if (checkTradePasswdResultsHttpResultModel.isNoneTradePassword()) {
                     //设置交易密码
                     final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm,

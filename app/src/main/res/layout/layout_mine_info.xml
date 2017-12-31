@@ -18,12 +18,26 @@
         android:paddingLeft="@dimen/dp_10"
         android:paddingRight="@dimen/dp_10"
         android:orientation="horizontal"
-        android:layout_height="@dimen/mine_icon_avatar">
-        <com.game.helper.views.HeadImageView
-            android:id="@+id/iv_avatar"
-            android:background="@mipmap/ic_default_avatar_circle"
-            android:layout_width="@dimen/mine_icon_avatar"
-            android:layout_height="@dimen/mine_icon_avatar" />
+        android:layout_height="70dp">
+        <RelativeLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp">
+            <com.game.helper.views.HeadImageView
+                android:id="@+id/iv_avatar"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/ic_default_avatar_circle"
+                android:layout_width="@dimen/mine_icon_avatar"
+                android:layout_height="@dimen/mine_icon_avatar" />
+            <ImageView
+                android:id="@+id/iv_vip_level"
+                android:visibility="visible"
+                android:src="@mipmap/vip_0"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="3dp"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20" />
+        </RelativeLayout>
         <LinearLayout
             android:gravity="center_vertical"
             android:layout_marginLeft="@dimen/dp_10"
@@ -40,6 +54,7 @@
                 android:text="hello word!"
                 android:textSize="@dimen/text_size_xxlarge"/>
             <LinearLayout
+                android:id="@+id/ll_vip"
                 android:orientation="horizontal"
                 android:background="@drawable/bg_vip_white_stroke_radius"
                 android:padding="2dp"

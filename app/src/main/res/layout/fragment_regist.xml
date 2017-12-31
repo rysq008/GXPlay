@@ -135,30 +135,30 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/tabbar_divider_height"
             android:background="@color/colorDivider"/>
-        <LinearLayout
-            android:layout_marginTop="@dimen/dp_5"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_marginRight="@dimen/dp_5"
-                android:src="@mipmap/login_ic_phone"
-                android:layout_width="@dimen/dp_20"
-                android:layout_height="@dimen/dp_20" />
-            <com.game.helper.views.EditInputView
-                android:id="@+id/et_invatation"
-                app:eiv_hint="输入邀请码（可选）"
-                app:eiv_type="type_account"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <View
-            android:layout_marginTop="@dimen/dp_5"
-            android:layout_marginBottom="@dimen/dp_5"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/tabbar_divider_height"
-            android:background="@color/colorDivider"/>
+        <!--<LinearLayout-->
+            <!--android:layout_marginTop="@dimen/dp_5"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<ImageView-->
+                <!--android:layout_marginRight="@dimen/dp_5"-->
+                <!--android:src="@mipmap/login_ic_phone"-->
+                <!--android:layout_width="@dimen/dp_20"-->
+                <!--android:layout_height="@dimen/dp_20" />-->
+            <!--<com.game.helper.views.EditInputView-->
+                <!--android:id="@+id/et_invatation"-->
+                <!--app:eiv_hint="输入邀请码（可选）"-->
+                <!--app:eiv_type="type_account"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content" />-->
+        <!--</LinearLayout>-->
+        <!--<View-->
+            <!--android:layout_marginTop="@dimen/dp_5"-->
+            <!--android:layout_marginBottom="@dimen/dp_5"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/tabbar_divider_height"-->
+            <!--android:background="@color/colorDivider"/>-->
 
         <!-- <com.game.helper.views.EditInputView
             android:id="@+id/et_account"

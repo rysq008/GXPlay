@@ -240,6 +240,8 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
                 mDiscount1.setText(discount_high_vip+discountList.high_vip_discount+"折");
                 mDiscount2.setText(discount_member+discountList.member_discount+"折");
                 mDiscount3.setText(discount_vip+discountList.vip_discount+"折");
+
+                getCheckDiscount();
             }
         }, new Consumer<NetError>() {
             @Override
@@ -351,7 +353,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
         if (mTotalDiscountValue < 0 || inputVlaue <= 0 ) return;
         if (mTotalDiscountValue == 0) mTotalDiscountValue = 10;
-        else mTotalBalanceValue = inputVlaue / 10 * mTotalDiscountValue;
+        else mTotalBalanceValue = (float) (inputVlaue * mTotalDiscountValue / 10.0);
 
         mTotalBalanceValue = Utils.m2(mTotalBalanceValue);
         mTotalBalance.setText(mTotalBalanceValue+"元");

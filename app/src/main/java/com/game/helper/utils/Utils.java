@@ -99,6 +99,26 @@ public class Utils {
         }
     }
 
+
+    /**
+     * 获取不带外框vip等级图标
+     *
+     * @param level 等级
+     * */
+    public static int getMineVipLevel(int level){
+        switch (level){
+            case 0:
+                return R.mipmap.vip_0;
+            case 1:
+                return R.mipmap.vip_1;
+            case 2:
+                return R.mipmap.vip_2;
+            case 3:
+                return R.mipmap.vip_3;
+        }
+        return 0;
+    }
+
     /**
      * 获取邀请记录vip等级图标
      *
