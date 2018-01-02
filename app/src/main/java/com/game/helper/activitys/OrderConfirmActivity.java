@@ -531,7 +531,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             inputBalance = bundle.getDouble(BUNDLE_INPUT_VALUE);
             payPurpose = bundle.getString(PAYPURPOSE);
             vipLevel = bundle.getString(VIPLEVEL);
-
+            is_vip = bundle.getBoolean(IS_VIP);
         }
 
         //分解数据
@@ -540,7 +540,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mChannel = gameBean.getGame_channel_name();
         gameAccountId = gameBean.getId();
         gameId = gameBean.getGame_id();
-        is_vip = gameBean.isIs_vip();
     }
 
     private void initView() {
