@@ -16,21 +16,18 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.InvatationResults;
-import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.SystemMessageResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.StringUtils;
-import com.game.helper.views.widget.StateView;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -53,10 +50,8 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
     ImageView mSystem;
 
     @BindView(R.id.rc_list)
-    XRecyclerContentLayout mContent;
+    XReloadableRecyclerContentLayout mContent;
 
-    private StateView errorView;
-    private View loadingView;
     private MessageAdapter mAdapter;
     private List mData = new ArrayList();
     private int type = Type_Platform;
@@ -87,15 +82,6 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         mPlatform.setSelected(true);
         mSystem.setSelected(false);
 
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) ((ViewGroup) errorView.getParent()).removeView(errorView);
-        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
-        if (null != loadingView.getParent()) ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        mContent.errorView(errorView);
-        mContent.loadingView(loadingView);
         mContent.showLoading();
         initList();
         getDataFromNet(1);
@@ -150,31 +136,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
      * */
     private void getDataFromNet(final int page){
         //平台消息
-        if (type == Type_Platform) {
-            Flowable<HttpResultModel<PlatformMessageResults>> fr = DataService.getPlatformMessage(new SinglePageRequestBody(page));
-            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
-                @Override
-                public void accept(HttpResultModel<PlatformMessageResults> platformMessageResultsHttpResultModel) throws Exception {
-                    if (!platformMessageResultsHttpResultModel.isSucceful()) {
-                        Toast.makeText(getContext(), platformMessageResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (page == 1) mData = platformMessageResultsHttpResultModel.data.list;
-                    else mData.addAll(platformMessageResultsHttpResultModel.data.list);
-                    notifyData();
-                    mContent.getRecyclerView().setPage(platformMessageResultsHttpResultModel.current_page, platformMessageResultsHttpResultModel.total_page);
-                }
-            }, new Consumer<NetError>() {
-                @Override
-                public void accept(NetError netError) throws Exception {
-                    showError(netError);
-                    Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
-                }
-            });
-        }
-
-        //系统消息
-        if (type == Type_System){
+        if (type == Type_System) {
             Flowable<HttpResultModel<SystemMessageResults>> fr = DataService.getSystemMessage(new SinglePageRequestBody(page));
             RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<SystemMessageResults>>() {
                 @Override
@@ -196,13 +158,42 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                 }
             });
         }
+
+        //系统消息
+        if (type == Type_Platform){
+            Flowable<HttpResultModel<PlatformMessageResults>> fr = DataService.getPlatformMessage(new SinglePageRequestBody(page));
+            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
+                @Override
+                public void accept(HttpResultModel<PlatformMessageResults> platformMessageResultsHttpResultModel) throws Exception {
+                    if (!platformMessageResultsHttpResultModel.isSucceful()) {
+                        Toast.makeText(getContext(), platformMessageResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (page == 1) mData = platformMessageResultsHttpResultModel.data.list;
+                    else mData.addAll(platformMessageResultsHttpResultModel.data.list);
+                    notifyData();
+                    mContent.getRecyclerView().setPage(platformMessageResultsHttpResultModel.current_page, platformMessageResultsHttpResultModel.total_page);
+                }
+            }, new Consumer<NetError>() {
+                @Override
+                public void accept(NetError netError) throws Exception {
+                    showError(netError);
+                    Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                }
+            });
+        }
     }
 
     private void notifyData(){
         mAdapter.notifyDataSetChanged();
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        mContent.showContent();
+        if (mAdapter.getItemCount()<1){
+            mContent.showEmpty();
+            return;
+        }else {
+            mContent.showContent();
+        }
     }
 
     public void showError(NetError error) {
@@ -293,6 +284,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         void onBind(int position){
             PlatformMessageResults.PlatformMessageItem results = (PlatformMessageResults.PlatformMessageItem) mData.get(position);
             rootView.setOnClickListener(this);
+            rootView.setTag(results);
             mTittle.setText(results.title);
             mTime.setText(results.create_time);
         }
@@ -300,7 +292,13 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         @Override
         public void onClick(View v) {
             if (v == rootView){
-
+                PlatformMessageResults.PlatformMessageItem item = (PlatformMessageResults.PlatformMessageItem) rootView.getTag();
+                Bundle bundle = new Bundle();
+                bundle.putString(MessageDescFragment.TITTLE,item.title);
+                bundle.putString(MessageDescFragment.CONTENT,item.content);
+                MessageDescFragment messageDescFragment = MessageDescFragment.newInstance();
+                messageDescFragment.setArguments(bundle);
+                DetailFragmentsActivity.launch(getContext(),bundle,messageDescFragment);
             }
         }
     }

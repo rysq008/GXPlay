@@ -28,6 +28,7 @@ import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -60,7 +61,7 @@ public class ExtensionProfitItemFragment extends XBaseFragment implements View.O
     private int type;
 
     @BindView(R.id.rc_extension_list)
-    XRecyclerContentLayout mContent;
+    XReloadableRecyclerContentLayout mContent;
     @BindView(R.id.tv_left)
     TextView left;
     @BindView(R.id.tv_center)
@@ -69,8 +70,6 @@ public class ExtensionProfitItemFragment extends XBaseFragment implements View.O
     TextView right;
 
     private ExtensionCommonAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
 
     @SuppressLint("ValidFragment")
     public ExtensionProfitItemFragment(int type) {
@@ -96,15 +95,6 @@ public class ExtensionProfitItemFragment extends XBaseFragment implements View.O
     }
 
     private void initView(){
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) ((ViewGroup) errorView.getParent()).removeView(errorView);
-        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
-        if (null != loadingView.getParent()) ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        mContent.errorView(errorView);
-        mContent.loadingView(loadingView);
         mContent.showLoading();
         initList();
         getDataFromNet(1);
@@ -194,7 +184,12 @@ public class ExtensionProfitItemFragment extends XBaseFragment implements View.O
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        mContent.showContent();
+        if (mAdapter.getItemCount()<1){
+            mContent.showEmpty();
+            return;
+        }else {
+            mContent.showContent();
+        }
     }
 
     public void showError(NetError error) {

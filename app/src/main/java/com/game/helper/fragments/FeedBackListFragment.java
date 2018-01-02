@@ -22,6 +22,7 @@ import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.FeedbakcStatusRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 
@@ -95,6 +96,21 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
         });
     }
 
+    private void changeFeedbackStatus(int status, int id) {
+        Flowable<HttpResultModel<NotConcernResults>> fr = DataService.feedbackStatus(new FeedbakcStatusRequestBody(status,id));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
+            @Override
+            public void accept(HttpResultModel<NotConcernResults> feedbackListResultsHttpResultModel) throws Exception {
+                Toast.makeText(getContext(), feedbackListResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         if (v == mHeadBack) {
@@ -156,18 +172,20 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
             reply.setVisibility(StringUtils.isEmpty(feedbackItem.reply_content) ? View.GONE : View.VISIBLE);
             reply.setText(feedbackItem.reply_content);
 
+            cancel.setTag(feedbackItem.id);
+            confirm.setTag(feedbackItem.id);
             cancel.setOnClickListener(this);
             confirm.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(getContext(), "感谢您的反馈！", Toast.LENGTH_SHORT).show();
+            int id = (int) v.getTag();
             if (v == cancel){
-
+                changeFeedbackStatus(2,id);
             }
             if (v == confirm){
-
+                changeFeedbackStatus(1,id);
             }
         }
     }

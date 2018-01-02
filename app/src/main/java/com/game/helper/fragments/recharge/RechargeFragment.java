@@ -187,6 +187,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             public IPagerIndicator getIndicator(Context context) {
                 LinePagerIndicator indicator = new LinePagerIndicator(context);
                 indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+                indicator.setColors(getResources().getColor(R.color.colorPrimary));
                 return indicator;
             }
         });

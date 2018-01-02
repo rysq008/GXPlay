@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +18,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.adapters.RechargeCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
@@ -29,6 +32,7 @@ import com.game.helper.net.api.ApiService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -63,11 +67,8 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
     @BindView(R.id.rc_extension_list)
-    XRecyclerContentLayout mContent;
-
+    XReloadableRecyclerContentLayout mContent;
     private ExtensionHistoryAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
 
     public static ExtensionHistoryFragment newInstance(){
         return new ExtensionHistoryFragment();
@@ -96,15 +97,6 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         mHeadBack.setOnClickListener(this);
         mAction.setOnClickListener(this);
 
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) ((ViewGroup) errorView.getParent()).removeView(errorView);
-        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
-        if (null != loadingView.getParent()) ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        mContent.errorView(errorView);
-        mContent.loadingView(loadingView);
         mContent.showLoading();
         initList();
         getDataFromNet(1);
@@ -156,7 +148,12 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        mContent.showContent();
+        if (mAdapter.getItemCount()<1){
+            mContent.showEmpty();
+            return;
+        }else {
+            mContent.showContent();
+        }
     }
 
     public void showError(NetError error) {
@@ -171,9 +168,34 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             getActivity().onBackPressed();
         }
         if (v == mAction){
-            // TODO: 2017/12/29 补全跳转
-            Toast.makeText(getContext(), "去邀请", Toast.LENGTH_SHORT).show();
+            fetchShareIncomeUrl();
         }
+    }
+
+    /**
+     * 分享推广收益
+     */
+    private void fetchShareIncomeUrl() {
+        Flowable<HttpResultModel<H5UrlListResults>> fr = DataService.getH5UrlList();
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<H5UrlListResults>>() {
+            @Override
+            public void accept(HttpResultModel<H5UrlListResults> notConcernResultsHttpResultModel) throws Exception {
+                if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getMarket_url())) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WebviewFragment.PARAM_URL, notConcernResultsHttpResultModel.data.getMarket_url());
+                    bundle.putString(WebviewFragment.PARAM_TITLE, "分享收益");
+                    DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
+                } else {
+                    Toast.makeText(getContext(), notConcernResultsHttpResultModel.message, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

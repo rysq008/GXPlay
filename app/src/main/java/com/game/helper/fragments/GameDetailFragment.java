@@ -410,11 +410,11 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 public void accept(HttpResultModel<MemberInfoResults> memberInfoResultsHttpResultModel) throws Exception {
                     if (memberInfoResultsHttpResultModel.isSucceful()) {
                         MemberInfoResults userInfo = memberInfoResultsHttpResultModel.data;
-                        Map<String, String> vip_level = userInfo.vip_level;
-                        String url = vip_level.get("image");
-                        String name = vip_level.get("name");
-                        String descs = vip_level.get("descs" + "折");
-                        String level = vip_level.get("level");
+                        MemberInfoResults.VipLevel vip_level = userInfo.vip_level;
+                        String url = vip_level.image;
+                        String name = vip_level.name;
+                        String descs = vip_level.descs+ "折";
+                        String level = vip_level.level;
                         //ILFactory.getLoader().loadNet(ivVipLevel, Api.API_BASE_URL.concat(url), ILoader.Options.defaultOptions());
                         tvNameLevel.setText(name);
                         tvDiscount.setText(descs);
