@@ -80,4 +80,9 @@
         <item name="android:width">@dimen/dp_20</item>
         <item name="android:height">@dimen/dp_20</item>
     </style>
+    <style name="CustomAlertDialogBackground" parent="@android:style/Theme.Holo.Dialog">
+        <!--<item name="android:background">@mipmap/pthy_bg</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

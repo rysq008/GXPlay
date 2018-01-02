@@ -15,8 +15,6 @@ import com.game.helper.fragments.GameDetailFragment;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.api.Api;
 
-import org.reactivestreams.Subscription;
-
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
@@ -105,6 +103,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         public ViewHolder(View itemView) {
             super(itemView);
             KnifeKit.bind(this,itemView);
+
         }
 
     }
