@@ -252,7 +252,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 if ("1".equals(type)) {
                     if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getMarket_url())) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(WebviewFragment.PARAM_URL, notConcernResultsHttpResultModel.data.getMarket_url());
+                        bundle.putString(WebviewFragment.PARAM_URL, notConcernResultsHttpResultModel.data.getMarket_url().concat("?" + SharedPreUtil.getSessionId()));
                         bundle.putString(WebviewFragment.PARAM_TITLE, "分享收益");
                         DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                     } else {
@@ -261,7 +261,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 } else if ("2".equals(type)) {
                     if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getShare_discount_url())) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(WebviewFragment.PARAM_URL, notConcernResultsHttpResultModel.data.getShare_discount_url());
+                        bundle.putString(WebviewFragment.PARAM_URL, notConcernResultsHttpResultModel.data.getShare_discount_url().concat("?" + SharedPreUtil.getSessionId()));
                         bundle.putString(WebviewFragment.PARAM_TITLE, "分享超低折扣");
                         DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                     } else {

@@ -1,41 +1,53 @@
 package com.game.helper.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-
 import android.text.TextUtils;
-
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.login.LoginFragment;
+import com.game.helper.fragments.login.RegistFragment;
+import com.game.helper.fragments.recharge.RechargeFragment;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.CommonShareResults;
+import com.game.helper.model.GeneralizeAccountInfoResultModel;
+import com.game.helper.net.DataService;
+import com.game.helper.share.UMengShare;
+import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
+import com.game.helper.views.XReloadableStateContorller;
 import com.jude.swipbackhelper.SwipeBackHelper;
 
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.Map;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
-import cn.droidlover.xstatecontroller.XStateController;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 public class WebviewFragment extends XBaseFragment {
     public static final String TAG = WebviewFragment.class.getSimpleName();
 
     @BindView(R.id.generalize_root_layout)
-    XStateController contentLayout;
+    XReloadableStateContorller contentLayout;
 
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -44,6 +56,7 @@ public class WebviewFragment extends XBaseFragment {
     WebView webView;
     String url;
     String title;
+    String shareUrl;
 
     public static final String PARAM_URL = "url";
     public static final String PARAM_TITLE = "title";
@@ -66,7 +79,7 @@ public class WebviewFragment extends XBaseFragment {
     }
 
     private void initContentLayout() {
-        contentLayout.loadingView(View.inflate(context, R.layout.view_loading, null));
+//        contentLayout.loadingView(View.inflate(context, R.layout.view_loading, null));
     }
 
     private void initRefreshLayout() {
@@ -85,16 +98,30 @@ public class WebviewFragment extends XBaseFragment {
 
     }
 
+    @SuppressLint("JavascriptInterface")
     private void initWebView() {
-        webView.loadDataWithBaseURL("", "", "text/html", "utf-8", "");
+//        webView.loadDataWithBaseURL("", "", "text/html", "utf-8", "");
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
                 if (newProgress == 100) {
                     swipeRefreshLayout.setRefreshing(false);
-                    if (contentLayout != null)
-                        contentLayout.showContent();
+                    if (contentLayout != null) {
+                        if ("分享收益".equals(title) && Kits.Empty.check(shareUrl)) {
+                            Flowable<HttpResultModel<GeneralizeAccountInfoResultModel>> fr = DataService.getGeneralizeAccountInfo();
+                            RxLoadingUtils.subscribeWithReload(contentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<GeneralizeAccountInfoResultModel>>() {
+                                @Override
+                                public void accept(HttpResultModel<GeneralizeAccountInfoResultModel> generalizeAccountInfoResultModelHttpResultModel) throws Exception {
+                                    contentLayout.showContent();
+                                    if (generalizeAccountInfoResultModelHttpResultModel.isSucceful()) {
+                                        shareUrl = generalizeAccountInfoResultModelHttpResultModel.data.getUrl();
+                                    }
+                                }
+                            }, null, null, true);
+                        } else
+                            contentLayout.showContent();
+                    }
                     if (webView != null)
                         url = webView.getUrl();
                 } else {
@@ -110,6 +137,7 @@ public class WebviewFragment extends XBaseFragment {
         webView.getSettings().setDatabaseEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webView.getSettings().setAppCacheEnabled(true);
+        webView.addJavascriptInterface(getHtmlObject(), "jsObj");
 
 //        webView.setWebViewClient(new WebViewClient() {
 //            @Override
@@ -130,7 +158,93 @@ public class WebviewFragment extends XBaseFragment {
         synCookies(url, SharedPreUtil.getSessionId());
 //        synCookieToWebView(url, SharedPreUtil.getSessionId());
 
-        webView.loadUrl(url.concat("?"+SharedPreUtil.getSessionId()),extraHeaders);
+        webView.loadUrl(url.concat("?" + SharedPreUtil.getSessionId()), extraHeaders);
+        webView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (webView.canGoBack())
+                    webView.goBack();
+                else
+                    getActivity().finish();
+                return false;
+            }
+        });
+    }
+
+    private Object getHtmlObject() {
+        Object insertObj = new Object() {
+            /***
+             *  jsObj.JavaCallBack(1,"注册");
+             jsObj.JavaCallBack(2,"登陆");
+             jsObj.JavaCallBack(3,"充值");
+             jsObj.JavaCallBack(4,"分享");
+             jsObj.JavaCallBack(5,"返回");
+             jsObj.JavaCallBack(6,"会员升级");
+             * @param code
+             * @param message
+             */
+            @JavascriptInterface
+            public void JavaCallBack(int code, String message) {
+                switch (code) {
+                    case 1:
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DetailFragmentsActivity.launch(context, null, RegistFragment.newInstance());
+                            }
+                        });
+                        break;
+                    case 2:
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DetailFragmentsActivity.launch(context, null, LoginFragment.newInstance());
+                            }
+                        });
+                        break;
+                    case 3:
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                DetailFragmentsActivity.launch(context, null, RechargeFragment.newInstance());
+                            }
+                        });
+                        break;
+                    case 4:
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                UMengShare share = new UMengShare(getActivity());
+                                CommonShareResults shareResults = new CommonShareResults(shareUrl,"推广收益","",SharedPreUtil.getLoginUserInfo().icon);
+                                share.shareLinkWithBoard(shareResults,null);
+                            }
+                        });
+                        break;
+                    case 5:
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (webView.canGoBack()) {
+                                    webView.goBack();
+                                } else {
+                                    getActivity().finish();
+                                }
+                            }
+                        });
+                        break;
+                    case 6:
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+//                                DetailFragmentsActivity.launch(context, null, WebviewFragment.newInstance());
+                                webView.reload();
+                            }
+                        });
+                        break;
+                }
+            }
+        };
+        return insertObj;
     }
 
     /**
@@ -145,14 +259,14 @@ public class WebviewFragment extends XBaseFragment {
         CookieSyncManager.getInstance().sync();
     }
 
-    public boolean synCookies(String url,String cookie) {
+    public boolean synCookies(String url, String cookie) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             CookieSyncManager.createInstance(context);
         }
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setCookie(url, cookie);//如果没有特殊需求，这里只需要将session id以"key=value"形式作为cookie即可
         String newCookie = cookieManager.getCookie(url);
-        return TextUtils.isEmpty(newCookie)?false:true;
+        return TextUtils.isEmpty(newCookie) ? false : true;
     }
 
     private void synCookieToWebView(String url, String cookies) {
@@ -161,7 +275,7 @@ public class WebviewFragment extends XBaseFragment {
         cm.setAcceptCookie(true);
         if (cookies != null) {
 //            for (String cookie : cookies) {
-                cm.setCookie(url, cookies);//注意端口号和域名，这种方式可以同步所有cookie，包括sessionid
+            cm.setCookie(url, cookies);//注意端口号和域名，这种方式可以同步所有cookie，包括sessionid
 //            }
         }
 
@@ -183,6 +297,27 @@ public class WebviewFragment extends XBaseFragment {
     public void onResume() {
         super.onResume();
         if (webView != null) webView.onResume();
+        getFocus();
+    }
+
+    //主界面获取焦点
+    private void getFocus() {
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                    // 监听到返回按钮点击事件
+                    if (webView.canGoBack())
+                        webView.goBack();
+                    else
+                        getActivity().finish();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override

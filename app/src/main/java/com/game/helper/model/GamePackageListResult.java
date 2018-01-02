@@ -4,7 +4,7 @@ import com.game.helper.model.BaseModel.XBaseModel;
 
 import java.util.List;
 
-import zlc.season.practicalrecyclerview.ItemType;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Tian on 2017/12/22.
@@ -22,7 +22,7 @@ public class GamePackageListResult extends XBaseModel {
         this.list = list;
     }
 
-    public static class ListBean extends XBaseModel{
+    public static class ListBean extends XBaseModel {
         /**
          * discount_vip : 4
          * game : {"logo":"/upload/image/20161209/20161209114359_333.jpg","type":{"id":17,"name":"卡牌"},"id":1,"logothumb":"","name":"航海王强者之路"}
@@ -44,6 +44,12 @@ public class GamePackageListResult extends XBaseModel {
         private String path;
         private int id;
         private ChannelBean channel;
+        private String saveName;
+        public Disposable disposable;
+
+        public void setSaveName(String saveName) {
+            this.saveName = saveName;
+        }
 
         public float getDiscount_vip() {
             return discount_vip;
@@ -99,6 +105,21 @@ public class GamePackageListResult extends XBaseModel {
 
         public void setPath(String path) {
             this.path = path;
+            this.saveName = getSaveNameByUrl(path);
+        }
+
+        /**
+         * 截取Url最后一段作为文件保存名称
+         *
+         * @param url url
+         * @return saveName
+         */
+        private String getSaveNameByUrl(String url) {
+            return url.substring(url.lastIndexOf('/') + 1);
+        }
+
+        public String getSaveName() {
+            return saveName;
         }
 
         public int getId() {
