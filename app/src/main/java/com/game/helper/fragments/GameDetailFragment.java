@@ -328,7 +328,6 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         if (getActivity() instanceof DetailFragmentsActivity) {
             ((DetailFragmentsActivity) getActivity()).umShare(packageInfo);
         }
-
     }
 
 

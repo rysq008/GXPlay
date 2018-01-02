@@ -10,6 +10,7 @@ import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
+import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
 import com.game.helper.model.FeedbackListResults;
@@ -459,6 +460,9 @@ public class DataService {
         return Api.CreateApiService().getH5UrlList();
     }
 
+    public static Flowable<HttpResultModel<CommonShareResults>> getG9Info() {
+        return Api.CreateApiService().getG9Info();
+    }
 
     public static Flowable<HttpResultModel<Object>> receiveGift(ReceiveGiftRequestBody receiveGiftRequestBody) {
         return Api.CreateApiService().receiveGift(receiveGiftRequestBody);

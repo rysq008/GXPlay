@@ -333,7 +333,7 @@ public class UMengShare {
         UMWeb web = new UMWeb(commonShareResults.getUrl());
         web.setTitle(commonShareResults.getTitle());//标题
         web.setThumb(new UMImage(mActivity, Api.API_BASE_URL + commonShareResults.getLogo()));  //缩略图
-        web.setDescription(commonShareResults.getDesc());//描述
+        web.setDescription(commonShareResults.getContent());//描述
 //        web.setThumb(new UMImage(mActivity,R.mipmap.ic_alipay));  //缩略图
 
         new ShareAction(mActivity)

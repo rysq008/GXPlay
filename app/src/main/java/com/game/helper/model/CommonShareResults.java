@@ -9,13 +9,13 @@ public class CommonShareResults extends XBaseModel {
 
     public String url;//分享出去的url
     public String title;//分享出去的title
-    public String desc;//分享出去的一句话描述
+    public String content;//分享出去的一句话描述
     public String logo;//分享出去的logo的url
 
-    public CommonShareResults(String url, String title, String desc, String logo) {
+    public CommonShareResults(String url, String title, String content, String logo) {
         this.url = url;
         this.title = title;
-        this.desc = desc;
+        this.content = content;
         this.logo = logo;
     }
 
@@ -38,12 +38,12 @@ public class CommonShareResults extends XBaseModel {
         this.title = title;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getContent() {
+        return content;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getLogo() {

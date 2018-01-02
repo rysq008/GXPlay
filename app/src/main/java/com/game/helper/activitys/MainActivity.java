@@ -1,5 +1,6 @@
 package com.game.helper.activitys;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,23 +15,24 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
-import com.game.helper.data.RxConstant;
-import com.game.helper.event.BusProvider;
-import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.GamePagerFragment;
 import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
 import com.game.helper.fragments.MinePagerFragment;
 import com.game.helper.fragments.login.ResetPasswdFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.net.DataService;
+import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.widget.CustomBadgeItem;
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,6 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import okhttp3.internal.Util;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -155,14 +156,14 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             fragmentsViewPager.setCurrentItem(0);
             isFirst = false;
         }
-        if (SharedPreUtil.isLogin()){
+        if (SharedPreUtil.isLogin()) {
             LoginUserInfo userInfo = SharedPreUtil.getLoginUserInfo();
             if (!userInfo.has_passwd) showSetPassWord();
         }
     }
 
-    private void showSetPassWord(){
-        DetailFragmentsActivity.launch(this,null, ResetPasswdFragment.newInstance());
+    private void showSetPassWord() {
+        DetailFragmentsActivity.launch(this, null, ResetPasswdFragment.newInstance());
     }
 
     @Override
@@ -230,8 +231,8 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
     /**
      * h5
-     * */
-    private void getH5UrlFromNet(){
+     */
+    private void getH5UrlFromNet() {
         Flowable<HttpResultModel<H5UrlListResults>> fr = DataService.getH5UrlList();
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<H5UrlListResults>>() {
             @Override
@@ -251,5 +252,46 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                 Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
+    }
+
+    /**
+     * umeng 分享
+     *
+     * @param shareInfo
+     */
+    public void umShare(CommonShareResults shareInfo) {
+        if (null == shareInfo) {
+            return;
+        }
+
+        UMengShare share = new UMengShare(this);
+        share.shareLinkWithBoard(shareInfo, new UMShareListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+                Log.e(TAG, "onStart: umShare");
+            }
+
+            @Override
+            public void onResult(SHARE_MEDIA share_media) {
+                Log.e(TAG, "onResult: umShare");
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                Log.e(TAG, "onError: umShare");
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media) {
+                Log.e(TAG, "onCancel: umShare");
+            }
+        });
+    }
+
+    //注意onActivityResult不可在fragment中实现，如果在fragment中调用登录或分享，需要在fragment依赖的Activity中实现
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 }

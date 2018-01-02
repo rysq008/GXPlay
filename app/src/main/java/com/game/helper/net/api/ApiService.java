@@ -10,6 +10,7 @@ import com.game.helper.model.ChannelListResultModel;
 import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ClassicalResults;
 import com.game.helper.model.CommonResults;
+import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
 import com.game.helper.model.FeedbackListResults;
@@ -290,7 +291,7 @@ public interface ApiService {
     Flowable<HttpResultModel<ResetTradeResults>> resetTradePassword(@Body ResetTradeRequestBody resetTradeRequestBody);
 
     @POST("/member/set_trade_password/")
-//设置交易密码
+    //设置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
 
     //重置支付宝
@@ -382,39 +383,39 @@ public interface ApiService {
 
 
     @POST("/marketing/get_marketing_info/")
-//推广账号详情
+    //推广账号详情
     Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();
 
     @POST("/marketing/get_marketing_flow_list/")
-//推广收益列表
+    //推广收益列表
     Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/marketing/get_expected_flow_list/")
-//推广预期收益列表
+    //推广预期收益列表
     Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/member/get_my_game_list/")
-//获取我的游戏列表
+    //获取我的游戏列表
     Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody);
 
     @POST("/member/get_my_gift_code_list/")
-//获取我的礼包列表
+    //获取我的礼包列表
     Flowable<HttpResultModel<MineGiftlistResults>> getMineGiftList(@Body MineGameRequestBody mineGameRequestBody);
 
     @POST("/account/get_game_consume_list/")
-//获取我的订单列表
+    //获取我的订单列表
     Flowable<HttpResultModel<MineOrderlistResults>> getMineOrderList(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/member/delete_my_gift_code/")
-//删除游戏礼包
+    //删除游戏礼包
     Flowable<HttpResultModel<DeleteMineGiftResults>> deleteMineGiftCode(@Body DeleteGiftRequestBody deleteGiftRequestBody);
 
     @POST("/member/delete_my_game/")
-//删除游戏
+    //删除游戏
     Flowable<HttpResultModel<NotConcernResults>> deleteMineGame(@Body DeleteGameRequestBody deleteGameRequestBody);
 
     @POST("/game/get_gift_info/")
-//游戏礼包详情
+    //游戏礼包详情
     Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody);
 
     //获取游戏详情之详情
@@ -455,4 +456,8 @@ public interface ApiService {
     //获取系统消息
     @POST("/sys/get_article_list/")
     Flowable<HttpResultModel<SystemMessageResults>> getSystemMessage(@Body SinglePageRequestBody singlePageRequestBody);
+
+    //获取平台信息接口
+    @POST("/sys/get_g9_info/")
+    Flowable<HttpResultModel<CommonShareResults>> getG9Info();
 }

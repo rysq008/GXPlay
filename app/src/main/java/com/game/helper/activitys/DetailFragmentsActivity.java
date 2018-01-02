@@ -99,7 +99,7 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
 
     private CommonShareResults parseToShareModel(GamePackageInfoResult packageInfo) {
         CommonShareResults model = new CommonShareResults();
-        model.setDesc(packageInfo.getGame().getIntro());
+        model.setContent(packageInfo.getGame().getIntro());
         model.setLogo(packageInfo.getGame().getLogo());
         model.setTitle(packageInfo.getGame().getName());
         model.setUrl(packageInfo.getGame().getUrl());
