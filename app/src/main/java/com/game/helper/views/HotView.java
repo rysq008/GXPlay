@@ -61,7 +61,7 @@ public class HotView extends LinearLayout {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new HotAdapter(data));
-        recyclerView.verticalDivider(R.color.white,R.dimen.dp_20);//设置divider
+//        recyclerView.verticalDivider(R.color.white,R.dimen.dp_20);//设置divider
 
     }
 

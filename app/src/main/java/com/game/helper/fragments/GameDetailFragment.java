@@ -7,15 +7,23 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +66,9 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function3;
+
+import static com.alipay.sdk.app.statistic.c.v;
 
 public class GameDetailFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = GameDetailFragment.class.getSimpleName();
@@ -100,6 +111,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     ProgressBar pb;
     @BindView(R.id.ll_Progress_bar_game_detail)
     LinearLayout llProgressBar;
+    @BindView(R.id.ll_discount_navigation_game_detail)
+    LinearLayout llNavigation;
     private H5UrlListResults mH5UrlList;
 
     private int gamepackeId;
@@ -109,8 +122,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private GameDetailRechargeFragment rechargeGameFragment;
     private GameDetailGiftFragment gameDetailGiftFragment;
     private GameDetailCommunityFragment gameDetailCommunityFragment;
-    private AlertDialog.Builder builder;
     private GamePackageInfoResult packageInfo;
+    private MemberInfoResults memberInfoResults;
+
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -208,16 +222,30 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     }
 
     private void initGamePackage() {
+        Flowable<GameDetailAllResults> fa;
         Flowable<HttpResultModel<GamePackageInfoResult>> fg = DataService.getGamePackageInfo(new GamePackageInfoRequestBody(gamepackeId));
         Flowable<HttpResultModel<H5UrlListResults>> fh = DataService.getH5UrlList();
-        final Flowable<GameDetailAllResults> fa = Flowable.zip(fg, fh, new BiFunction<HttpResultModel<GamePackageInfoResult>, HttpResultModel<H5UrlListResults>, GameDetailAllResults>() {
+        if (SharedPreUtil.isLogin()) {
+            //获取用户的会员级别
+            Flowable<HttpResultModel<MemberInfoResults>> fm = DataService.getMemberInfo();
+            fa = Flowable.zip(fg, fh, fm, new Function3<HttpResultModel<GamePackageInfoResult>, HttpResultModel<H5UrlListResults>, HttpResultModel<MemberInfoResults>, GameDetailAllResults>() {
+                @Override
+                public GameDetailAllResults apply(HttpResultModel<GamePackageInfoResult> gamePackageInfoResult, HttpResultModel<H5UrlListResults> h5UrlListResults, HttpResultModel<MemberInfoResults> memberInfoResults) throws Exception {
+                    GameDetailAllResults gameDetailAllResults = new GameDetailAllResults(gamePackageInfoResult.data, h5UrlListResults.data, memberInfoResults.data);
+                    return gameDetailAllResults;
+                }
+            });
+        } else {
+            fa = Flowable.zip(fg, fh, new BiFunction<HttpResultModel<GamePackageInfoResult>, HttpResultModel<H5UrlListResults>, GameDetailAllResults>() {
 
-            @Override
-            public GameDetailAllResults apply(HttpResultModel<GamePackageInfoResult> gamePackageModel, HttpResultModel<H5UrlListResults> h5UrlListtModel) throws Exception {
-                GameDetailAllResults gameDetailAllResults = new GameDetailAllResults(gamePackageModel.data, h5UrlListtModel.data);
-                return gameDetailAllResults;
-            }
-        });
+                @Override
+                public GameDetailAllResults apply(HttpResultModel<GamePackageInfoResult> gamePackageModel, HttpResultModel<H5UrlListResults> h5UrlListtModel) throws Exception {
+                    GameDetailAllResults gameDetailAllResults = new GameDetailAllResults(gamePackageModel.data, h5UrlListtModel.data);
+                    return gameDetailAllResults;
+                }
+            });
+        }
+
 
         RxLoadingUtils.subscribe(fa, this.bindToLifecycle(), new Consumer<GameDetailAllResults>() {
             @Override
@@ -238,6 +266,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                     SPUtils.putString(context, SPUtils.GAME_NAME, packageInfo.getGame().getName());
                     SPUtils.putInt(context, SPUtils.CHANNEL_ID, packageInfo.getChannel().getId());
                     SPUtils.putInt(context, SPUtils.GAME_ID, packageInfo.getGame().getId());
+                }
+                if (gameDetailAllResults.memberInfoResults != null) {
+                    memberInfoResults = gameDetailAllResults.memberInfoResults;
                 }
             }
         }, new Consumer<NetError>() {
@@ -348,10 +379,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 }
                 break;
             case R.id.tv_discount_game_detail_common:
-                createCommonDialog();
+                createCommonDialog(llNavigation);
                 break;
             case R.id.tv_discount_game_detail_vip:
-                createVipDialog();
+                createVipDialog(llNavigation);
                 break;
             case R.id.ll_discount_navigation_game_detail:
                 Bundle bundle = new Bundle();
@@ -385,7 +416,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         });
     }
 
-    public void createVipDialog() {
+    public void createVipDialog(View view) {
         View v = View.inflate(context, R.layout.dialog_vip, null);
         LinearLayout currentVip = v.findViewById(R.id.ll_current_vip_dialog_game_detail);
         TextView tvDiscount1 = v.findViewById(R.id.tv_discount1_dialog_game_detail);
@@ -394,91 +425,86 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         final TextView tvVip1 = v.findViewById(R.id.tv_vip1_dialog_game_detail);
         final TextView tvVip2 = v.findViewById(R.id.tv_vip2_dialog_game_detail);
         final TextView tvVip3 = v.findViewById(R.id.tv_vip3_dialog_game_detail);
+        //用户当前的信息
+        final ImageView ivVipLevel = v.findViewById(R.id.iv_vip_level_user_dialog_game_detail);
+        final TextView tvNameLevel = v.findViewById(R.id.tv_name_level_user_dialog_game_detail);
+        final TextView tvDiscount = v.findViewById(R.id.tv_discount_level_user_dialog_game_detail);
+
         tvDiscount1.setText(String.valueOf(packageInfo.getZhekou_shouchong()) + "折");
         tvDiscount2.setText(String.valueOf(packageInfo.getZhekou_shouchong()) + "折");
         tvDiscount3.setText(String.valueOf(packageInfo.getDiscount_vip()) + "折");
         boolean b = SharedPreUtil.isLogin();
-        if (SharedPreUtil.isLogin()) {
+        //用户已登录，就可以拿到用户详情信息
+        if (memberInfoResults != null) {
             currentVip.setVisibility(View.VISIBLE);
-            final ImageView ivVipLevel = v.findViewById(R.id.iv_vip_level_user_dialog_game_detail);
-            final TextView tvNameLevel = v.findViewById(R.id.tv_name_level_user_dialog_game_detail);
-            final TextView tvDiscount = v.findViewById(R.id.tv_discount_level_user_dialog_game_detail);
-            //获取用户的会员级别
-            Flowable<HttpResultModel<MemberInfoResults>> fr = DataService.getMemberInfo();
-            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MemberInfoResults>>() {
-                @Override
-                public void accept(HttpResultModel<MemberInfoResults> memberInfoResultsHttpResultModel) throws Exception {
-                    if (memberInfoResultsHttpResultModel.isSucceful()) {
-                        MemberInfoResults userInfo = memberInfoResultsHttpResultModel.data;
-                        MemberInfoResults.VipLevel vip_level = userInfo.vip_level;
-                        String url = vip_level.image;
-                        String name = vip_level.name;
-                        String descs = vip_level.descs+ "折";
-                        String level = vip_level.level;
-                        //ILFactory.getLoader().loadNet(ivVipLevel, Api.API_BASE_URL.concat(url), ILoader.Options.defaultOptions());
-                        tvNameLevel.setText(name);
-                        tvDiscount.setText(descs);
-                        //根据等级显示升级会员是否可以点击到下一页
-                        if ("0".equals(level)) {
-                            ivVipLevel.setImageResource(R.mipmap.vip0);
-                        } else if ("1".equals(level)) {
-                            ivVipLevel.setImageResource(R.mipmap.vip1);
-                            tvVip1.setClickable(false);
-                            tvVip1.setTextColor(getResources().getColor(R.color.color_666));
-                        } else if ("2".equals(level)) {
-                            ivVipLevel.setImageResource(R.mipmap.vip2);
-                            tvVip1.setClickable(false);
-                            tvVip1.setTextColor(getResources().getColor(R.color.color_666));
-                            tvVip2.setClickable(false);
-                            tvVip2.setTextColor(getResources().getColor(R.color.color_666));
+            MemberInfoResults.VipLevel vip_level = memberInfoResults.vip_level;
+            String url = vip_level.image;
+            String name = vip_level.name;
+            String descs = vip_level.descs + "折";
+            String level = vip_level.level;
+            //ILFactory.getLoader().loadNet(ivVipLevel, Api.API_BASE_URL.concat(url), ILoader.Options.defaultOptions());
+            tvNameLevel.setText(name);
+            tvDiscount.setText(descs);
+            //根据等级显示升级会员是否可以点击到下一页
+            if ("0".equals(level)) {
+                ivVipLevel.setImageResource(R.mipmap.vip0);
+            } else if ("1".equals(level)) {
+                ivVipLevel.setImageResource(R.mipmap.vip1);
+                tvVip1.setClickable(false);
+                tvVip1.setTextColor(getResources().getColor(R.color.color_666));
+            } else if ("2".equals(level)) {
+                ivVipLevel.setImageResource(R.mipmap.vip2);
+                tvVip1.setClickable(false);
+                tvVip1.setTextColor(getResources().getColor(R.color.color_666));
+                tvVip2.setClickable(false);
+                tvVip2.setTextColor(getResources().getColor(R.color.color_666));
 
-                        } else if ("3".equals(level)) {
-                            ivVipLevel.setImageResource(R.mipmap.vip3);
-                            tvVip1.setClickable(false);
-                            tvVip1.setTextColor(getResources().getColor(R.color.color_666));
-                            tvVip2.setClickable(false);
-                            tvVip2.setTextColor(getResources().getColor(R.color.color_666));
-                            tvVip3.setClickable(false);
-                            tvVip3.setTextColor(getResources().getColor(R.color.color_666));
-                        }
-                    } else {
-                        Toast.makeText(getContext(), memberInfoResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }, new Consumer<NetError>() {
-                @Override
-                public void accept(NetError netError) throws Exception {
-                    Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
-                }
-            });
+            } else if ("3".equals(level)) {
+                ivVipLevel.setImageResource(R.mipmap.vip3);
+                tvVip1.setClickable(false);
+                tvVip1.setTextColor(getResources().getColor(R.color.color_666));
+                tvVip2.setClickable(false);
+                tvVip2.setTextColor(getResources().getColor(R.color.color_666));
+                tvVip3.setClickable(false);
+                tvVip3.setTextColor(getResources().getColor(R.color.color_666));
+            }
+        }else{
+            currentVip.setVisibility(View.GONE);
         }
-        if (builder == null) {
-            builder = new AlertDialog.Builder(context);// 创建自定义样式dialog
-        }
+         final AlertDialog dialog = new AlertDialog.Builder(context,R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
         // 不可以用“返回键”取消
-        builder.setCancelable(true);
-        builder.setView(v);// 设置布局
-        final AlertDialog alertDialog = builder.show();// 创建自定义样式dialog
-
+        dialog.setCancelable(true);
+        //dialog.setView(v);// 设置布局
+        Window dialogWindow = dialog.getWindow();
+        /*实例化Window*/
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        //实例化Window操作者
+        //lp.x = 100; // 新位置X坐标
+        //lp.y = 30; // 新位置Y坐标
+        dialogWindow.setAttributes(lp);
+        // 不可以用“返回键”取消
+        dialog.setCancelable(true);
+        dialog.setView(v,30,view.getBottom()+30,30,0);// 设置布局
+        dialog.show();
         tvVip1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog.dismiss();
+                dialog.dismiss();
                 VipPassage();
             }
         });
         tvVip2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog.dismiss();
+                dialog.dismiss();
                 VipPassage();
             }
         });
         tvVip3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog.dismiss();
+                dialog.dismiss();
                 VipPassage();
             }
         });
@@ -496,7 +522,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     }
 
 
-    public void createCommonDialog() {
+    public void createCommonDialog(View view) {
         View v = View.inflate(context, R.layout.dialog_common_discount, null);
         TextView tvDiscountFirst = v.findViewById(R.id.tv_first_recharge_discount_common_dialog);
         TextView goFirstCharge = v.findViewById(R.id.tv_first_go_recharge_common_dialog);
@@ -504,19 +530,26 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         TextView goAddCharge = v.findViewById(R.id.tv_add_go_recharge_common_dialog);
         tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getDiscount_vip() + "折)");
         tvDiscountAdd.setText(+packageInfo.getZhekou_xuchong() + "折");
-        if (builder == null) {
-            builder = new AlertDialog.Builder(context);// 创建自定义样式dialog
-        }
+        final AlertDialog CommonDialog = new AlertDialog.Builder(context,R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
+        Window dialogWindow = CommonDialog.getWindow();
+        //实例化Window
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        //实例化Window操作者
+        //lp.x = 100; // 新位置X坐标
+        lp.y = -30; // 新位置Y坐标
+        dialogWindow.setAttributes(lp);
+        Log.d(TAG,"dialogWindow的坐标"+lp.x+"----------"+lp.y);
         // 不可以用“返回键”取消
-
-        builder.setCancelable(true);
-        builder.setView(v);// 设置布局
-        final AlertDialog alertDialog = builder.show();
+        CommonDialog.setCancelable(true);
+        CommonDialog.setView(v,30,0,30,0);// 设置布局
+        CommonDialog.show();
+        //CommonDialog.setContentView(v);
+        //CommonDialog.getWindow().setLayout(v.getWidth(), v.getHeight());
         goFirstCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog.dismiss();
+                CommonDialog.dismiss();
                 viewPager.setCurrentItem(0);
 
             }
@@ -524,7 +557,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         goAddCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alertDialog.dismiss();
+                CommonDialog.dismiss();
                 viewPager.setCurrentItem(0);
             }
         });
