@@ -15,17 +15,18 @@ import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
- * 人脉排行榜adapter
+ * 可用红包adapter
  */
 public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, AvailableRedpackAdapter.ViewHolder> {
 
     private Activity mActivity;
-    private AvailableRedpackResultModel.ListBean bean;
+    private AvailableRedpackResultModel.ListBean mBean;
     private OnItemCheckListener onItemCheckListener;
 
-    public AvailableRedpackAdapter(Activity context) {
+    public AvailableRedpackAdapter(Activity context, AvailableRedpackResultModel.ListBean bean) {
         super(context);
         mActivity = context;
+        mBean = bean;
     }
 
     @Override
@@ -40,10 +41,12 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearStatus();
+//                clearStatus();
                 ((AvailableRedpackResultModel.ListBean) item).setSelect(!(((AvailableRedpackResultModel.ListBean) item).isSelect()));
-                recordAccount((AvailableRedpackResultModel.ListBean) item);
                 notifyDataSetChanged();
+                if (onItemCheckListener != null) {
+                    onItemCheckListener.onItemCheked((AvailableRedpackResultModel.ListBean) item);
+                }
             }
         });
     }
@@ -88,6 +91,14 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
         public void setDisplay(ItemType itemType, final Activity activity, final int position) {
             final AvailableRedpackResultModel.ListBean data = (AvailableRedpackResultModel.ListBean) itemType;
 
+            //选中之前选中的
+            if (null != mBean) {
+                if (mBean.equals(data)) {
+                    data.setSelect(true);
+                } else {
+                    data.setSelect(false);
+                }
+            }
             //名字
             redPackName.setText(data.getName());
             //使用限制
@@ -99,9 +110,6 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
 
             if (data.isSelect()) {
                 rootRl.setSelected(true);
-                if (onItemCheckListener != null) {
-                    onItemCheckListener.onItemCheked(data);
-                }
             } else {
                 rootRl.setSelected(false);
             }
@@ -118,16 +126,4 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
         }
     }
 
-    /**
-     * 记录选中
-     *
-     * @param bean
-     */
-    public void recordAccount(AvailableRedpackResultModel.ListBean bean) {
-        this.bean = bean;
-    }
-
-    public AvailableRedpackResultModel.ListBean getRecordAccount() {
-        return bean;
-    }
 }

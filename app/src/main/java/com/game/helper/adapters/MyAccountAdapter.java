@@ -51,16 +51,6 @@ public class MyAccountAdapter extends SimpleRecAdapter<ItemType, MyAccountAdapte
         });
     }
 
-
-    /**
-     * 清除选中状态
-     */
-    private void clearStatus() {
-        for (ItemType item : data) {
-            ((GameAccountResultModel.ListBean) item).setSelected(false);
-        }
-    }
-
     @Override
     public int getLayoutId() {
         return R.layout.item_account;

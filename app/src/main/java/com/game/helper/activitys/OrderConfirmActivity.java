@@ -26,7 +26,6 @@ import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.RedPackEvent;
 import com.game.helper.fragments.UpdateTradePasswordFragment;
-import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -68,6 +67,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public static final String PAYPURPOSE = "payPurpose";
     public static final String VIPLEVEL = "vipLevel";
     public static final String IS_VIP = "is_vip";
+    public static final String RED_PACK_BEAN = "red_pack_bean";
 
 
     @BindView(R.id.action_bar_back)
@@ -218,7 +218,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     public String vipLevel = "0";
 
-    private AvailableRedpackResultModel mRedPacks = new AvailableRedpackResultModel();
+    AvailableRedpackResultModel.ListBean bean ;
 
     String accountAmount = "";//使用充值账户金额
     String marketingAmount = "";//使用推广账户金额
@@ -506,7 +506,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                         redPackNum.setText(generalizeResultsHttpResultModel.data.getList().size() + "个可用");
                         hasRedPack = true;
                     }
-                    mRedPacks = generalizeResultsHttpResultModel.data;
                 } else {
                     hasRedPack = false;
                     redPackNum.setTextColor(getResources().getColor(R.color.black));
@@ -576,8 +575,11 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             case R.id.redPackLayout://红包
                 if (hasRedPack) {
                     intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(RED_PACK_BEAN,bean);
                     intent.putExtra(OPTION_GAME_ID, gameId);
                     intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
+                    intent.putExtra(RED_PACK_BEAN,bundle);
                     startActivityForResult(intent, 0);
                 }
                 break;
@@ -693,9 +695,29 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
-            String amount = data.getStringExtra(RED_PACK_AMOUNT);
-            String type = data.getStringExtra(RED_PACK_TYPE);
-            String red_id = data.getStringExtra(RED_PACK_ID);
+            bean = (AvailableRedpackResultModel.ListBean) data.getBundleExtra(RED_PACK_BEAN).getSerializable(RED_PACK_BEAN);
+            String amount;
+            String type;
+            String red_id;
+
+            if (null != bean) {
+                amount = bean.getAmount();
+                if (1 == bean.getKind()) {//单发
+                    type = "1";
+                    red_id = bean.getMy_red_id() + "";
+                } else if (2 == bean.getKind()) {//群发
+                    type = "2";
+                    red_id = bean.getRed_id() + "";
+                } else {
+                    type = "0";
+                    red_id = "";
+                }
+            } else {
+                amount = "0.0";
+                type = "0";
+                red_id = "";
+            }
+
             onRedPackSelected(amount, type, red_id);
         }
     }

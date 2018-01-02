@@ -28,7 +28,7 @@ public class AvailableRedpackResultModel extends XBaseModel {
         this.list = list;
     }
 
-    public static class ListBean implements ItemType ,Serializable{
+    public static class ListBean implements ItemType, Serializable {
 
 
         private int red_id;//红包id
@@ -41,6 +41,19 @@ public class AvailableRedpackResultModel extends XBaseModel {
         private int type;//1为通用红包 2指定游戏红包
         private int kind;//1为单发红包 2为群发红包
         private boolean select;
+
+        @Override
+        public boolean equals(Object obj) {
+            AvailableRedpackResultModel.ListBean bean = (AvailableRedpackResultModel.ListBean) obj;
+            return this.red_id == bean.getRed_id()
+                    && this.amount.equals(bean.getAmount())
+                    && this.money_limit.equals(bean.getMoney_limit())
+                    && this.name.equals(bean.getName())
+                    && this.end_date.equals(bean.getEnd_date())
+                    && this.my_red_id == bean.getMy_red_id()
+                    && this.type == bean.getType();
+//                    && this.games.equals(bean.getGames());
+        }
 
         public boolean isSelect() {
             return select;
@@ -150,10 +163,15 @@ public class AvailableRedpackResultModel extends XBaseModel {
 
             private String logo;
 
+            @Override
+            public boolean equals(Object obj) {
+                GameBean bean = (GameBean) obj;
+                return this.name.equals(bean.getName())
+                        && this.logo.equals(bean.getLogo());
+            }
         }
 
     }
-
 
 
 }

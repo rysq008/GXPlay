@@ -3,7 +3,6 @@ package com.game.helper.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,15 +15,13 @@ import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
-import com.game.helper.views.widget.StateView;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
@@ -40,14 +37,12 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
     @BindView(R.id.game_adapter_layout)
-    XRecyclerContentLayout xRecyclerContentLayout;
+    XReloadableRecyclerContentLayout xRecyclerContentLayout;
     @BindView(R.id.addAccount)
     ImageView addAccount;
 
 
     MyAccountAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
 
     public int option_game_id;
     public int option_channel_id;
@@ -63,7 +58,6 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
         //initIntentData(getIntent());
         initView();
         initAdapter();
-        errorView.setLoadDataType(StateView.REFRESH, 1);
     }
 
     private void initIntentData(Intent intent) {
@@ -82,23 +76,7 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
             mAdapter.addOnItemCheckListener(this);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
-        xRecyclerContentLayout.getRecyclerView().setRefreshEnabled(false);
-
-        if (errorView == null) {
-            errorView = new StateView(context);
-        }
-        if (null != errorView.getParent()) {
-            ((ViewGroup) errorView.getParent()).removeView(errorView);
-        }
-        if (loadingView == null) {
-            loadingView = View.inflate(context, R.layout.view_loading, null);
-        }
-        if (null != loadingView.getParent()) {
-            ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        }
-        xRecyclerContentLayout.errorView(errorView);
-
-        xRecyclerContentLayout.loadingView(loadingView);
+        xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
         xRecyclerContentLayout.showLoading();
 
     }
@@ -135,8 +113,7 @@ public class MyAccountActivity extends XBaseActivity implements View.OnClickList
     }
 
     public void showError(NetError error) {
-        xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
-        xRecyclerContentLayout.showError();
+        xRecyclerContentLayout.refreshState(false);
     }
 
     @Override

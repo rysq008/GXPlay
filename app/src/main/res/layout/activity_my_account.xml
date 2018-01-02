@@ -14,7 +14,7 @@
         android:id="@+id/action_bar"
         layout="@layout/layout_action_bar"/>
 
-    <cn.droidlover.xrecyclerview.XRecyclerContentLayout
+    <com.game.helper.views.XReloadableRecyclerContentLayout
         android:id="@+id/game_adapter_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
