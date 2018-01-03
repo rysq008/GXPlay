@@ -296,7 +296,6 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
                 if (payRequestBody.isSucceful()) {
-                    Log.d("", "accept");
                     WxPayInfoBean bean = new WxPayInfoBean();
                     bean.setAppid(RxConstant.ThirdPartKey.WeixinId);
                     bean.setNoncestr(payRequestBody.data.getWxorderInfo().getNoncestr());

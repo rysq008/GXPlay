@@ -114,7 +114,7 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
             tvVip3.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
             tvVip3.setTextColor(getResources().getColor(R.color.color_00aeff));
         } else if (vipLevel == 2) {
-            if(tvVip1.isClickable()){
+            if (tvVip1.isClickable()) {
                 tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
             }
@@ -129,9 +129,20 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
             tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
             tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
             tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
+
+            if (tvVip1.isClickable()) {
+                tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
+                tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
+            }
+            if (tvVip2.isClickable()) {
+                tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
+                tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
+            }
+
         }
     }
-    public void setVipLevelYearFree(int vipLevel,String cost){
+
+    public void setVipLevelYearFree(int vipLevel, String cost) {
         if (vipLevel == 1) {
             tvVip1.setText(String.valueOf(cost));
         } else if (vipLevel == 2) {
@@ -140,8 +151,9 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
             tvVip3.setText(String.valueOf(cost));
         }
     }
-    public void currentVipLevel(int vipLevel){
-        if(vipLevel == 0){
+
+    public void currentVipLevel(int vipLevel) {
+        if (vipLevel == 0) {
 
         } else if (vipLevel == 1) {
             tvVip1.setClickable(false);
@@ -161,6 +173,10 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         }
     }
 
+    private void setTotalData(int ivpLevel) {
+
+    }
+
     private void initData(Boolean isShowLoading) {
         Flowable<UserInfoAndVipLevelResults> fa;
         Flowable<HttpResultModel<VipLevelResults>> fv = DataService.getVipLevel();
@@ -176,18 +192,18 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         RxLoadingUtils.subscribeWithReload(xController, fa, this.bindToLifecycle(), new Consumer<UserInfoAndVipLevelResults>() {
             @Override
             public void accept(UserInfoAndVipLevelResults userInfoAndVipLevelResults) throws Exception {
-               if(userInfoAndVipLevelResults != null){
-                   xController.showContent();
-                   MemberInfoResults memberInfoResults = userInfoAndVipLevelResults.memberInfoResults;
-                   String level = memberInfoResults.vip_level.get("level");
-                   currentVipLevel(Integer.valueOf(level));
-                   VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
-                   for (VipLevelResults.VipBean vipBean : levelResults.list) {
-                       setVipLevelYearFree(vipBean.level,vipBean.year_fee);
-                   }
-               }else{
-                   xController.showEmpty();
-               }
+                if (userInfoAndVipLevelResults != null) {
+                    xController.showContent();
+                    MemberInfoResults memberInfoResults = userInfoAndVipLevelResults.memberInfoResults;
+                    String level = memberInfoResults.vip_level.get("level");
+                    currentVipLevel(Integer.valueOf(level));
+                    VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
+                    for (VipLevelResults.VipBean vipBean : levelResults.list) {
+                        setVipLevelYearFree(vipBean.level, vipBean.year_fee);
+                    }
+                } else {
+                    xController.showEmpty();
+                }
             }
         }, null, null, isShowLoading);
 
