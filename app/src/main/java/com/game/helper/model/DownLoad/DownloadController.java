@@ -3,6 +3,8 @@ package com.game.helper.model.DownLoad;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.game.helper.R;
+
 import zlc.season.rxdownload2.entity.DownloadEvent;
 import zlc.season.rxdownload2.entity.DownloadFlag;
 
@@ -83,7 +85,8 @@ public class DownloadController {
 
         @Override
         void setText(TextView status, Button button) {
-            button.setText("下载");
+//            button.setText("下载");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_download);
             status.setText("");
         }
 
@@ -96,7 +99,8 @@ public class DownloadController {
     public static class Waiting extends DownloadState {
         @Override
         void setText(TextView status, Button button) {
-            button.setText("等待中");
+//            button.setText("等待中");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_waitting);
             status.setText("等待中...");
         }
 
@@ -109,7 +113,8 @@ public class DownloadController {
     public static class Started extends DownloadState {
         @Override
         void setText(TextView status, Button button) {
-            button.setText("暂停");
+//            button.setText("暂停");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_pause);
             status.setText("下载中...");
         }
 
@@ -122,7 +127,8 @@ public class DownloadController {
     public static class Paused extends DownloadState {
         @Override
         void setText(TextView status, Button button) {
-            button.setText("继续");
+//            button.setText("继续");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_continue);
             status.setText("已暂停");
         }
 
@@ -135,7 +141,8 @@ public class DownloadController {
     public static class Failed extends DownloadState {
         @Override
         void setText(TextView status, Button button) {
-            button.setText("继续");
+//            button.setText("继续");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_continue);
             status.setText("下载失败");
         }
 
@@ -148,7 +155,8 @@ public class DownloadController {
     public static class Canceled extends DownloadState {
         @Override
         void setText(TextView status, Button button) {
-            button.setText("下载");
+//            button.setText("下载");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_download);
             status.setText("下载已取消");
         }
 
@@ -161,7 +169,8 @@ public class DownloadController {
     public static class Completed extends DownloadState {
         @Override
         void setText(TextView status, Button button) {
-            button.setText("安装");
+//            button.setText("安装");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_install);
             status.setText("下载已完成");
         }
 
@@ -175,7 +184,8 @@ public class DownloadController {
 
         @Override
         void setText(TextView status, Button button) {
-            button.setText("下载");
+//            button.setText("下载");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_download);
             status.setText("下载已取消");
         }
 
@@ -189,7 +199,8 @@ public class DownloadController {
 
         @Override
         void setText(TextView status, Button button) {
-            button.setText("打开");
+//            button.setText("打开");
+            button.setBackgroundResource(R.mipmap.bg_game_list_item_open);
             status.setText("安装已完成");
         }
 

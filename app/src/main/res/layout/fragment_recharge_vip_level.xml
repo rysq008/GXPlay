@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.game.helper.views.XReloadableStateContorller xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/xController_vip_level_recharge"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_53"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/vip1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_weight="1"
+                android:text="黑钻会员"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_15sp" />
+
+            <TextView
+                android:id="@+id/tv_vip1_recharge_vip_level"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_25"
+                android:background="@mipmap/vip_recharge_bg_b"
+                android:gravity="center"
+                android:text="299"
+                android:textColor="@color/color_00aeff"
+                android:textSize="@dimen/size_14sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.5"
+            android:background="@color/colorDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_53"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/vip2" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_weight="1"
+                android:text="红钻会员"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_15sp" />
+
+            <TextView
+                android:id="@+id/tv_vip2_recharge_vip_level"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_25"
+                android:background="@mipmap/vip_recharge_bg_b"
+                android:gravity="center"
+                android:text="898"
+                android:textColor="@color/color_00aeff"
+                android:textSize="@dimen/size_14sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.5"
+            android:background="@color/colorDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_53"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/vip3" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_weight="1"
+                android:text="皇冠会员"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_15sp" />
+
+            <TextView
+                android:id="@+id/tv_vip3_recharge_vip_level"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_25"
+                android:background="@mipmap/vip_recharge_bg_b"
+                android:gravity="center"
+                android:text="1888"
+                android:textColor="@color/color_00aeff"
+                android:textSize="@dimen/size_14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_51"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_14">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/qrdd_icon_wxzf" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_weight="1"
+                android:text="微信支付"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_15sp" />
+
+            <ImageView
+                android:id="@+id/iv_weixin_recharge_vip_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/margin_25"
+                android:src="@mipmap/kxcz_btn_hg" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_0.5"
+            android:background="@color/colorDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_51"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_14">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/qrzf_icon_zfbzf" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_weight="1"
+                android:text="支付宝支付"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_15sp" />
+
+            <ImageView
+                android:id="@+id/iv_zhifubao_recharge_vip_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/margin_25"
+                android:src="@mipmap/qrddz_btn_wgx" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_51"
+            android:background="@color/white"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_5"
+
+                android:text="实际支付金额："
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_14sp" />
+
+            <TextView
+                android:id="@+id/tv_total_recharge_vip_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_5"
+
+                android:text="0"
+                android:textColor="@color/color_fe4430"
+                android:textSize="@dimen/size_14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:text="元"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="实际支付金额 = 预升级VIP等级金额 - 当前会员等级金额 / 12 * （12 - 所使用月数 ）"
+            android:textSize="@dimen/size_12sp"
+            android:textColor="@color/color_333"/>
+        <TextView
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="所使用月数规则：未满15天按0.5个月计算，满15天按1个月计算。"
+            android:textSize="@dimen/size_12sp"
+            android:textColor="@color/color_333"/>
+    </LinearLayout>
+</com.game.helper.views.XReloadableStateContorller>

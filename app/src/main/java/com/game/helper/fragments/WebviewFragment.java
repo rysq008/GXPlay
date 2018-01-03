@@ -151,14 +151,6 @@ public class WebviewFragment extends XBaseFragment {
 //            }
 //        });
 
-        Map extraHeaders = new HashMap<String, String>();
-        extraHeaders.put("control-cache", "no-cache,private");
-        extraHeaders.put("pragma", "no-cache,no-store");
-        extraHeaders.put("expires", "0");
-        synCookies(url, SharedPreUtil.getSessionId());
-//        synCookieToWebView(url, SharedPreUtil.getSessionId());
-
-        webView.loadUrl(url.concat("?" + SharedPreUtil.getSessionId()), extraHeaders);
         webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -215,8 +207,8 @@ public class WebviewFragment extends XBaseFragment {
                             @Override
                             public void run() {
                                 UMengShare share = new UMengShare(getActivity());
-                                CommonShareResults shareResults = new CommonShareResults(shareUrl,"推广收益","",SharedPreUtil.getLoginUserInfo().icon);
-                                share.shareLinkWithBoard(shareResults,null);
+                                CommonShareResults shareResults = new CommonShareResults(shareUrl, "推广收益", "", SharedPreUtil.getLoginUserInfo().icon);
+                                share.shareLinkWithBoard(shareResults, null);
                             }
                         });
                         break;
@@ -236,8 +228,10 @@ public class WebviewFragment extends XBaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-//                                DetailFragmentsActivity.launch(context, null, WebviewFragment.newInstance());
-                                webView.reload();
+                                Bundle bundle = new Bundle();
+                                bundle.putInt(RechargeFragment.VIP, 3);
+                                DetailFragmentsActivity.launch(context, bundle, RechargeFragment.newInstance());
+//                                webView.reload();
                             }
                         });
                         break;
@@ -298,6 +292,13 @@ public class WebviewFragment extends XBaseFragment {
         super.onResume();
         if (webView != null) webView.onResume();
         getFocus();
+        Map extraHeaders = new HashMap<String, String>();
+        extraHeaders.put("control-cache", "no-cache,private");
+        extraHeaders.put("pragma", "no-cache,no-store");
+        extraHeaders.put("expires", "0");
+        synCookies(url, SharedPreUtil.getSessionId());
+//        synCookieToWebView(url, SharedPreUtil.getSessionId());
+        webView.loadUrl(url.concat("?" + SharedPreUtil.getSessionId()), extraHeaders);
     }
 
     //主界面获取焦点

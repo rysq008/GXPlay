@@ -41,7 +41,6 @@
                 android:id="@+id/tv_discount_level_user_dialog_game_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="9.8折"
                 android:textSize="@dimen/size_12sp"
                 android:textColor="@color/color_fe4430"/>
         </LinearLayout>

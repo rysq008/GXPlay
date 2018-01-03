@@ -372,7 +372,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     @Override
     public void onClick(View v) {
         if (v == mItemAccount){
-            startActivityForResult(new Intent(getActivity(), MyAccountActivity.class),REQUEST_CODE);
+            startActivityForResult(new Intent(getActivity(), GameDetailMyAccountActivity.class),REQUEST_CODE);
         }
         if (v == mItemDiscount1){
             if (mCbDiscount1.isEnabled()) return;

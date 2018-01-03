@@ -157,10 +157,10 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
     }
 
     @Override
-    public void onItemCheked(AvailableRedpackResultModel.ListBean bean) {
+    public void onItemCheked(AvailableRedpackResultModel.ListBean bean,int redPackNum) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-
+        bundle.putInt(OrderConfirmActivity.RED_PACK_NUM,redPackNum);
         if (bean.isSelect()) {
             bundle.putSerializable(OrderConfirmActivity.RED_PACK_BEAN, bean);
         } else {
@@ -168,23 +168,6 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
         }
         intent.putExtra(OrderConfirmActivity.RED_PACK_BEAN, bundle);
 
-//        if (null != bean) {
-//            intent.putExtra(OrderConfirmActivity.RED_PACK_AMOUNT, bean.getAmount());
-//            if (1 == bean.getKind()) {//单发
-//                intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE, "1");
-//                intent.putExtra(OrderConfirmActivity.RED_PACK_ID, bean.getMy_red_id() + "");
-//            } else if (2 == bean.getKind()) {//群发
-//                intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE, "2");
-//                intent.putExtra(OrderConfirmActivity.RED_PACK_ID, bean.getRed_id() + "");
-//            } else {
-//                intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE, "0");
-//                intent.putExtra(OrderConfirmActivity.RED_PACK_ID, "");
-//            }
-//        } else {
-//            intent.putExtra(OrderConfirmActivity.RED_PACK_AMOUNT, "0.0");
-//            intent.putExtra(OrderConfirmActivity.RED_PACK_TYPE, "0");
-//            intent.putExtra(OrderConfirmActivity.RED_PACK_ID, "");
-//        }
         setResult(RESULT_OK, intent);
         onBackPressed();
     }

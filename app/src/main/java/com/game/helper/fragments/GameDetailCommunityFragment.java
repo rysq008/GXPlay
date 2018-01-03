@@ -1,16 +1,10 @@
 package com.game.helper.fragments;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.game.helper.R;
@@ -19,11 +13,9 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameCommentListResult;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
-import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GameInfoCommentListRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.ToastUtil;
-import com.game.helper.views.HeadImageView;
+import com.game.helper.views.CircleImageView;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 
 import java.util.ArrayList;
@@ -31,11 +23,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
-import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.RecyclerItemCallback;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
@@ -156,7 +146,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         public void onBindViewHolder(CommunityHolder holder, int position) {
             final ItemType item = data.get(position);
             final GameCommentListResult.ListBean itemDate = (GameCommentListResult.ListBean) data.get(position);
-            ILFactory.getLoader().loadNet(holder.ivAvatar.getAvatarView(), Api.API_BASE_URL.concat(itemDate.getMember().getIcon_thumb()), ILoader.Options.defaultOptions());
+            ILFactory.getLoader().loadNet(holder.ivAvatar, Api.API_BASE_URL.concat(itemDate.getMember().getIcon_thumb()), ILoader.Options.defaultOptions());
             holder.tvMemberName.setText(itemDate.getMember().getNick_name());
             holder.tvContent.setText(itemDate.getContent());
             holder.tvTime.setText(String.valueOf(itemDate.getCreate_time()));
@@ -166,7 +156,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
 
         class CommunityHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.iv_avatar_game_communication)
-            HeadImageView ivAvatar;
+            CircleImageView ivAvatar;
             @BindView(R.id.tv_member_name_game_communication)
             TextView tvMemberName;
             @BindView(R.id.tv_content_game_communication)

@@ -61,9 +61,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public static final String BUNDLE_GAME_BEAN = "game_bean";
     public static final String BUNDLE_TOTAL_BALANCE = "after_diacount_total_balance";
     public static final String BUNDLE_INPUT_VALUE = "input_value";
-    public static final String RED_PACK_AMOUNT = "red_pack_amount";
-    public static final String RED_PACK_TYPE = "red_pack_type";
-    public static final String RED_PACK_ID = "input_value_id";
+    public static final String RED_PACK_NUM = "red_pack_num";
     public static final String PAYPURPOSE = "payPurpose";
     public static final String VIPLEVEL = "vipLevel";
     public static final String IS_VIP = "is_vip";
@@ -218,7 +216,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     public String vipLevel = "0";
 
-    AvailableRedpackResultModel.ListBean bean ;
+    AvailableRedpackResultModel.ListBean bean;
 
     String accountAmount = "";//使用充值账户金额
     String marketingAmount = "";//使用推广账户金额
@@ -575,10 +573,10 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 if (hasRedPack) {
                     intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(RED_PACK_BEAN,bean);
+                    bundle.putSerializable(RED_PACK_BEAN, bean);
                     intent.putExtra(OPTION_GAME_ID, gameId);
                     intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
-                    intent.putExtra(RED_PACK_BEAN,bundle);
+                    intent.putExtra(RED_PACK_BEAN, bundle);
                     startActivityForResult(intent, 0);
                 }
                 break;
@@ -695,6 +693,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             bean = (AvailableRedpackResultModel.ListBean) data.getBundleExtra(RED_PACK_BEAN).getSerializable(RED_PACK_BEAN);
+            int num = data.getBundleExtra(RED_PACK_BEAN).getInt(RED_PACK_NUM);
             String amount;
             String type;
             String red_id;
@@ -711,10 +710,16 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     type = "0";
                     red_id = "";
                 }
+                //展示红包抵用金额
+                redPackNum.setTextColor(Color.parseColor("#fe4430"));
+                redPackNum.setText("-" + new BigDecimal(String.valueOf(amount)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             } else {
                 amount = "0.0";
                 type = "0";
                 red_id = "";
+                //展示红包抵用金额
+                redPackNum.setTextColor(Color.parseColor("#fe4430"));
+                redPackNum.setText(num + "个可用");
             }
 
             onRedPackSelected(amount, type, red_id);
@@ -726,9 +731,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mRedpackAmount = Double.parseDouble(amount);
         mRedpackType = type;
         mRedpackId = red_id;
-        //展示红包抵用金额
-        redPackNum.setTextColor(Color.parseColor("#fe4430"));
-        redPackNum.setText("-" + new BigDecimal(String.valueOf(mRedpackAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         //重新计算实际支付
         realPayTv.setText(calcRealPay());
         //计算还需支付
@@ -831,7 +833,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * ali支付
      */
     private void aliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "", mNeedPay + "", "1", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "",
+                new BigDecimal(String.valueOf(mNeedPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString(), "1", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -870,7 +873,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 微信支付
      */
     private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "", mNeedPay + "", "2", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "",
+                new BigDecimal(String.valueOf(mNeedPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString(), "2", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
