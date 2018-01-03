@@ -41,7 +41,6 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                clearStatus();
                 ((AvailableRedpackResultModel.ListBean) item).setSelect(!(((AvailableRedpackResultModel.ListBean) item).isSelect()));
                 notifyDataSetChanged();
                 if (onItemCheckListener != null) {
@@ -114,15 +113,6 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
                 rootRl.setSelected(false);
             }
 
-        }
-    }
-
-    /**
-     * 清除选中状态
-     */
-    private void clearStatus() {
-        for (ItemType item : data) {
-            ((AvailableRedpackResultModel.ListBean) item).setSelect(false);
         }
     }
 
