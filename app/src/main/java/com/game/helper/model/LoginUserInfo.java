@@ -10,7 +10,7 @@ public class LoginUserInfo implements Serializable {
     public String phone;
     public int member_id;
     public String icon;
-    public boolean has_passwd;//登陆密码
+    public boolean has_passwd;//登录密码
     public boolean has_trade_passwd;//交易密码
     public boolean has_alipay_account;//支付宝账号
 

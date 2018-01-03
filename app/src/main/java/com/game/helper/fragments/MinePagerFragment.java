@@ -166,7 +166,11 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
             DetailFragmentsActivity.launch(getContext(),null, CouponFragment.newInstance());
         }
         if (v == mRecharge){
-            DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
+            Bundle bundle = new Bundle();
+            bundle.putString(RechargeFragment.TAG,userInfo.vip_level.level);
+            RechargeFragment rechargeFragment = RechargeFragment.newInstance();
+            rechargeFragment.setArguments(bundle);
+            DetailFragmentsActivity.launch(getContext(),bundle, rechargeFragment);
         }
         if (v == mMessage){
             DetailFragmentsActivity.launch(getContext(),null, MessageFragment.newInstance());

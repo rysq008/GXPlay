@@ -16,7 +16,7 @@ public final class RxConstant {
     public static final int PLATFORM_ANDROID = 1;
 
     /**
-     * 登陆share preference
+     * 登录share preference
      * */
     public static final String LOGIN_PREFERENCE_NAME = "login_share_preference";
     public static final String LOGIN_PREFERENCE_KEY_STATUS = "login_preference_islogin";
@@ -55,7 +55,7 @@ public final class RxConstant {
 
     public static final class AccountModeType {
         public static final int Account_Regist_type = 50;//注册
-        public static final int Account_Login_type = 51;//登陆
+        public static final int Account_Login_type = 51;//登录
         public static final int Account_Logout_type = 52;//登出
         public static final int Account_Member_Info_type = 53;//用户详情
         public static final int Account_Vertify_type = 54;//验证码

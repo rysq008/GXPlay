@@ -10,7 +10,7 @@
         layout="@layout/layout_action_bar"/>
     
     <TextView
-        android:text="绑定手机号码可以提升账号安全性，方便登陆与数据同步，您的个人隐私将被保护，请放心绑定。"
+        android:text="绑定手机号码可以提升账号安全性，方便登录与数据同步，您的个人隐私将被保护，请放心绑定。"
         android:layout_margin="@dimen/dp_10"
         android:textSize="@dimen/text_size_medium"
         android:textColor="@color/colorShadow"

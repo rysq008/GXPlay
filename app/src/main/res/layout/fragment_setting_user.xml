@@ -240,7 +240,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:text="登陆密码"
+                    android:text="登录密码"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/text_size_large"
                     android:layout_width="0dp"

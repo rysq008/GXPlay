@@ -26,6 +26,7 @@ import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.Utils;
 import com.game.helper.views.MemberDescDialog;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -145,6 +146,7 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
+                colorTransitionPagerTitleView.setPadding(Utils.dip2px(getContext(),40),0,Utils.dip2px(getContext(),40),0);
                 colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
                 colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
                 String title = null;

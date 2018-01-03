@@ -143,7 +143,7 @@
     </LinearLayout>
 
     <TextView
-        android:text="退出登陆"
+        android:text="退出登录"
         android:id="@+id/tv_exit_login"
         android:textSize="@dimen/text_size_large"
         android:textColor="@color/colorWhite"

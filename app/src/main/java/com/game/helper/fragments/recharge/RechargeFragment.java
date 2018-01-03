@@ -1,14 +1,18 @@
 package com.game.helper.fragments.recharge;
 
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,11 +28,15 @@ import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.WxPayInfoBean;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.ConsumeRequestBody;
 import com.game.helper.net.model.PayRequestBody;
+import com.game.helper.utils.AliPayResultUtils;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
@@ -84,6 +92,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private RechargeGoldFragment rechargeGoldFragment;
     private ProgressDialog dialog;
     public static final int Reset_Ui_Code = 11;
+    private String level = "0";
 
     public static RechargeFragment newInstance() {
         return new RechargeFragment();
@@ -111,6 +120,10 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         mHeadBack.setOnClickListener(this);
         mConfirmOrder.setOnClickListener(this);
         mConnectKefu.setOnClickListener(this);
+
+        if (getArguments() != null){
+            level = getArguments().getString(TAG);
+        }
 
         rechargeGameFragment = RechargeGameFragment.newInstance();
         list.add(rechargeGameFragment);
@@ -162,6 +175,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
+                colorTransitionPagerTitleView.setPadding(Utils.dip2px(getContext(),30),0,Utils.dip2px(getContext(),30),0);
                 colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
                 colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
                 String title = null;
@@ -238,64 +252,93 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             }
             if (select_pay_mode == RechargeGoldFragment.Pay_Type_Alipay) {
                 //支付宝支付
-                AliPay(totalChargeGold);
+                aliPay(totalChargeGold);
             }
         }
     }
 
-    private void AliPay(float amount) {
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            dismissWaittingDialog();
+            switch (msg.what) {
+                case 1: {
+                    @SuppressWarnings("unchecked")
+                    AliPayResultUtils payResult = new AliPayResultUtils((Map<String, String>) msg.obj);
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        Toast.makeText(getContext(), "支付成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "支付失败", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
+    /**
+     * ali支付
+     */
+    private void aliPay(float amount) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                SharedPreUtil.getLoginUserInfo().member_id+"",
+                SharedPreUtil.getLoginUserInfo().member_id + "",
                 amount + "",
                 "1",
                 "1",
-                "1"));
+                level));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
                 if (payRequestBody.isSucceful()) {
                     final String info = payRequestBody.data.orderInfo;
-                    Log.e(TAG, "accept: info:::::" + info);
                     Runnable payRunnable = new Runnable() {
                         @Override
                         public void run() {
                             PayTask alipay = new PayTask(getActivity());
                             Map<String, String> result = alipay.payV2(info, true);
                             Log.i("msp", result.toString());
+
+                            Message msg = new Message();
+                            msg.what = 1;
+                            msg.obj = result;
+                            mHandler.sendMessage(msg);
                         }
                     };
 
                     Thread payThread = new Thread(payRunnable);
                     payThread.start();
                 } else {
-                    dismissWaittingDialog();
-                    Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                dismissWaittingDialog();
                 Log.e("", "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
 
     }
-
-    private void weixinPay(float amount) {
+    /**
+     * 微信支付
+     */
+    private void weixinPay(float mNeedPay) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                SharedPreUtil.getLoginUserInfo().member_id+"",
-                amount + "",
+                SharedPreUtil.getLoginUserInfo().member_id + "",
+                mNeedPay + "",
                 "2",
                 "1",
-                "0"));
+                level));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
                 if (payRequestBody.isSucceful()) {
-                    Log.d("", "accept");
                     WxPayInfoBean bean = new WxPayInfoBean();
                     bean.setAppid(RxConstant.ThirdPartKey.WeixinId);
                     bean.setNoncestr(payRequestBody.data.getWxorderInfo().getNoncestr());
@@ -305,15 +348,14 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                     bean.setSign(payRequestBody.data.getWxorderInfo().getSign());
                     bean.setTimestamp(payRequestBody.data.getWxorderInfo().getTimestamp());
                     GameMarketApplication.api.sendReq(WXPayUtils.weChatPay(bean));
-                } else {
                     dismissWaittingDialog();
-                    Toast.makeText(getActivity(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
+                Toast.makeText(getContext(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                dismissWaittingDialog();
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("", "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });

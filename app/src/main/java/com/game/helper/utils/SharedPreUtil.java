@@ -116,7 +116,7 @@ public class SharedPreUtil {
     }
 
     /**
-     * 是否登陆
+     * 是否登录
      */
     public static boolean isLogin() {
         String sessionid = getSessionId();
@@ -124,14 +124,14 @@ public class SharedPreUtil {
     }
 
     /**
-     * 获取登陆用户
+     * 获取登录用户
      */
     public static LoginUserInfo getLoginUserInfo() {
         return getObject(USER_INFO);
     }
 
     /**
-     * 保存登陆用户
+     * 保存登录用户
      */
     public static void saveLoginUserInfo(LoginUserInfo loginUserInfo) {
         saveObject(USER_INFO, loginUserInfo);
@@ -139,7 +139,7 @@ public class SharedPreUtil {
     }
 
     /**
-     * 清除登陆
+     * 清除登录
      */
     public static void cleanLoginUserInfo() {
         sp.edit().remove(USER_INFO).apply();
@@ -162,7 +162,7 @@ public class SharedPreUtil {
     }
 
     /**
-     * 更新登陆账户密码设置状态
+     * 更新登录账户密码设置状态
      */
     public static void updateUserPasswdStatus(Context context, boolean hasPasswd) {
         LoginUserInfo savedUser = getLoginUserInfo();
@@ -172,7 +172,7 @@ public class SharedPreUtil {
     }
 
     /**
-     * 更新登陆账户交易密码设置状态
+     * 更新登录账户交易密码设置状态
      */
     public static void updateUserTradePasswdStatus(Context context, boolean hasTradePasswd) {
         LoginUserInfo savedUser = getLoginUserInfo();
@@ -182,7 +182,7 @@ public class SharedPreUtil {
     }
 
     /**
-     * 更新登陆账户支付宝设置状态
+     * 更新登录账户支付宝设置状态
      */
     public static void updateUserAlipayStatus(Context context, boolean hasAlipay) {
         LoginUserInfo savedUser = getLoginUserInfo();

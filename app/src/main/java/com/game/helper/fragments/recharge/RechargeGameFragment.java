@@ -414,17 +414,13 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         if (type == 1) content = "您的VIP账户名额不足，升级会员等级可增加VIP账户名额，是否去升级VIP？";
         if (type == 2) content = "您的VIP账户名额已用完，并且是皇冠会员，已无法再升级会员，若您仍想绑定该账号为VIP账号，请联系客服！";
         dialog = null;
-        if (type ==2 || type == 0) {
-            dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", content);
-        }
-        if (type == 1){
-            dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, "温馨提示", content);
-        }
+        dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, "温馨提示", content);
         dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
             @Override
             public void onCancel() {
                 dialog.dismiss();
-                mItemDiscount2.performClick();
+                if (!mCbDiscount2.isEnabled()) mItemDiscount2.performClick();
+                else if (!mCbDiscount1.isEnabled()) mItemDiscount1.performClick();
             }
 
             @Override

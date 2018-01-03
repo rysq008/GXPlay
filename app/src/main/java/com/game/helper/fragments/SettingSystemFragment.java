@@ -112,7 +112,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             getActivity().onBackPressed();
         }
         if (v == mExit){
-            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm,"退出登陆","确定要退出登陆？");
+            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm,"退出登录","确定要退出登录？");
             dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
                 @Override
                 public void onCancel() {

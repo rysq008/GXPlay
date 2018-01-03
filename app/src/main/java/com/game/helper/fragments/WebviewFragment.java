@@ -175,7 +175,7 @@ public class WebviewFragment extends XBaseFragment {
         Object insertObj = new Object() {
             /***
              *  jsObj.JavaCallBack(1,"注册");
-             jsObj.JavaCallBack(2,"登陆");
+             jsObj.JavaCallBack(2,"登录");
              jsObj.JavaCallBack(3,"充值");
              jsObj.JavaCallBack(4,"分享");
              jsObj.JavaCallBack(5,"返回");

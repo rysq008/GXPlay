@@ -123,6 +123,8 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
         else if (StringUtils.isEmpty(code)) errorMsg = getResources().getString(R.string.login_hint_without_code);
         else if (StringUtils.isEmpty(identy) || identy.length() != 6) errorMsg = getResources().getString(R.string.login_hint_without_identy);
         else if (StringUtils.isEmpty(name)) errorMsg = getResources().getString(R.string.login_hint_without_name);
+        else if (passWord.length() != 6) errorMsg = getResources().getString(R.string.login_hint_wrong_password);
+        else if (passWord1.length() != 6) errorMsg = getResources().getString(R.string.login_hint_wrong_password);
 
         if (errorMsg != null) {
             Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
@@ -176,6 +178,8 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
         else if (StringUtils.isEmpty(code)) errorMsg = getResources().getString(R.string.login_hint_without_code);
         else if (StringUtils.isEmpty(identy)) errorMsg = getResources().getString(R.string.login_hint_without_identy);
         else if (StringUtils.isEmpty(name)) errorMsg = getResources().getString(R.string.login_hint_without_name);
+        else if (passWord.length() != 6) errorMsg = getResources().getString(R.string.login_hint_wrong_password);
+        else if (passWord1.length() != 6) errorMsg = getResources().getString(R.string.login_hint_wrong_password);
 
         if (errorMsg != null) {
             Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();

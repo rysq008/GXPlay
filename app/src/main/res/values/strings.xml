@@ -90,7 +90,7 @@
     <string name="mine_name_5">账号管理</string>
     <string name="mine_name_3">我的反馈</string>
     <string name="mine_name_4">我的设置</string>
-    <string name="mine_login_hint">登陆后，钱包余额、推广记录、邀请记录\n会显示在这里，方便查看</string>
+    <string name="mine_login_hint">登录后，钱包余额、推广记录、邀请记录\n会显示在这里，方便查看</string>
 
 
     <!--推广-->
@@ -128,11 +128,11 @@
     <string name="feedback_edit_phone_hint">您的联系方式（选填）</string>
     <string name="feedback_edit_mail_hint">电子邮件或者QQ（方便我们与您及时联系）</string>
 
-    <!--登陆-->
+    <!--登录-->
     <string name="regist_tittle">注册</string>
     <string name="reset_tittle">重置密码</string>
     <string name="forget_tittle">忘记密码</string>
-    <string name="login_tittle">登陆</string>
+    <string name="login_tittle">登录</string>
     <string name="login_hint_code">输入验证码</string>
     <string name="login_hint_password">输入密码</string>
     <string name="login_hint_without_account">请输入手机号码！</string>
@@ -144,6 +144,7 @@
     <string name="login_hint_wrong_code">验证码错误！</string>
     <string name="login_hint_wrong_notequal_passwd">前后密码不一致！</string>
     <string name="login_hint_wrong_notequal_alipay">前后支付宝账户不一致！</string>
+    <string name="login_hint_wrong_password">请输入六位支付密码！</string>
     <string name="login_hint_without_identy">请输入身份证后六位！</string>
     <string name="login_hint_without_name">请输入真实姓名！</string>
 

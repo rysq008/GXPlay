@@ -22,7 +22,7 @@ public class HttpResultModel<T> extends XBaseModel {
 
     @Override
     public boolean isAuthError() {
-        return code.equals("0006");//登陆错误（验证错误）
+        return code.equals("0006");//登录错误（验证错误）
     }
 
     @Override
