@@ -1,4 +1,4 @@
-<cn.droidlover.xrecyclerview.XRecyclerContentLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.game.helper.views.XReloadableRecyclerContentLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rc_wallet_list"
     android:layout_width="match_parent"

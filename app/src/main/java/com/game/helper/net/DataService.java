@@ -44,7 +44,7 @@ import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
-import com.game.helper.model.PlatformMessageResults;
+import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
@@ -55,7 +55,7 @@ import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
-import com.game.helper.model.SystemMessageResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
@@ -73,6 +73,7 @@ import com.game.helper.net.model.ConsumeRequestBody;
 import com.game.helper.net.model.DeleteGameRequestBody;
 import com.game.helper.net.model.DeleteGiftRequestBody;
 import com.game.helper.net.model.FeedbackRequestBody;
+import com.game.helper.net.model.FeedbakcStatusRequestBody;
 import com.game.helper.net.model.ForgetPasswdRequestBody;
 import com.game.helper.net.model.FriendRangeRequestBody;
 import com.game.helper.net.model.GameAccountRequestBody;
@@ -472,11 +473,15 @@ public class DataService {
         return Api.CreateApiService().getMineGameDescList(singleGameIdRequestBody);
     }
 
+    public static Flowable<HttpResultModel<SystemMessageResults>> getSystemMessage(SinglePageRequestBody singlePageRequestBody) {
+        return Api.CreateApiService().getSystemMessage(singlePageRequestBody);
+    }
+
     public static Flowable<HttpResultModel<PlatformMessageResults>> getPlatformMessage(SinglePageRequestBody singlePageRequestBody) {
         return Api.CreateApiService().getPlatformMessage(singlePageRequestBody);
     }
 
-    public static Flowable<HttpResultModel<SystemMessageResults>> getSystemMessage(SinglePageRequestBody singlePageRequestBody) {
-        return Api.CreateApiService().getSystemMessage(singlePageRequestBody);
+    public static Flowable<HttpResultModel<NotConcernResults>> feedbackStatus(FeedbakcStatusRequestBody feedbakcStatusRequestBody) {
+        return Api.CreateApiService().feedbackStatus(feedbakcStatusRequestBody);
     }
 }

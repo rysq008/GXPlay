@@ -16,8 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.MyAccountActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -26,6 +28,7 @@ import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
@@ -438,7 +441,10 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     private void goToVipLevel(){
         //跳转vip升级页面
         mItemDiscount2.performClick();
-        Toast.makeText(getContext(), "可用数量为0，跳转vip升级", Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putString(WebviewFragment.PARAM_TITLE,"VIP");
+        bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
+        DetailFragmentsActivity.launch(getContext(),bundle,WebviewFragment.newInstance());
     }
 
     private void goToKefu(){

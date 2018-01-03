@@ -23,6 +23,7 @@ import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.views.GXPlayDialog;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -43,11 +44,9 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
     @BindView(R.id.rc_account_list)
-    XRecyclerContentLayout mContent;
+    XReloadableRecyclerContentLayout mContent;
 
     private AccountManagerAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
 
     public static AccountManageFragment newInstance(){
         return new AccountManageFragment();
@@ -67,17 +66,6 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
         mHeadTittle.setText(getResources().getString(R.string.common_account_mannager));
         mHeadBack.setOnClickListener(this);
 
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent())
-            ((ViewGroup) errorView.getParent()).removeView(errorView);
-        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
-        if (null != loadingView.getParent())
-            ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        mContent.errorView(errorView);
-        mContent.loadingView(loadingView);
         mContent.showLoading();
         initList();
         getDataFromNet(1);
@@ -149,7 +137,12 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        mContent.showContent();
+        if (mAdapter.getItemCount()<1){
+            mContent.showEmpty();
+            return;
+        }else {
+            mContent.showContent();
+        }
     }
 
     public void showError(NetError error) {

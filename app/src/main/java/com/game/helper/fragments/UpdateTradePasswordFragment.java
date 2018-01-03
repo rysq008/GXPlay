@@ -2,6 +2,7 @@ package com.game.helper.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -91,6 +92,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
         is_new = (arguments == null) ? true : !(arguments.getBoolean(UpdateTradePasswordFragment.TAG));
         mHeadTittle.setText(getResources().getString(is_new ? R.string.common_update_trade_password : R.string.common_update_trade_password1));
         mHeadBack.setOnClickListener(this);
+        mIdenty.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789xX"));
 
         mResetPasswd.setSelected(false);
         mAccount.setText(Utils.converterSecretPhone(SharedPreUtil.getLoginUserInfo().phone));
@@ -119,7 +121,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
         else if (StringUtils.isEmpty(passWord1)) errorMsg = getResources().getString(R.string.login_hint_without_confirm_passwd);
         else if (passWord != null && passWord1 != null && !passWord.equals(passWord1)) errorMsg = getResources().getString(R.string.login_hint_wrong_notequal_passwd);
         else if (StringUtils.isEmpty(code)) errorMsg = getResources().getString(R.string.login_hint_without_code);
-        else if (StringUtils.isEmpty(identy)) errorMsg = getResources().getString(R.string.login_hint_without_identy);
+        else if (StringUtils.isEmpty(identy) || identy.length() != 6) errorMsg = getResources().getString(R.string.login_hint_without_identy);
         else if (StringUtils.isEmpty(name)) errorMsg = getResources().getString(R.string.login_hint_without_name);
 
         if (errorMsg != null) {

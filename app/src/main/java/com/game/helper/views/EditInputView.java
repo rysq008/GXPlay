@@ -163,6 +163,10 @@ public class EditInputView extends RelativeLayout implements View.OnClickListene
         void onTextChange(EditText content);
     }
 
+    public EditText getEditText(){
+        return mContent;
+    }
+
     /**
     * 模拟 EditText 的 getText()
     * */
