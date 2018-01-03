@@ -29,6 +29,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
+import com.game.helper.utils.ToastUtil;
 import com.game.helper.utils.WXPayUtils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -80,6 +81,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private RechargeVIPLevelFragment rechargeVIPLevelFragment;
     private ProgressDialog dialog;
     public static final int Reset_Ui_Code = 11;
+    public static final String VIP = "vip";
 
     public static RechargeFragment newInstance() {
         return new RechargeFragment();
@@ -91,7 +93,15 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        Bundle arguments = getArguments();
         initView();
+        if(arguments != null){
+            int vip = arguments.getInt(VIP);
+            if(vip == 123){
+                viewPager.setCurrentItem(2);
+            }
+        }
+
     }
 
     @Override
@@ -241,6 +251,23 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                 //支付宝支付
                 AliPay(totalChargeGold);
             }
+        }
+
+        if (current_page == 2) {
+            Boolean payType = rechargeVIPLevelFragment.getPayType();
+            int totalCharge = rechargeVIPLevelFragment.getTotal();
+            if (totalCharge <= 0 ) {
+                ToastUtil.showToast("请选择要升级的VIP");
+            }else{
+                if (payType ) {
+                    //微信支付
+                    weixinPay(totalCharge);
+                }else{
+                    //支付宝支付
+                    AliPay(totalCharge);
+                }
+            }
+
         }
     }
 

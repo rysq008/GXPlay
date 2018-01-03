@@ -57,6 +57,7 @@ import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
+import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
@@ -105,6 +106,7 @@ import com.game.helper.net.model.UpdateGenderRequestBody;
 import com.game.helper.net.model.UpdateNicknameRequestBody;
 import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
+import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 
 import io.reactivex.Flowable;
@@ -466,4 +468,7 @@ public interface ApiService {
     @POST("/sys/update_feedback_status/")
     Flowable<HttpResultModel<NotConcernResults>> feedbackStatus(@Body FeedbakcStatusRequestBody feedbakcStatusRequestBody);
 
+    //计算升级vip花费
+    @POST("/member/calculate_upgrade_vip/")
+    Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(@Body VIPUpGradfeRequestBody vipUpGradfeRequestBody);
 }

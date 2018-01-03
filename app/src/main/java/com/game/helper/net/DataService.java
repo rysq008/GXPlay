@@ -57,6 +57,7 @@ import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
+import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
@@ -105,6 +106,7 @@ import com.game.helper.net.model.UpdateGenderRequestBody;
 import com.game.helper.net.model.UpdateNicknameRequestBody;
 import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
+import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.UploadUtils;
 
@@ -483,5 +485,9 @@ public class DataService {
 
     public static Flowable<HttpResultModel<NotConcernResults>> feedbackStatus(FeedbakcStatusRequestBody feedbakcStatusRequestBody) {
         return Api.CreateApiService().feedbackStatus(feedbakcStatusRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(VIPUpGradfeRequestBody vipUpGradfeRequestBody) {
+        return Api.CreateApiService().getVIPUpGradeCost(vipUpGradfeRequestBody);
     }
 }

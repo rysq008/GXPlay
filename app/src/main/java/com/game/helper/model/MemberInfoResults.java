@@ -6,7 +6,7 @@ import com.game.helper.model.BaseModel.XBaseModel;
 import zlc.season.practicalrecyclerview.ItemType;
 
 public class MemberInfoResults extends XBaseModel {
-    //        {
+//        {
 //            "message": "成功",
 //                "code": "0000",
 //                "data": {
@@ -31,7 +31,7 @@ public class MemberInfoResults extends XBaseModel {
     public String nick_name;
     public String gender;
     public String phone;
-    //                        "image": "",
+//                        "image": "",
 //                        "level": 1,
 //                        "name": "",
 //                        "descs": "享受vip充值折扣待遇"
@@ -186,6 +186,6 @@ public class MemberInfoResults extends XBaseModel {
 
     @Override
     public int itemType() {
-        return RxConstant.AccountModeType.Account_Member_Info_type;
-    }
+            return RxConstant.AccountModeType.Account_Member_Info_type;
+        }
 }

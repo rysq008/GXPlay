@@ -10,10 +10,14 @@ import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.UserInfoAndVipLevelResults;
+import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.views.XReloadableStateContorller;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -41,8 +45,9 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
     TextView tvTotal;
     @BindView(R.id.xController_vip_level_recharge)
     XReloadableStateContorller xController;
-    private boolean isWeixin = true;
+    private boolean isWeixin = true;//true 是微信，false 是支付宝
     private int vipLevel = 0;
+    private List<VipLevelResults.VipBean> vipBeans;
 
     public static RechargeVIPLevelFragment newInstance() {
         return new RechargeVIPLevelFragment();
@@ -91,21 +96,20 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                 }
                 break;
             case R.id.tv_vip1_recharge_vip_level:
-                tvTotal.setText(tvVip1.getText().toString());
                 changeState(1);
                 break;
             case R.id.tv_vip2_recharge_vip_level:
-                tvTotal.setText(tvVip2.getText().toString());
                 changeState(2);
                 break;
             case R.id.tv_vip3_recharge_vip_level:
-                tvTotal.setText(tvVip3.getText().toString());
                 changeState(3);
                 break;
         }
     }
 
     private void changeState(int vipLevel) {
+        //获取vip升级的费用
+        setTotalData(vipLevel);
         if (vipLevel == 1) {
             tvVip1.setBackgroundColor(getResources().getColor(R.color.color_00aeff));
             tvVip1.setTextColor(getResources().getColor(R.color.colorWhite));
@@ -114,7 +118,7 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
             tvVip3.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
             tvVip3.setTextColor(getResources().getColor(R.color.color_00aeff));
         } else if (vipLevel == 2) {
-            if(tvVip1.isClickable()){
+            if (tvVip1.isClickable()) {
                 tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
             }
@@ -125,13 +129,18 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         } else if (vipLevel == 3) {
             tvVip3.setBackgroundColor(getResources().getColor(R.color.color_00aeff));
             tvVip3.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
-            tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
-            tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
-            tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
+            if (tvVip1.isClickable()) {
+                tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
+                tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
+            }
+            if (tvVip2.isClickable()) {
+                tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
+                tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
+            }
         }
     }
-    public void setVipLevelYearFree(int vipLevel,String cost){
+
+    public void setVipLevelYearFree(int vipLevel, String cost) {
         if (vipLevel == 1) {
             tvVip1.setText(String.valueOf(cost));
         } else if (vipLevel == 2) {
@@ -140,8 +149,9 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
             tvVip3.setText(String.valueOf(cost));
         }
     }
-    public void currentVipLevel(int vipLevel){
-        if(vipLevel == 0){
+
+    public void currentVipLevel(int vipLevel) {
+        if (vipLevel == 0) {
 
         } else if (vipLevel == 1) {
             tvVip1.setClickable(false);
@@ -161,6 +171,17 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         }
     }
 
+    private void setTotalData(int ivpLevel) {
+        int id = vipBeans.get(ivpLevel).id;
+        Flowable<HttpResultModel<VIPUpGradeCostResults>> fv = DataService.getVIPUpGradeCost(new VIPUpGradfeRequestBody(id));
+        RxLoadingUtils.subscribe(fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VIPUpGradeCostResults>>() {
+            @Override
+            public void accept(HttpResultModel<VIPUpGradeCostResults> vipUpGradeCost) throws Exception {
+                tvTotal.setText(String.valueOf(vipUpGradeCost.data.getCost()));
+            }
+        });
+    }
+
     private void initData(Boolean isShowLoading) {
         Flowable<UserInfoAndVipLevelResults> fa;
         Flowable<HttpResultModel<VipLevelResults>> fv = DataService.getVipLevel();
@@ -176,20 +197,28 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         RxLoadingUtils.subscribeWithReload(xController, fa, this.bindToLifecycle(), new Consumer<UserInfoAndVipLevelResults>() {
             @Override
             public void accept(UserInfoAndVipLevelResults userInfoAndVipLevelResults) throws Exception {
-               if(userInfoAndVipLevelResults != null){
-                   xController.showContent();
-                   MemberInfoResults memberInfoResults = userInfoAndVipLevelResults.memberInfoResults;
-                   String level = memberInfoResults.vip_level.getLevel();
-                   currentVipLevel(Integer.valueOf(level));
-                   VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
-                   for (VipLevelResults.VipBean vipBean : levelResults.list) {
-                       setVipLevelYearFree(vipBean.level,vipBean.year_fee);
-                   }
-               }else{
-                   xController.showEmpty();
-               }
+                if (userInfoAndVipLevelResults != null) {
+                    xController.showContent();
+                    MemberInfoResults memberInfoResults = userInfoAndVipLevelResults.memberInfoResults;
+                    String level = memberInfoResults.vip_level.getLevel();
+                    currentVipLevel(Integer.valueOf(level));
+                    VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
+                    vipBeans = levelResults.list;
+                    for (VipLevelResults.VipBean vipBean : vipBeans) {
+                        setVipLevelYearFree(vipBean.level, vipBean.year_fee);
+                    }
+                } else {
+                    xController.showEmpty();
+                }
             }
         }, null, null, isShowLoading);
 
+    }
+
+    public Boolean getPayType(){
+        return isWeixin;
+    }
+    public int getTotal(){
+        return Integer.valueOf(tvTotal.getText().toString());
     }
 }
