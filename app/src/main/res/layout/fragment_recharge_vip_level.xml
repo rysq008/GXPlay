@@ -202,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_5"
-                android:text="合计金额："
+                android:text="实际支付金额："
                 android:textColor="@color/color_333"
                 android:textSize="@dimen/size_14sp" />
 
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_5"
-                android:text="299"
+                android:text="0"
                 android:textColor="@color/color_fe4430"
                 android:textSize="@dimen/size_14sp" />
 
@@ -225,6 +225,23 @@
                 android:textColor="@color/color_333"
                 android:textSize="@dimen/size_14sp" />
         </LinearLayout>
-
+        <TextView
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="实际支付金额 = 预升级VIP等级金额 - 当前会员等级金额 / 12 * （12 - 所使用月数 ）"
+            android:textSize="@dimen/size_12sp"
+            android:textColor="@color/color_333"/>
+        <TextView
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="所使用月数规则：未满15天按0.5个月计算，满15天按1个月计算。"
+            android:textSize="@dimen/size_12sp"
+            android:textColor="@color/color_333"/>
     </LinearLayout>
 </com.game.helper.views.XReloadableStateContorller>
