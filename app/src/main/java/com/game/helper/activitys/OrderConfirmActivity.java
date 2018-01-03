@@ -218,7 +218,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     public String vipLevel = "0";
 
-    AvailableRedpackResultModel.ListBean bean ;
+    AvailableRedpackResultModel.ListBean bean;
 
     String accountAmount = "";//使用充值账户金额
     String marketingAmount = "";//使用推广账户金额
@@ -575,10 +575,10 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 if (hasRedPack) {
                     intent.setClass(OrderConfirmActivity.this, ChoiceRedPackActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(RED_PACK_BEAN,bean);
+                    bundle.putSerializable(RED_PACK_BEAN, bean);
                     intent.putExtra(OPTION_GAME_ID, gameId);
                     intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
-                    intent.putExtra(RED_PACK_BEAN,bundle);
+                    intent.putExtra(RED_PACK_BEAN, bundle);
                     startActivityForResult(intent, 0);
                 }
                 break;
@@ -831,7 +831,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * ali支付
      */
     private void aliPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "", mNeedPay + "", "1", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "",
+                new BigDecimal(String.valueOf(mNeedPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString(), "1", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -870,7 +871,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 微信支付
      */
     private void weixinPay() {
-        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "", mNeedPay + "", "2", payPurpose, vipLevel));
+        Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(SharedPreUtil.getLoginUserInfo().member_id + "",
+                new BigDecimal(String.valueOf(mNeedPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString(), "2", payPurpose, vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
