@@ -440,11 +440,11 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             MemberInfoResults.VipLevel vip_level = memberInfoResults.vip_level;
             String url = vip_level.image;
             String name = vip_level.name;
-            String descs = vip_level.descs + "折";
+            //String descs = vip_level.descs + "折";
             String level = vip_level.level;
             //ILFactory.getLoader().loadNet(ivVipLevel, Api.API_BASE_URL.concat(url), ILoader.Options.defaultOptions());
             tvNameLevel.setText(name);
-            tvDiscount.setText(descs);
+            //tvDiscount.setText(descs);
             //根据等级显示升级会员是否可以点击到下一页
             if ("0".equals(level)) {
                 ivVipLevel.setImageResource(R.mipmap.vip0);
