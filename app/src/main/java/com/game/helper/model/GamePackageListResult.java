@@ -100,7 +100,7 @@ public class GamePackageListResult extends XBaseModel {
         }
 
         public String getPath() {
-            return path;
+            return path = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
         }
 
         public void setPath(String path) {

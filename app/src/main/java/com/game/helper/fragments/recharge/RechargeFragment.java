@@ -97,7 +97,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         initView();
         if(arguments != null){
             int vip = arguments.getInt(VIP);
-            if(vip == 123){
+            if(vip == 3){
                 viewPager.setCurrentItem(2);
             }
         }

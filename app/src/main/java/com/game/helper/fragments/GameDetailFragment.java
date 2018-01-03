@@ -7,15 +7,10 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -23,15 +18,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.DownLoad.DownloadController;
 import com.game.helper.model.GameDetailAllResults;
 import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.model.H5UrlListResults;
@@ -40,6 +35,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
+import com.game.helper.utils.DownLoadReceiveUtils;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
@@ -56,7 +52,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -64,11 +59,13 @@ import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
+import zlc.season.rxdownload2.entity.DownloadEvent;
 
-import static com.alipay.sdk.app.statistic.c.v;
+import static zlc.season.rxdownload2.function.Utils.dispose;
 
 public class GameDetailFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = GameDetailFragment.class.getSimpleName();
@@ -87,8 +84,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     TextView tvPackageFilesize;
     @BindView(R.id.tv_game_detail_content)
     TextView tvContent;
-    @BindView(R.id.iv_game_detail_load)
-    ImageView ivLoad;
+    @BindView(R.id.btn_game_detail_load)
+    Button btnLoad;
     @BindView(R.id.tv_discount_game_detail_common)
     TextView tvDiscountCommon;
     @BindView(R.id.tv_discount_game_detail_vip)
@@ -110,7 +107,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     @BindView(R.id.pb_game_detail)
     ProgressBar pb;
     @BindView(R.id.ll_Progress_bar_game_detail)
-    LinearLayout llProgressBar;
+    RelativeLayout llProgressBar;
     @BindView(R.id.ll_discount_navigation_game_detail)
     LinearLayout llNavigation;
     private H5UrlListResults mH5UrlList;
@@ -124,6 +121,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private GameDetailCommunityFragment gameDetailCommunityFragment;
     private GamePackageInfoResult packageInfo;
     private MemberInfoResults memberInfoResults;
+    private Disposable disposable;
+    private DownloadController mDownloadController;
 
 
     public static GameDetailFragment newInstance() {
@@ -266,6 +265,12 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                     SPUtils.putString(context, SPUtils.GAME_NAME, packageInfo.getGame().getName());
                     SPUtils.putInt(context, SPUtils.CHANNEL_ID, packageInfo.getChannel().getId());
                     SPUtils.putInt(context, SPUtils.GAME_ID, packageInfo.getGame().getId());
+                    DownLoadReceiveUtils.receiveDownloadEvent(context, "", disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+                        @Override
+                        public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
+
+                        }
+                    });
                 }
                 if (gameDetailAllResults.memberInfoResults != null) {
                     memberInfoResults = gameDetailAllResults.memberInfoResults;
@@ -468,10 +473,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 tvVip3.setClickable(false);
                 tvVip3.setTextColor(getResources().getColor(R.color.color_666));
             }
-        }else{
+        } else {
             currentVip.setVisibility(View.GONE);
         }
-         final AlertDialog dialog = new AlertDialog.Builder(context,R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
+        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
@@ -485,7 +490,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         dialogWindow.setAttributes(lp);
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
-        dialog.setView(v,30,view.getBottom()+30,30,0);// 设置布局
+        dialog.setView(v, 30, view.getBottom() + 30, 30, 0);// 设置布局
         dialog.show();
         tvVip1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -530,7 +535,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         TextView goAddCharge = v.findViewById(R.id.tv_add_go_recharge_common_dialog);
         tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getDiscount_vip() + "折)");
         tvDiscountAdd.setText(+packageInfo.getZhekou_xuchong() + "折");
-        final AlertDialog CommonDialog = new AlertDialog.Builder(context,R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
+        final AlertDialog CommonDialog = new AlertDialog.Builder(context, R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
         Window dialogWindow = CommonDialog.getWindow();
         //实例化Window
@@ -539,10 +544,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         //lp.x = 100; // 新位置X坐标
         lp.y = -30; // 新位置Y坐标
         dialogWindow.setAttributes(lp);
-        Log.d(TAG,"dialogWindow的坐标"+lp.x+"----------"+lp.y);
+        Log.d(TAG, "dialogWindow的坐标" + lp.x + "----------" + lp.y);
         // 不可以用“返回键”取消
         CommonDialog.setCancelable(true);
-        CommonDialog.setView(v,30,0,30,0);// 设置布局
+        CommonDialog.setView(v, 30, 0, 30, 0);// 设置布局
         CommonDialog.show();
         //CommonDialog.setContentView(v);
         //CommonDialog.getWindow().setLayout(v.getWidth(), v.getHeight());
@@ -563,5 +568,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         });
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dispose(disposable);
+    }
 }

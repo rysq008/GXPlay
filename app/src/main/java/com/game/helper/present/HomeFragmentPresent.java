@@ -58,7 +58,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
 //                if (recommendResults.data.isNull()) {
 //                    Flowable.error(new NetError("fetch recommendResults failed", NetError.NoDataError));
 //                }
-//                mXBaseModel = recommendResults;
+                mXBaseModel = recommendResults;
                 HomeAllResultsData homeAllResultsData = new HomeAllResultsData(bannerResults.data, noticeResults.data, h5Results.data, specialResults.data, hotResults.data, recommendResults.data);
                 return homeAllResultsData;
             }

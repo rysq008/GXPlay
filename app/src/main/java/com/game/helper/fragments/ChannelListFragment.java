@@ -5,6 +5,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.adapters.ChannelListItemAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -24,6 +25,8 @@ import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import zlc.season.practicalrecyclerview.ItemType;
+
+import static zlc.season.rxdownload2.function.Utils.dispose;
 
 /**
  * Created by Tian on 2017/12/21.
@@ -63,8 +66,13 @@ public class ChannelListFragment extends XBaseFragment {
                 @Override
                 public void onItemClick(int position, ItemType model, int tag, ChannelListItemAdapter.ViewHolder holder) {
                     super.onItemClick(position, model, tag, holder);
+                    GamePackageListResult.ListBean itemDate = (GamePackageListResult.ListBean) model;
                     //游戏详情
-
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("gamepackeId", itemDate.getId());
+                    bundle.putInt("gameId", itemDate.getGame().getId());
+                    bundle.putInt("channelId", itemDate.getChannel().getId());
+                    DetailFragmentsActivity.launch(context, bundle, GameDetailFragment.newInstance());
                 }
             });
         }
@@ -124,4 +132,23 @@ public class ChannelListFragment extends XBaseFragment {
         getActivity().finish();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        /**
+         * 一定要在销毁时取消进度接收，否则会内存泄露
+         */
+        List<ItemType> list = mAdapter.getDataSource();
+        for (ItemType each : list) {
+            dispose(((GamePackageListResult.ListBean) each).disposable);
+        }
+    }
 }

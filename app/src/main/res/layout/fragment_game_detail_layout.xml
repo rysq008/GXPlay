@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -125,15 +126,17 @@
                         android:textSize="@dimen/size_12sp" />
                 </LinearLayout>
                 <!--点击下载后关闭游戏提供,显示下载进度条-->
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/ll_Progress_bar_game_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/percent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:text="50%"
                         android:textColor="@color/color_999"
                         android:textSize="@dimen/size_12sp" />
@@ -141,21 +144,48 @@
                     <ProgressBar
                         android:id="@+id/pb_game_detail"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="7dp"
+                        android:layout_below="@id/percent"
                         android:layout_marginBottom="@dimen/margin_3"
                         android:layout_marginTop="@dimen/margin_3"
-                        android:progress="50"
+                        android:progress="10"
                         android:visibility="visible" />
-                </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/pb_game_detail"
+                        android:layout_gravity="start"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        tools:text="正在下载中" />
+
+                    <TextView
+                        android:id="@+id/size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@id/pb_game_detail"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:text="0.0KB/0.0KB"
+                        android:textSize="11sp" />
+                </RelativeLayout>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/iv_game_detail_load"
+            <Button
+                android:id="@+id/btn_game_detail_load"
                 android:layout_width="@dimen/view_59"
                 android:layout_height="@dimen/view_29"
-                android:layout_marginRight="@dimen/margin_21"
-                android:background="@mipmap/middle_az" />
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_10"
+                android:background="@mipmap/bg_game_list_item_download" />
         </LinearLayout>
 
         <ImageView
@@ -340,23 +370,23 @@
             android:layout_weight="1"
             android:background="@drawable/bg_grey_stroke_radius"
             android:hint="说点什么吧"
+            android:maxLength="30"
+            android:maxLines="3"
             android:padding="@dimen/margin_5"
             android:textColorHint="@color/colorShadow"
-            android:textSize="@dimen/text_size_small"
-            android:maxLines="3"
-            android:maxLength="30"/>
+            android:textSize="@dimen/text_size_small" />
 
         <Button
             android:id="@+id/btn_send_comment_game_detail"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_30"
-            android:gravity="center"
-            android:background="@color/white"
-            android:text="发送"
-            android:textColorHint="@color/colorBlack"
+            android:layout_marginBottom="@dimen/margin_3"
             android:layout_marginRight="@dimen/margin_5"
             android:layout_marginTop="@dimen/margin_3"
-            android:layout_marginBottom="@dimen/margin_3"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="发送"
+            android:textColorHint="@color/colorBlack"
             android:textSize="@dimen/text_size_xlarge" />
     </LinearLayout>
 

@@ -5,7 +5,6 @@ import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -19,9 +18,7 @@ import android.widget.Toast;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.data.RxConstant;
-import com.game.helper.model.LoginUserInfo;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import org.json.JSONArray;
 
 import java.io.File;
@@ -79,9 +76,9 @@ public class Utils {
      * 获取vip等级图标
      *
      * @param level 等级
-     * */
-    public static int getVipLevel(int level){
-        switch (level){
+     */
+    public static int getVipLevel(int level) {
+        switch (level) {
             case 0:
                 return R.mipmap.ic_member_vip1;
             case 1:
@@ -104,9 +101,9 @@ public class Utils {
      * 获取不带外框vip等级图标
      *
      * @param level 等级
-     * */
-    public static int getMineVipLevel(int level){
-        switch (level){
+     */
+    public static int getMineVipLevel(int level) {
+        switch (level) {
             case 0:
                 return R.mipmap.vip_0;
             case 1:
@@ -123,10 +120,10 @@ public class Utils {
      * 获取邀请记录vip等级图标
      *
      * @param level 等级
-     * */
-    public static int getExtensionVipIcon(int level){
+     */
+    public static int getExtensionVipIcon(int level) {
         int res = 0;
-        switch (level){
+        switch (level) {
             case 1:
                 res = R.drawable.vip1_with_white_bg;
                 break;
@@ -142,11 +139,11 @@ public class Utils {
 
     /**
      * 游戏下载状态图标
-     * */
-    public static int getGameDownloadStatusIcon(int status){
-        switch (status){
+     */
+    public static int getGameDownloadStatusIcon(int status) {
+        switch (status) {
             case 0:
-                return R.mipmap.bg_game_list_item_install;
+                return R.mipmap.bg_game_list_item_download;
             case 1:
                 return R.mipmap.bg_game_list_item_waitting;
             case 2:
@@ -156,20 +153,20 @@ public class Utils {
             case 4:
                 return R.mipmap.bg_game_list_item_sussceeful;
             default:
-                return R.mipmap.bg_game_list_item_install;
+                return R.mipmap.bg_game_list_item_download;
         }
     }
 
     /**
      * 字符串判空
-     * */
+     */
     public static String emptyConverter(String str) {
         return TextUtils.isEmpty(str) || str.equals("null") ? "" : str;
     }
 
     /**
      * list判空
-     * */
+     */
     public static JSONArray emptyConverter(List<String> list) {
         JSONArray jsonArray = new JSONArray(list);
         return jsonArray;
@@ -177,10 +174,10 @@ public class Utils {
 
     /**
      * 隐藏手机号中间数字
-     * */
-    public static String converterSecretPhone(String phone){
+     */
+    public static String converterSecretPhone(String phone) {
         if (StringUtils.isEmpty(phone)) return "";
-        String converterResult = phone.substring(0,3)+"****"+phone.substring(phone.length()-4,phone.length());
+        String converterResult = phone.substring(0, 3) + "****" + phone.substring(phone.length() - 4, phone.length());
         return converterResult;
     }
 
@@ -203,14 +200,14 @@ public class Utils {
 
     /**
      * 判断字符串中包不包含特殊字符
-     * */
-    public static boolean hasRestrictionString(String string){
-        String limitEx="[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
+     */
+    public static boolean hasRestrictionString(String string) {
+        String limitEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
 
         Pattern pattern = Pattern.compile(limitEx);
         Matcher m = pattern.matcher(string);
 
-        if( m.find()){
+        if (m.find()) {
             return true;
         }
         return false;
@@ -218,8 +215,8 @@ public class Utils {
 
     /**
      * 复制内容到剪贴板
-     * */
-    public static boolean copyToClipboard(Context context, String text){
+     */
+    public static boolean copyToClipboard(Context context, String text) {
         // 从API11开始android推荐使用android.content.ClipboardManager
         // 为了兼容低版本我们这里使用旧版的android.text.ClipboardManager，虽然提示deprecated，但不影响使用。
         ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -230,7 +227,7 @@ public class Utils {
 
     /**
      * 通过包名启动app
-     * */
+     */
     public static void doStartApplicationWithPackageName(Context context, String packagename) {
 
         // 通过包名获取此APP详细信息，包括Activities、services、versioncode、name等等
@@ -270,9 +267,26 @@ public class Utils {
 
             intent.setComponent(cn);
             context.startActivity(intent);
-        }else {
+        } else {
             Toast.makeText(context, "无当前应用！", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 判斷APP是否已安裝
+     *
+     * @param uri
+     * @return
+     */
+    public static boolean isAppInstalled(Context context, String uri) {
+        boolean installed;
+        try {
+            context.getPackageManager().getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            installed = false;
+        }
+        return installed;
     }
 
     /**
@@ -280,7 +294,7 @@ public class Utils {
      */
     public static float m2(float arg) {
         DecimalFormat df = new DecimalFormat("#.00");
-        Log.e(TAG, "m2: "+arg+"/"+df.format(arg));
+        Log.e(TAG, "m2: " + arg + "/" + df.format(arg));
         return Float.parseFloat(df.format(arg));
     }
 }
