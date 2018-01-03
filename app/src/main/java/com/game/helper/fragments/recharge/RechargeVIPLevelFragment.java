@@ -138,7 +138,6 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                 tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
             }
-
         }
     }
 
@@ -195,7 +194,7 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                 if (userInfoAndVipLevelResults != null) {
                     xController.showContent();
                     MemberInfoResults memberInfoResults = userInfoAndVipLevelResults.memberInfoResults;
-                    String level = memberInfoResults.vip_level.get("level");
+                    String level = memberInfoResults.vip_level.level;
                     currentVipLevel(Integer.valueOf(level));
                     VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
                     for (VipLevelResults.VipBean vipBean : levelResults.list) {

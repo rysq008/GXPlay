@@ -25,6 +25,7 @@ import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.fragments.login.RegistFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
+import com.game.helper.fragments.recharge.RechargeVIPLevelFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.GeneralizeAccountInfoResultModel;
@@ -228,8 +229,8 @@ public class WebviewFragment extends XBaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-//                                DetailFragmentsActivity.launch(context, null, WebviewFragment.newInstance());
-                                webView.reload();
+                                DetailFragmentsActivity.launch(context, null, RechargeVIPLevelFragment.newInstance());
+//                                webView.reload();
                             }
                         });
                         break;

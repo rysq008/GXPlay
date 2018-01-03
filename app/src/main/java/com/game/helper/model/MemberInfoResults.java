@@ -2,16 +2,11 @@ package com.game.helper.model;
 
 import com.game.helper.data.RxConstant;
 import com.game.helper.model.BaseModel.XBaseModel;
-import com.google.gson.annotations.SerializedName;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import zlc.season.practicalrecyclerview.ItemType;
 
 public class MemberInfoResults extends XBaseModel {
-//        {
+    //        {
 //            "message": "成功",
 //                "code": "0000",
 //                "data": {
@@ -36,7 +31,7 @@ public class MemberInfoResults extends XBaseModel {
     public String nick_name;
     public String gender;
     public String phone;
-//                        "image": "",
+    //                        "image": "",
 //                        "level": 1,
 //                        "name": "",
 //                        "descs": "享受vip充值折扣待遇"
@@ -49,7 +44,7 @@ public class MemberInfoResults extends XBaseModel {
     public String total_balance;
     public String icon;
 
-    public class VipLevel implements ItemType{
+    public class VipLevel implements ItemType {
         public String image;
         public String level;
         public String name;
@@ -63,6 +58,6 @@ public class MemberInfoResults extends XBaseModel {
 
     @Override
     public int itemType() {
-            return RxConstant.AccountModeType.Account_Member_Info_type;
-        }
+        return RxConstant.AccountModeType.Account_Member_Info_type;
+    }
 }
