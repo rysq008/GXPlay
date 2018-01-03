@@ -138,7 +138,6 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                 tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
             }
-
         }
     }
 
