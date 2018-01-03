@@ -18,11 +18,9 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.WxPayInfoBean;
@@ -31,7 +29,6 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.utils.Utils;
 import com.game.helper.utils.WXPayUtils;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -51,8 +48,6 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,6 +77,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private List<Fragment> list = new ArrayList<Fragment>();
     private RechargeGameFragment rechargeGameFragment;
     private RechargeGoldFragment rechargeGoldFragment;
+    private RechargeVIPLevelFragment rechargeVIPLevelFragment;
     private ProgressDialog dialog;
     public static final int Reset_Ui_Code = 11;
 
@@ -116,6 +112,8 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         list.add(rechargeGameFragment);
         rechargeGoldFragment = RechargeGoldFragment.newInstance();
         list.add(rechargeGoldFragment);
+        rechargeVIPLevelFragment = RechargeVIPLevelFragment.newInstance();
+        list.add(rechargeVIPLevelFragment);
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -172,6 +170,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                     case 1:
                         title = "金币";
                         break;
+                    case 2:
+                        title = "VIP";
+                        break;
                 }
                 colorTransitionPagerTitleView.setText(title);
                 colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +222,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                 bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
                 bundle.putBoolean(OrderConfirmActivity.IS_VIP, is_vip);
                 intent.putExtra(OrderConfirmActivity.TAG, bundle);
-                startActivityForResult(intent,Reset_Ui_Code);
+                startActivityForResult(intent, Reset_Ui_Code);
             }
         }
         if (current_page == 1) {
@@ -245,7 +246,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private void AliPay(float amount) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                SharedPreUtil.getLoginUserInfo().member_id+"",
+                SharedPreUtil.getLoginUserInfo().member_id + "",
                 amount + "",
                 "1",
                 "1",
@@ -285,7 +286,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private void weixinPay(float amount) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
-                SharedPreUtil.getLoginUserInfo().member_id+"",
+                SharedPreUtil.getLoginUserInfo().member_id + "",
                 amount + "",
                 "2",
                 "1",
@@ -344,7 +345,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             // TODO: 2017/12/29 补全跳转
             Toast.makeText(getContext(), "跳转客服", Toast.LENGTH_SHORT).show();
         }
-        if (v == mHeadAction){
+        if (v == mHeadAction) {
             // TODO: 2017/12/29 补全跳转
             Toast.makeText(getContext(), "跳转说明", Toast.LENGTH_SHORT).show();
         }
