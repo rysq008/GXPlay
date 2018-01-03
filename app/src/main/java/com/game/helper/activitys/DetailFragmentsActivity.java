@@ -69,12 +69,12 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
     }
 
     public void umShare(GamePackageInfoResult packageInfo) {
-        if(null == packageInfo){
+        if (null == packageInfo) {
             return;
         }
 
         UMengShare share = new UMengShare(this);
-        share.shareLinkWithBoard(parseToShareModel(packageInfo),new UMShareListener() {
+        share.shareLinkWithBoard(parseToShareModel(packageInfo), new UMShareListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
                 Log.e(TAG, "onStart: umShare");

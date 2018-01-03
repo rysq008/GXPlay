@@ -239,10 +239,10 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         mName.setText(userData.nick_name);
         mMoney.setText("¥" + userData.total_balance);
         mVipLevel.setCompoundDrawablePadding(Utils.dip2px(getContext(), 5));
-        Drawable d = getResources().getDrawable(Utils.getVipLevel(Integer.valueOf(userData.gender)));
+        Drawable d = getResources().getDrawable(Utils.getVipLevel(Integer.valueOf(userData.vip_level.level)));
         d.setBounds(0, 0, d.getMinimumWidth(), d.getMinimumHeight());
         mVipLevel.setCompoundDrawables(null, null, d, null);
-        mVipIcon.setImageResource(Utils.getMineVipLevel(Integer.valueOf(userData.gender)));
+        mVipIcon.setImageResource(Utils.getMineVipLevel(Integer.valueOf(userData.vip_level.level)));
         if (!StringUtils.isEmpty(userData.icon_thumb)) {
 //            Glide.with(getContext()).load(userData.icon).into(mAvatar.getAvatarView());
             BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, userData.icon_thumb));
@@ -317,6 +317,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                         fra = ExtensionProfitFragment.newInstance();
                         break;
                     case R.string.mine_name_2:
+                        enable_click = false;
                         break;
                     case R.string.mine_name_3:
                         fra = FeedBackFragment.newInstance();

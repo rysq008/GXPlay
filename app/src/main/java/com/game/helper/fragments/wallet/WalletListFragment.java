@@ -23,6 +23,7 @@ import com.game.helper.model.RechargeListResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.List;
@@ -42,11 +43,9 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
     private int Show_List_Type = RechargeCommonAdapter.Type_Account_Consume;
 
     @BindView(R.id.rc_wallet_list)
-    XRecyclerContentLayout mContent;
+    XReloadableRecyclerContentLayout mContent;
 
     private RechargeCommonAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
 
     public static WalletListFragment newInstance(int type){
         return new WalletListFragment(type);
@@ -62,8 +61,8 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        initView();
-        errorView.setLoadDataType(StateView.REFRESH,1);
+        initList();
+        getDataFromNet(1);
     }
 
     @Override
@@ -71,30 +70,16 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
         return R.layout.fragment_wallet_list;
     }
 
-    private void initView(){
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) ((ViewGroup) errorView.getParent()).removeView(errorView);
-        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
-        if (null != loadingView.getParent()) ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        mContent.errorView(errorView);
-        mContent.loadingView(loadingView);
-        mContent.showLoading();
-        initList();
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        getDataFromNet(1);
     }
 
     /**
      * 获取数据
      * */
     private void getDataFromNet(int page){
+        mContent.showLoading();
         if (Show_List_Type == RechargeCommonAdapter.Type_Account_Consume) getConsumeListData(page);
         if (Show_List_Type == RechargeCommonAdapter.Type_Account_Recharge) getRechargeListData(page);
         if (Show_List_Type == RechargeCommonAdapter.Type_Account_Cash) getCashListData(page);
@@ -203,11 +188,16 @@ public class WalletListFragment extends XBaseFragment implements View.OnClickLis
         });
     }
 
-    private void notifyData(XBaseModel data,int page){
+    private void notifyData(XBaseModel data, int page){
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        mContent.showContent();
+        if (mAdapter.getItemCount()<1){
+            mContent.showEmpty();
+            return;
+        }else {
+            mContent.showContent();
+        }
     }
 
     public void showError(NetError error) {

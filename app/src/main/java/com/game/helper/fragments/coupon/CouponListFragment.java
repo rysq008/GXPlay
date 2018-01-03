@@ -18,6 +18,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.List;
@@ -36,11 +37,9 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
     public static final String TAG = CouponListFragment.class.getSimpleName();
     private int Show_List_Type = CouponCommonAdapter.Type_Coupon_Canuse;
     @BindView(R.id.rc_wallet_list)
-    XRecyclerContentLayout mContent;
+    XReloadableRecyclerContentLayout mContent;
 
     private CouponCommonAdapter mAdapter;
-    private StateView errorView;
-    private View loadingView;
 
     public static CouponListFragment newInstance(int type){
         return new CouponListFragment(type);
@@ -59,7 +58,6 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
     @Override
     public void initData(Bundle savedInstanceState) {
         initView();
-        errorView.setLoadDataType(StateView.REFRESH,1);
     }
 
     @Override
@@ -68,15 +66,6 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
     }
 
     private void initView(){
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) ((ViewGroup) errorView.getParent()).removeView(errorView);
-        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
-        if (null != loadingView.getParent()) ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        mContent.errorView(errorView);
-        mContent.loadingView(loadingView);
         mContent.showLoading();
         initList();
         getDataFromNet(1);
@@ -175,7 +164,12 @@ public class CouponListFragment extends XBaseFragment implements View.OnClickLis
         mAdapter.setData(data,page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        mContent.showContent();
+        if (mAdapter.getItemCount()<1){
+            mContent.showEmpty();
+            return;
+        }else {
+            mContent.showContent();
+        }
     }
 
     public void showError(NetError error) {

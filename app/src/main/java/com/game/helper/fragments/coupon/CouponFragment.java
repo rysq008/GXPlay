@@ -147,6 +147,7 @@ public class CouponFragment extends XBaseFragment implements View.OnClickListene
             public IPagerIndicator getIndicator(Context context) {
                 LinePagerIndicator indicator = new LinePagerIndicator(context);
                 indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+                indicator.setColors(getResources().getColor(R.color.colorPrimary));
                 return indicator;
             }
         });

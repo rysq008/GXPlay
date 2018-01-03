@@ -24,6 +24,7 @@ import com.game.helper.net.api.Api;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
+import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
@@ -67,10 +68,8 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
     TextView freeValue;
 
     @BindView(R.id.rc_lista)
-    XRecyclerContentLayout mContent;
+    XReloadableRecyclerContentLayout mContent;
 
-    private StateView errorView;
-    private View loadingView;
     private GameDescAdapter adapter;
     private GameAccountResultModel.ListBean game;
     private List<MineGameDesclistResults.MineGameDesclistItem> data = new ArrayList<>();
@@ -117,15 +116,6 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
         }
 
 
-        if (errorView == null) {
-            errorView = new StateView(context);
-            errorView.setOnRefreshAndLoadMoreListener(mContent.getRecyclerView().getOnRefreshAndLoadMoreListener());
-        }
-        if (null != errorView.getParent()) ((ViewGroup) errorView.getParent()).removeView(errorView);
-        if (loadingView == null) loadingView = View.inflate(context, R.layout.view_loading, null);
-        if (null != loadingView.getParent()) ((ViewGroup) loadingView.getParent()).removeView(loadingView);
-        mContent.errorView(errorView);
-        mContent.loadingView(loadingView);
         mContent.showLoading();
         initList();
     }
@@ -185,7 +175,12 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
         adapter.notifyDataSetChanged();
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        mContent.showContent();
+        if (adapter.getItemCount()<1){
+            mContent.showEmpty();
+            return;
+        }else {
+            mContent.showContent();
+        }
     }
 
     public void showError(NetError error) {

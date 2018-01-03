@@ -40,7 +40,7 @@ public class MemberInfoResults extends XBaseModel {
 //                        "level": 1,
 //                        "name": "",
 //                        "descs": "享受vip充值折扣待遇"
-    public Map<String,String> vip_level;
+    public VipLevel vip_level;
     public String birthday;
     public String signature;
     public int address_count;
@@ -48,6 +48,18 @@ public class MemberInfoResults extends XBaseModel {
     public String market_balance;
     public String total_balance;
     public String icon;
+
+    public class VipLevel implements ItemType{
+        public String image;
+        public String level;
+        public String name;
+        public String descs;
+
+        @Override
+        public int itemType() {
+            return RxConstant.AccountModeType.Account_Member_Info_type;
+        }
+    }
 
     @Override
     public int itemType() {
