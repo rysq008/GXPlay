@@ -80,7 +80,7 @@ public class Utils {
     public static int getVipLevel(int level) {
         switch (level) {
             case 0:
-                return R.mipmap.ic_member_vip1;
+                return R.mipmap.ic_member_vip0;
             case 1:
                 return R.mipmap.ic_member_vip1;
             case 2:
