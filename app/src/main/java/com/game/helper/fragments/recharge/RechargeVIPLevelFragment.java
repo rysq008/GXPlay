@@ -125,12 +125,10 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         } else if (vipLevel == 3) {
             tvVip3.setBackgroundColor(getResources().getColor(R.color.color_00aeff));
             tvVip3.setTextColor(getResources().getColor(R.color.colorWhite));
-<<<<<<< HEAD
             tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
             tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
             tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
             tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
-=======
             if(tvVip1.isClickable()){
                 tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
@@ -139,7 +137,6 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                 tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
             }
->>>>>>> d5a1cffe1a0cd161558c5372cf4ba8eee6713f32
         }
     }
     public void setVipLevelYearFree(int vipLevel,String cost){
@@ -171,12 +168,9 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
             tvVip3.setTextColor(getResources().getColor(R.color.color_999));
         }
     }
-<<<<<<< HEAD
-=======
     private void setTotalData(int ivpLevel){
 
     }
->>>>>>> d5a1cffe1a0cd161558c5372cf4ba8eee6713f32
 
     private void initData(Boolean isShowLoading) {
         Flowable<UserInfoAndVipLevelResults> fa;
