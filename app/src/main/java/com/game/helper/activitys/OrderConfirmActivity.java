@@ -61,9 +61,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public static final String BUNDLE_GAME_BEAN = "game_bean";
     public static final String BUNDLE_TOTAL_BALANCE = "after_diacount_total_balance";
     public static final String BUNDLE_INPUT_VALUE = "input_value";
-    public static final String RED_PACK_AMOUNT = "red_pack_amount";
-    public static final String RED_PACK_TYPE = "red_pack_type";
-    public static final String RED_PACK_ID = "input_value_id";
+    public static final String RED_PACK_NUM = "red_pack_num";
     public static final String PAYPURPOSE = "payPurpose";
     public static final String VIPLEVEL = "vipLevel";
     public static final String IS_VIP = "is_vip";
@@ -695,6 +693,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK && data != null) {
             bean = (AvailableRedpackResultModel.ListBean) data.getBundleExtra(RED_PACK_BEAN).getSerializable(RED_PACK_BEAN);
+            int num = data.getBundleExtra(RED_PACK_BEAN).getInt(RED_PACK_NUM);
             String amount;
             String type;
             String red_id;
@@ -711,10 +710,16 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     type = "0";
                     red_id = "";
                 }
+                //展示红包抵用金额
+                redPackNum.setTextColor(Color.parseColor("#fe4430"));
+                redPackNum.setText("-" + new BigDecimal(String.valueOf(amount)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
             } else {
                 amount = "0.0";
                 type = "0";
                 red_id = "";
+                //展示红包抵用金额
+                redPackNum.setTextColor(Color.parseColor("#fe4430"));
+                redPackNum.setText(num + "个可用");
             }
 
             onRedPackSelected(amount, type, red_id);
@@ -726,9 +731,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         mRedpackAmount = Double.parseDouble(amount);
         mRedpackType = type;
         mRedpackId = red_id;
-        //展示红包抵用金额
-        redPackNum.setTextColor(Color.parseColor("#fe4430"));
-        redPackNum.setText("-" + new BigDecimal(String.valueOf(mRedpackAmount)).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
         //重新计算实际支付
         realPayTv.setText(calcRealPay());
         //计算还需支付

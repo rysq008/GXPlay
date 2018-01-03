@@ -45,7 +45,7 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
                 ((AvailableRedpackResultModel.ListBean) item).setSelect(!(((AvailableRedpackResultModel.ListBean) item).isSelect()));
                 notifyDataSetChanged();
                 if (onItemCheckListener != null) {
-                    onItemCheckListener.onItemCheked((AvailableRedpackResultModel.ListBean) item);
+                    onItemCheckListener.onItemCheked((AvailableRedpackResultModel.ListBean) item,data.size());
                 }
             }
         });
@@ -57,7 +57,7 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
     }
 
     public interface OnItemCheckListener {
-        void onItemCheked(AvailableRedpackResultModel.ListBean bean);
+        void onItemCheked(AvailableRedpackResultModel.ListBean bean,int redPackNum);
     }
 
     public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener) {
