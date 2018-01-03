@@ -16,11 +16,24 @@ public class VipLevelResults extends XBaseModel {
         "list": [
             {
                 "name": "黄钻",
+                "year_fee": "",
+                "level": 0,
+                "image": "",
+                "descs": "",
+                "num_account": "",
+                "no_re_rate": "0.20",
+                "vip_re_amount": "",
+                "id": 99
+            },
+            {
+                "name": "黑钻",
                 "year_fee": 298,
                 "level": 1,
-                "image": "",
+                "image": "/upload/images/sys/2017112710530310113.png",
                 "descs": "享受vip充值折扣待遇",
                 "num_account": 2,
+                "no_re_rate": "0.30",
+                "vip_re_amount": "200.00",
                 "id": 1
             },
             {
@@ -30,6 +43,8 @@ public class VipLevelResults extends XBaseModel {
                 "image": "/upload/images/sys/2017111710353353889.png",
                 "descs": "1",
                 "num_account": 3,
+                "no_re_rate": "0.40",
+                "vip_re_amount": "300.00",
                 "id": 2
             },
             {
@@ -39,16 +54,9 @@ public class VipLevelResults extends XBaseModel {
                 "image": "/upload/images/sys/2017111710354315372.png",
                 "descs": "1",
                 "num_account": 4,
+                "no_re_rate": "0.50",
+                "vip_re_amount": "500.00",
                 "id": 3
-            },
-            {
-                "name": "普通",
-                "year_fee": "",
-                "level": 0,
-                "image": "",
-                "descs": "",
-                "num_account": "",
-                "id": 99
             }
         ]
     }
