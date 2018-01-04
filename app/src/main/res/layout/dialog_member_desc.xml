@@ -79,7 +79,7 @@
         <TextView
             android:id="@+id/tv_bili_0"
             android:gravity="center"
-            android:text="20%"
+            android:text="0%"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/text_size_small"
             android:layout_width="0dp"
@@ -128,7 +128,7 @@
         <TextView
             android:id="@+id/tv_bili_1"
             android:gravity="center"
-            android:text="20%"
+            android:text="0%"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/text_size_small"
             android:layout_width="0dp"
@@ -177,7 +177,7 @@
         <TextView
             android:id="@+id/tv_bili_2"
             android:gravity="center"
-            android:text="20%"
+            android:text="0%"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/text_size_small"
             android:layout_width="0dp"
@@ -226,7 +226,7 @@
         <TextView
             android:id="@+id/tv_bili_3"
             android:gravity="center"
-            android:text="20%"
+            android:text="0%"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/text_size_small"
             android:layout_width="0dp"

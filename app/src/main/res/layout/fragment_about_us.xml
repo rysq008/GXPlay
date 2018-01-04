@@ -87,6 +87,7 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
+        android:visibility="gone"
         android:layout_marginTop="@dimen/tabbar_divider_height"
         android:layout_width="match_parent"
         android:padding="@dimen/dp_15"

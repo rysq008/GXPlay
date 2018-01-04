@@ -1,5 +1,7 @@
 package com.game.helper.net.api;
 
+import android.icu.util.VersionInfo;
+
 import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
@@ -59,6 +61,7 @@ import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VersionInfoResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.model.PayResultModel;
@@ -95,6 +98,7 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SetPasswordRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
@@ -297,6 +301,10 @@ public interface ApiService {
     //设置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
 
+    @POST("/member/set_trade_password/")
+        //设置密码
+    Flowable<HttpResultModel<NotConcernResults>> setPassword(@Body SetPasswordRequestBody setPasswordRequestBody);
+
     //重置支付宝
     @POST("/member/set_or_update_apliy_info/")
     Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(@Body ResetAlipayRequestBody resetAlipayRequestBody);
@@ -471,4 +479,8 @@ public interface ApiService {
     //计算升级vip花费
     @POST("/member/calculate_upgrade_vip/")
     Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(@Body VIPUpGradfeRequestBody vipUpGradfeRequestBody);
+
+    @POST("/sys/get_version_list/")
+    Flowable<HttpResultModel<VersionInfoResults>> getVersionInfo();
+
 }

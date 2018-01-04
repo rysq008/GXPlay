@@ -59,6 +59,7 @@ import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VersionInfoResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.model.PayResultModel;
@@ -96,6 +97,7 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SetPasswordRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
@@ -265,6 +267,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<ResetTradeResults>> setTradePasswrd(SetTradeRequestBody setTradeRequestBody) {
         return Api.CreateApiService().setTradePassword(setTradeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> setPasswrd(SetPasswordRequestBody setPasswordRequestBody) {
+        return Api.CreateApiService().setPassword(setPasswordRequestBody);
     }
 
     public static Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(ResetAlipayRequestBody resetAlipayRequestBody) {
@@ -489,5 +495,9 @@ public class DataService {
 
     public static Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(VIPUpGradfeRequestBody vipUpGradfeRequestBody) {
         return Api.CreateApiService().getVIPUpGradeCost(vipUpGradfeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<VersionInfoResults>> getVersionInfo() {
+        return Api.CreateApiService().getVersionInfo();
     }
 }

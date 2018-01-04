@@ -67,7 +67,11 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         mHeadTittle.setText(getResources().getString(R.string.common_setting_system));
         mHeadBack.setOnClickListener(this);
 
-        mCache.setText("0MB");
+        try {
+            mCache.setText(Utils.getTotalCacheSize(getContext()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mAboutUs.setOnClickListener(this);
         mExit.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
@@ -141,6 +145,10 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
                         @Override
                         public void run() {
                             mCache.setText("0MB");
+                            Utils.cleanFiles(getContext());//data/data/file
+                            Utils.cleanExternalCache(getContext());//外存
+                            Utils.cleanInternalCache(getContext());//清除本应用内部缓存
+                            Utils.clearAllCache(getContext());
                             Toast.makeText(getContext(), "清除缓存成功！", Toast.LENGTH_SHORT).show();
                         }
                     },2000);

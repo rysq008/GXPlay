@@ -300,6 +300,7 @@
                     android:hint="请输入大于100的金额"
                     android:textColor="@color/colorBlack"
                     android:background="@null"
+                    android:inputType="number"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:textSize="@dimen/text_size_small"

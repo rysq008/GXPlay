@@ -63,12 +63,7 @@ public class MemberDescDialog extends android.support.v4.app.DialogFragment impl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_member_desc, container, false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        View view = inflater.inflate(R.layout.dialog_member_desc, container, false);
         icon0 = view.findViewById(R.id.iv_img_0);
         name0 = view.findViewById(R.id.tv_name_0);
         value0 = view.findViewById(R.id.tv_value_0);
@@ -92,6 +87,7 @@ public class MemberDescDialog extends android.support.v4.app.DialogFragment impl
         confirm = view.findViewById(R.id.tv_confirm);
         confirm.setOnClickListener(this);
         getDataFromNet();
+        return view;
     }
 
     /**
