@@ -13,6 +13,7 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
+import com.game.helper.model.EasemobAccountResults;
 import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
@@ -489,5 +490,9 @@ public class DataService {
 
     public static Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(VIPUpGradfeRequestBody vipUpGradfeRequestBody) {
         return Api.CreateApiService().getVIPUpGradeCost(vipUpGradfeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<EasemobAccountResults>> getEasemobIM() {
+        return Api.CreateApiService().getEasemobIM();
     }
 }

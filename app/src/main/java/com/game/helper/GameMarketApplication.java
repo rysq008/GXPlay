@@ -12,6 +12,8 @@ import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.TotoroToast;
+import com.hyphenate.chat.ChatClient;
+import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.Config;
@@ -47,6 +49,8 @@ public class GameMarketApplication extends MultiDexApplication {
 
         initWX();
         initUmengShare();
+        //初始化环信
+        initHuanXin();
 
         Stetho.initializeWithDefaults(this);
         SharedPreUtil.init(this);
@@ -145,6 +149,20 @@ public class GameMarketApplication extends MultiDexApplication {
                 return false;
             }
         });
+    }
+
+    private void initHuanXin() {
+        ChatClient.Options options = new ChatClient.Options();
+        options.setAppkey("1179180103178449#g9youxi");//必填项，appkey获取地址：kefu.easemob.com，“管理员模式 > 渠道管理 > 手机APP”页面的关联的“AppKey”
+        options.setTenantId("51593");//必填项，tenantId获取地址：kefu.easemob.com，“管理员模式 > 设置 > 企业信息”页面的“租户ID”
+
+        // Kefu SDK 初始化
+        if (!ChatClient.getInstance().init(this, options)){
+            return;
+        }
+        // Kefu EaseUI的初始化
+        UIProvider.getInstance().init(this);
+        //后面可以设置其他属性
     }
 
     public static GameMarketApplication getInstance() {

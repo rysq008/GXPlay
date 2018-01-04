@@ -16,6 +16,7 @@ public class SPUtils {
     public static final String CHANNEL_ID = "channel_id";
     public static final String GAME_NAME = "game_name";
     public static final String GAME_ID = "game_id";
+    public static final String TEMP_HUANXIN_NAME = "temp_hanxin_name";
 
     // 保存boolean值
     public static void putBoolean(Context context, String key, boolean value) {

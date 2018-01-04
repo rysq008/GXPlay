@@ -88,6 +88,7 @@
     <string name="mine_name_1">推广收益</string>
     <string name="mine_name_2">我的客服</string>
     <string name="mine_name_5">账号管理</string>
+    <string name="mine_name_6">我的下载</string>
     <string name="mine_name_3">我的反馈</string>
     <string name="mine_name_4">我的设置</string>
     <string name="mine_login_hint">登录后，钱包余额、推广记录、邀请记录\n会显示在这里，方便查看</string>

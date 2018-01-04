@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.activitys.HuanxinKefuLoginActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -23,11 +24,14 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
 import com.game.helper.views.widget.CountDownText;
+import com.hyphenate.chat.ChatClient;
+import com.hyphenate.helpdesk.callback.Callback;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -128,6 +132,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                 if (loginResultsHttpResultModel.isSucceful()) {
                     LoginUserInfo userInfo = new LoginUserInfo(loginResultsHttpResultModel.data);
                     SharedPreUtil.saveLoginUserInfo(userInfo);
+                    logoutTempAccount();
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginSuccessful(userInfo);
                     }
@@ -242,5 +247,26 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
 
     public void addOnRegistListener(onLoginListener onLoginListener) {
         mOnLoginListener = onLoginListener;
+    }
+
+
+    private void logoutTempAccount(){
+        ChatClient.getInstance().logout(true, new Callback() {
+            @Override
+            public void onSuccess() {
+                SPUtils.remove(context,SPUtils.TEMP_HUANXIN_NAME);
+                Log.d(TAG,"已清除SPUtils.TEMP_HUANXIN_NAME:"+SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
     }
 }
