@@ -36,6 +36,8 @@ public class SharedPreUtil {
     public static final String H5_URL_MARKET = "market_url";
     public static final String H5_URL_VIP = "vip_url";
     public static final String H5_URL_ACCOUNT_GUIDE = "account_guide_url";
+    public static final String EXPECTED_URL = "expected_url";
+    public static final String SHARE_DISCOUNT_URL = "share_discount_url";
 
     private static SharedPreferences sp;
 

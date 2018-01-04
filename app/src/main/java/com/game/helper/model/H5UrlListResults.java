@@ -28,7 +28,15 @@ public class H5UrlListResults extends XBaseModel {
     public String vip_url;//vip通道url
     public String account_guide_url;//自动折扣攻略url
     public String share_discount_url;//	分享超低折扣url
+    public String expected_url;//敬请期待url
 
+    public String getExpected_url() {
+        return expected_url;
+    }
+
+    public void setExpected_url(String expected_url) {
+        this.expected_url = expected_url;
+    }
 
     public String getShare_discount_url() {
         return share_discount_url;

@@ -241,9 +241,13 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                     String market_url = h5UrlListResultsHttpResultModel.data.getMarket_url();
                     String vip_url = h5UrlListResultsHttpResultModel.data.getVip_url();
                     String account_guide_url = h5UrlListResultsHttpResultModel.data.getAccount_guide_url();
+                    String expected_url = h5UrlListResultsHttpResultModel.data.getExpected_url();
+                    String share_discount_url = h5UrlListResultsHttpResultModel.data.getShare_discount_url();
                     SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_MARKET, market_url);
                     SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_VIP, vip_url);
                     SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_ACCOUNT_GUIDE, account_guide_url);
+                    SharedPreUtil.saveH5Url(SharedPreUtil.EXPECTED_URL, expected_url);
+                    SharedPreUtil.saveH5Url(SharedPreUtil.SHARE_DISCOUNT_URL, share_discount_url);
                 }
             }
         }, new Consumer<NetError>() {
