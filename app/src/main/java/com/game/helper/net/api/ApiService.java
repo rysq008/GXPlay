@@ -13,6 +13,7 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
+import com.game.helper.model.EasemobAccountResults;
 import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
@@ -471,4 +472,8 @@ public interface ApiService {
     //计算升级vip花费
     @POST("/member/calculate_upgrade_vip/")
     Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(@Body VIPUpGradfeRequestBody vipUpGradfeRequestBody);
+
+    //获取环信账号接口
+    @POST("/member/get_easemob_account/")
+    Flowable<HttpResultModel<EasemobAccountResults>> getEasemobIM();
 }

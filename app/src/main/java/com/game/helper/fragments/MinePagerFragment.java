@@ -1,5 +1,6 @@
 package com.game.helper.fragments;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.activitys.HuanxinKefuLoginActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
@@ -318,6 +320,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                         break;
                     case R.string.mine_name_2:
                         enable_click = false;
+                        Intent kefuIntent = new Intent(context, HuanxinKefuLoginActivity.class);
+                        startActivity(kefuIntent);
                         break;
                     case R.string.mine_name_3:
                         fra = FeedBackFragment.newInstance();
