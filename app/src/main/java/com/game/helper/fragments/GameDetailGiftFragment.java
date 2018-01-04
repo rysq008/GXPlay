@@ -49,10 +49,21 @@ public class GameDetailGiftFragment extends XBaseFragment {
     @BindView(R.id.gift_game_detail_recycler_view_layout)
     XReloadableRecyclerContentLayout xRecyclerContentLayout;
     private GiftAdapter mAdapter;
+    private int gameId;
 
     public static GameDetailGiftFragment newInstance() {
         GameDetailGiftFragment fragment = new GameDetailGiftFragment();
         return fragment;
+    }
+    @Override
+    public void initData(Bundle savedInstanceState) {
+        Log.d(TAG, "----------------======================2");
+        initAdapter();
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            gameId = arguments.getInt("gameId");
+            loadAdapterData(1, gameId,true);
+        }
     }
 
     private void initAdapter() {
@@ -70,12 +81,12 @@ public class GameDetailGiftFragment extends XBaseFragment {
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                loadAdapterData(1,47,false);
+                loadAdapterData(1,gameId,false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                loadAdapterData(page,47,false);
+                loadAdapterData(page,gameId,false);
             }
         });
         mAdapter.setRecItemClick(new RecyclerItemCallback<ItemType, GiftAdapter.GiftHolder>() {
@@ -118,16 +129,7 @@ public class GameDetailGiftFragment extends XBaseFragment {
         }
     }
 
-    @Override
-    public void initData(Bundle savedInstanceState) {
-        Log.d(TAG, "----------------======================2");
-        initAdapter();
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            int gameId = arguments.getInt("gameId");
-            loadAdapterData(1, 47,true);
-        }
-    }
+
 
     @Override
     public int getLayoutId() {
@@ -178,7 +180,7 @@ public class GameDetailGiftFragment extends XBaseFragment {
                         public void accept(HttpResultModel<Object> gameListResult) throws Exception {
                             ToastUtil.showToast(gameListResult.getResponseMsg());
                             if(gameListResult.isSucceful()){
-                                loadAdapterData(1,47,false);
+                                loadAdapterData(1,gameId,false);
                             }
                         }
                     }, null);

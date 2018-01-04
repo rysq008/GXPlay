@@ -124,7 +124,6 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     }
 
 
-
     public class CommunityAdapter extends SimpleRecAdapter<ItemType, CommunityAdapter.CommunityHolder> {
 
 
@@ -146,7 +145,11 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         public void onBindViewHolder(CommunityHolder holder, int position) {
             final ItemType item = data.get(position);
             final GameCommentListResult.ListBean itemDate = (GameCommentListResult.ListBean) data.get(position);
-            ILFactory.getLoader().loadNet(holder.ivAvatar, Api.API_BASE_URL.concat(itemDate.getMember().getIcon_thumb()), ILoader.Options.defaultOptions());
+            if (itemDate.getMember().getIcon().length() > 0) {
+                ILFactory.getLoader().loadNet(holder.ivAvatar, Api.API_BASE_URL.concat(itemDate.getMember().getIcon_thumb()), ILoader.Options.defaultOptions());
+            }else{
+                holder.ivAvatar.setImageResource(R.mipmap.ic_default_avatar_circle);
+            }
             holder.tvMemberName.setText(itemDate.getMember().getNick_name());
             holder.tvContent.setText(itemDate.getContent());
             holder.tvTime.setText(String.valueOf(itemDate.getCreate_time()));
