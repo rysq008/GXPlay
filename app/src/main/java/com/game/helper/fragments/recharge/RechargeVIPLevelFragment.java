@@ -15,6 +15,7 @@ import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.XReloadableStateContorller;
 
 import java.util.List;
@@ -45,9 +46,12 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
     TextView tvTotal;
     @BindView(R.id.xController_vip_level_recharge)
     XReloadableStateContorller xController;
-    private boolean isWeixin = true;//true 是微信，false 是支付宝
-    private int vipLevel = 0;
+    private boolean isWeixin = true;//true 默认是微信，false 是支付宝
+    private int currentVIPLevel = 0;//当前用户的等级
+    private int selectedVIPLevel = 0;//选中VIP的等级
+    private int previousVIPLevel = -1;//前一次选中的VIP等级
     private List<VipLevelResults.VipBean> vipBeans;
+    private GXPlayDialog dialog;
 
     public static RechargeVIPLevelFragment newInstance() {
         return new RechargeVIPLevelFragment();
@@ -96,48 +100,71 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                 }
                 break;
             case R.id.tv_vip1_recharge_vip_level:
-                changeState(1);
+                selectedVIPLevel = 1;
+                if (currentVIPLevel == 3) {
+                    showVipHintDialog(2);
+                } else if (selectedVIPLevel <= currentVIPLevel) {
+                    showVipHintDialog(1);
+                } else {
+                    changeState(selectedVIPLevel);
+                    //获取vip升级的费用
+                    setTotalData(selectedVIPLevel);
+                }
                 break;
             case R.id.tv_vip2_recharge_vip_level:
-                changeState(2);
+                selectedVIPLevel = 2;
+                if (currentVIPLevel == 3) {
+                    showVipHintDialog(2);
+                } else if (selectedVIPLevel <= currentVIPLevel) {
+                    showVipHintDialog(1);
+                } else {
+                    changeState(selectedVIPLevel);
+                    //获取vip升级的费用
+                    setTotalData(selectedVIPLevel);
+                }
                 break;
             case R.id.tv_vip3_recharge_vip_level:
-                changeState(3);
+                selectedVIPLevel = 3;
+                if (currentVIPLevel == 3) {
+                    showVipHintDialog(2);
+                } else if (selectedVIPLevel <= currentVIPLevel) {
+                    showVipHintDialog(1);
+                } else {
+                    changeState(selectedVIPLevel);
+                    //获取vip升级的费用
+                    setTotalData(selectedVIPLevel);
+                }
                 break;
         }
     }
 
-    private void changeState(int vipLevel) {
-        //获取vip升级的费用
-        setTotalData(vipLevel);
-        if (vipLevel == 1) {
+    private void changeState(int selvipLevel) {
+        //设置选中的状态
+        if (selvipLevel == 1) {
             tvVip1.setBackgroundColor(getResources().getColor(R.color.color_00aeff));
             tvVip1.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
-            tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
-            tvVip3.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
-            tvVip3.setTextColor(getResources().getColor(R.color.color_00aeff));
-        } else if (vipLevel == 2) {
-            if (tvVip1.isClickable()) {
-                tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
-                tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
-            }
+        } else if (selvipLevel == 2) {
             tvVip2.setBackgroundColor(getResources().getColor(R.color.color_00aeff));
             tvVip2.setTextColor(getResources().getColor(R.color.colorWhite));
-            tvVip3.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
-            tvVip3.setTextColor(getResources().getColor(R.color.color_00aeff));
-        } else if (vipLevel == 3) {
+        } else if (selvipLevel == 3) {
             tvVip3.setBackgroundColor(getResources().getColor(R.color.color_00aeff));
             tvVip3.setTextColor(getResources().getColor(R.color.colorWhite));
-            if (tvVip1.isClickable()) {
+        }
+        //将前一次的选中的状态变成没选中状态
+        if (previousVIPLevel != -1 && selvipLevel != previousVIPLevel) {
+            if (previousVIPLevel == 1) {
                 tvVip1.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip1.setTextColor(getResources().getColor(R.color.color_00aeff));
-            }
-            if (tvVip2.isClickable()) {
+            } else if (previousVIPLevel == 2) {
                 tvVip2.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
                 tvVip2.setTextColor(getResources().getColor(R.color.color_00aeff));
+            } else if (previousVIPLevel == 3) {
+                tvVip3.setBackgroundResource(R.mipmap.vip_recharge_bg_b);
+                tvVip3.setTextColor(getResources().getColor(R.color.color_00aeff));
             }
         }
+        previousVIPLevel = selvipLevel;
+
     }
 
     public void setVipLevelYearFree(int vipLevel, String cost) {
@@ -154,25 +181,25 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         if (vipLevel == 0) {
 
         } else if (vipLevel == 1) {
-            tvVip1.setClickable(false);
+            //tvVip1.setClickable(false);
             tvVip1.setTextColor(getResources().getColor(R.color.color_999));
         } else if (vipLevel == 2) {
-            tvVip1.setClickable(false);
+            //tvVip1.setClickable(false);
             tvVip1.setTextColor(getResources().getColor(R.color.color_999));
-            tvVip2.setClickable(false);
+            //tvVip2.setClickable(false);
             tvVip2.setTextColor(getResources().getColor(R.color.color_999));
         } else if (vipLevel == 3) {
-            tvVip1.setClickable(false);
+            //tvVip1.setClickable(false);
             tvVip1.setTextColor(getResources().getColor(R.color.color_999));
-            tvVip2.setClickable(false);
+            //tvVip2.setClickable(false);
             tvVip2.setTextColor(getResources().getColor(R.color.color_999));
-            tvVip3.setClickable(false);
+            //tvVip3.setClickable(false);
             tvVip3.setTextColor(getResources().getColor(R.color.color_999));
         }
     }
 
-    private void setTotalData(int ivpLevel) {
-        int id = vipBeans.get(ivpLevel).id;
+    private void setTotalData(final int iVPLevel) {
+        int id = vipBeans.get(iVPLevel).id;
         Flowable<HttpResultModel<VIPUpGradeCostResults>> fv = DataService.getVIPUpGradeCost(new VIPUpGradfeRequestBody(id));
         RxLoadingUtils.subscribe(fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VIPUpGradeCostResults>>() {
             @Override
@@ -201,7 +228,8 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                     xController.showContent();
                     MemberInfoResults memberInfoResults = userInfoAndVipLevelResults.memberInfoResults;
                     String level = memberInfoResults.vip_level.getLevel();
-                    currentVipLevel(Integer.valueOf(level));
+                    currentVIPLevel = Integer.valueOf(level);
+                    currentVipLevel(currentVIPLevel);
                     VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
                     vipBeans = levelResults.list;
                     for (VipLevelResults.VipBean vipBean : vipBeans) {
@@ -215,10 +243,43 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
 
     }
 
-    public Boolean getPayType(){
+    public Boolean getPayType() {
         return isWeixin;
     }
-    public int getTotal(){
+
+    public int getTotal() {
         return Integer.valueOf(tvTotal.getText().toString());
+    }
+
+    public String getSelectedVIPLevel() {
+        return String.valueOf(selectedVIPLevel);
+    }
+
+
+    /**
+     * type
+     * 0：仅提示消耗vip数量
+     * 1：升级vip
+     * 2：vip最高联系管理员
+     */
+    private void showVipHintDialog(final int type) {
+        String content = "";
+        if (type == 0) content = "您当前没有选择选择VIP等级，请选择VIP等级";
+        if (type == 1) content = "请选择比当前高的VIP等级";
+        if (type == 2) content = "您是皇冠会员，已无法再升级会员,请联系客服";
+        dialog = null;
+        dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, "温馨提示", content);
+        dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+            @Override
+            public void onCancel() {
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onConfirm() {
+                dialog.dismiss();
+            }
+        });
+        dialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
     }
 }

@@ -141,7 +141,7 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
         final String account = userName;
         final String userPwd = huanxinPassword;
         progressDialog = getProgressDialog();
-        progressDialog.setMessage("System is automatically registered users for you...");
+        //progressDialog.setMessage("System is automatically registered users for you...");
         progressDialog.show();
         // createAccount to huanxin server
         // if you have a account, this step will ignore
@@ -214,7 +214,7 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
     private void login(final String uname, final String upwd) {
         progressShow = true;
         progressDialog = getProgressDialog();
-        progressDialog.setMessage("Being contact customer service, please wait...");
+       // progressDialog.setMessage("Being contact customer service, please wait...");
         if (!progressDialog.isShowing()) {
             progressDialog.show();
         }

@@ -33,7 +33,7 @@ public class HotView extends LinearLayout {
     @BindView(R.id.hot_item_title_tv)
     TextView textView;
     @BindView(R.id.hot_item_body_recycle)
-    XRecyclerView recyclerView;
+    RecyclerView recyclerView;
 
     public HotView(Context context) {
         super(context);
@@ -59,9 +59,9 @@ public class HotView extends LinearLayout {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new HotAdapter(data));
-//        recyclerView.verticalDivider(R.color.white,R.dimen.dp_20);//设置divider
+        //recyclerView.verticalDivider(R.color.white,R.dimen.dp_20);//设置divider
 
     }
 

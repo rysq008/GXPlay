@@ -41,6 +41,7 @@ import zlc.season.rxdownload2.entity.DownloadRecord;
 import zlc.season.rxdownload2.entity.DownloadStatus;
 import zlc.season.rxdownload2.function.Utils;
 
+import static zlc.season.rxdownload2.function.Utils.dispose;
 import static zlc.season.rxdownload2.function.Utils.empty;
 
 public class DownloadManageFragment extends XBaseFragment {
@@ -302,12 +303,12 @@ public class DownloadManageFragment extends XBaseFragment {
 //                                updateProgressStatus(downloadEvent.getDownloadStatus());
 //                            }
 //                        });
-                DownLoadReceiveUtils.receiveDownloadEvent(context, mData.record.getUrl(), mData.disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+                mData.disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, mData.record.getUrl(), mData.record.getExtra3(), mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
                     @Override
                     public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
                         updateProgressStatus(event.getDownloadStatus());
                         if (isDisposable) {
-
+                            dispose(mData.disposable);
                         }
                     }
                 });
@@ -341,6 +342,7 @@ public class DownloadManageFragment extends XBaseFragment {
                             @Override
                             public void openApp() {
                                 Toast.makeText(context, "open", Toast.LENGTH_SHORT).show();
+                                DownLoadReceiveUtils.openApp(context, mData.record.getExtra3());
                             }
                         });
                         break;
@@ -355,6 +357,7 @@ public class DownloadManageFragment extends XBaseFragment {
                 mProgress.setMax((int) status.getTotalSize());
                 mProgress.setProgress((int) status.getDownloadSize());
                 mPercent.setText(status.getPercent());
+                if (status.getDownloadSize() > 0 && status.getTotalSize() > 0)
                 mSize.setText(status.getFormatStatusString());
             }
 
@@ -369,7 +372,7 @@ public class DownloadManageFragment extends XBaseFragment {
                             DownLoadReceiveUtils.deleteDownload(context, mData.disposable, mData.record.getUrl(), new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
                                 @Override
                                 public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
-                                    mAdapter.removeElement(pos);
+                                    mAdapter.removeElement(mData);
                                 }
                             });
                             listPopupWindow.dismiss();

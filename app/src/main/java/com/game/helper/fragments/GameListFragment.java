@@ -1,7 +1,7 @@
 package com.game.helper.fragments;
 
 import android.os.Bundle;
-import android.view.View;
+import android.widget.ImageView;
 
 import com.game.helper.R;
 import com.game.helper.adapters.SearchListAdapter;
@@ -12,12 +12,12 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
-import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
@@ -33,6 +33,8 @@ public class GameListFragment extends XBaseFragment {
 
     @BindView(R.id.game_list_layout)
     XReloadableRecyclerContentLayout xRecyclerContentLayout;
+    @BindView(R.id.game_list_move_top_iv)
+    ImageView ivMoveTop;
 
     SearchListAdapter mAdapter;
     int classical_type = 0, common_type = 0;
@@ -87,7 +89,7 @@ public class GameListFragment extends XBaseFragment {
         if (mAdapter.getItemCount() < 1) {
             xRecyclerContentLayout.showEmpty();
             return;
-        }else{
+        } else {
             xRecyclerContentLayout.showContent();
         }
     }
@@ -126,6 +128,13 @@ public class GameListFragment extends XBaseFragment {
     @Override
     public Object newP() {
         return null;
+    }
+
+    @OnClick(R.id.game_list_move_top_iv)
+    public void OnClick() {
+        if (mAdapter.getItemCount() > 0) {
+            xRecyclerContentLayout.getRecyclerView().scrollToPosition(0);
+        }
     }
 
 }

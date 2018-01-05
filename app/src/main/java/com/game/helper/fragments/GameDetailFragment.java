@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -125,6 +124,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private int gamepackeId;
     private int gameId;
     private int channelId;
+    private String path;
+    private String pkg;
     private GameDetailInfoFragment gameDetailInfoFragment;
     private GameDetailRechargeFragment rechargeGameFragment;
     private GameDetailGiftFragment gameDetailGiftFragment;
@@ -150,6 +151,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             gamepackeId = arguments.getInt("gamepackeId");
             gameId = arguments.getInt("gameId");
             channelId = arguments.getInt("channelId");
+            path = arguments.getString("path", "");
+            pkg = arguments.getString("pkg", "");
             initGamePackage();
         }
         if (gameDetailInfoFragment == null) {
@@ -162,7 +165,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             rechargeGameFragment = GameDetailRechargeFragment.newInstance();
             Bundle bundle = new Bundle();
 
-            rechargeGameFragment.setArguments(bundle);
+            //rechargeGameFragment.setArguments(bundle);
         }
         if (gameDetailGiftFragment == null) {
             gameDetailGiftFragment = GameDetailGiftFragment.newInstance();
@@ -229,7 +232,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             }
         });
         loadData();
-        mDownloadController = new DownloadController(mStatusText, btnLoad);
+        mDownloadController = new DownloadController(mStatusText, btnLoad,tvBottomDownload);
     }
 
     private void initGamePackage() {
@@ -277,13 +280,16 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                     SPUtils.putInt(context, SPUtils.CHANNEL_ID, packageInfo.getChannel().getId());
                     SPUtils.putInt(context, SPUtils.GAME_ID, packageInfo.getGame().getId());
                     downloadBean = new DownloadBean
-                            .Builder(packageInfo.getGame().getUrl())
+                            .Builder(packageInfo.getPath())
                             .setSaveName(null)      //not need.
                             .setSavePath(null)      //not need
                             .setExtra1(packageInfo.getGame().getLogo())   //save extra info into database.
                             .setExtra2(packageInfo.getGame().getName())  //save extra info into database.
+                            .setExtra3(packageInfo.getName_package())
                             .build();
-                    DownLoadReceiveUtils.receiveDownloadEvent(context, packageInfo.getGame().getUrl(), disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+                    path = packageInfo.getPath();
+                    pkg = packageInfo.getName_package();
+                    disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, path, pkg, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
                         @Override
                         public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
                             updateProgressStatus(event.getDownloadStatus());
@@ -312,9 +318,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         mSize.setText(status.getFormatStatusString());
     }
 
-    @OnClick({R.id.btn_game_detail_load, R.id.action_bar_back, R.id.iv_action})
+    @OnClick({R.id.btn_game_detail_load, R.id.action_bar_back, R.id.iv_action, R.id.tv_game_detail_bottom_download})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.tv_game_detail_bottom_download:
             case R.id.btn_game_detail_load:
                 mDownloadController.handleClick(new DownloadController.Callback() {
                     @Override
@@ -324,7 +331,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
                     @Override
                     public void pauseDownload() {
-                        DownLoadReceiveUtils.pauseDownload(context, Kits.Empty.check(packageInfo.getGame()) ? "" : packageInfo.getGame().getUrl());
+                        DownLoadReceiveUtils.pauseDownload(context, path);
                     }
 
                     @Override
@@ -333,13 +340,12 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
                     @Override
                     public void installApk() {
-                        DownLoadReceiveUtils.installApk(context, Kits.Empty.check(packageInfo.getGame()) ? "" : packageInfo.getGame().getUrl());
+                        DownLoadReceiveUtils.installApk(context, path);
                     }
 
                     @Override
                     public void openApp() {
-                        //Intent intent = context.getPackageManager().getLaunchIntentForPackage()
-                        Toast.makeText(context, "open", Toast.LENGTH_LONG).show();
+                        DownLoadReceiveUtils.openApp(context, pkg);
                     }
                 });
                 break;
@@ -422,9 +428,6 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             R.id.ll_discount_navigation_game_detail})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.tv_game_detail_bottom_download:
-
-                break;
             case R.id.btn_send_comment_game_detail:
                 String content = etEditContent.getText().toString().trim();
                 if (content.length() == 0) {
@@ -548,9 +551,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         } else {
             currentVip.setVisibility(View.GONE);
         }
-        Log.d(TAG, "createVipDialog: tvVip1是否可以点击"+tvVip1.isClickable());
-        Log.d(TAG, "createVipDialog: tvVip2是否可以点击"+tvVip2.isClickable());
-        Log.d(TAG, "createVipDialog: tvVip3是否可以点击"+tvVip3.isClickable());
+        Log.d(TAG, "createVipDialog: tvVip1是否可以点击" + tvVip1.isClickable());
+        Log.d(TAG, "createVipDialog: tvVip2是否可以点击" + tvVip2.isClickable());
+        Log.d(TAG, "createVipDialog: tvVip3是否可以点击" + tvVip3.isClickable());
 
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
         // 不可以用“返回键”取消
@@ -561,13 +564,12 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         //实例化Window操作者
         //lp.x = 100; // 新位置X坐标
-        lp.y = view.getBottom()+20; // 新位置Y坐标
+        lp.y = view.getBottom() + 20; // 新位置Y坐标
         dialogWindow.setAttributes(lp);
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
         dialog.setView(v, 30, 0, 30, 0);// 设置布局
         dialog.show();
-
 
 
     }
@@ -597,7 +599,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         //实例化Window操作者
         //lp.x = 100; // 新位置X坐标
-        lp.y = view.getTop();; // 新位置Y坐标
+        lp.y = view.getTop();
+        ; // 新位置Y坐标
         dialogWindow.setAttributes(lp);
         Log.d(TAG, "dialogWindow的坐标" + lp.x + "----------" + lp.y);
         // 不可以用“返回键”取消
@@ -626,7 +629,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-        DownLoadReceiveUtils.receiveDownloadEvent(context, Kits.Empty.check(packageInfo.getGame()) ? "" : packageInfo.getGame().getUrl(), disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+        disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, path, pkg, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
             @Override
             public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
                 updateProgressStatus(event.getDownloadStatus());

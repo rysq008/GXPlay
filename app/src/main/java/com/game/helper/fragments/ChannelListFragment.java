@@ -72,6 +72,8 @@ public class ChannelListFragment extends XBaseFragment {
                     bundle.putInt("gamepackeId", itemDate.getId());
                     bundle.putInt("gameId", itemDate.getGame().getId());
                     bundle.putInt("channelId", itemDate.getChannel().getId());
+                    bundle.putString("path", itemDate.getPath());
+                    bundle.putString("pkg", itemDate.getName_package());
                     DetailFragmentsActivity.launch(context, bundle, GameDetailFragment.newInstance());
                 }
             });
@@ -103,16 +105,16 @@ public class ChannelListFragment extends XBaseFragment {
     }
 
     public void showData(int cur_page, int total_page, List model) {
-        if (model.size() < 1 || model == null) {
-            xrclChannelList.showEmpty();
-
+        if (cur_page > 1) {
+            mAdapter.addData(model);
         } else {
-            if (cur_page > 1) {
-                mAdapter.addData(model);
-            } else {
-                mAdapter.setData(model);
-            }
-            xrclChannelList.getRecyclerView().setPage(cur_page, total_page);
+            mAdapter.setData(model);
+        }
+        xrclChannelList.getRecyclerView().setPage(cur_page, total_page);
+        if (mAdapter.getItemCount() < 1) {
+            xrclChannelList.showEmpty();
+        } else {
+            xrclChannelList.showContent();
         }
     }
 

@@ -3,7 +3,6 @@ package com.game.helper.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.HotRecommandGameListActivity;
 import com.game.helper.adapters.HomeItemAdapter;
 import com.game.helper.data.RxConstant;
@@ -56,7 +55,6 @@ public class HomePagerFragment extends HomeBasePagerFragment {
                 }
             });
         }
-
         return mAdapter;
     }
 

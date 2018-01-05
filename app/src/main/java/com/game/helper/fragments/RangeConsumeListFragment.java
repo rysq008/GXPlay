@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.game.helper.R;
-import com.game.helper.adapters.RangeIncomeAdapter;
+import com.game.helper.adapters.RangeConsumeAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.FriendRangeResultModel;
@@ -29,12 +29,12 @@ import io.reactivex.functions.Consumer;
  * Created by zr on 2017-10-13.
  */
 
-public class RangeIncomeListFragment extends XBaseFragment {
+public class RangeConsumeListFragment extends XBaseFragment {
 
     @BindView(R.id.game_adapter_layout)
     XRecyclerContentLayout xRecyclerContentLayout;
 
-    RangeIncomeAdapter mAdapter;
+    RangeConsumeAdapter mAdapter;
     private StateView errorView;
     private View loadingView;
 
@@ -47,26 +47,26 @@ public class RangeIncomeListFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         initAdapter();
         errorView.setLoadDataType(StateView.REFRESH, 1);
-        fetchIncomeRangeData(1);
+        fetchRangeConsumeData(1);
     }
 
     private void initAdapter() {
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == mAdapter) {
-            mAdapter = new RangeIncomeAdapter(context);
+            mAdapter = new RangeConsumeAdapter(context);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
                 errorView.setLoadDataType(StateView.REFRESH, 1);
-                fetchIncomeRangeData(1);
+                fetchRangeConsumeData(1);
             }
 
             @Override
             public void onLoadMore(int page) {
                 errorView.setLoadDataType(StateView.LOADMORE, page);
-                fetchIncomeRangeData(page);
+                fetchRangeConsumeData(page);
             }
         });
 
@@ -103,7 +103,6 @@ public class RangeIncomeListFragment extends XBaseFragment {
         } else {
             mAdapter.setData(model);
         }
-
         xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
         xRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
         if (mAdapter.getItemCount() < 1) {
@@ -116,8 +115,8 @@ public class RangeIncomeListFragment extends XBaseFragment {
         }
     }
 
-    public void fetchIncomeRangeData(int page) {
-        Flowable<HttpResultModel<FriendRangeResultModel>> fr = DataService.getIncomeRank(new FriendRangeRequestBody(page));
+    public void fetchRangeConsumeData(int page) {
+        Flowable<HttpResultModel<FriendRangeResultModel>> fr = DataService.getRangeConsume(new FriendRangeRequestBody(page));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FriendRangeResultModel>>() {
             @Override
             public void accept(HttpResultModel<FriendRangeResultModel> recommendResultsHttpResultModel) throws Exception {
@@ -133,8 +132,8 @@ public class RangeIncomeListFragment extends XBaseFragment {
         });
     }
 
-    public static RangeIncomeListFragment newInstance() {
-        RangeIncomeListFragment fragment = new RangeIncomeListFragment();
+    public static RangeConsumeListFragment newInstance() {
+        RangeConsumeListFragment fragment = new RangeConsumeListFragment();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
         return fragment;
