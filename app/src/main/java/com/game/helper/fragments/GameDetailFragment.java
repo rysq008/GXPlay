@@ -162,7 +162,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             rechargeGameFragment = GameDetailRechargeFragment.newInstance();
             Bundle bundle = new Bundle();
 
-            rechargeGameFragment.setArguments(bundle);
+            //rechargeGameFragment.setArguments(bundle);
         }
         if (gameDetailGiftFragment == null) {
             gameDetailGiftFragment = GameDetailGiftFragment.newInstance();

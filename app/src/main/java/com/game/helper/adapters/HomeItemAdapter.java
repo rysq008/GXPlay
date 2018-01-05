@@ -97,7 +97,6 @@ public class HomeItemAdapter extends SimpleRecAdapter<ItemType, HomeItemAdapter.
                         case RxConstant.HomeModeType.Recommend_Model_Type:
                             ((RecommendView) entry.getValue()).setData((RecommendResults.RecommendItem) itemType);
                             break;
-
                     }
                 } else {
                     entry.getValue().setVisibility(View.GONE);
