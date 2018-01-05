@@ -123,7 +123,9 @@
                         android:layout_height="wrap_content"
                         android:text="游戏详情描述游戏详情描述游戏详情描述"
                         android:textColor="@color/color_999"
-                        android:textSize="@dimen/size_12sp" />
+                        android:textSize="@dimen/size_12sp"
+                        android:maxLines="2"
+                        android:ellipsize="end"/>
                 </LinearLayout>
                 <!--点击下载后关闭游戏提供,显示下载进度条-->
                 <RelativeLayout
