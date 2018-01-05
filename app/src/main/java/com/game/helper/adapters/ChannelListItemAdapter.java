@@ -248,6 +248,6 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 }
             });
         }
-
+        
     }
 }
