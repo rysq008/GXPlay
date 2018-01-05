@@ -101,7 +101,7 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         CommonShareResults model = new CommonShareResults();
         model.setContent(packageInfo.getGame().getIntro());
         model.setLogo(packageInfo.getGame().getLogo());
-        model.setTitle(packageInfo.getGame().getName());
+        model.setTitle(packageInfo.getGame().getName() + " 最低" + packageInfo.getDiscount_vip() + "折");
         model.setUrl(packageInfo.getGame().getUrl());
         return model;
     }
