@@ -506,4 +506,8 @@ public class DataService {
         return Api.CreateApiService().getVersionInfo();
     }
 
+    public static Flowable<HttpResultModel<FriendRangeResultModel>> getRangeConsume(FriendRangeRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getRangeConsume(friendRangeRequestBody);
+    }
+
 }

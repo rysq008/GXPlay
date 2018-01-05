@@ -24,7 +24,7 @@
         <ImageView
             android:id="@+id/superStarIv"
             android:layout_weight="1"
-            android:background="@mipmap/bg_mingxing_select"
+            android:background="@mipmap/bg_consume_select"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"/>
         <ImageView

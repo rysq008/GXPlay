@@ -36,6 +36,15 @@ public class FriendRangeResultModel extends XBaseModel {
         private int total_promotion_number;
         private String zongshouyi;
         private int id;
+        private String consume_amount;
+
+        public String getConsume_amount() {
+            return consume_amount;
+        }
+
+        public void setConsume_amount(String consume_amount) {
+            this.consume_amount = consume_amount;
+        }
 
         public MemberBean getMember() {
             return member;
