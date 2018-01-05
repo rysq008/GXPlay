@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,21 +97,6 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
         });
     }
 
-    private void changeFeedbackStatus(int status, int id) {
-        Flowable<HttpResultModel<NotConcernResults>> fr = DataService.feedbackStatus(new FeedbakcStatusRequestBody(status,id));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
-            @Override
-            public void accept(HttpResultModel<NotConcernResults> feedbackListResultsHttpResultModel) throws Exception {
-                Toast.makeText(getContext(), feedbackListResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
         if (v == mHeadBack) {
@@ -156,6 +142,8 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
         public TextView reply;
         public View cancel;
         public View confirm;
+        public ImageView cancelImg;
+        public ImageView confirmImg;
 
         public FeedbackHolder(View itemView) {
             super(itemView);
@@ -164,29 +152,82 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
             reply = itemView.findViewById(R.id.tv_reply);
             cancel = itemView.findViewById(R.id.tv_cancel);
             confirm = itemView.findViewById(R.id.tv_confirm);
+            cancelImg = itemView.findViewById(R.id.iv_cancel);
+            confirmImg = itemView.findViewById(R.id.iv_confirm);
         }
 
         void onBind(int position) {
             FeedbackListResults.FeedbackItem feedbackItem = mData.get(position);
+            rootView.setTag(feedbackItem);
             content.setText(feedbackItem.content);
-            reply.setVisibility(StringUtils.isEmpty(feedbackItem.reply_content) ? View.GONE : View.VISIBLE);
             reply.setText(feedbackItem.reply_content);
+            if (feedbackItem.is_solved == 0){
+                cancelImg.setSelected(false);
+                confirmImg.setSelected(false);
+            }
+            if (feedbackItem.is_solved == 2) {
+                cancelImg.setSelected(true);
+                confirmImg.setSelected(false);
+            }
+            if (feedbackItem.is_solved == 1){
+                confirmImg.setSelected(true);
+                cancelImg.setSelected(false);
+            }
 
             cancel.setTag(feedbackItem.id);
             confirm.setTag(feedbackItem.id);
             cancel.setOnClickListener(this);
             confirm.setOnClickListener(this);
+            rootView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            int id = (int) v.getTag();
             if (v == cancel){
+                if (confirmImg.isSelected()) return;
+                int id = (int) v.getTag();
                 changeFeedbackStatus(2,id);
             }
             if (v == confirm){
+                if (confirmImg.isSelected()) return;
+                int id = (int) v.getTag();
                 changeFeedbackStatus(1,id);
             }
+            if (v == rootView){
+                FeedbackListResults.FeedbackItem item = (FeedbackListResults.FeedbackItem) rootView.getTag();
+                if (StringUtils.isEmpty(item.reply_content)){
+                    //Toast.makeText(getContext(), "当前反馈暂无回复", Toast.LENGTH_SHORT).show();
+                }else {
+                    if (reply.getVisibility() == View.GONE){
+                        reply.setVisibility(View.VISIBLE);
+                    }else {
+                        reply.setVisibility(View.GONE);
+                    }
+                }
+
+            }
+        }
+
+        private void changeFeedbackStatus(final int status, int id) {
+            Flowable<HttpResultModel<NotConcernResults>> fr = DataService.feedbackStatus(new FeedbakcStatusRequestBody(status,id));
+            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
+                @Override
+                public void accept(HttpResultModel<NotConcernResults> feedbackListResultsHttpResultModel) throws Exception {
+                    if (feedbackListResultsHttpResultModel.isSucceful() && status == 1){
+                        cancelImg.setSelected(false);
+                        confirmImg.setSelected(true);
+                    }else {
+                        cancelImg.setSelected(true);
+                        confirmImg.setSelected(false);
+                    }
+                    Toast.makeText(getContext(), feedbackListResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }, new Consumer<NetError>() {
+                @Override
+                public void accept(NetError netError) throws Exception {
+                    Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                }
+            });
         }
     }
 }
