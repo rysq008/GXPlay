@@ -1,5 +1,6 @@
 package com.game.helper.model;
 
+import com.game.helper.data.RxConstant;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.google.gson.annotations.SerializedName;
 
@@ -34,6 +35,8 @@ public class PlatformMessageResults extends XBaseModel {
     "current_page": 1
 }
     * */
+    public H5Results h5Results;
+
     @SerializedName("list")
     public List<PlatformMessageItem> list;
 
@@ -45,11 +48,12 @@ public class PlatformMessageResults extends XBaseModel {
 
         @Override
         public int itemType() {
-            return 0;
+            return RxConstant.HomeModeType.Notice_Model_Type;
         }
     }
+
     @Override
     public int itemType() {
-            return 0;
-        }
+        return RxConstant.HomeModeType.Notice_Model_Type;
+    }
 }

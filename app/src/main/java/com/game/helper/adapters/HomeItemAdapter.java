@@ -9,6 +9,7 @@ import com.game.helper.data.RxConstant;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.NoticeResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.views.BannerView;
@@ -86,7 +87,7 @@ public class HomeItemAdapter extends SimpleRecAdapter<ItemType, HomeItemAdapter.
                             ((BannerView) entry.getValue()).setData((BannerResults) itemType);
                             break;
                         case RxConstant.HomeModeType.Notice_Model_Type:
-                            ((NoticeView) entry.getValue()).setData((NoticeResults) itemType);
+                            ((NoticeView) entry.getValue()).setData((PlatformMessageResults) itemType);
                             break;
                         case RxConstant.HomeModeType.Special_Model_Type:
                             ((SpecialView) entry.getValue()).setData((SpecialResults) itemType);
