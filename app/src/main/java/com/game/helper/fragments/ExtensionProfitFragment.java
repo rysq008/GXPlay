@@ -23,11 +23,14 @@ import com.game.helper.fragments.wallet.WalletListFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MarketInfoResults;
 import com.game.helper.model.NotConcernResults;
+import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.FeedbackRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.MemberDescDialog;
+import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -45,6 +48,7 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,6 +78,7 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
 
     private List<Fragment> list = new ArrayList<Fragment>();
     private MarketInfoResults marketInfo;
+    private MemberDescDialog memberDescDialog;
 
     public static ExtensionProfitFragment newInstance(){
         return new ExtensionProfitFragment();
@@ -99,6 +104,7 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
         mHelp.setOnClickListener(this);
 
         getMarketInfo();
+        memberDescDialog = new MemberDescDialog();
         list.add(ExtensionProfitItemFragment.newInstance(ExtensionProfitItemFragment.Type_Extension_Gold));
         list.add(ExtensionProfitItemFragment.newInstance(ExtensionProfitItemFragment.Type_Plan_Gold));
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
@@ -214,8 +220,7 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
             getActivity().onBackPressed();
         }
         if (v == mHelp){
-            MemberDescDialog dialog = new MemberDescDialog();
-            dialog.show(getChildFragmentManager(),MemberDescDialog.TAG);
+            memberDescDialog.show(getChildFragmentManager(),MemberDescDialog.TAG);
         }
     }
 

@@ -102,7 +102,7 @@ public class GamePackageInfoResult extends XBaseModel {
         private String name;
 
         public String getUrl() {
-            return url;
+            return url ="https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
         }
 
         public void setUrl(String url) {

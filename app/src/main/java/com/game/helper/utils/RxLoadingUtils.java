@@ -16,9 +16,14 @@ import com.game.helper.views.ReloadableFrameLayout;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.TotoroToast;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 
+import org.json.JSONException;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
+
+import java.net.UnknownHostException;
 
 import cn.droidlover.xdroidmvp.net.ApiSubscriber;
 import cn.droidlover.xdroidmvp.net.IModel;
@@ -27,11 +32,114 @@ import cn.droidlover.xdroidmvp.net.XApi;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableOperator;
 import io.reactivex.FlowableTransformer;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.observers.ResourceObserver;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class RxLoadingUtils {
+    public static <T> void subscribeWithReloadObserver(final XReloadableRecyclerContentLayout reloadableFrameLayout,
+                                                       final Observable<T> observable, final ObservableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
+                                                       final Action onComplete, final boolean showloading) {
+        if (reloadableFrameLayout == null) return;
+
+        if (showloading)
+            reloadableFrameLayout.showContent();
+        reloadableFrameLayout.setOnReloadListener(new XReloadableRecyclerContentLayout.OnReloadListener() {
+            @Override
+            public void onReload(XReloadableRecyclerContentLayout reloadableFrameLayout) {
+                subscribeWithReloadObserver(reloadableFrameLayout, observable, transformer, onNext, onError, onComplete, showloading);
+            }
+        });
+        final boolean[] finishReload = new boolean[]{false};
+        observable
+                .compose(transformer)
+                .compose(new ObservableTransformer() {
+                    @Override
+                    public ObservableSource apply(Observable upstream) {
+                        return upstream.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread());
+                    }
+                })
+                .subscribe(new ResourceObserver<T>() {
+                    @Override
+                    protected void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onNext(T t) {
+                        if (onNext != null) {
+                            try {
+                                onNext.accept(t);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (!finishReload[0]) {
+                            finishReload[0] = true;
+                        }
+                        reloadableFrameLayout.refreshState(false);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        NetError error = null;
+                        if (e != null) {
+                            if (!(e instanceof NetError)) {
+                                if (e instanceof UnknownHostException) {
+                                    error = new NetError(e, NetError.NoConnectError);
+                                } else if (e instanceof JSONException
+                                        || e instanceof JsonParseException
+                                        || e instanceof JsonSyntaxException) {
+                                    error = new NetError(e, NetError.ParseError);
+                                } else {
+                                    error = new NetError(e, NetError.OtherError);
+                                }
+                            } else {
+                                error = (NetError) e;
+                            }
+
+                            if (XApi.getCommonProvider() != null) {
+                                if (XApi.getCommonProvider().handleError(error)) {        //使用通用异常处理
+                                    return;
+                                }
+                            }
+                        }
+                        if (onError != null) {
+                            try {
+                                BusProvider.getBus().post(error);
+                                onError.accept(error);
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                        reloadableFrameLayout.refreshState(false);
+                        if (!finishReload[0]) {
+                            reloadableFrameLayout.showError();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        if (onComplete != null) {
+                            try {
+                                onComplete.run();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (!finishReload[0]) {
+//                            reloadableFrameLayout.finishReload();
+                        }
+                    }
+                });
+    }
 
     public static <T extends IModel> void subscribeWithReload(final ReloadableFrameLayout reloadableFrameLayout,
                                                               final Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,

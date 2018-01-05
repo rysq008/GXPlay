@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -57,13 +58,16 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
+import zlc.season.rxdownload2.entity.DownloadBean;
 import zlc.season.rxdownload2.entity.DownloadEvent;
+import zlc.season.rxdownload2.entity.DownloadStatus;
 
 import static zlc.season.rxdownload2.function.Utils.dispose;
 
@@ -84,8 +88,6 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     TextView tvPackageFilesize;
     @BindView(R.id.tv_game_detail_content)
     TextView tvContent;
-    @BindView(R.id.btn_game_detail_load)
-    Button btnLoad;
     @BindView(R.id.tv_discount_game_detail_common)
     TextView tvDiscountCommon;
     @BindView(R.id.tv_discount_game_detail_vip)
@@ -106,6 +108,14 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     TextView tvPlat;
     @BindView(R.id.pb_game_detail)
     ProgressBar pb;
+    @BindView(R.id.percent)
+    TextView mPercent;
+    @BindView(R.id.size)
+    TextView mSize;
+    @BindView(R.id.status)
+    TextView mStatusText;
+    @BindView(R.id.btn_game_detail_load)
+    Button btnLoad;
     @BindView(R.id.ll_Progress_bar_game_detail)
     RelativeLayout llProgressBar;
     @BindView(R.id.ll_discount_navigation_game_detail)
@@ -119,10 +129,11 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private GameDetailRechargeFragment rechargeGameFragment;
     private GameDetailGiftFragment gameDetailGiftFragment;
     private GameDetailCommunityFragment gameDetailCommunityFragment;
-    private GamePackageInfoResult packageInfo;
+    private GamePackageInfoResult packageInfo = new GamePackageInfoResult();
     private MemberInfoResults memberInfoResults;
     private Disposable disposable;
     private DownloadController mDownloadController;
+    private DownloadBean downloadBean;
 
 
     public static GameDetailFragment newInstance() {
@@ -218,6 +229,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             }
         });
         loadData();
+        mDownloadController = new DownloadController(mStatusText, btnLoad);
     }
 
     private void initGamePackage() {
@@ -245,7 +257,6 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             });
         }
 
-
         RxLoadingUtils.subscribe(fa, this.bindToLifecycle(), new Consumer<GameDetailAllResults>() {
             @Override
             public void accept(GameDetailAllResults gameDetailAllResults) throws Exception {
@@ -265,10 +276,20 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                     SPUtils.putString(context, SPUtils.GAME_NAME, packageInfo.getGame().getName());
                     SPUtils.putInt(context, SPUtils.CHANNEL_ID, packageInfo.getChannel().getId());
                     SPUtils.putInt(context, SPUtils.GAME_ID, packageInfo.getGame().getId());
-                    DownLoadReceiveUtils.receiveDownloadEvent(context, "", disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+                    downloadBean = new DownloadBean
+                            .Builder(packageInfo.getGame().getUrl())
+                            .setSaveName(null)      //not need.
+                            .setSavePath(null)      //not need
+                            .setExtra1(packageInfo.getGame().getLogo())   //save extra info into database.
+                            .setExtra2(packageInfo.getGame().getName())  //save extra info into database.
+                            .build();
+                    DownLoadReceiveUtils.receiveDownloadEvent(context, packageInfo.getGame().getUrl(), disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
                         @Override
                         public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
-
+                            updateProgressStatus(event.getDownloadStatus());
+                            if (isDisposable) {
+                                dispose(disposable);
+                            }
                         }
                     });
                 }
@@ -279,11 +300,59 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-
             }
         });
+    }
 
+    private void updateProgressStatus(DownloadStatus status) {
+        pb.setIndeterminate(status.isChunked);
+        pb.setMax((int) status.getTotalSize());
+        pb.setProgress((int) status.getDownloadSize());
+        mPercent.setText(status.getPercent());
+        mSize.setText(status.getFormatStatusString());
+    }
 
+    @OnClick({R.id.btn_game_detail_load, R.id.action_bar_back, R.id.iv_action})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_game_detail_load:
+                mDownloadController.handleClick(new DownloadController.Callback() {
+                    @Override
+                    public void startDownload() {
+                        DownLoadReceiveUtils.startDownload(context, getRxPermissions(), downloadBean);
+                    }
+
+                    @Override
+                    public void pauseDownload() {
+                        DownLoadReceiveUtils.pauseDownload(context, Kits.Empty.check(packageInfo.getGame()) ? "" : packageInfo.getGame().getUrl());
+                    }
+
+                    @Override
+                    public void cancelDownload() {
+                    }
+
+                    @Override
+                    public void installApk() {
+                        DownLoadReceiveUtils.installApk(context, Kits.Empty.check(packageInfo.getGame()) ? "" : packageInfo.getGame().getUrl());
+                    }
+
+                    @Override
+                    public void openApp() {
+                        //Intent intent = context.getPackageManager().getLaunchIntentForPackage()
+                        Toast.makeText(context, "open", Toast.LENGTH_LONG).show();
+                    }
+                });
+                break;
+            case R.id.action_bar_back:
+                getActivity().finish();
+                break;
+            case R.id.iv_action:
+                //分享
+                if (getActivity() instanceof DetailFragmentsActivity) {
+                    ((DetailFragmentsActivity) getActivity()).umShare(packageInfo);
+                }
+                break;
+        }
     }
 
     public void loadData() {
@@ -347,25 +416,6 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     public Object newP() {
         return null;
     }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @OnClick(R.id.action_bar_back)
-    public void onClick() {
-        getActivity().finish();
-    }
-
-    @OnClick(R.id.iv_action)
-    public void onShareClick() {
-        //分享
-        if (getActivity() instanceof DetailFragmentsActivity) {
-            ((DetailFragmentsActivity) getActivity()).umShare(packageInfo);
-        }
-    }
-
 
     @OnClick({R.id.tv_game_detail_bottom_download, R.id.btn_send_comment_game_detail,
             R.id.tv_discount_game_detail_common, R.id.tv_discount_game_detail_vip,
@@ -564,6 +614,20 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             public void onClick(View view) {
                 CommonDialog.dismiss();
                 viewPager.setCurrentItem(0);
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        DownLoadReceiveUtils.receiveDownloadEvent(context, Kits.Empty.check(packageInfo.getGame()) ? "" : packageInfo.getGame().getUrl(), disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+            @Override
+            public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
+                updateProgressStatus(event.getDownloadStatus());
+                if (isDisposable) {
+                    dispose(disposable);
+                }
             }
         });
     }

@@ -21,6 +21,7 @@ import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.GameDetailMyAccountActivity;
+import com.game.helper.activitys.HuanxinKefuLoginActivity;
 import com.game.helper.activitys.MyAccountActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
@@ -114,6 +115,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
 
     public static final int REQUEST_CODE = 99;
     public static final int RESULT_CODE = 98;
+    private GXPlayDialog dialog;
 
     public GameDetailRechargeFragment() {
         // Required empty public constructor
@@ -252,6 +254,8 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
                 mDiscount1.setText(discount_high_vip+discountList.high_vip_discount+"折");
                 mDiscount2.setText(discount_member+discountList.member_discount+"折");
                 mDiscount3.setText(discount_vip+discountList.vip_discount+"折");
+
+                getCheckDiscount();
             }
         }, new Consumer<NetError>() {
             @Override
@@ -363,7 +367,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
 
         if (mTotalDiscountValue < 0 || inputVlaue <= 0 ) return;
         if (mTotalDiscountValue == 0) mTotalDiscountValue = 10;
-        else mTotalBalanceValue = inputVlaue / 10 * mTotalDiscountValue;
+        else mTotalBalanceValue = (float) (inputVlaue * mTotalDiscountValue / 10.0);
 
         mTotalBalanceValue = Utils.m2(mTotalBalanceValue);
         mTotalBalance.setText(mTotalBalanceValue+"元");
@@ -412,12 +416,15 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         }
         String content = "";
         if (type == 0) content = "您当前选择VIP折扣，将会占用1个VIP名额，您确定使用此折扣支付吗？";
-        if (type == 1) {
-            goToVipLevel();
-            return;
-        }
+        if (type == 1) content = "您的VIP账户名额不足，升级会员等级可增加VIP账户名额，是否去升级VIP？";
         if (type == 2) content = "您的VIP账户名额已用完，并且是皇冠会员，已无法再升级会员，若您仍想绑定该账号为VIP账号，请联系客服！";
-        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm,"温馨提示",content);
+        dialog = null;
+        if (type ==2 || type == 0) {
+            dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", content);
+        }
+        if (type == 1){
+            dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, "温馨提示", content);
+        }
         dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
             @Override
             public void onCancel() {
@@ -429,6 +436,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             public void onConfirm() {
                 dialog.dismiss();
                 if (type == 2) goToKefu();
+                if (type == 1) goToVipLevel();
             }
         });
         dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
@@ -439,7 +447,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         //跳转vip升级页面
         mItemDiscount2.performClick();
         Bundle bundle = new Bundle();
-        bundle.putString(WebviewFragment.PARAM_TITLE,"升级VIP");
+        bundle.putString(WebviewFragment.PARAM_TITLE,"VIP");
         bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
         DetailFragmentsActivity.launch(getContext(),bundle,WebviewFragment.newInstance());
     }
@@ -447,7 +455,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     private void goToKefu(){
         //跳转客服
         mItemDiscount2.performClick();
-        Toast.makeText(getContext(), "跳转客服", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "最高等级vip，跳转客服", Toast.LENGTH_SHORT).show();
     }
 
     public GameAccountResultModel.ListBean getGameBean() {
@@ -470,7 +478,6 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         return Double.parseDouble(inputValue);
     }
 
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         getCheckDiscount();
@@ -491,6 +498,23 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         }
     }
 
+    public void resetFragment(){
+        gameBean = null;
+        discountList = null;
+        accountBean = null;
+        mTotalDiscountValue = 0;
+        mTotalBalanceValue = 0;
+        initView();
+        mAccount.setText("");
+        mBalance.setText("");
+        mTotalDiscount.setText("0.0折");
+        mDiscount1.setText(discount_high_vip);
+        mDiscount2.setText(discount_member);
+        mDiscount3.setText(discount_vip);
+        caculateBalanceVlue();
+    }
+
+
     @Override
     public Object newP() {
         return null;
@@ -500,6 +524,8 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_connect_kefu_recharge_game_detail:
+                Intent intentKefu = new Intent(context, HuanxinKefuLoginActivity.class);
+                startActivity(intentKefu);
                 break;
             case R.id.tv_confirm_order_recharge_game_detail:
                 confirmOrder();

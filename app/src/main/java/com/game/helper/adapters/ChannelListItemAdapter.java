@@ -223,12 +223,12 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
             mDownloadController.handleClick(new DownloadController.Callback() {
                 @Override
                 public void startDownload() {
-                    DownLoadReceiveUtils.startDownload(context,mRxDownload,rxPermissions,downloadBean);
+                    DownLoadReceiveUtils.startDownload(context,rxPermissions,downloadBean);
                 }
 
                 @Override
                 public void pauseDownload() {
-                    DownLoadReceiveUtils.pauseDownload(mRxDownload,mData.getPath());
+                    DownLoadReceiveUtils.pauseDownload(context,mData.getPath());
                 }
 
                 @Override
@@ -237,7 +237,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
 
                 @Override
                 public void installApk() {
-                    DownLoadReceiveUtils.installApk(context,mRxDownload,mData.getPath());
+                    DownLoadReceiveUtils.installApk(context,mData.getPath());
                 }
 
                 @Override
