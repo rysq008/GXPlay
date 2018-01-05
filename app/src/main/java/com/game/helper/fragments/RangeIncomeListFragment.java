@@ -88,7 +88,6 @@ public class RangeIncomeListFragment extends XBaseFragment {
 
         xRecyclerContentLayout.loadingView(loadingView);
         xRecyclerContentLayout.showLoading();
-
     }
 
     public void showError(NetError error) {
