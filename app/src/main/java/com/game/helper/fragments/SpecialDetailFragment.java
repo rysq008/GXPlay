@@ -150,6 +150,7 @@ public class SpecialDetailFragment extends XBaseFragment{
             mXRv.showEmpty();
 
         } else {
+            mXRv.showContent();
             if (cur_page > 1) {
                 mAdapter.addData(model);
             } else {

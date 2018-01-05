@@ -472,6 +472,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     }
 
     public void createVipDialog(View view) {
+        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
         View v = View.inflate(context, R.layout.dialog_vip, null);
         LinearLayout currentVip = v.findViewById(R.id.ll_current_vip_dialog_game_detail);
         TextView tvDiscount1 = v.findViewById(R.id.tv_discount1_dialog_game_detail);
@@ -480,6 +481,27 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         final TextView tvVip1 = v.findViewById(R.id.tv_vip1_dialog_game_detail);
         final TextView tvVip2 = v.findViewById(R.id.tv_vip2_dialog_game_detail);
         final TextView tvVip3 = v.findViewById(R.id.tv_vip3_dialog_game_detail);
+        tvVip1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                VipPassage();
+            }
+        });
+        tvVip2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                VipPassage();
+            }
+        });
+        tvVip3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                VipPassage();
+            }
+        });
         //用户当前的信息
         final ImageView ivVipLevel = v.findViewById(R.id.iv_vip_level_user_dialog_game_detail);
         final TextView tvNameLevel = v.findViewById(R.id.tv_name_level_user_dialog_game_detail);
@@ -526,7 +548,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         } else {
             currentVip.setVisibility(View.GONE);
         }
-        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
+        Log.d(TAG, "createVipDialog: tvVip1是否可以点击"+tvVip1.isClickable());
+        Log.d(TAG, "createVipDialog: tvVip2是否可以点击"+tvVip2.isClickable());
+        Log.d(TAG, "createVipDialog: tvVip3是否可以点击"+tvVip3.isClickable());
+
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
@@ -536,33 +561,13 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         //实例化Window操作者
         //lp.x = 100; // 新位置X坐标
-        //lp.y = 30; // 新位置Y坐标
+        lp.y = view.getBottom()+20; // 新位置Y坐标
         dialogWindow.setAttributes(lp);
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
-        dialog.setView(v, 30, view.getBottom() + 30, 30, 0);// 设置布局
+        dialog.setView(v, 30, 0, 30, 0);// 设置布局
         dialog.show();
-        tvVip1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                VipPassage();
-            }
-        });
-        tvVip2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                VipPassage();
-            }
-        });
-        tvVip3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                VipPassage();
-            }
-        });
+
 
 
     }
@@ -592,7 +597,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         //实例化Window操作者
         //lp.x = 100; // 新位置X坐标
-        lp.y = -30; // 新位置Y坐标
+        lp.y = view.getTop();; // 新位置Y坐标
         dialogWindow.setAttributes(lp);
         Log.d(TAG, "dialogWindow的坐标" + lp.x + "----------" + lp.y);
         // 不可以用“返回键”取消

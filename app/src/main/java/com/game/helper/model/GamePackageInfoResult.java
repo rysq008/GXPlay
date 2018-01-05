@@ -8,13 +8,16 @@ import com.game.helper.model.BaseModel.XBaseModel;
 
 public class GamePackageInfoResult extends XBaseModel {
 
+
     /**
-     * game : {"class_type":{"id":1,"name":"网游"},"intro":"集结，被选召的孩子们，冒险再次起程！","logo":"/upload/image/20161210/20161210162000_239.jpg","download_count":0,"type":{"id":9,"name":"角色"},"id":47,"name":"数码大冒险"}
+     * game : {"class_type":{"id":1,"name":"网游"},"url":"http://www.baidu.com","intro":"集结，被选召的孩子们，冒险再次起程！","logo":"/upload/image/20161210/20161210162000_239.jpg","download_count":0,"type":{"id":9,"name":"角色"},"id":47,"name":"数码大冒险"}
      * zhekou_xuchong : 6.6
      * filesize : 172.7
      * discount_vip : 4.4
      * zhekou_shouchong : 5.5
      * id : 22893
+     * name_package : com.netease.my.ewan.kaopu
+     * path : http://www.6y.com.cn/ajax/game/download/315/317
      * channel : {"id":15,"name":"当乐"}
      */
 
@@ -24,6 +27,8 @@ public class GamePackageInfoResult extends XBaseModel {
     private double discount_vip;
     private double zhekou_shouchong;
     private int id;
+    private String name_package;
+    private String path;
     private ChannelBean channel;
 
     public GameBean getGame() {
@@ -74,6 +79,22 @@ public class GamePackageInfoResult extends XBaseModel {
         this.id = id;
     }
 
+    public String getName_package() {
+        return name_package;
+    }
+
+    public void setName_package(String name_package) {
+        this.name_package = name_package;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     public ChannelBean getChannel() {
         return channel;
     }
@@ -85,6 +106,7 @@ public class GamePackageInfoResult extends XBaseModel {
     public static class GameBean {
         /**
          * class_type : {"id":1,"name":"网游"}
+         * url : http://www.baidu.com
          * intro : 集结，被选召的孩子们，冒险再次起程！
          * logo : /upload/image/20161210/20161210162000_239.jpg
          * download_count : 0
@@ -94,6 +116,7 @@ public class GamePackageInfoResult extends XBaseModel {
          */
 
         private ClassTypeBean class_type;
+        private String url;
         private String intro;
         private String logo;
         private int download_count;
@@ -101,22 +124,20 @@ public class GamePackageInfoResult extends XBaseModel {
         private int id;
         private String name;
 
-        public String getUrl() {
-            return url ="https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        private String url;
-
         public ClassTypeBean getClass_type() {
             return class_type;
         }
 
         public void setClass_type(ClassTypeBean class_type) {
             this.class_type = class_type;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
         }
 
         public String getIntro() {
