@@ -45,7 +45,7 @@ import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
-import com.game.helper.model.SystemMessageResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
@@ -56,10 +56,11 @@ import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
-import com.game.helper.model.PlatformMessageResults;
+import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VersionInfoResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.model.model.PayResultModel;
@@ -97,6 +98,7 @@ import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
+import com.game.helper.net.model.SetPasswordRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
@@ -266,6 +268,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<ResetTradeResults>> setTradePasswrd(SetTradeRequestBody setTradeRequestBody) {
         return Api.CreateApiService().setTradePassword(setTradeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> setPasswrd(SetPasswordRequestBody setPasswordRequestBody) {
+        return Api.CreateApiService().setPassword(setPasswordRequestBody);
     }
 
     public static Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(ResetAlipayRequestBody resetAlipayRequestBody) {
@@ -495,4 +501,9 @@ public class DataService {
     public static Flowable<HttpResultModel<EasemobAccountResults>> getEasemobIM() {
         return Api.CreateApiService().getEasemobIM();
     }
+
+    public static Flowable<HttpResultModel<VersionInfoResults>> getVersionInfo() {
+        return Api.CreateApiService().getVersionInfo();
+    }
+
 }

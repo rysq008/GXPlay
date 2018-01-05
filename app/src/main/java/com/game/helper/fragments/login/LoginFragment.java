@@ -29,6 +29,7 @@ import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
+import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.widget.CountDownText;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.Callback;
@@ -77,6 +78,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     //args
     private int Login_Type = 1;
     private onLoginListener mOnLoginListener;
+    private GXPlayDialog loginDialog;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -139,7 +141,19 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                     getActivity().onBackPressed();
 
                     if (!loginResultsHttpResultModel.data.has_passwd) {
-                        DetailFragmentsActivity.launch(getContext(), null, ResetPasswdFragment.newInstance());
+                        if (loginDialog == null) loginDialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", getResources().getString(R.string.common_set_password_hint));
+                        loginDialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
+                        loginDialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
+                            @Override
+                            public void onCancel() {
+                                DetailFragmentsActivity.launch(getContext(), null, SetPasswordFragment.newInstance());
+                            }
+
+                            @Override
+                            public void onConfirm() {
+                                DetailFragmentsActivity.launch(getContext(), null, SetPasswordFragment.newInstance());
+                            }
+                        });
                     }
                 } else {
                     Toast.makeText(getContext(), loginResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();

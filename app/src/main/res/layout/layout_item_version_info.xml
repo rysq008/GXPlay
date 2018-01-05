@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="G9游戏1.0.0"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_medium" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginBottom="@dimen/dp_15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
+        android:text="1.新增xx功能\n2.优化用户体验及性能\n3.期待G9游戏的下一个进步吧"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_size_small" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tabbar_divider_height"
+        android:background="@color/colorDivider"/>
+</LinearLayout>
