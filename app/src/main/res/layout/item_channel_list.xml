@@ -83,6 +83,20 @@
                     android:text="221M"
                     android:textColor="@color/color_999"
                     android:textSize="@dimen/size_12sp" />
+                <ImageView
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/margin_5"
+                    android:layout_marginRight="@dimen/margin_5"
+                    android:background="@color/color_999" />
+
+                <TextView
+                    android:id="@+id/tv_channel_list_package_plat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="果盘"
+                    android:textColor="@color/color_999"
+                    android:textSize="@dimen/size_12sp" />
 
             </LinearLayout>
 
@@ -130,7 +144,7 @@
                     android:layout_below="@id/percent"
                     android:layout_marginBottom="@dimen/margin_3"
                     android:layout_marginTop="@dimen/margin_3"
-                    android:progress="10"
+                    android:progress="0"
                     android:visibility="visible" />
 
                 <TextView
@@ -155,7 +169,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:text="0.0KB/0.0KB"
+                    android:text="0.0M/0.0M"
                     android:textSize="11sp" />
             </RelativeLayout>
 

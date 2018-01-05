@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
+import com.game.helper.activitys.HuanxinKefuLoginActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
@@ -413,8 +414,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             confirmOrder();
         }
         if (v == mConnectKefu) {
-            // TODO: 2017/12/29 补全跳转
-            Toast.makeText(getContext(), "跳转客服", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "跳转客服", Toast.LENGTH_SHORT).show();
+            Intent intentKefu = new Intent(context, HuanxinKefuLoginActivity.class);
+            startActivity(intentKefu);
         }
         if (v == mHeadAction){
             // TODO: 2017/12/29 补全跳转

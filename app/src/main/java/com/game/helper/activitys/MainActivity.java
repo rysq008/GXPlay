@@ -31,11 +31,11 @@ import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.CustomBadgeItem;
 import com.hyphenate.chat.ChatClient;
+import com.hyphenate.helpdesk.callback.Callback;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.hyphenate.helpdesk.callback.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +127,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                 .setBackgroundColor(Color.TRANSPARENT);// Badge背景颜色
 //        if (null != agentTaskCollect)
         {
-            n = 9;
+            n = 0;
             if (n > 0) {
                 numberBadgeItem.setBorderWidth(0)// Badge的Border(边界)宽度
                         .setBorderColor(getResources().getColor(R.color.colorOrangeDepth))// Badge的Border颜色
@@ -305,19 +305,19 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(!SharedPreUtil.isLogin()){
+        if (!SharedPreUtil.isLogin()) {
             //第一个参数为是否解绑推送的devicetoken
-            ChatClient.getInstance().logout(true, new Callback(){
+            ChatClient.getInstance().logout(true, new Callback() {
                 @Override
                 public void onSuccess() {
-                    SPUtils.remove(context,SPUtils.TEMP_HUANXIN_NAME);
-                    Log.d(TAG,"已清除SPUtils.TEMP_HUANXIN_NAME:"+SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
+                    SPUtils.remove(context, SPUtils.TEMP_HUANXIN_NAME);
+                    Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
 
                 }
 
                 @Override
                 public void onError(int i, String s) {
-                    Log.d(TAG,"退出失败s-----"+s);
+                    Log.d(TAG, "退出失败s-----" + s);
                 }
 
                 @Override

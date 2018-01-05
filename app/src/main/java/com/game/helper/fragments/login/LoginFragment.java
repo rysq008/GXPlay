@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.activitys.HuanxinKefuLoginActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
@@ -27,7 +26,6 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
 import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.widget.CountDownText;
@@ -35,9 +33,13 @@ import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.Callback;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -138,11 +140,18 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginSuccessful(userInfo);
                     }
+
+                    if (!Kits.Empty.check(SharedPreUtil.getSessionId())) {
+                        getActivity().setResult(RESULT_OK);
+                    } else {
+                        getActivity().setResult(RESULT_CANCELED);
+                    }
                     getActivity().onBackPressed();
 
                     if (!loginResultsHttpResultModel.data.has_passwd) {
-                        if (loginDialog == null) loginDialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", getResources().getString(R.string.common_set_password_hint));
-                        loginDialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
+                        if (loginDialog == null)
+                            loginDialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", getResources().getString(R.string.common_set_password_hint));
+                        loginDialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
                         loginDialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
                             @Override
                             public void onCancel() {
@@ -210,8 +219,8 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         if (v == mGotoRegist) {
             DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
-        if (v == mForgetPasswd){
-            DetailFragmentsActivity.launch(getContext(),null,ForgetPasswdFragment.newInstance());
+        if (v == mForgetPasswd) {
+            DetailFragmentsActivity.launch(getContext(), null, ForgetPasswdFragment.newInstance());
         }
         if (v == mTabMessage) {
             switchLoginType(LOGIN_TYPE_MESSAGE);
@@ -264,12 +273,12 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     }
 
 
-    private void logoutTempAccount(){
+    private void logoutTempAccount() {
         ChatClient.getInstance().logout(true, new Callback() {
             @Override
             public void onSuccess() {
-                SPUtils.remove(context,SPUtils.TEMP_HUANXIN_NAME);
-                Log.d(TAG,"已清除SPUtils.TEMP_HUANXIN_NAME:"+SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
+                SPUtils.remove(context, SPUtils.TEMP_HUANXIN_NAME);
+                Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
             }
 
             @Override

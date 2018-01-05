@@ -23,7 +23,7 @@ import zlc.season.practicalrecyclerview.AbstractViewHolder;
 
 public class NoticeViewHolder extends AbstractViewHolder<NoticeResults> {
 
-    @BindView(R.id.activity_notice_item_tv)
+    @BindView(R.id.tv_notice_view_item)
     TextView textView;
     @BindView(R.id.activity_notice_item_vflipper)
     ViewFlipper viewFlipper;

@@ -2,8 +2,6 @@ package com.game.helper.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
@@ -44,7 +42,7 @@ public class DownLoadReceiveUtils {
         public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable);
     }
 
-    public static void receiveDownloadEvent(final Context context, final String url, Disposable disposable, final DownloadController controller, final OnDownloadEventReceiveListener receive) {
+    public static Disposable receiveDownloadEvent(final Context context, final String url, final String pkg, final DownloadController controller, final OnDownloadEventReceiveListener receive) {
         Observable<DownloadEvent> replayDownloadStatus = RxDownload.getInstance(context).receiveDownloadStatus(url)
                 .replay()
                 .autoConnect();
@@ -63,7 +61,7 @@ public class DownLoadReceiveUtils {
                         return downloadEvent.getFlag() != DownloadFlag.STARTED;
                     }
                 });
-        disposable = Observable.merge(sampled, noProgress)
+        return Observable.merge(sampled, noProgress)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DownloadEvent>() {
                     @Override
@@ -82,8 +80,8 @@ public class DownLoadReceiveUtils {
                             File[] files = RxDownload.getInstance(context).getRealFiles(url);
                             if (files != null) {
                                 if (files[0].exists()) {
-                                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(files[0].getPath(), PackageManager.GET_ACTIVITIES);
-                                    if (Utils.isAppInstalled(context, info.applicationInfo.packageName)) {
+//                                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(files[0].getPath(), PackageManager.GET_ACTIVITIES);
+                                    if (Utils.isAppInstalled(context, pkg/*info.applicationInfo.packageName*/)) {
                                         downloadEvent.setFlag(DownloadFlag.INSTALLED);
                                     } else {
                                         downloadEvent.setFlag(DownloadFlag.COMPLETED);
@@ -196,6 +194,12 @@ public class DownLoadReceiveUtils {
                 })
                 .subscribe();
 
+    }
+
+    public static void openApp(Context context, String pkg) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(pkg);
+        if (null != intent)
+            context.startActivity(intent);
     }
 
     public static void showPopUpWindow(Context mContext, View view) {

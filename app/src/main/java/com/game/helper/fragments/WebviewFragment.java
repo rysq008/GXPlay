@@ -3,6 +3,7 @@ package com.game.helper.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +19,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -43,6 +45,8 @@ import cn.droidlover.xdroidmvp.kit.Kits;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
+import static android.app.Activity.RESULT_OK;
+
 public class WebviewFragment extends XBaseFragment {
     public static final String TAG = WebviewFragment.class.getSimpleName();
 
@@ -58,6 +62,7 @@ public class WebviewFragment extends XBaseFragment {
     String title;
     String shareUrl;
 
+    public static String PARAM_VIP = "";
     public static final String PARAM_URL = "url";
     public static final String PARAM_TITLE = "title";
 
@@ -150,7 +155,13 @@ public class WebviewFragment extends XBaseFragment {
 //                return true;
 //            }
 //        });
-
+        Map extraHeaders = new HashMap<String, String>();
+        extraHeaders.put("control-cache", "no-cache,private");
+        extraHeaders.put("pragma", "no-cache,no-store");
+        extraHeaders.put("expires", "0");
+        synCookies(url, SharedPreUtil.getSessionId());
+//        synCookieToWebView(url, SharedPreUtil.getSessionId());
+        webView.loadUrl(url.concat("?" + SharedPreUtil.getSessionId()), extraHeaders);
         webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -190,7 +201,7 @@ public class WebviewFragment extends XBaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                DetailFragmentsActivity.launch(context, null, LoginFragment.newInstance());
+                                DetailFragmentsActivity.launchForResult(WebviewFragment.this, LoginFragment.newInstance(), 0, null, 0);
                             }
                         });
                         break;
@@ -292,13 +303,6 @@ public class WebviewFragment extends XBaseFragment {
         super.onResume();
         if (webView != null) webView.onResume();
         getFocus();
-        Map extraHeaders = new HashMap<String, String>();
-        extraHeaders.put("control-cache", "no-cache,private");
-        extraHeaders.put("pragma", "no-cache,no-store");
-        extraHeaders.put("expires", "0");
-        synCookies(url, SharedPreUtil.getSessionId());
-//        synCookieToWebView(url, SharedPreUtil.getSessionId());
-        webView.loadUrl(url.concat("?" + SharedPreUtil.getSessionId()), extraHeaders);
     }
 
     //主界面获取焦点
@@ -343,5 +347,21 @@ public class WebviewFragment extends XBaseFragment {
     @Override
     public Object newP() {
         return null;
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 0:
+                if (resultCode == RESULT_OK) {
+                    getActivity().onBackPressed();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(PARAM_URL, WebviewFragment.PARAM_VIP);
+                    DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
+                }
+                break;
+        }
     }
 }
