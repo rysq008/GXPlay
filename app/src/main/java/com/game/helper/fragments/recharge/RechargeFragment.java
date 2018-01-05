@@ -257,26 +257,27 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             }
             if (select_pay_mode == RechargeGoldFragment.Pay_Type_Wechat) {
                 //微信支付
-                weixinPay(totalChargeGold,false);
+                weixinPay(totalChargeGold,false,level);
             }
             if (select_pay_mode == RechargeGoldFragment.Pay_Type_Alipay) {
                 //支付宝支付
-                aliPay(totalChargeGold,false);
+                aliPay(totalChargeGold,false,level);
             }
         }
 
         if (current_page == 2) {
             Boolean payType = rechargeVIPLevelFragment.getPayType();
             int totalCharge = rechargeVIPLevelFragment.getTotal();
+            String selectVIPLevel = rechargeVIPLevelFragment.getSelectedVIPLevel();
             if (totalCharge <= 0 ) {
-                ToastUtil.showToast("请选择要升级的VIP");
+                ToastUtil.showToast("实付金额为0元，无法充值");
             }else{
                 if (payType ) {
                     //微信支付
-                    weixinPay(totalCharge,true);
+                    weixinPay(totalCharge,true,selectVIPLevel);
                 }else{
                     //支付宝支付
-                    aliPay(totalCharge,true);
+                    aliPay(totalCharge,true,selectVIPLevel);
                 }
             }
 
@@ -309,14 +310,14 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     /**
      * ali支付
      */
-    private void aliPay(float amount, boolean vip) {
+    private void aliPay(float amount, boolean vip,String vipLevel) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
                 SharedPreUtil.getLoginUserInfo().member_id + "",
                 amount + "",
                 "1",
                 vip ? "2" : "1",
-                level));
+                vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {
@@ -355,14 +356,14 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     /**
      * 微信支付
      */
-    private void weixinPay(float mNeedPay,boolean vip) {
+    private void weixinPay(float mNeedPay,boolean vip,String vipLevel) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
                 SharedPreUtil.getLoginUserInfo().member_id + "",
                 mNeedPay + "",
                 "2",
                 vip ? "2" : "1",
-                level));
+                vipLevel));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PayResultModel>>() {
             @Override
             public void accept(HttpResultModel<PayResultModel> payRequestBody) throws Exception {

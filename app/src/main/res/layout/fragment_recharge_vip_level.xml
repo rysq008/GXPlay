@@ -149,6 +149,7 @@
                 android:id="@+id/iv_weixin_recharge_vip_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/margin_5"
                 android:paddingRight="@dimen/margin_25"
                 android:src="@mipmap/kxcz_btn_hg" />
         </LinearLayout>
@@ -185,6 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="@dimen/margin_25"
+                android:paddingLeft="@dimen/margin_5"
                 android:src="@mipmap/qrddz_btn_wgx" />
         </LinearLayout>
 
