@@ -103,6 +103,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
 
     //avatar
     private AvatarEditDialog dialog;
+    private ProgressDialog loading;
     
     public static SettingUserFragment newInstance() {
         return new SettingUserFragment();
@@ -123,6 +124,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     }
 
     private void initView() {
+        showWaittingDialog();
         mHeadTittle.setText(getResources().getString(R.string.common_setting_user_info));
         pickerInit();
 
@@ -239,6 +241,8 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             mAlipayStatus.setText(getResources().getString(R.string.setting_password_status_none));
             mAlipayStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
+
+        loading.dismiss();
     }
 
     @Override
@@ -303,6 +307,15 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             goToSetAlipay();
         }
 
+    }
+
+    private void showWaittingDialog() {
+        loading = null;
+        loading = new ProgressDialog(getContext(), ProgressDialog.STYLE_SPINNER);
+        loading.setCancelable(true);
+        loading.setCanceledOnTouchOutside(false);
+        loading.setMessage("加载中...");
+        loading.show();
     }
 
     /**************************         safe mannage         ***************************/
