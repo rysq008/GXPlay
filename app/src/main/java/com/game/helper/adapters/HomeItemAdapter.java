@@ -8,7 +8,6 @@ import com.game.helper.R;
 import com.game.helper.data.RxConstant;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.HotResults;
-import com.game.helper.model.NoticeResults;
 import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialResults;

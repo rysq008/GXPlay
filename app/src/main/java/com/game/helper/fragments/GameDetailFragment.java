@@ -136,6 +136,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private DownloadController mDownloadController;
     private DownloadBean downloadBean;
 
+    long lastClickTime = 0;
+
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -232,7 +234,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             }
         });
         loadData();
-        mDownloadController = new DownloadController(mStatusText, btnLoad,tvBottomDownload);
+        mDownloadController = new DownloadController(mStatusText, btnLoad, tvBottomDownload);
     }
 
     private void initGamePackage() {
@@ -443,10 +445,15 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 createVipDialog(llNavigation);
                 break;
             case R.id.ll_discount_navigation_game_detail:
-                Bundle bundle = new Bundle();
-                bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.getAccount_guide_url());
-                bundle.putString(WebviewFragment.PARAM_TITLE, mTvTittle.getText().toString());
-                DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
+                long clickTime = System.currentTimeMillis();
+                long timeOffset = clickTime - lastClickTime;
+                if (timeOffset > 300) {
+                    lastClickTime = clickTime;
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.getAccount_guide_url());
+                    bundle.putString(WebviewFragment.PARAM_TITLE, mTvTittle.getText().toString());
+                    DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
+                }
                 break;
         }
     }

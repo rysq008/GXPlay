@@ -266,7 +266,7 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
         String content = "";
         if (type == 0) content = "您当前没有选择选择VIP等级，请选择VIP等级";
         if (type == 1) content = "请选择比当前高的VIP等级";
-        if (type == 2) content = "您是皇冠会员，已无法再升级会员,请联系客服";
+        if (type == 2) content = "您是皇冠会员，已无法再升级会员，请联系客服";
         dialog = null;
         dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, "温馨提示", content);
         dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
