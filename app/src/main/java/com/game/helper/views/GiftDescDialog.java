@@ -24,6 +24,7 @@ import com.game.helper.net.model.MineGameRequestBody;
 import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.ScreenUtils;
+import com.game.helper.utils.StringUtils;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
 
@@ -49,8 +50,9 @@ public class GiftDescDialog extends android.support.v4.app.DialogFragment implem
     private MineGiftInfoResults giftInfo;
 
     @SuppressLint("ValidFragment")
-    public GiftDescDialog(int giftId) {
-        id = giftId;
+    public GiftDescDialog(int giftId, MineGiftInfoResults gift) {
+        this.id = giftId;
+        this.giftInfo = gift;
     }
 
     @Override
@@ -74,27 +76,7 @@ public class GiftDescDialog extends android.support.v4.app.DialogFragment implem
 
         close.setOnClickListener(this);
         if (id == -1) return;
-        getDataFromNet();
-    }
-
-    /**
-     * 获取数据
-     */
-    private void getDataFromNet() {
-        BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
-        Flowable<HttpResultModel<MineGiftInfoResults>> fr = DataService.getMineGiftCodeInfo(new MineGiftInfoRequestBody(id));
-        RxLoadingUtils.subscribe(fr, RxLifecycleAndroid.bindFragment(lifecycleSubject), new Consumer<HttpResultModel<MineGiftInfoResults>>() {
-            @Override
-            public void accept(HttpResultModel<MineGiftInfoResults> mineGiftInfoResultsHttpResultModel) throws Exception {
-                giftInfo = mineGiftInfoResultsHttpResultModel.data;
-                setData();
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
-            }
-        });
+        setData();
     }
 
     private void setData() {
@@ -103,7 +85,8 @@ public class GiftDescDialog extends android.support.v4.app.DialogFragment implem
             return;
         }
         content.setText(giftInfo.gift_content);
-        time.setText(giftInfo.start_time + "至" + giftInfo.end_time);
+        time.setText( (StringUtils.isEmpty(giftInfo.start_time) ? "" : giftInfo.start_time )
+                + (StringUtils.isEmpty(giftInfo.end_time) ? "" : ("至" + giftInfo.end_time) ) );
     }
 
     @Override

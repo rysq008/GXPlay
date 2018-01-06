@@ -51,7 +51,8 @@ public class MemberDescDialog extends android.support.v4.app.DialogFragment impl
 
     private VipLevelResults vipList;
 
-    public MemberDescDialog() {
+    public MemberDescDialog(VipLevelResults vip) {
+        this.vipList = vip;
     }
 
     @Override
@@ -86,28 +87,13 @@ public class MemberDescDialog extends android.support.v4.app.DialogFragment impl
 
         confirm = view.findViewById(R.id.tv_confirm);
         confirm.setOnClickListener(this);
-        getDataFromNet();
         return view;
     }
 
-    /**
-     * 获取数据
-     */
-    private void getDataFromNet() {
-        BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
-        Flowable<HttpResultModel<VipLevelResults>> fr = DataService.getVipLevel();
-        RxLoadingUtils.subscribe(fr, RxLifecycleAndroid.bindFragment(lifecycleSubject), new Consumer<HttpResultModel<VipLevelResults>>() {
-            @Override
-            public void accept(HttpResultModel<VipLevelResults> vipLevelResultsHttpResultModel ) throws Exception {
-                vipList = vipLevelResultsHttpResultModel.data;
-                setData();
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
-            }
-        });
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setData();
     }
 
     private void setData(){

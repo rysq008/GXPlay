@@ -20,6 +20,7 @@ import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
 import com.game.helper.fragments.MinePagerFragment;
 import com.game.helper.fragments.login.ResetPasswdFragment;
+import com.game.helper.fragments.login.SetPasswordFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.H5UrlListResults;
@@ -163,7 +164,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     }
 
     private void showSetPassWord() {
-        DetailFragmentsActivity.launch(this, null, ResetPasswdFragment.newInstance());
+        DetailFragmentsActivity.launch(this, null, SetPasswordFragment.newInstance());
     }
 
     @Override

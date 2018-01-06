@@ -18,11 +18,13 @@ import com.game.helper.R;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.MineGiftInfoResults;
 import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.MineGameRequestBody;
+import com.game.helper.net.model.MineGiftInfoRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
@@ -30,6 +32,8 @@ import com.game.helper.views.GiftDescDialog;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +46,7 @@ import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -195,6 +200,8 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
         }
 
         class MineGiftHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            private MineGiftInfoResults giftInfo;
+            private GiftDescDialog dialog;
             private int position = 0;
             private View rootView;
             private RoundedImageView icon;
@@ -225,7 +232,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                 desc.setText("礼包码："+item.gift_code.code);
                 rootView.setTag(item);
                 copy.setTag(item);
-
+                getDialogDataFromNet(item.gift_code.id,false);
             }
 
             @Override
@@ -237,8 +244,8 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                 if (rootView.getTag() instanceof MineGiftlistResults.MineGiftlistItem){
                     MineGiftlistResults.MineGiftlistItem item = (MineGiftlistResults.MineGiftlistItem) rootView.getTag();
                     if (v == rootView){
-                        GiftDescDialog dialog = new GiftDescDialog(item.gift_code.id);
-                        dialog.show(getChildFragmentManager(),GiftDescDialog.TAG);
+                        if (dialog != null) dialog.show(getChildFragmentManager(),GiftDescDialog.TAG);
+                        else getDialogDataFromNet(item.gift_code.id,true);
                     }
                     if (v == copy){
                         Utils.copyToClipboard(getContext(),item.gift_code.code);
@@ -246,6 +253,26 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                         Toast.makeText(getContext(), "礼包码已复制到剪贴板！", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+
+            private void getDialogDataFromNet(final int id, final boolean show) {
+                BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
+                Flowable<HttpResultModel<MineGiftInfoResults>> fr = DataService.getMineGiftCodeInfo(new MineGiftInfoRequestBody(id));
+                RxLoadingUtils.subscribe(fr, RxLifecycleAndroid.bindFragment(lifecycleSubject), new Consumer<HttpResultModel<MineGiftInfoResults>>() {
+                    @Override
+                    public void accept(HttpResultModel<MineGiftInfoResults> mineGiftInfoResultsHttpResultModel) throws Exception {
+                        giftInfo = mineGiftInfoResultsHttpResultModel.data;
+                        dialog = new GiftDescDialog(id,giftInfo);
+                        if (show){
+                            dialog.show(getChildFragmentManager(),GiftDescDialog.TAG);
+                        }
+                    }
+                }, new Consumer<NetError>() {
+                    @Override
+                    public void accept(NetError netError) throws Exception {
+                        Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                    }
+                });
             }
         }
     }
