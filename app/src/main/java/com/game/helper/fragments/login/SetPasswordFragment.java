@@ -62,7 +62,7 @@ public class SetPasswordFragment extends XBaseFragment implements View.OnClickLi
     }
 
     private void initView(){
-        mHeadTittle.setText(getResources().getString(R.string.common_about_us));
+        mHeadTittle.setText(getResources().getString(R.string.common_set_password));
         mHeadBack.setOnClickListener(this);
         mPassWord.addOnEditInputListener(this);
         mPassWord1.addOnEditInputListener(this);

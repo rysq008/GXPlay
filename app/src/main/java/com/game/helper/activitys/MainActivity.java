@@ -20,6 +20,7 @@ import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
 import com.game.helper.fragments.MinePagerFragment;
 import com.game.helper.fragments.login.ResetPasswdFragment;
+import com.game.helper.fragments.login.SetPasswordFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.H5UrlListResults;
@@ -166,7 +167,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     }
 
     private void showSetPassWord() {
-        DetailFragmentsActivity.launch(this, null, ResetPasswdFragment.newInstance());
+        DetailFragmentsActivity.launch(this, null, SetPasswordFragment.newInstance());
     }
 
     @Override
@@ -293,6 +294,11 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                 Log.e(TAG, "onCancel: umShare");
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     //注意onActivityResult不可在fragment中实现，如果在fragment中调用登录或分享，需要在fragment依赖的Activity中实现

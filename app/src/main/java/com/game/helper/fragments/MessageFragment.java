@@ -21,6 +21,7 @@ import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.StringUtils;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 
 import java.util.ArrayList;
@@ -307,7 +308,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         private View rootView;
         public View contentView;
         public TextView mTittle;
-        //public TextView mTime;
+        public TextView mTime;
         public TextView mContent;
         public ImageView mArrow;
 
@@ -315,7 +316,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             super(itemView);
             rootView = itemView;
             mTittle = itemView.findViewById(R.id.tv_tittle);
-            //mTime = itemView.findViewById(R.id.tv_time);
+            mTime = itemView.findViewById(R.id.tv_time);
             mContent = itemView.findViewById(R.id.tv_content);
             contentView = itemView.findViewById(R.id.ll_content);
             mArrow = itemView.findViewById(R.id.iv_arrow);
@@ -325,7 +326,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mData.get(position);
             rootView.setOnClickListener(this);
             mTittle.setText(results.title);
-            //mTime.setText(StringUtils.isEmpty(results.create_time) ? "" : results.create_time);
+            mTime.setText(StringUtils.isEmpty(results.create_time) ? "" : results.create_time);
             mContent.setText(results.content);
         }
 

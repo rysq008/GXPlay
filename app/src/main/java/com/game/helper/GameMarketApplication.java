@@ -1,6 +1,7 @@
 package com.game.helper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -19,6 +20,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.uploadlog.UMLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -143,7 +145,7 @@ public class GameMarketApplication extends MultiDexApplication {
             public boolean handleError(NetError error) {
                 if (error.getType() == NetError.AuthError) {
                     TotoroToast.makeText(getApplicationContext(), error.getMessage(), 1).show();
-                    DetailFragmentsActivity.launch(GameMarketApplication.this,null, LoginFragment.newInstance());
+                    DetailFragmentsActivity.launch(GameMarketApplication.this,null, Intent.FLAG_ACTIVITY_NEW_TASK, LoginFragment.newInstance());
                     return true;
                 }
                 return false;

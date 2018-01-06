@@ -146,23 +146,25 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                     } else {
                         getActivity().setResult(RESULT_CANCELED);
                     }
-                    getActivity().onBackPressed();
 
                     if (!loginResultsHttpResultModel.data.has_passwd) {
-                        if (loginDialog == null)
-                            loginDialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", getResources().getString(R.string.common_set_password_hint));
-                        loginDialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
+                        if (loginDialog == null) loginDialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", getResources().getString(R.string.common_set_password_hint));
+                        loginDialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
                         loginDialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
                             @Override
                             public void onCancel() {
+                                getActivity().onBackPressed();
                                 DetailFragmentsActivity.launch(getContext(), null, SetPasswordFragment.newInstance());
                             }
 
                             @Override
                             public void onConfirm() {
+                                getActivity().onBackPressed();
                                 DetailFragmentsActivity.launch(getContext(), null, SetPasswordFragment.newInstance());
                             }
                         });
+                    }else {
+                        getActivity().onBackPressed();
                     }
                 } else {
                     Toast.makeText(getContext(), loginResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
@@ -219,8 +221,8 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         if (v == mGotoRegist) {
             DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
-        if (v == mForgetPasswd) {
-            DetailFragmentsActivity.launch(getContext(), null, ForgetPasswdFragment.newInstance());
+        if (v == mForgetPasswd){
+            DetailFragmentsActivity.launch(getContext(),null,ForgetPasswdFragment.newInstance());
         }
         if (v == mTabMessage) {
             switchLoginType(LOGIN_TYPE_MESSAGE);

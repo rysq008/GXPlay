@@ -47,33 +47,26 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
     /**
      * 使用startActivityForResult的时候，requestCode一定不要大于0xffff(65535)。
      * 如果希望在Fragment的onActivityResult接收数据，就要调用Fragment.startActivityForResult，而不是Fragment.getActivity().startActivityForResult。
-     *
-     * @param from
-     * @param to
-     * @param flag
-     * @param bundle
-     * @param requestCode
      */
     public static void launchForResult(Fragment from, Fragment to, int flag, Bundle bundle, int requestCode) {
         currentFragment = to;
         currentFragment.setArguments(bundle);
-//        .to(DetailFragmentsActivity.class).addFlags(flag).data(bundle).requestCode(requestCode).launch();
         Intent it = new Intent(from.getActivity(), DetailFragmentsActivity.class);
         it.setFlags(flag);
         from.startActivityForResult(it, requestCode, bundle);
     }
 
     public static void launch(Context context, Bundle bundle, final Fragment fra) {
-//        Router.newIntent((Activity) context).to(DetailFragmentsActivity.class).data(bundle).launch();
-        launch(context, bundle, Intent.FLAG_ACTIVITY_NEW_TASK, fra);
+        launch(context, bundle, 0, fra);
     }
 
     public static void launch(Context context, Bundle bundle, int flag, final Fragment fra) {
-//        Router.newIntent((Activity) context).to(DetailFragmentsActivity.class).data(bundle).launch();
         Intent intent = new Intent(context, DetailFragmentsActivity.class);
-        intent.addFlags(flag);
+        if (flag != 0)
+            intent.addFlags(flag);
         currentFragment = fra;
-        currentFragment.setArguments(bundle);
+        if (null != bundle)
+            currentFragment.setArguments(bundle);
         context.startActivity(intent);
     }
 

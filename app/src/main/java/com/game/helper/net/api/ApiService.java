@@ -300,7 +300,7 @@ public interface ApiService {
     //设置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
 
-    @POST("/member/set_trade_password/")
+    @POST("/member/set_passwd/")
         //设置密码
     Flowable<HttpResultModel<NotConcernResults>> setPassword(@Body SetPasswordRequestBody setPasswordRequestBody);
 

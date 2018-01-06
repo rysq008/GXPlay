@@ -104,7 +104,7 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
         mHelp.setOnClickListener(this);
 
         getMarketInfo();
-        memberDescDialog = new MemberDescDialog();
+        getDataFromNet(false);
         list.add(ExtensionProfitItemFragment.newInstance(ExtensionProfitItemFragment.Type_Extension_Gold));
         list.add(ExtensionProfitItemFragment.newInstance(ExtensionProfitItemFragment.Type_Plan_Gold));
         viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
@@ -214,13 +214,37 @@ public class ExtensionProfitFragment extends XBaseFragment implements View.OnCli
         });
     }
 
+    /**
+     * 获取数据
+     */
+    private void getDataFromNet(final boolean show) {
+        BehaviorSubject<FragmentEvent> lifecycleSubject = BehaviorSubject.create();
+        Flowable<HttpResultModel<VipLevelResults>> fr = DataService.getVipLevel();
+        RxLoadingUtils.subscribe(fr, RxLifecycleAndroid.bindFragment(lifecycleSubject), new Consumer<HttpResultModel<VipLevelResults>>() {
+            @Override
+            public void accept(HttpResultModel<VipLevelResults> vipLevelResultsHttpResultModel ) throws Exception {
+                VipLevelResults vipList = vipLevelResultsHttpResultModel.data;
+                memberDescDialog = new MemberDescDialog(vipList);
+                if (show){
+                    memberDescDialog.show(getChildFragmentManager(),MemberDescDialog.TAG);
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         if (v == mHeadBack){
             getActivity().onBackPressed();
         }
         if (v == mHelp){
-            memberDescDialog.show(getChildFragmentManager(),MemberDescDialog.TAG);
+            if (memberDescDialog != null) memberDescDialog.show(getChildFragmentManager(),MemberDescDialog.TAG);
+            else getDataFromNet(true);
         }
     }
 
