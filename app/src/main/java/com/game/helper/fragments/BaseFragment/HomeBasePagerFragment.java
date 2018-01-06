@@ -119,8 +119,8 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         contentLayout.getRecyclerView().setPage(cur_page, total_page);
 //        contentLayout.removeView(contentLayout.getLoadingView());
 //        xStateController.removeView(xStateController.getLoadingView());
-        xStateController.getLoadingView().setVisibility(View.GONE);
-        contentLayout.getLoadingView().setVisibility(View.GONE);
+//        xStateController.getLoadingView().setVisibility(View.GONE);
+//        contentLayout.getLoadingView().setVisibility(View.GONE);
         if (getAdapter().getItemCount() < 1) {
             xStateController.showEmpty();
             contentLayout.showEmpty();

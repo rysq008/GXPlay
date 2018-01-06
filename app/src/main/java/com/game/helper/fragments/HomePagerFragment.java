@@ -73,4 +73,8 @@ public class HomePagerFragment extends HomeBasePagerFragment {
         return new HomePagerFragment();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

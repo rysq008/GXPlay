@@ -296,6 +296,11 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     //注意onActivityResult不可在fragment中实现，如果在fragment中调用登录或分享，需要在fragment依赖的Activity中实现
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
