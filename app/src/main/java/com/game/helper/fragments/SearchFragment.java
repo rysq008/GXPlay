@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.adapters.GameItemAdapter;
-import com.game.helper.adapters.SearchListAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.HotWordResults;
@@ -151,12 +150,17 @@ public class SearchFragment extends XBaseFragment {
             @Override
             public void accept(HttpResultModel<HotWordResults> hotWordResultsHttpResultModel) throws Exception {
                 hotWordList.addAll(hotWordResultsHttpResultModel.data.list);
+                if (Kits.Empty.check(hotWordList)) {
+                    xReloadableStateContorller.showEmpty();
+                    return;
+                }
+                xReloadableStateContorller.showContent();
                 hotFlowlayout.getAdapter().notifyDataChanged();
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-
+                xReloadableStateContorller.showEmpty();
             }
         }, null, false);
 
@@ -178,18 +182,7 @@ public class SearchFragment extends XBaseFragment {
                 list.addAll(searchListResultsHttpResultModel.data.list);
                 showData(searchListResultsHttpResultModel.current_page, searchListResultsHttpResultModel.total_page, list);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-            }
-        }, null, showLoading);
-    }
-
-    public void showError(NetError error) {
-//        xReloadableRecyclerContentLayout.getLoadingView().setVisibility(View.GONE);
-        xReloadableRecyclerContentLayout.refreshState(false);
-//        xReloadableRecyclerContentLayout.showError();
+        }, null, null, showLoading);
     }
 
     public void showData(int cur_page, int total_page, List model) {
@@ -204,9 +197,8 @@ public class SearchFragment extends XBaseFragment {
             xReloadableRecyclerContentLayout.showEmpty();
             return;
         } else {
-//            xReloadableRecyclerContentLayout.showContent();
-//            xReloadableRecyclerContentLayout.getSwipeRefreshLayout().setVisibility(View.VISIBLE);
-//            return;
+            xReloadableRecyclerContentLayout.showContent();
+            return;
         }
     }
 

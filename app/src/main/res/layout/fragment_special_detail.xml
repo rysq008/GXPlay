@@ -11,7 +11,6 @@
     <com.game.helper.views.XReloadableRecyclerContentLayout
         android:id="@+id/xrcl_special_detail"
         android:layout_width="match_parent"
-        app:x_emptyLayoutId="@layout/view_error_state"
         android:layout_height="match_parent"/>
 
 </LinearLayout>

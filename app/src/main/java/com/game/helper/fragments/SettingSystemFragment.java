@@ -19,6 +19,8 @@ import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
+import java.util.concurrent.Executors;
+
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -87,8 +89,13 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
                 if (logoutResultsHttpResultModel.isSucceful()) {
                     SharedPreUtil.clearSessionId();
                     SharedPreUtil.cleanLoginUserInfo();
-                    ILFactory.getLoader().clearDiskCache(context);
                     ILFactory.getLoader().clearMemoryCache(context);
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            ILFactory.getLoader().clearDiskCache(context);
+                        }
+                    });
                     getActivity().onBackPressed();
                 } else {
                     //Toast.makeText(getContext(), logoutResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();

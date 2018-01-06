@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import zlc.season.practicalrecyclerview.ItemType;
-
 /**
  * */
 public class SystemMessageResults extends XBaseModel {
@@ -57,21 +55,12 @@ public class SystemMessageResults extends XBaseModel {
     @SerializedName("list")
     public List<SystemMessageItem> list;
 
-    public static class SystemMessageItem implements ItemType{
+    public static class SystemMessageItem extends XBaseModel {
         public int is_read;
         public int id;
         public String title;
         public String content;
         public String create_time;
         public String type;
-
-        @Override
-        public int itemType() {
-            return 0;
-        }
     }
-    @Override
-    public int itemType() {
-            return 0;
-        }
 }
