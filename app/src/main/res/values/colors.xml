@@ -72,6 +72,7 @@
     <color name="float_transparent">#00000000</color>
 
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorTransWhite">#40FFFFFF</color>
     <color name="colorWhiteDark">#F6F7FB</color>
     <color name="colorWhiteTrans">#f2f2f2</color>
 

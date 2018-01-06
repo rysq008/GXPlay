@@ -237,8 +237,8 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         mCountDownText.setVisibility(message_login ? View.GONE : View.VISIBLE);
         mPassWord.setInputType(message_login ? EditInputView.Type_Password : EditInputView.Type_Code);
         mPassWord.setHintText(getResources().getString(message_login ? R.string.login_hint_password : R.string.login_hint_code));
-        mTabPasswd.setTextColor(getResources().getColor(message_login ? R.color.colorWhite : R.color.colorPrimary));
-        mTabMessage.setTextColor(getResources().getColor(message_login ? R.color.colorPrimary : R.color.colorWhite));
+        mTabPasswd.setTextColor(getResources().getColor(message_login ? R.color.colorWhite : R.color.colorTransWhite));
+        mTabMessage.setTextColor(getResources().getColor(message_login ? R.color.colorTransWhite : R.color.colorWhite));
         mTabPasswd.setSelected(message_login ? true : false);
         mTabMessage.setSelected(message_login ? false : true);
         mIvCode.setImageResource(message_login ? R.mipmap.login_ic_secret : R.mipmap.login_ic_code);
