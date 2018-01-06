@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -29,11 +30,12 @@ import jp.shts.android.library.TriangleLabelView;
  */
 
 public class HotView extends LinearLayout {
+    private static final String TAG = HotView.class.getSimpleName();
 
     @BindView(R.id.hot_item_title_tv)
     TextView textView;
     @BindView(R.id.hot_item_body_recycle)
-    RecyclerView recyclerView;
+    XRecyclerView recyclerView;
 
     public HotView(Context context) {
         super(context);
@@ -53,15 +55,16 @@ public class HotView extends LinearLayout {
     public void setupView(Context context) {
         inflate(context, R.layout.activity_hot_item_layout, this);
         ButterKnife.bind(this);
-    }
-
-    public void setData(final HotResults data) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
         //recyclerView.setHasFixedSize(true);
+        //recyclerView.horizontalDivider(R.color.white,R.dimen.dp_0);
+        recyclerView.verticalDivider(R.color.white,R.dimen.dp_20);//设置divider
+    }
+
+    public void setData(final HotResults data) {
         recyclerView.setAdapter(new HotAdapter(data));
-        //recyclerView.verticalDivider(R.color.white,R.dimen.dp_20);//设置divider
 
     }
 

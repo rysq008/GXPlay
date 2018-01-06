@@ -92,7 +92,7 @@ public class HomeItemAdapter extends SimpleRecAdapter<ItemType, HomeItemAdapter.
                             ((SpecialView) entry.getValue()).setData((SpecialResults) itemType);
                             break;
                         case RxConstant.HomeModeType.Hot_Model_Type:
-                            ((HotView) entry.getValue()).setData((HotResults) itemType);
+                            ((HotView) entry.getValue()). setData((HotResults) itemType);
                             break;
                         case RxConstant.HomeModeType.Recommend_Model_Type:
                             ((RecommendView) entry.getValue()).setData((RecommendResults.RecommendItem) itemType);
