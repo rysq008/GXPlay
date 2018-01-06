@@ -47,7 +47,7 @@ public class RangeFriendListFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         initAdapter();
         errorView.setLoadDataType(StateView.REFRESH, 1);
-        loadGmaeAdapterData(1);
+        fetchFriendRangeData(1);
     }
 
     private void initAdapter() {
@@ -60,13 +60,13 @@ public class RangeFriendListFragment extends XBaseFragment {
             @Override
             public void onRefresh() {
                 errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadGmaeAdapterData(1);
+                fetchFriendRangeData(1);
             }
 
             @Override
             public void onLoadMore(int page) {
                 errorView.setLoadDataType(StateView.LOADMORE, page);
-                loadGmaeAdapterData(page);
+                fetchFriendRangeData(page);
             }
         });
 
@@ -115,7 +115,7 @@ public class RangeFriendListFragment extends XBaseFragment {
         }
     }
 
-    public void loadGmaeAdapterData(int page) {
+    public void fetchFriendRangeData(int page) {
         Flowable<HttpResultModel<FriendRangeResultModel>> fr = DataService.getFriendRank(new FriendRangeRequestBody(page));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FriendRangeResultModel>>() {
             @Override

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.fragments.RangeConsumeListFragment;
 import com.game.helper.fragments.RangeFriendListFragment;
 import com.game.helper.fragments.RangeIncomeListFragment;
 
@@ -51,7 +52,7 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
     }
 
     private void init() {
-        fragments.add(RangeFriendListFragment.newInstance());
+        fragments.add(RangeConsumeListFragment.newInstance());
         fragments.add(RangeFriendListFragment.newInstance());
         fragments.add(RangeIncomeListFragment.newInstance());
 
@@ -77,17 +78,17 @@ public class RankingListActivity extends XBaseActivity implements View.OnClickLi
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_select);
+                        superStarIv.setBackgroundResource(R.mipmap.bg_consume_select);
                         renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
                         incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
                         break;
                     case 1:
-                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
+                        superStarIv.setBackgroundResource(R.mipmap.bg_consume_unselect);
                         renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_select);
                         incomeIv.setBackgroundResource(R.mipmap.bg_income_unselect);
                         break;
                     case 2:
-                        superStarIv.setBackgroundResource(R.mipmap.bg_mingxing_unselect);
+                        superStarIv.setBackgroundResource(R.mipmap.bg_consume_unselect);
                         renmaiIv.setBackgroundResource(R.mipmap.bg_renmai_unselect);
                         incomeIv.setBackgroundResource(R.mipmap.bg_income_select);
                         break;

@@ -12,9 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.game.helper.event.BusProvider;
-import com.game.helper.event.MsgEvent;
-
-import zlc.season.rxdownload2.entity.DownloadFlag;
 
 import static com.makeramen.roundedimageview.RoundedImageView.TAG;
 
@@ -26,7 +23,7 @@ public class AppInnerReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
             String packageName = intent.getData().getSchemeSpecificPart();
             Toast.makeText(context, "安装成功" + packageName, Toast.LENGTH_LONG).show();
-            BusProvider.getBus().post(new MsgEvent<>(DownloadFlag.INSTALLED, DownloadFlag.INSTALLED, packageName));
+//            BusProvider.getBus().post(new MsgEvent<>(DownloadFlag.INSTALLED, DownloadFlag.INSTALLED, packageName));
         } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
             String packageName = intent.getData().getSchemeSpecificPart();
             Toast.makeText(context, "卸载成功" + packageName, Toast.LENGTH_LONG).show();

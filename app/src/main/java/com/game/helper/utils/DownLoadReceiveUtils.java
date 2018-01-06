@@ -2,8 +2,6 @@ package com.game.helper.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
@@ -44,8 +42,7 @@ public class DownLoadReceiveUtils {
         public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable);
     }
 
-    public static void receiveDownloadEvent(final Context context, final String url, Disposable disposable, final DownloadController controller, final OnDownloadEventReceiveListener receive) {
-
+    public static Disposable receiveDownloadEvent(final Context context, final String url, final String pkg, final DownloadController controller, final OnDownloadEventReceiveListener receive) {
         Observable<DownloadEvent> replayDownloadStatus = RxDownload.getInstance(context).receiveDownloadStatus(url)
                 .replay()
                 .autoConnect();
@@ -64,7 +61,7 @@ public class DownLoadReceiveUtils {
                         return downloadEvent.getFlag() != DownloadFlag.STARTED;
                     }
                 });
-        disposable = Observable.merge(sampled, noProgress)
+        return Observable.merge(sampled, noProgress)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DownloadEvent>() {
                     @Override
@@ -83,8 +80,8 @@ public class DownLoadReceiveUtils {
                             File[] files = RxDownload.getInstance(context).getRealFiles(url);
                             if (files != null) {
                                 if (files[0].exists()) {
-                                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(files[0].getPath(), PackageManager.GET_ACTIVITIES);
-                                    if (Utils.isAppInstalled(context, info.applicationInfo.packageName)) {
+//                                    PackageInfo info = context.getPackageManager().getPackageArchiveInfo(files[0].getPath(), PackageManager.GET_ACTIVITIES);
+                                    if (Utils.isAppInstalled(context, pkg/*info.applicationInfo.packageName*/)) {
                                         downloadEvent.setFlag(DownloadFlag.INSTALLED);
                                     } else {
                                         downloadEvent.setFlag(DownloadFlag.COMPLETED);
@@ -98,10 +95,10 @@ public class DownLoadReceiveUtils {
                                     }
 //                                    dispose(disposable);
                                 } else {
-                                    DataBaseHelper.getSingleton(context).deleteRecord(url);
+                                    DataBaseHelper.getSingleton(context.getApplicationContext()).deleteRecord(url);
                                     downloadEvent.setFlag(DownloadFlag.NORMAL);
                                     controller.setEvent(downloadEvent);
-                                    downloadEvent.setDownloadStatus(DataBaseHelper.getSingleton(context).readStatus(url));
+                                    downloadEvent.setDownloadStatus(DataBaseHelper.getSingleton(context.getApplicationContext()).readStatus(url));
                                     if (null != receive) {
                                         receive.receiveDownloadEvent(downloadEvent, false);
 //                                        updateProgressStatus(downloadEvent.getDownloadStatus());
@@ -113,10 +110,10 @@ public class DownLoadReceiveUtils {
                 });
     }
 
-    public static void installApk(Context context, RxDownload rxDownload, String url) {
-        if (Kits.Empty.check(context) || Kits.Empty.check(rxDownload) || Kits.Empty.check(url))
+    public static void installApk(Context context, String url) {
+        if (Kits.Empty.check(context) || Kits.Empty.check(url))
             return;
-        File[] files = rxDownload.getRealFiles(url);
+        File[] files = RxDownload.getInstance(context).getRealFiles(url);
         if (files != null) {
             Uri uri = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -134,7 +131,8 @@ public class DownLoadReceiveUtils {
         }
     }
 
-    public static void startDownload(final Context context, RxDownload rxDownload, RxPermissions rxPermissions, DownloadBean downloadBean) {
+    public static void startDownload(final Context context, RxPermissions rxPermissions, DownloadBean downloadBean) {
+        if (Kits.Empty.check(downloadBean)) return;
         rxPermissions
                 .request(WRITE_EXTERNAL_STORAGE)
                 .doOnNext(new Consumer<Boolean>() {
@@ -145,7 +143,7 @@ public class DownLoadReceiveUtils {
                         }
                     }
                 })
-                .compose(rxDownload.<Boolean>transformService(downloadBean))
+                .compose(RxDownload.getInstance(context).<Boolean>transformService(downloadBean))
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
@@ -154,7 +152,8 @@ public class DownLoadReceiveUtils {
                 });
     }
 
-    public static void startDownload(final Context context, RxDownload rxDownload, RxPermissions rxPermissions, DownloadItem downloadItem) {
+    public static void startDownload(final Context context, RxPermissions rxPermissions, DownloadItem downloadItem) {
+        if (Kits.Empty.check(downloadItem)) return;
         rxPermissions
                 .request(WRITE_EXTERNAL_STORAGE)
                 .doOnNext(new Consumer<Boolean>() {
@@ -165,7 +164,7 @@ public class DownLoadReceiveUtils {
                         }
                     }
                 })
-                .compose(rxDownload.<Boolean>transformService(downloadItem.record.getUrl()))
+                .compose(RxDownload.getInstance(context).<Boolean>transformService(downloadItem.record.getUrl()))
                 .subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
@@ -175,13 +174,15 @@ public class DownLoadReceiveUtils {
 
     }
 
-    public static void pauseDownload(RxDownload rxDownload, String url) {
-        rxDownload.pauseServiceDownload(url).subscribe();
+    public static void pauseDownload(Context context, String url) {
+        if (Kits.Empty.check(url)) return;
+        RxDownload.getInstance(context).pauseServiceDownload(url).subscribe();
     }
 
-    public static void deleteDownload(RxDownload rxDownload, Disposable disposable, String url, final OnDownloadEventReceiveListener listener) {
+    public static void deleteDownload(Context context, Disposable disposable, String url, final OnDownloadEventReceiveListener listener) {
+        if (Kits.Empty.check(url)) return;
         dispose(disposable);
-        rxDownload.deleteServiceDownload(url, true)
+        RxDownload.getInstance(context).deleteServiceDownload(url, true)
                 .doFinally(new Action() {
                     @Override
                     public void run() throws Exception {
@@ -193,6 +194,12 @@ public class DownLoadReceiveUtils {
                 })
                 .subscribe();
 
+    }
+
+    public static void openApp(Context context, String pkg) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(pkg);
+        if (null != intent)
+            context.startActivity(intent);
     }
 
     public static void showPopUpWindow(Context mContext, View view) {

@@ -44,12 +44,8 @@ public class GamePackageListResult extends XBaseModel {
         private String path;
         private int id;
         private ChannelBean channel;
-        private String saveName;
         public Disposable disposable;
 
-        public void setSaveName(String saveName) {
-            this.saveName = saveName;
-        }
 
         public float getDiscount_vip() {
             return discount_vip;
@@ -100,26 +96,11 @@ public class GamePackageListResult extends XBaseModel {
         }
 
         public String getPath() {
-            return path = "https://qd.myapp.com/myapp/qqteam/AndroidQQ/mobileqq_android.apk";
+            return path;
         }
 
         public void setPath(String path) {
             this.path = path;
-            this.saveName = getSaveNameByUrl(path);
-        }
-
-        /**
-         * 截取Url最后一段作为文件保存名称
-         *
-         * @param url url
-         * @return saveName
-         */
-        private String getSaveNameByUrl(String url) {
-            return url.substring(url.lastIndexOf('/') + 1);
-        }
-
-        public String getSaveName() {
-            return saveName;
         }
 
         public int getId() {

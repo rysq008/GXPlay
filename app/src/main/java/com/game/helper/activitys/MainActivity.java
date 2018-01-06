@@ -28,8 +28,11 @@ import com.game.helper.model.LoginUserInfo;
 import com.game.helper.net.DataService;
 import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.CustomBadgeItem;
+import com.hyphenate.chat.ChatClient;
+import com.hyphenate.helpdesk.callback.Callback;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -125,7 +128,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                 .setBackgroundColor(Color.TRANSPARENT);// Badge背景颜色
 //        if (null != agentTaskCollect)
         {
-            n = 9;
+            n = 0;
             if (n > 0) {
                 numberBadgeItem.setBorderWidth(0)// Badge的Border(边界)宽度
                         .setBorderColor(getResources().getColor(R.color.colorOrangeDepth))// Badge的Border颜色
@@ -242,9 +245,13 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                     String market_url = h5UrlListResultsHttpResultModel.data.getMarket_url();
                     String vip_url = h5UrlListResultsHttpResultModel.data.getVip_url();
                     String account_guide_url = h5UrlListResultsHttpResultModel.data.getAccount_guide_url();
+                    String expected_url = h5UrlListResultsHttpResultModel.data.getExpected_url();
+                    String share_discount_url = h5UrlListResultsHttpResultModel.data.getShare_discount_url();
                     SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_MARKET, market_url);
                     SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_VIP, vip_url);
                     SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_ACCOUNT_GUIDE, account_guide_url);
+                    SharedPreUtil.saveH5Url(SharedPreUtil.EXPECTED_URL, expected_url);
+                    SharedPreUtil.saveH5Url(SharedPreUtil.SHARE_DISCOUNT_URL, share_discount_url);
                 }
             }
         }, new Consumer<NetError>() {
@@ -294,5 +301,32 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!SharedPreUtil.isLogin()) {
+            //第一个参数为是否解绑推送的devicetoken
+            ChatClient.getInstance().logout(true, new Callback() {
+                @Override
+                public void onSuccess() {
+                    SPUtils.remove(context, SPUtils.TEMP_HUANXIN_NAME);
+                    Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
+
+                }
+
+                @Override
+                public void onError(int i, String s) {
+                    Log.d(TAG, "退出失败s-----" + s);
+                }
+
+                @Override
+                public void onProgress(int i, String s) {
+
+                }
+            });
+        }
+
     }
 }

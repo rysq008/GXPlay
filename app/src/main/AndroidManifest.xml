@@ -125,8 +125,8 @@
         <activity
             android:name=".activitys.DetailFragmentsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/activityTheme02" />
+            android:theme="@style/activityTheme02"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver
             android:name=".utils.AppInnerReceiver"
@@ -175,7 +175,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.game.helper.fileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -197,6 +197,10 @@
             android:theme="@style/activityTheme02" />
         <activity
             android:name=".activitys.GameDetailAddAccountActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/activityTheme02" />
+        <activity
+            android:name=".activitys.HuanxinKefuLoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/activityTheme02" />
     </application>

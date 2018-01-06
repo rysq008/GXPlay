@@ -1,5 +1,6 @@
 package com.game.helper.fragments;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.activitys.HuanxinKefuLoginActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
@@ -29,7 +31,6 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.api.Api;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
@@ -37,8 +38,6 @@ import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.imageloader.ILFactory;
-import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -143,43 +142,43 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
             DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
         if (v == mLogin) {
-            DetailFragmentsActivity.launch(getContext(),null, LoginFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), null, LoginFragment.newInstance());
         }
         if (v == mEditUserInfo || v == mAvatar) {
-            DetailFragmentsActivity.launch(getContext(),null,SettingUserFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), null, SettingUserFragment.newInstance());
         }
-        if (v == mWallet){
+        if (v == mWallet) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(WalletFragment.TAG,userInfo);
-            DetailFragmentsActivity.launch(getContext(),bundle, WalletFragment.newInstance());
+            bundle.putSerializable(WalletFragment.TAG, userInfo);
+            DetailFragmentsActivity.launch(getContext(), bundle, WalletFragment.newInstance());
         }
         if (v == mMineGame) {
-            DetailFragmentsActivity.launch(getContext(),null, MineGameFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), null, MineGameFragment.newInstance());
         }
         if (v == mMineGift) {
-            DetailFragmentsActivity.launch(getContext(),null, MineGiftFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), null, MineGiftFragment.newInstance());
         }
         if (v == mMineOrder) {
-            DetailFragmentsActivity.launch(getContext(),null, MineOrderFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), null, MineOrderFragment.newInstance());
         }
         if (v == mMineVip) {
-            DetailFragmentsActivity.launch(getContext(),null, CouponFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), null, CouponFragment.newInstance());
         }
-        if (v == mRecharge){
+        if (v == mRecharge) {
             Bundle bundle = new Bundle();
-            bundle.putString(RechargeFragment.TAG,userInfo.vip_level.level);
+            bundle.putString(RechargeFragment.TAG, userInfo.vip_level.level);
             RechargeFragment rechargeFragment = RechargeFragment.newInstance();
             rechargeFragment.setArguments(bundle);
-            DetailFragmentsActivity.launch(getContext(),bundle, rechargeFragment);
+            DetailFragmentsActivity.launch(getContext(), bundle, rechargeFragment);
         }
-        if (v == mMessage){
-            DetailFragmentsActivity.launch(getContext(),null, MessageFragment.newInstance());
+        if (v == mMessage) {
+            DetailFragmentsActivity.launch(getContext(), null, MessageFragment.newInstance());
         }
-        if (v == mVip){
+        if (v == mVip) {
             Bundle bundle = new Bundle();
-            bundle.putString(WebviewFragment.PARAM_TITLE,"VIP");
+            bundle.putString(WebviewFragment.PARAM_TITLE, "VIP");
             bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
-            DetailFragmentsActivity.launch(getContext(),bundle,WebviewFragment.newInstance());
+            DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
         }
     }
 
@@ -216,6 +215,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                 R.mipmap.ic_mine_tuiguang,
                 R.mipmap.ic_mine_kefu,
                 R.mipmap.ic_mine_kefu,
+                R.mipmap.ic_mine_kefu,
                 R.mipmap.ic_mine_fankui,
                 R.mipmap.ic_mine_setting};
         resName = new int[]{
@@ -223,6 +223,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                 R.string.mine_name_1,
                 R.string.mine_name_2,
                 R.string.mine_name_5,
+                R.string.mine_name_6,
                 R.string.mine_name_3,
                 R.string.mine_name_4};
     }
@@ -322,6 +323,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                         break;
                     case R.string.mine_name_2:
                         enable_click = false;
+                        Intent kefuIntent = new Intent(context, HuanxinKefuLoginActivity.class);
+                        startActivity(kefuIntent);
                         break;
                     case R.string.mine_name_3:
                         fra = FeedBackFragment.newInstance();
@@ -331,6 +334,9 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                         break;
                     case R.string.mine_name_5:
                         fra = AccountManageFragment.newInstance();
+                        break;
+                    case R.string.mine_name_6:
+                        fra = DownloadManageFragment.newInstance();
                         break;
                 }
                 if (fra != null) {

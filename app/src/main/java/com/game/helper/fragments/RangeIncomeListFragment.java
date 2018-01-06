@@ -47,7 +47,7 @@ public class RangeIncomeListFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         initAdapter();
         errorView.setLoadDataType(StateView.REFRESH, 1);
-        loadGmaeAdapterData(1);
+        fetchIncomeRangeData(1);
     }
 
     private void initAdapter() {
@@ -60,13 +60,13 @@ public class RangeIncomeListFragment extends XBaseFragment {
             @Override
             public void onRefresh() {
                 errorView.setLoadDataType(StateView.REFRESH, 1);
-                loadGmaeAdapterData(1);
+                fetchIncomeRangeData(1);
             }
 
             @Override
             public void onLoadMore(int page) {
                 errorView.setLoadDataType(StateView.LOADMORE, page);
-                loadGmaeAdapterData(page);
+                fetchIncomeRangeData(page);
             }
         });
 
@@ -88,7 +88,6 @@ public class RangeIncomeListFragment extends XBaseFragment {
 
         xRecyclerContentLayout.loadingView(loadingView);
         xRecyclerContentLayout.showLoading();
-
     }
 
     public void showError(NetError error) {
@@ -116,7 +115,7 @@ public class RangeIncomeListFragment extends XBaseFragment {
         }
     }
 
-    public void loadGmaeAdapterData(int page) {
+    public void fetchIncomeRangeData(int page) {
         Flowable<HttpResultModel<FriendRangeResultModel>> fr = DataService.getIncomeRank(new FriendRangeRequestBody(page));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FriendRangeResultModel>>() {
             @Override

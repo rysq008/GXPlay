@@ -50,7 +50,7 @@ public class XReloadableStateContorller extends XStateController {
 //        if (getLoadingView() != null) {
 //            setDisplayState(STATE_LOADING);
 //        } else {
-//        setDisplayState(STATE_LOADING);
+        setDisplayState(STATE_LOADING);
 //        }
     }
 
@@ -62,9 +62,9 @@ public class XReloadableStateContorller extends XStateController {
                 @Override
                 public void onClick(View v) {
                     if (XReloadableStateContorller.this.onReloadListener != null) {
-//                        if (null == getLoadingView()) {
-//                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
-//                        }
+                        if (null == getLoadingView()) {
+                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+                        }
 //                        if (null == getEmptyView()) {
 //                            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
 //                        }
@@ -84,9 +84,9 @@ public class XReloadableStateContorller extends XStateController {
                 @Override
                 public void onClick(View v) {
                     if (XReloadableStateContorller.this.onReloadListener != null) {
-//                        if (null == getLoadingView()) {
-//                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
-//                        }
+                        if (null == getLoadingView()) {
+                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+                        }
 //                        if (null == getEmptyView()) {
 //                            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
 //                        }
@@ -95,7 +95,7 @@ public class XReloadableStateContorller extends XStateController {
                     }
                 }
             });
-        }else{
+        } else {
             return;
         }
         super.showEmpty();

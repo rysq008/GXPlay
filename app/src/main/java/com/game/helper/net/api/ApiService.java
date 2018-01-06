@@ -1,7 +1,5 @@
 package com.game.helper.net.api;
 
-import android.icu.util.VersionInfo;
-
 import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
@@ -15,6 +13,7 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
+import com.game.helper.model.EasemobAccountResults;
 import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
@@ -46,7 +45,7 @@ import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
-import com.game.helper.model.SystemMessageResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
@@ -57,7 +56,7 @@ import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
-import com.game.helper.model.PlatformMessageResults;
+import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
@@ -480,7 +479,14 @@ public interface ApiService {
     @POST("/member/calculate_upgrade_vip/")
     Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(@Body VIPUpGradfeRequestBody vipUpGradfeRequestBody);
 
+    //获取环信账号接口
+    @POST("/member/get_easemob_account/")
+    Flowable<HttpResultModel<EasemobAccountResults>> getEasemobIM();
+
     @POST("/sys/get_version_list/")
     Flowable<HttpResultModel<VersionInfoResults>> getVersionInfo();
+
+    @POST("/account/get_consume_rank/")
+    Flowable<HttpResultModel<FriendRangeResultModel>> getRangeConsume(@Body FriendRangeRequestBody payRequestBody);
 
 }

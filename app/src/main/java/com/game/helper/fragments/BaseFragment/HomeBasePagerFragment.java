@@ -2,13 +2,15 @@ package com.game.helper.fragments.BaseFragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.DownloadManageFragment;
 import com.game.helper.present.HomeFragmentPresent;
 import com.game.helper.views.SearchComponentView;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.XReloadableStateContorller;
-import com.game.helper.views.widget.StateView;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.List;
@@ -31,7 +33,6 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
     @BindView(R.id.common_search_view)
     SearchComponentView searchComponentView;
 
-    protected static final int MAX_PAGE = 10;
     private ObjectAnimator mAnimator;
     private boolean mShow = true;
 
@@ -80,6 +81,12 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
             }
         });
 
+        searchComponentView.setRightViewOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DetailFragmentsActivity.launch(context, null, DownloadManageFragment.newInstance());
+            }
+        });
     }
 
     private void animToolBar(int flag) {
@@ -112,6 +119,8 @@ public abstract class HomeBasePagerFragment extends XBaseFragment<HomeFragmentPr
         contentLayout.getRecyclerView().setPage(cur_page, total_page);
 //        contentLayout.removeView(contentLayout.getLoadingView());
 //        xStateController.removeView(xStateController.getLoadingView());
+        xStateController.getLoadingView().setVisibility(View.GONE);
+        contentLayout.getLoadingView().setVisibility(View.GONE);
         if (getAdapter().getItemCount() < 1) {
             xStateController.showEmpty();
             contentLayout.showEmpty();

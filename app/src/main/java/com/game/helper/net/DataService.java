@@ -13,6 +13,7 @@ import com.game.helper.model.CommonResults;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.DeleteMineGiftResults;
+import com.game.helper.model.EasemobAccountResults;
 import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.FriendRangeResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
@@ -44,7 +45,7 @@ import com.game.helper.model.MineGiftlistResults;
 import com.game.helper.model.MineOrderlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.NoticeResults;
-import com.game.helper.model.SystemMessageResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.ProfitListResults;
 import com.game.helper.model.RechargeListResults;
 import com.game.helper.model.RecommendResults;
@@ -55,7 +56,7 @@ import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
-import com.game.helper.model.PlatformMessageResults;
+import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
@@ -497,7 +498,16 @@ public class DataService {
         return Api.CreateApiService().getVIPUpGradeCost(vipUpGradfeRequestBody);
     }
 
+    public static Flowable<HttpResultModel<EasemobAccountResults>> getEasemobIM() {
+        return Api.CreateApiService().getEasemobIM();
+    }
+
     public static Flowable<HttpResultModel<VersionInfoResults>> getVersionInfo() {
         return Api.CreateApiService().getVersionInfo();
     }
+
+    public static Flowable<HttpResultModel<FriendRangeResultModel>> getRangeConsume(FriendRangeRequestBody friendRangeRequestBody) {
+        return Api.CreateApiService().getRangeConsume(friendRangeRequestBody);
+    }
+
 }

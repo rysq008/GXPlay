@@ -11,23 +11,23 @@
         android:background="@color/colorWhite"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10">
-
-        <TextView
-            android:id="@+id/activity_notice_item_tv"
+        android:paddingRight="@dimen/dp_10"
+        android:orientation="horizontal">
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/ic_home_notice"
-            android:drawablePadding="5dp"
-            android:text="王者荣耀比赛季"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/text_size_medium" />
-
+            android:src="@mipmap/ic_home_notice"
+            android:layout_marginRight="@dimen/margin_5"/>
         <ViewFlipper
             android:id="@+id/activity_notice_item_vflipper"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_notice_view_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_medium" />
+        </ViewFlipper>
     </LinearLayout>
 
     <LinearLayout

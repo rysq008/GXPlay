@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.model.DownLoad.DownloadController;
@@ -22,7 +21,6 @@ import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
-import io.reactivex.functions.Consumer;
 import zlc.season.practicalrecyclerview.ItemType;
 import zlc.season.rxdownload2.RxDownload;
 import zlc.season.rxdownload2.db.DataBaseHelper;
@@ -30,7 +28,6 @@ import zlc.season.rxdownload2.entity.DownloadBean;
 import zlc.season.rxdownload2.entity.DownloadEvent;
 import zlc.season.rxdownload2.entity.DownloadStatus;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static zlc.season.rxdownload2.function.Utils.dispose;
 
 /**
@@ -95,6 +92,8 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         ProgressBar pbChannel;
         @BindView(R.id.btn_channel_list_load)
         Button ivChannelListLoad;
+        @BindView(R.id.tv_channel_list_package_plat)
+        TextView tvChannelPlat;
 
         private DownloadBean downloadBean;
         private int flag;
@@ -116,6 +115,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
             tvTypeName.setText(itemDate.getGame().getType().getName());
             tvPackageFilesize.setText(String.valueOf(itemDate.getFilesize()) + "M");
             tvtSource.setText(itemDate.getChannel().getName());
+            tvChannelPlat.setText(itemDate.getChannel().getName());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -136,6 +136,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                     .setSavePath(null)      //not need
                     .setExtra1(itemDate.getGame().getLogo())   //save extra info into database.
                     .setExtra2(itemDate.getGame().getName())  //save extra info into database.
+                    .setExtra3(itemDate.getName_package())
                     .build();
 //            Utils.dispose(mData.disposable);
 //            Observable<DownloadEvent> replayDownloadStatus = mRxDownload.receiveDownloadStatus(itemDate.getPath())
@@ -199,7 +200,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
 //                            }
 //                        }
 //                    });
-            DownLoadReceiveUtils.receiveDownloadEvent(context, mData.getPath(), mData.disposable, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+            mData.disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, mData.getPath(), mData.getName_package(), mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
                 @Override
                 public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
                     updateProgressStatus(event.getDownloadStatus());
@@ -215,7 +216,8 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
             pbChannel.setMax((int) status.getTotalSize());
             pbChannel.setProgress((int) status.getDownloadSize());
             mPercent.setText(status.getPercent());
-            mSize.setText(status.getFormatStatusString());
+            if (status.getDownloadSize() > 0 && status.getTotalSize() > 0)
+                mSize.setText(status.getFormatStatusString());
         }
 
         @OnClick(R.id.btn_channel_list_load)
@@ -223,12 +225,12 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
             mDownloadController.handleClick(new DownloadController.Callback() {
                 @Override
                 public void startDownload() {
-                    DownLoadReceiveUtils.startDownload(context,mRxDownload,rxPermissions,downloadBean);
+                    DownLoadReceiveUtils.startDownload(context, rxPermissions, downloadBean);
                 }
 
                 @Override
                 public void pauseDownload() {
-                    DownLoadReceiveUtils.pauseDownload(mRxDownload,mData.getPath());
+                    DownLoadReceiveUtils.pauseDownload(context, mData.getPath());
                 }
 
                 @Override
@@ -237,18 +239,15 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
 
                 @Override
                 public void installApk() {
-                    DownLoadReceiveUtils.installApk(context,mRxDownload,mData.getPath());
+                    DownLoadReceiveUtils.installApk(context, mData.getPath());
                 }
 
                 @Override
                 public void openApp() {
-                    //Intent intent = context.getPackageManager().getLaunchIntentForPackage()
-                    open();
+                    DownLoadReceiveUtils.openApp(context, mData.getName_package());
                 }
             });
         }
-        private void open() {
-            Toast.makeText(context, "open", Toast.LENGTH_LONG).show();
-        }
+        
     }
 }

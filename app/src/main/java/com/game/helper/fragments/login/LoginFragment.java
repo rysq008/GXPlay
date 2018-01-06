@@ -23,17 +23,23 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
+import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.EditInputView;
 import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.widget.CountDownText;
+import com.hyphenate.chat.ChatClient;
+import com.hyphenate.helpdesk.callback.Callback;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -130,8 +136,15 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                 if (loginResultsHttpResultModel.isSucceful()) {
                     LoginUserInfo userInfo = new LoginUserInfo(loginResultsHttpResultModel.data);
                     SharedPreUtil.saveLoginUserInfo(userInfo);
+                    logoutTempAccount();
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginSuccessful(userInfo);
+                    }
+
+                    if (!Kits.Empty.check(SharedPreUtil.getSessionId())) {
+                        getActivity().setResult(RESULT_OK);
+                    } else {
+                        getActivity().setResult(RESULT_CANCELED);
                     }
 
                     if (!loginResultsHttpResultModel.data.has_passwd) {
@@ -259,5 +272,26 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
 
     public void addOnRegistListener(onLoginListener onLoginListener) {
         mOnLoginListener = onLoginListener;
+    }
+
+
+    private void logoutTempAccount() {
+        ChatClient.getInstance().logout(true, new Callback() {
+            @Override
+            public void onSuccess() {
+                SPUtils.remove(context, SPUtils.TEMP_HUANXIN_NAME);
+                Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
+            }
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onProgress(int i, String s) {
+
+            }
+        });
     }
 }

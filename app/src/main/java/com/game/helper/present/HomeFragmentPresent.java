@@ -7,12 +7,14 @@ import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.H5Results;
 import com.game.helper.model.HotResults;
 import com.game.helper.model.NoticeResults;
+import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
+import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
 import com.game.helper.views.XReloadableStateContorller;
@@ -32,16 +34,17 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
 
     public void onRefreshData(XReloadableStateContorller reloadableStateContorller, boolean showLoading) {
         Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(1));
-        Flowable<HttpResultModel<NoticeResults>> fn = DataService.getHomeNotice();
+        //Flowable<HttpResultModel<NoticeResults>> fn = DataService.getHomeNotice();
+        Flowable<HttpResultModel<PlatformMessageResults>> fn = DataService.getPlatformMessage(new SinglePageRequestBody(1));
         Flowable<HttpResultModel<H5Results>> f5 = DataService.getH5Data();
         Flowable<HttpResultModel<SpecialResults>> fs = DataService.getHomeSpecial(new BaseRequestBody(1));
         Flowable<HttpResultModel<HotResults>> fh = DataService.getHomeHot(new RecommendRequestBody(1, 0, 0));
         Flowable<HttpResultModel<RecommendResults>> fr = DataService.getHomeRecommend((new BaseRequestBody(1)));
 
 
-        final Flowable<HomeAllResultsData> fa = Flowable.zip(fb, fn, f5, fs, fh, fr, new Function6<HttpResultModel<BannerResults>, HttpResultModel<NoticeResults>, HttpResultModel<H5Results>, HttpResultModel<SpecialResults>, HttpResultModel<HotResults>, HttpResultModel<RecommendResults>, HomeAllResultsData>() {
+        final Flowable<HomeAllResultsData> fa = Flowable.zip(fb, fn, f5, fs, fh, fr, new Function6<HttpResultModel<BannerResults>, HttpResultModel<PlatformMessageResults>, HttpResultModel<H5Results>, HttpResultModel<SpecialResults>, HttpResultModel<HotResults>, HttpResultModel<RecommendResults>, HomeAllResultsData>() {
             @Override
-            public HomeAllResultsData apply(HttpResultModel<BannerResults> bannerResults, HttpResultModel<NoticeResults> noticeResults, HttpResultModel<H5Results> h5Results, HttpResultModel<SpecialResults> specialResults, HttpResultModel<HotResults> hotResults, HttpResultModel<RecommendResults> recommendResults) throws Exception {
+            public HomeAllResultsData apply(HttpResultModel<BannerResults> bannerResults, HttpResultModel<PlatformMessageResults> platformMessageResults, HttpResultModel<H5Results> h5Results, HttpResultModel<SpecialResults> specialResults, HttpResultModel<HotResults> hotResults, HttpResultModel<RecommendResults> recommendResults) throws Exception {
 //                if (bannerResults.data.isNull()) {
 //                    Flowable.error(new NetError("fetch bannerResults failed", NetError.NoDataError));
 ////                    throw new NetError("fetch invitePageQrcode failed", NetError.NoDataError);
@@ -59,7 +62,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
 //                    Flowable.error(new NetError("fetch recommendResults failed", NetError.NoDataError));
 //                }
                 mXBaseModel = recommendResults;
-                HomeAllResultsData homeAllResultsData = new HomeAllResultsData(bannerResults.data, noticeResults.data, h5Results.data, specialResults.data, hotResults.data, recommendResults.data);
+                HomeAllResultsData homeAllResultsData = new HomeAllResultsData(bannerResults.data, platformMessageResults.data, h5Results.data, specialResults.data, hotResults.data, recommendResults.data);
                 return homeAllResultsData;
             }
         });
@@ -69,7 +72,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
             public void accept(HomeAllResultsData homeAllResultsData) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.add(homeAllResultsData.bannerResults);
-                list.add(homeAllResultsData.noticeResults);
+                list.add(homeAllResultsData.platformMessageResults);
                 list.add(homeAllResultsData.specialResults);
                 list.add(homeAllResultsData.hotResults);
                 list.addAll(homeAllResultsData.recommendResults.list);
@@ -101,17 +104,18 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
     public class HomeAllResultsData extends XBaseModel {
 
         BannerResults bannerResults;
-        NoticeResults noticeResults;
+        //NoticeResults noticeResults;
         H5Results h5Results;
         SpecialResults specialResults;
         HotResults hotResults;
         RecommendResults recommendResults;
+        PlatformMessageResults platformMessageResults;
 
-        public HomeAllResultsData(BannerResults bannerResults, NoticeResults noticeResults, H5Results h5Results, SpecialResults specialResults, HotResults hotResults, RecommendResults recommendResults) {
+        public HomeAllResultsData(BannerResults bannerResults, PlatformMessageResults platformMessageResults, H5Results h5Results, SpecialResults specialResults, HotResults hotResults, RecommendResults recommendResults) {
             this.bannerResults = bannerResults;
-            this.noticeResults = noticeResults;
+            this.platformMessageResults = platformMessageResults;
             this.h5Results = h5Results;
-            this.noticeResults.h5Results = this.h5Results;
+            this.platformMessageResults.h5Results = this.h5Results;
             this.specialResults = specialResults;
             this.hotResults = hotResults;
             this.recommendResults = recommendResults;
