@@ -106,6 +106,7 @@ import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UpdateAvatarRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
+import com.game.helper.net.model.UpdateMsgStatusRequestBody;
 import com.game.helper.net.model.UpdateNicknameRequestBody;
 import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
@@ -488,5 +489,8 @@ public interface ApiService {
 
     @POST("/account/get_consume_rank/")
     Flowable<HttpResultModel<FriendRangeResultModel>> getRangeConsume(@Body FriendRangeRequestBody payRequestBody);
+
+    @POST("/sys/update_message_status/")
+    Flowable<HttpResultModel<NotConcernResults>> updateMsgStatus(@Body UpdateMsgStatusRequestBody updateMsgStatusRequestBody);
 
 }

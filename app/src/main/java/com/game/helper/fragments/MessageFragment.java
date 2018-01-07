@@ -16,13 +16,16 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.NotConcernResults;
 import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
+import com.game.helper.net.model.UpdateMsgStatusRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
+import com.game.helper.views.widget.SwipeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -238,6 +241,8 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
     class MessageAdapter extends RecyclerView.Adapter {
         private int mode;
+        //存放所有已经打开的菜单
+        public List<SwipeLayout> openList=new ArrayList<SwipeLayout>();
 
         public MessageAdapter(int type) {
             mode = type;
@@ -268,73 +273,137 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         public int getItemCount() {
             return mData.size();
         }
-    }
 
-    class PlatformMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private View rootView;
-        public TextView mTittle;
-        public TextView mTime;
+        class PlatformMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            private View rootView;
+            public TextView mTittle;
+            public TextView mTime;
 
-        public PlatformMessageHolder(View itemView) {
-            super(itemView);
-            mTittle = itemView.findViewById(R.id.tv_tittle);
-            mTime = itemView.findViewById(R.id.tv_time);
-            rootView = itemView;
-        }
+            public PlatformMessageHolder(View itemView) {
+                super(itemView);
+                mTittle = itemView.findViewById(R.id.tv_tittle);
+                mTime = itemView.findViewById(R.id.tv_time);
+                rootView = itemView;
+            }
 
-        void onBind(int position){
-            PlatformMessageResults.PlatformMessageItem results = (PlatformMessageResults.PlatformMessageItem) mData.get(position);
-            rootView.setOnClickListener(this);
-            rootView.setTag(results);
-            mTittle.setText(results.title);
-            mTime.setText(results.create_time);
-        }
+            void onBind(int position){
+                PlatformMessageResults.PlatformMessageItem results = (PlatformMessageResults.PlatformMessageItem) mData.get(position);
+                rootView.setOnClickListener(this);
+                rootView.setTag(results);
+                mTittle.setText(results.title);
+                mTime.setText(results.create_time);
+            }
 
-        @Override
-        public void onClick(View v) {
-            if (v == rootView){
-                PlatformMessageResults.PlatformMessageItem item = (PlatformMessageResults.PlatformMessageItem) rootView.getTag();
-                Bundle bundle = new Bundle();
-                bundle.putString(MessageDescFragment.TITTLE,item.title);
-                bundle.putString(MessageDescFragment.CONTENT,item.content);
-                MessageDescFragment messageDescFragment = MessageDescFragment.newInstance();
-                messageDescFragment.setArguments(bundle);
-                DetailFragmentsActivity.launch(getContext(),bundle,messageDescFragment);
+            @Override
+            public void onClick(View v) {
+                if (v == rootView){
+                    PlatformMessageResults.PlatformMessageItem item = (PlatformMessageResults.PlatformMessageItem) rootView.getTag();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(MessageDescFragment.TITTLE,item.title);
+                    bundle.putString(MessageDescFragment.CONTENT,item.content);
+                    MessageDescFragment messageDescFragment = MessageDescFragment.newInstance();
+                    messageDescFragment.setArguments(bundle);
+                    DetailFragmentsActivity.launch(getContext(),bundle,messageDescFragment);
+                }
             }
         }
-    }
 
-    class SystemMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        private View rootView;
-        public View contentView;
-        public TextView mTittle;
-        public TextView mTime;
-        public TextView mContent;
-        public ImageView mArrow;
+        class SystemMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            private View rootView;
+            private SwipeLayout mSwipeLayout;
+            private View mSwipeDelete;
+            public View contentView;
+            public TextView mTittle;
+            public TextView mTime;
+            public TextView mContent;
+            public ImageView mArrow;
+            private int itemPosition;
 
-        public SystemMessageHolder(View itemView) {
-            super(itemView);
-            rootView = itemView;
-            mTittle = itemView.findViewById(R.id.tv_tittle);
-            mTime = itemView.findViewById(R.id.tv_time);
-            mContent = itemView.findViewById(R.id.tv_content);
-            contentView = itemView.findViewById(R.id.ll_content);
-            mArrow = itemView.findViewById(R.id.iv_arrow);
-        }
+            public SystemMessageHolder(View itemView) {
+                super(itemView);
+                rootView = itemView.findViewById(R.id.root_layout);
+                mSwipeLayout = itemView.findViewById(R.id.swipeLayout);
+                mSwipeDelete = itemView.findViewById(R.id.tv_del);
+                mTittle = itemView.findViewById(R.id.tv_tittle);
+                mTime = itemView.findViewById(R.id.tv_time);
+                mContent = itemView.findViewById(R.id.tv_content);
+                contentView = itemView.findViewById(R.id.ll_content);
+                mArrow = itemView.findViewById(R.id.iv_arrow);
+            }
 
-        void onBind(int position){
-            SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mData.get(position);
-            rootView.setOnClickListener(this);
-            mTittle.setText(results.title);
-            mTime.setText(StringUtils.isEmpty(results.create_time) ? "" : results.create_time);
-            mContent.setText(results.content);
-        }
+            void onBind(int position){
+                this.itemPosition = position;
+                SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mData.get(position);
+                rootView.setOnClickListener(this);
+                mTittle.setText(results.title);
+                mTime.setText(StringUtils.isEmpty(results.create_time) ? "" : results.create_time);
+                mContent.setText(results.content);
+                mSwipeDelete.setTag(results);
+                mSwipeDelete.setOnClickListener(this);
+                mSwipeLayout.setSwipeChangeListener(new SwipeLayout.OnSwipeChangeListener() {
 
-        @Override
-        public void onClick(View v) {
-            if (v == rootView){
-                mArrow.setSelected(!mArrow.isSelected());
-                contentView.setVisibility(mArrow.isSelected() ? View.VISIBLE : View.GONE);
+                    @Override
+                    public void onStartOpen(SwipeLayout mSwipeLayout) {
+                        for(SwipeLayout layout:openList){
+                            layout.close();
+                        }
+                        openList.clear();
+                    }
+
+                    @Override
+                    public void onStartClose(SwipeLayout mSwipeLayout) {
+
+                    }
+
+                    @Override
+                    public void onOpen(SwipeLayout mSwipeLayout) {
+                        openList.add(mSwipeLayout);
+                    }
+
+                    @Override
+                    public void onDraging(SwipeLayout mSwipeLayout) {
+
+                    }
+
+                    @Override
+                    public void onClose(SwipeLayout mSwipeLayout) {
+                        openList.remove(mSwipeLayout);
+                    }
+                });
+            }
+
+            @Override
+            public void onClick(View v) {
+                if (v == rootView){
+                    mSwipeLayout.close();
+                    mArrow.setSelected(!mArrow.isSelected());
+                    contentView.setVisibility(mArrow.isSelected() ? View.VISIBLE : View.GONE);
+                }
+                if (v == mSwipeDelete){
+                    mSwipeLayout.close();
+                    SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mSwipeDelete.getTag();
+                    updateMsgStatus(results.id+"");
+                }
+            }
+
+            private void updateMsgStatus(String id){
+                Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateMsgStatus(new UpdateMsgStatusRequestBody(id,UpdateMsgStatusRequestBody.MESSAGE_SYSTEM,UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE));
+                RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
+                    @Override
+                    public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
+                        Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                        if (notConcernResultsHttpResultModel.isSucceful()) {
+                            mData.remove(itemPosition);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }, new Consumer<NetError>() {
+                    @Override
+                    public void accept(NetError netError) throws Exception {
+                        //showError(netError);
+                        Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                    }
+                });
             }
         }
     }

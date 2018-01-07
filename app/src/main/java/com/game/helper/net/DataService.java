@@ -106,6 +106,7 @@ import com.game.helper.net.model.SpecialDetailRequestBody;
 import com.game.helper.net.model.UnAvailableRedpackRequestBody;
 import com.game.helper.net.model.UpdateBirthdayRequestBody;
 import com.game.helper.net.model.UpdateGenderRequestBody;
+import com.game.helper.net.model.UpdateMsgStatusRequestBody;
 import com.game.helper.net.model.UpdateNicknameRequestBody;
 import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
@@ -508,6 +509,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<FriendRangeResultModel>> getRangeConsume(FriendRangeRequestBody friendRangeRequestBody) {
         return Api.CreateApiService().getRangeConsume(friendRangeRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<NotConcernResults>> updateMsgStatus(UpdateMsgStatusRequestBody updateMsgStatusRequestBody) {
+        return Api.CreateApiService().updateMsgStatus(updateMsgStatusRequestBody);
     }
 
 }
