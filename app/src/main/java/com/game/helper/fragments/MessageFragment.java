@@ -380,7 +380,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                     contentView.setVisibility(mArrow.isSelected() ? View.VISIBLE : View.GONE);
                 }
                 if (v == mSwipeDelete) {
-                    mSwipeLayout.close();
+                    rootView.performClick();
                     SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mSwipeDelete.getTag();
                     updateMsgStatus(results.id + "");
                 }
