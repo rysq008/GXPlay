@@ -70,10 +70,13 @@ public class DownLoadReceiveUtils {
                             Throwable throwable = downloadEvent.getError();
                             Log.w("TAG", throwable);
                         }
+
+                        if (Utils.isAppInstalled(context, pkg)) {
+                            downloadEvent.setFlag(DownloadFlag.INSTALLED);
+                        }
                         controller.setEvent(downloadEvent);
                         if (null != receive) {
-                            receive.receiveDownloadEvent(downloadEvent, false);
-//                            updateProgressStatus(downloadEvent.getDownloadStatus());
+                            receive.receiveDownloadEvent(downloadEvent, downloadEvent.getFlag() == DownloadFlag.INSTALLED);
                         }
 
                         if (downloadEvent.getFlag() == DownloadFlag.COMPLETED) {

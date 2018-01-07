@@ -19,7 +19,10 @@ import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
+import java.util.concurrent.Executors;
+
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -28,7 +31,7 @@ import io.reactivex.functions.Consumer;
  * A simple {@link Fragment} subclass.
  * 系统相关设置
  */
-public class SettingSystemFragment extends XBaseFragment implements View.OnClickListener{
+public class SettingSystemFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = SettingSystemFragment.class.getSimpleName();
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -45,7 +48,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
 
     private Handler handler = new Handler();
 
-    public static SettingSystemFragment newInstance(){
+    public static SettingSystemFragment newInstance() {
         return new SettingSystemFragment();
     }
 
@@ -63,7 +66,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         return R.layout.fragment_setting_system;
     }
 
-    private void initView(){
+    private void initView() {
         mHeadTittle.setText(getResources().getString(R.string.common_setting_system));
         mHeadBack.setOnClickListener(this);
 
@@ -77,26 +80,31 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         mClearCache.setOnClickListener(this);
     }
 
-    private void loginOut(){
+    private void loginOut() {
 
         Flowable<HttpResultModel<LogoutResults>> fr = DataService.logout();
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<LogoutResults>>() {
             @Override
             public void accept(HttpResultModel<LogoutResults> logoutResultsHttpResultModel) throws Exception {
                 if (logoutResultsHttpResultModel.isSucceful()) {
-                        SharedPreUtil.cleanLoginUserInfo();
-                    SharedPreUtil.cleanLoginUserInfo();
                     SharedPreUtil.clearSessionId();
-                    SharedPreUtil.saveSessionId("");
+                    SharedPreUtil.cleanLoginUserInfo();
+                    ILFactory.getLoader().clearMemoryCache(context);
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            ILFactory.getLoader().clearDiskCache(context);
+                        }
+                    });
                     getActivity().onBackPressed();
-                }else {
+                } else {
                     //Toast.makeText(getContext(), logoutResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: "+netError.getMessage().trim());
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
 
@@ -112,11 +120,11 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
-        if (v == mExit){
-            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm,"退出登录","确定要退出登录？");
+        if (v == mExit) {
+            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm, "退出登录", "确定要退出登录？");
             dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
                 @Override
                 public void onCancel() {
@@ -127,13 +135,13 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
                     loginOut();
                 }
             });
-            dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
+            dialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
         }
-        if (v == mAboutUs){
-            DetailFragmentsActivity.launch(getContext(),null,AboutUsFragment.newInstance());
+        if (v == mAboutUs) {
+            DetailFragmentsActivity.launch(getContext(), null, AboutUsFragment.newInstance());
         }
-        if (v == mClearCache){
-            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm,"","确认清除本地缓存？");
+        if (v == mClearCache) {
+            GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Block_Confirm, "", "确认清除本地缓存？");
             dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
                 @Override
                 public void onCancel() {
@@ -151,10 +159,10 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
                             Utils.clearAllCache(getContext());
                             Toast.makeText(getContext(), "清除缓存成功！", Toast.LENGTH_SHORT).show();
                         }
-                    },2000);
+                    }, 2000);
                 }
             });
-            dialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
+            dialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
         }
     }
 }

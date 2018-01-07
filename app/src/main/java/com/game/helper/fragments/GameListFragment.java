@@ -133,7 +133,7 @@ public class GameListFragment extends XBaseFragment {
     @OnClick(R.id.game_list_move_top_iv)
     public void OnClick() {
         if (mAdapter.getItemCount() > 0) {
-            xRecyclerContentLayout.getRecyclerView().scrollToPosition(0);
+            xRecyclerContentLayout.getRecyclerView().smoothScrollToPosition(0);
         }
     }
 

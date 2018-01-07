@@ -83,6 +83,7 @@
                     android:text="221M"
                     android:textColor="@color/color_999"
                     android:textSize="@dimen/size_12sp" />
+
                 <ImageView
                     android:layout_width="1dp"
                     android:layout_height="match_parent"

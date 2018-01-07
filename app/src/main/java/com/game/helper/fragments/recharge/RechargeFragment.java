@@ -379,8 +379,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                     bean.setTimestamp(payRequestBody.data.getWxorderInfo().getTimestamp());
                     GameMarketApplication.api.sendReq(WXPayUtils.weChatPay(bean));
                     dismissWaittingDialog();
+                }else{
+                    Toast.makeText(getContext(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override

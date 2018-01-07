@@ -39,7 +39,7 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MessageFragment extends XBaseFragment implements View.OnClickListener{
+public class MessageFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = MessageFragment.class.getSimpleName();
     public static final int Type_Platform = 0;
     public static final int Type_System = 1;
@@ -60,7 +60,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
     private List mData = new ArrayList();
     private int type = Type_Platform;
 
-    public static MessageFragment newInstance(){
+    public static MessageFragment newInstance() {
         return new MessageFragment();
     }
 
@@ -78,7 +78,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         return R.layout.fragment_message;
     }
 
-    private void initView(){
+    private void initView() {
         mHeadTittle.setText("消息");
         mHeadBack.setOnClickListener(this);
         mPlatform.setOnClickListener(this);
@@ -91,7 +91,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         getDataFromNet(1);
     }
 
-    private void initList(){
+    private void initList() {
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
@@ -113,13 +113,12 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
     /**
      * 切换数据显示模式
-     * */
-    private void switchDataType(){
+     */
+    private void switchDataType() {
         resetList();
-        if (type == Type_Platform){
+        if (type == Type_Platform) {
             type = Type_System;
-        }
-        else if (type == Type_System){
+        } else if (type == Type_System) {
             type = Type_Platform;
         }
         setmAdapter();
@@ -128,17 +127,18 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
     /**
      * 重设adapter
-     * */
-    private void setmAdapter(){
+     */
+    private void setmAdapter() {
         mAdapter = null;
         mAdapter = new MessageAdapter(type);
         mContent.getRecyclerView().setAdapter(null);
         mContent.getRecyclerView().setAdapter(mAdapter);
     }
+
     /**
      * 获取数据
-     * */
-    private void getDataFromNet(final int page){
+     */
+    private void getDataFromNet(final int page) {
         //平台消息
         if (type == Type_System) {
             Flowable<HttpResultModel<SystemMessageResults>> fr = DataService.getSystemMessage(new SinglePageRequestBody(page));
@@ -164,7 +164,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         }
 
         //系统消息
-        if (type == Type_Platform){
+        if (type == Type_Platform) {
             Flowable<HttpResultModel<PlatformMessageResults>> fr = DataService.getPlatformMessage(new SinglePageRequestBody(page));
             RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
                 @Override
@@ -188,14 +188,14 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         }
     }
 
-    private void notifyData(){
+    private void notifyData() {
         mAdapter.notifyDataSetChanged();
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        if (mAdapter.getItemCount()<1){
+        if (mAdapter.getItemCount() < 1) {
             mContent.showEmpty();
             return;
-        }else {
+        } else {
             mContent.showContent();
         }
     }
@@ -208,16 +208,16 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
-        if (v == mPlatform){
+        if (v == mPlatform) {
             if (mPlatform.isSelected()) return;
             mPlatform.setSelected(true);
             mSystem.setSelected(false);
             switchDataType();
         }
-        if (v == mSystem){
+        if (v == mSystem) {
             if (mSystem.isSelected()) return;
             mSystem.setSelected(true);
             mPlatform.setSelected(false);
@@ -232,8 +232,8 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
     /**
      * 清除adapter
-     * */
-    private void resetList(){
+     */
+    private void resetList() {
         mData.clear();
         mAdapter.notifyDataSetChanged();
         mAdapter = null;
@@ -242,7 +242,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
     class MessageAdapter extends RecyclerView.Adapter {
         private int mode;
         //存放所有已经打开的菜单
-        public List<SwipeLayout> openList=new ArrayList<SwipeLayout>();
+        public List<SwipeLayout> openList = new ArrayList<SwipeLayout>();
 
         public MessageAdapter(int type) {
             mode = type;
@@ -251,19 +251,19 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            if (mode == Type_Platform){
-                return new PlatformMessageHolder(inflater.inflate(R.layout.item_message_platform,parent,false));
+            if (mode == Type_Platform) {
+                return new PlatformMessageHolder(inflater.inflate(R.layout.item_message_platform, parent, false));
             }
-            return new SystemMessageHolder(inflater.inflate(R.layout.item_message_system,parent,false));
+            return new SystemMessageHolder(inflater.inflate(R.layout.item_message_system, parent, false));
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof PlatformMessageHolder){
+            if (holder instanceof PlatformMessageHolder) {
                 PlatformMessageHolder paltform = (PlatformMessageHolder) holder;
                 paltform.onBind(position);
             }
-            if (holder instanceof SystemMessageHolder){
+            if (holder instanceof SystemMessageHolder) {
                 SystemMessageHolder system = (SystemMessageHolder) holder;
                 system.onBind(position);
             }
@@ -274,7 +274,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             return mData.size();
         }
 
-        class PlatformMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class PlatformMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private View rootView;
             public TextView mTittle;
             public TextView mTime;
@@ -286,7 +286,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                 rootView = itemView;
             }
 
-            void onBind(int position){
+            void onBind(int position) {
                 PlatformMessageResults.PlatformMessageItem results = (PlatformMessageResults.PlatformMessageItem) mData.get(position);
                 rootView.setOnClickListener(this);
                 rootView.setTag(results);
@@ -296,19 +296,19 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
             @Override
             public void onClick(View v) {
-                if (v == rootView){
+                if (v == rootView) {
                     PlatformMessageResults.PlatformMessageItem item = (PlatformMessageResults.PlatformMessageItem) rootView.getTag();
                     Bundle bundle = new Bundle();
-                    bundle.putString(MessageDescFragment.TITTLE,item.title);
-                    bundle.putString(MessageDescFragment.CONTENT,item.content);
+                    bundle.putString(MessageDescFragment.TITTLE, item.title);
+                    bundle.putString(MessageDescFragment.CONTENT, item.content);
                     MessageDescFragment messageDescFragment = MessageDescFragment.newInstance();
                     messageDescFragment.setArguments(bundle);
-                    DetailFragmentsActivity.launch(getContext(),bundle,messageDescFragment);
+                    DetailFragmentsActivity.launch(getContext(), bundle, messageDescFragment);
                 }
             }
         }
 
-        class SystemMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class SystemMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private View rootView;
             private SwipeLayout mSwipeLayout;
             private View mSwipeDelete;
@@ -331,7 +331,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                 mArrow = itemView.findViewById(R.id.iv_arrow);
             }
 
-            void onBind(int position){
+            void onBind(int position) {
                 this.itemPosition = position;
                 SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mData.get(position);
                 rootView.setOnClickListener(this);
@@ -344,7 +344,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
                     @Override
                     public void onStartOpen(SwipeLayout mSwipeLayout) {
-                        for(SwipeLayout layout:openList){
+                        for (SwipeLayout layout : openList) {
                             layout.close();
                         }
                         openList.clear();
@@ -374,20 +374,20 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
             @Override
             public void onClick(View v) {
-                if (v == rootView){
+                if (v == rootView) {
                     mSwipeLayout.close();
                     mArrow.setSelected(!mArrow.isSelected());
                     contentView.setVisibility(mArrow.isSelected() ? View.VISIBLE : View.GONE);
                 }
-                if (v == mSwipeDelete){
+                if (v == mSwipeDelete) {
                     mSwipeLayout.close();
                     SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mSwipeDelete.getTag();
-                    updateMsgStatus(results.id+"");
+                    updateMsgStatus(results.id + "");
                 }
             }
 
-            private void updateMsgStatus(String id){
-                Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateMsgStatus(new UpdateMsgStatusRequestBody(id,UpdateMsgStatusRequestBody.MESSAGE_SYSTEM,UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE));
+            private void updateMsgStatus(String id) {
+                Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateMsgStatus(new UpdateMsgStatusRequestBody(id, UpdateMsgStatusRequestBody.MESSAGE_SYSTEM, UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE));
                 RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
                     @Override
                     public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {

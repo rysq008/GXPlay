@@ -82,40 +82,33 @@ public class SharedPreUtil {
 
     /**
      * 存
-     * */
+     */
     public static boolean saveH5Url(String key, String url) {
-        if(sp.contains(key)){
+        if (sp.contains(key)) {
             return updateH5Url(key, url);
         }
-        return sp.edit().putString(key,url).commit();
+        return sp.edit().putString(key, url).commit();
     }
 
     /**
      * 取
-     * */
-    public static String getH5url(String key){
-        return sp.getString(key,"");
+     */
+    public static String getH5url(String key) {
+        return sp.getString(key, "");
     }
 
     /**
      * 更新
-     * */
-    public static boolean updateH5Url (String key, String url) {
+     */
+    public static boolean updateH5Url(String key, String url) {
         sp.edit().remove(key).commit();
-        return saveH5Url(key,url);
+        return saveH5Url(key, url);
     }
 
     /*****************************          h5 url list end                 ******************************/
 
 
     /*****************************          login about start                 ******************************/
-
-    /**
-     * 保存sessionid
-     */
-    public static boolean saveLoginStatus(String sessionid) {
-        return sp.edit().putString(KEY_LOGIN_INFO, sessionid).commit();
-    }
 
     /**
      * 是否登录

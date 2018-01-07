@@ -16,8 +16,6 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.adapters.RechargeCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
-import com.game.helper.fragments.recharge.RechargeGameFragment;
-import com.game.helper.fragments.recharge.RechargeGoldFragment;
 import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MemberInfoResults;
@@ -81,7 +79,7 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
     private List<Fragment> list = new ArrayList<Fragment>();
     private MemberInfoResults userInfo;
 
-    public static WalletFragment newInstance(){
+    public static WalletFragment newInstance() {
         return new WalletFragment();
     }
 
@@ -99,7 +97,7 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
         return R.layout.fragment_wallet;
     }
 
-    private void initView(){
+    private void initView() {
         mHeadTittle.setText(getResources().getString(R.string.common_wallet));
         mHeadBack.setOnClickListener(this);
         mGotoRecharge.setOnClickListener(this);
@@ -166,7 +164,7 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
-                colorTransitionPagerTitleView.setPadding(Utils.dip2px(getContext(),15),0,Utils.dip2px(getContext(),15),0);
+                colorTransitionPagerTitleView.setPadding(Utils.dip2px(getContext(), 15), 0, Utils.dip2px(getContext(), 15), 0);
                 colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
                 colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
                 String title = null;
@@ -209,16 +207,16 @@ public class WalletFragment extends XBaseFragment implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
-        if (v == mGotoRecharge){
-            DetailFragmentsActivity.launch(getContext(),null, RechargeFragment.newInstance());
+        if (v == mGotoRecharge) {
+            DetailFragmentsActivity.launch(getContext(), null, RechargeFragment.newInstance());
         }
-        if (v == mGotoCash){
+        if (v == mGotoCash) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(CashFragment.TAG,userInfo);
-            DetailFragmentsActivity.launch(getContext(),bundle, CashFragment.newInstance());
+            bundle.putSerializable(CashFragment.TAG, userInfo);
+            DetailFragmentsActivity.launch(getContext(), bundle, CashFragment.newInstance());
         }
     }
 

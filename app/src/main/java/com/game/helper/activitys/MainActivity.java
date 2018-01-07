@@ -19,7 +19,6 @@ import com.game.helper.fragments.GamePagerFragment;
 import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
 import com.game.helper.fragments.MinePagerFragment;
-import com.game.helper.fragments.login.ResetPasswdFragment;
 import com.game.helper.fragments.login.SetPasswordFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
@@ -31,6 +30,7 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.CustomBadgeItem;
+import com.game.helper.views.widget.TotoroToast;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.jude.swipbackhelper.SwipeBackHelper;
@@ -295,6 +295,21 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             }
         });
     }
+
+
+    private long pressTime = 0;
+
+    @Override
+    public void onBackPressed() {
+        long curTime = System.currentTimeMillis();
+        if (curTime - pressTime > 2000) {
+            TotoroToast.makeText(context, "再次点击退出", 20).show();
+            pressTime = curTime;
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
     //注意onActivityResult不可在fragment中实现，如果在fragment中调用登录或分享，需要在fragment依赖的Activity中实现
     @Override

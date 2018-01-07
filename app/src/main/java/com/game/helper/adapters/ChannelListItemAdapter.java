@@ -26,7 +26,7 @@ import zlc.season.rxdownload2.RxDownload;
 import zlc.season.rxdownload2.db.DataBaseHelper;
 import zlc.season.rxdownload2.entity.DownloadBean;
 import zlc.season.rxdownload2.entity.DownloadEvent;
-import zlc.season.rxdownload2.entity.DownloadStatus;
+import zlc.season.rxdownload2.entity.DownloadFlag;
 
 import static zlc.season.rxdownload2.function.Utils.dispose;
 
@@ -203,7 +203,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
             mData.disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, mData.getPath(), mData.getName_package(), mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
                 @Override
                 public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
-                    updateProgressStatus(event.getDownloadStatus());
+                    updateProgressStatus(event);
                     if (isDisposable) {
                         dispose(mData.disposable);
                     }
@@ -211,13 +211,19 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
             });
         }
 
-        private void updateProgressStatus(DownloadStatus status) {
-            pbChannel.setIndeterminate(status.isChunked);
-            pbChannel.setMax((int) status.getTotalSize());
-            pbChannel.setProgress((int) status.getDownloadSize());
-            mPercent.setText(status.getPercent());
-            if (status.getDownloadSize() > 0 && status.getTotalSize() > 0)
-                mSize.setText(status.getFormatStatusString());
+        private void updateProgressStatus(DownloadEvent event) {
+            if (event.getFlag() == DownloadFlag.INSTALLED) {
+                pbChannel.setVisibility(View.GONE);
+                mPercent.setVisibility(View.GONE);
+                mSize.setVisibility(View.GONE);
+            } else {
+                pbChannel.setIndeterminate(event.getDownloadStatus().isChunked);
+                pbChannel.setMax((int) event.getDownloadStatus().getTotalSize());
+                pbChannel.setProgress((int) event.getDownloadStatus().getDownloadSize());
+                mPercent.setText(event.getDownloadStatus().getPercent());
+                if (event.getDownloadStatus().getDownloadSize() > 0 && event.getDownloadStatus().getTotalSize() > 0)
+                    mSize.setText(event.getDownloadStatus().getFormatStatusString());
+            }
         }
 
         @OnClick(R.id.btn_channel_list_load)
@@ -248,6 +254,6 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 }
             });
         }
-        
+
     }
 }
