@@ -138,7 +138,7 @@
     <string name="login_tittle">登录</string>
     <string name="login_hint_code">输入验证码</string>
     <string name="login_hint_password">输入密码</string>
-    <string name="login_hint_without_account">请输入手机号码！</string>
+    <string name="login_hint_without_account">请输入11位手机号码！</string>
     <string name="login_hint_without_code">请输入验证码！</string>
     <string name="login_hint_without_passwd">请输入密码！</string>
     <string name="login_hint_without_alipay">请输入支付宝账户！</string>
@@ -167,6 +167,7 @@
     <string name="pickerview_minutes">分</string>
 
     <!--recharge-->
+    <string name="recharge_activity_discount">首充限时活动</string>
     <string name="recharge_high_vip_discount">首充享受皇冠会员</string>
     <string name="recharge_vip_discount">VIP会员</string>
     <string name="recharge_member_discount">普通会员</string>

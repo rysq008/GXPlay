@@ -46,6 +46,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     private static final int check_able_color = R.color.colorBlack;
     private static final int check_disable_color = R.color.colorShadow;
+    private String discount_activity;
     private String discount_high_vip;
     private String discount_vip;
     private String discount_member;
@@ -126,6 +127,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         if (getArguments() != null) setChooseGameData(true);
         //getVipLevel();//获取最高vip
 
+        discount_activity = getResources().getString(R.string.recharge_activity_discount);
         discount_high_vip = getResources().getString(R.string.recharge_high_vip_discount);
         discount_vip = getResources().getString(R.string.recharge_vip_discount);
         discount_member = getResources().getString(R.string.recharge_member_discount);
@@ -241,6 +243,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             public void accept(HttpResultModel<GameAccountDiscountResults> gameAccountDiscountResultsHttpResultModel ) throws Exception {
                 discountList = gameAccountDiscountResultsHttpResultModel.data;
                 mDiscount1.setText(discount_high_vip+discountList.high_vip_discount+"折");
+                if (discountList.discount_activity != 0){
+                    mDiscount1.setText(discount_activity+discountList.discount_activity+"折");
+                }
                 mDiscount2.setText(discount_member+discountList.member_discount+"折");
                 mDiscount3.setText(discount_vip+discountList.vip_discount+"折");
 
@@ -336,6 +341,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         }
         if (mCbDiscount1.isChecked()){
             mTotalDiscountValue = discountList.high_vip_discount;
+            if (discountList.discount_activity != 0){
+                mTotalDiscountValue = discountList.discount_activity;
+            }
         }
         else if (mCbDiscount2.isChecked()){
             mTotalDiscountValue = discountList.member_discount;

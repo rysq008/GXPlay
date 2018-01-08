@@ -10,6 +10,7 @@ public class GameAccountDiscountResults extends XBaseModel {
     "data": {
         "vip_discount": 0,
         "high_vip_discount": 0,
+        "discount_activity": 0,
         "member_discount": 0
     }
 }
@@ -17,6 +18,7 @@ public class GameAccountDiscountResults extends XBaseModel {
     public float vip_discount;//vip会员折扣
     public float high_vip_discount;//黄冠折扣(首冲可体验一次)
     public float member_discount;//普通会员折扣
+    public float discount_activity;//活动折扣
 
     @Override
     public int itemType() {

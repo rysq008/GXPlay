@@ -123,7 +123,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         String account = mAccount.getText().toString().trim();
         String code = mPassWord.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)) {
+        if (StringUtils.isEmpty(account) || account.length() != 11) {
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -185,21 +185,20 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     private void getVerify() {
         String account = mAccount.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)) {
+        if (StringUtils.isEmpty(account) || account.length() != 11) {
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        mCountDownText.setCountDownTimer(60 * 1000, 1000);
-        mCountDownText.startTimer();
 
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_LOGIN));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
             public void accept(HttpResultModel<VerifyResults> verifyResultsHttpResultModel) throws Exception {
-                if (verifyResultsHttpResultModel.isSucceful()) {
-                } else {
-                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                if (verifyResultsHttpResultModel.isSucceful()){
+                    mCountDownText.setCountDownTimer(60 * 1000, 1000);
+                    mCountDownText.startTimer();
+                }else {
+                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {

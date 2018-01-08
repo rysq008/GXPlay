@@ -31,10 +31,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="15dp"
             android:id="@+id/dialog_content"
             android:text="请输入交易密码确认操作"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textColor="#333"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"

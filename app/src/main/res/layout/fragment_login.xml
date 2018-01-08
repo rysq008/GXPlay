@@ -40,20 +40,28 @@
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/text_size_xlarge" />
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+    <ImageView
+        android:src="@mipmap/logo"
+        android:padding="3dp"
+        android:layout_alignLeft="@+id/logo"
+        android:layout_alignTop="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_marginTop="80dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
         <LinearLayout
             android:gravity="center"
-            android:layout_marginTop="@dimen/dp_25"
+            android:layout_marginTop="165dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
@@ -108,8 +116,9 @@
                     android:background="@null"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:eiv_maxlength="11"
                     app:eiv_hint="输入手机号"
-                    app:eiv_type="type_account"/>
+                    app:eiv_type="type_code"/>
             </LinearLayout>
             <View
                 android:layout_marginTop="@dimen/dp_5"

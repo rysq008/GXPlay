@@ -309,6 +309,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
         class SystemMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private View rootView;
+            private View redBot;
             private SwipeLayout mSwipeLayout;
             private View mSwipeDelete;
             public View contentView;
@@ -321,6 +322,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             public SystemMessageHolder(View itemView) {
                 super(itemView);
                 rootView = itemView.findViewById(R.id.root_layout);
+                redBot = itemView.findViewById(R.id.iv_red);
                 mSwipeLayout = itemView.findViewById(R.id.swipeLayout);
                 mSwipeDelete = itemView.findViewById(R.id.tv_del);
                 mTittle = itemView.findViewById(R.id.tv_tittle);
@@ -334,6 +336,8 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                 this.itemPosition = position;
                 SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mData.get(position);
                 rootView.setOnClickListener(this);
+                rootView.setTag(results);
+                redBot.setVisibility(results.is_read == 0 ? View.VISIBLE : View.GONE);
                 mTittle.setText(results.title);
                 mTime.setText(StringUtils.isEmpty(results.create_time) ? "" : results.create_time);
                 mContent.setText(results.content);
@@ -377,23 +381,34 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                     mSwipeLayout.close();
                     mArrow.setSelected(!mArrow.isSelected());
                     contentView.setVisibility(mArrow.isSelected() ? View.VISIBLE : View.GONE);
+
+                    if (redBot.getVisibility() == View.VISIBLE){
+                        redBot.setVisibility(View.GONE);
+                        SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) rootView.getTag();
+                        updateMsgStatus(results.id + "", UpdateMsgStatusRequestBody.MESSAGE_OPTION_READ);
+                    }
                 }
                 if (v == mSwipeDelete) {
                     rootView.performClick();
                     SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mSwipeDelete.getTag();
-                    updateMsgStatus(results.id + "");
+                    updateMsgStatus(results.id + "",UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE);
                 }
             }
 
-            private void updateMsgStatus(String id) {
-                Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateMsgStatus(new UpdateMsgStatusRequestBody(id, UpdateMsgStatusRequestBody.MESSAGE_SYSTEM, UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE));
+            private void updateMsgStatus(String id, final String action) {
+                Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateMsgStatus(new UpdateMsgStatusRequestBody(id, UpdateMsgStatusRequestBody.MESSAGE_SYSTEM, action));
                 RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
                     @Override
                     public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
-                        Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                         if (notConcernResultsHttpResultModel.isSucceful()) {
-                            mData.remove(itemPosition);
-                            mAdapter.notifyDataSetChanged();
+                            if (action.equals(UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE)) {
+                                mData.remove(itemPosition);
+                                mAdapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), "删除成功！", Toast.LENGTH_SHORT).show();
+                            }else if (action.equals(UpdateMsgStatusRequestBody.MESSAGE_OPTION_READ)){
+                            }
+                        }else {
+                            Toast.makeText(getContext(), notConcernResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Consumer<NetError>() {

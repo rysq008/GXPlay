@@ -42,6 +42,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <ImageView
+                android:id="@+id/iv_red"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/tv_tittle"
+                android:layout_marginTop="7sp"
+                android:layout_marginRight="30dp"
+                android:src="@drawable/bg_gradient_radius_red"
+                android:layout_width="5dp"
+                android:layout_height="5dp" />
+            <ImageView
                 android:id="@+id/iv_arrow"
                 android:layout_alignTop="@+id/tv_tittle"
                 android:layout_alignParentBottom="@+id/tv_tittle"
@@ -49,7 +58,7 @@
                 android:src="@drawable/ic_arrow_message"
                 android:scaleType="fitCenter"
                 android:layout_marginRight="@dimen/dp_10"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="3dp"
                 android:layout_width="@dimen/text_size_small"
                 android:layout_height="@dimen/text_size_small" />
 
