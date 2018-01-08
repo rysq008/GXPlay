@@ -101,8 +101,10 @@ public class SetPasswordFragment extends XBaseFragment implements View.OnClickLi
                 if (resetPasswdResultsHttpResultModel.isSucceful()) {
                     SharedPreUtil.updateUserPasswdStatus(getContext(),true);
                     getActivity().onBackPressed();
+                    Toast.makeText(getContext(), "设置成功！", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getContext(), resetPasswdResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), resetPasswdResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
