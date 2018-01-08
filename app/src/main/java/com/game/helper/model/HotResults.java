@@ -7,8 +7,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import java.util.Map;
 
-import zlc.season.practicalrecyclerview.ItemType;
-
 public class HotResults extends XBaseModel {
 
     @SerializedName("list")
@@ -20,13 +18,12 @@ public class HotResults extends XBaseModel {
     }
 
 
-    public static class HotItem implements ItemType {
+    public static class HotItem extends XBaseModel {
         /**
          * "game_package": {
-         * "zhekou_shouchong": 4.3,
-         * "zhekou_xuchong": 5.5,
+         * "zhekou_shouchong": 4.2,
+         * "discount_activity": 3.5,
          * "filesize": 211,
-         * "discount_vip": 0
          * },
          * "name": "少年西游记",
          * "logothumb": "/media/game_logo/f0cf3e7ec227f67918d94237aecd7959.jpg",

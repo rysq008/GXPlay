@@ -3,7 +3,6 @@ package com.game.helper.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,28 +10,27 @@ import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.adapters.MyAccountAdapter;
 import com.game.helper.fragments.GameDetailRechargeFragment;
-import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
-import com.game.helper.views.widget.StateView;
+import com.game.helper.views.widget.TotoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
 public class GameDetailMyAccountActivity extends XBaseActivity implements View.OnClickListener, MyAccountAdapter.OnItemCheckListener {
 
     public static final String TAG = "MyAccountActivity";
+    public static final String GAME_RECHARGE_INFO = "game_recharge_info";
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -48,11 +46,23 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
 
     public int option_game_id;
     public int option_channel_id;
+    private GamePackageInfoResult gameDetailInfo;
+    private boolean isfirstEnter = true;
 
     @Override
     protected void onResume() {
-        getGameAccountInfo(1,true);
         super.onResume();
+        if (isfirstEnter) {
+            getGameAccountInfo(1, true);
+            isfirstEnter = false;
+        } else {
+            if (SharedPreUtil.isLogin()) {
+                getGameAccountInfo(1, true);
+            } else {
+//                TotoroToast.makeText(this, "finish", 1000).show();
+                finish();
+            }
+        }
     }
 
     @Override
@@ -63,8 +73,15 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
     }
 
     private void initIntentData(Intent intent) {
-        option_game_id = SPUtils.getInt(context,SPUtils.GAME_ID,0);
-        option_channel_id = SPUtils.getInt(context,SPUtils.CHANNEL_ID,0);
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            gameDetailInfo = (GamePackageInfoResult) extras.getSerializable(GAME_RECHARGE_INFO);
+            option_game_id = gameDetailInfo.getGame().getId();
+            option_channel_id = gameDetailInfo.getChannel().getId();
+        } else {
+            xRecyclerContentLayout.showEmpty();
+        }
+
     }
 
     private void initView() {
@@ -83,7 +100,7 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
         xRecyclerContentLayout.getRecyclerView().setRefreshEnabled(false);
     }
 
-    private void getGameAccountInfo(int page,boolean showLoading) {
+    private void getGameAccountInfo(int page, boolean showLoading) {
         Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page, 1, option_game_id, option_channel_id));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
             @Override
@@ -92,7 +109,7 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
                 list.addAll(recommendResultsHttpResultModel.data.getList());
                 showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
             }
-        }, null,null,showLoading);
+        }, null, null, showLoading);
 
     }
 
@@ -125,8 +142,9 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
                 break;
             case R.id.addAccount_game_detail://添加账户
                 Intent intent = new Intent(GameDetailMyAccountActivity.this, GameDetailAddAccountActivity.class);
-                intent.putExtra(AddAccountActivity.GAME_ID,option_game_id);
-                intent.putExtra(AddAccountActivity.CHANNEL_ID,option_channel_id);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(GameDetailAddAccountActivity.GAME_MY_ACCOUNT_INFO, gameDetailInfo);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 break;
 

@@ -11,7 +11,6 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.ChannelListFragment;
 import com.game.helper.model.HotResults;
-import com.game.helper.model.SearchListResults;
 import com.game.helper.net.api.Api;
 import com.game.helper.views.RecommendView;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -60,8 +59,8 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("gameId",((HotResults.HotItem) item).id);
-                DetailFragmentsActivity.launch(context,bundle, ChannelListFragment.newInstance());
+                bundle.putInt("gameId", ((HotResults.HotItem) item).id);
+                DetailFragmentsActivity.launch(context, bundle, ChannelListFragment.newInstance());
             }
         });
 
@@ -92,7 +91,10 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
             HotResults.HotItem data = (HotResults.HotItem) itemType;
             ILFactory.getLoader().loadNet(roundedIv, Api.API_PAY_OR_IMAGE_URL.concat(data.logo), ILoader.Options.defaultOptions());
             nameTv.setText(data.name.replace(" ", ""));
-            discountTv.setText(data.game_package.get("zhekou_shouchong").toString().replace(" ", ""));
+
+            Float zhekou_shouchong = data.game_package.get("zhekou_shouchong");
+            Float discount_activity = data.game_package.get("discount_activity");
+            discountTv.setText(discount_activity == 0 ? zhekou_shouchong.toString() : discount_activity.toString());
             typeTv.setText(data.type.get("name").replace(" ", ""));
             sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
             descTv.setText(data.intro.replace(" ", ""));

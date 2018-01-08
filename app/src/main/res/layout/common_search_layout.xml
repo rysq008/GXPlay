@@ -3,7 +3,6 @@
     android:id="@+id/common_search_view_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/home_head_height"
-    android:background="@color/colorPrimary"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:gravity="center_vertical"

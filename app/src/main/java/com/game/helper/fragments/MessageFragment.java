@@ -17,8 +17,8 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.NotConcernResults;
-import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.PlatformMessageResults;
+import com.game.helper.model.SystemMessageResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.UpdateMsgStatusRequestBody;
@@ -88,23 +88,22 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
         mContent.showLoading();
         initList();
-        getDataFromNet(1);
+        getDataFromNet(1, true);
     }
 
     private void initList() {
-        mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
         mContent.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
         mContent.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                getDataFromNet(1);
+                getDataFromNet(1, false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                getDataFromNet(page);
+                getDataFromNet(page, false);
             }
         });
         mContent.getRecyclerView().useDefLoadMoreView();
@@ -122,7 +121,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             type = Type_Platform;
         }
         setmAdapter();
-        getDataFromNet(1);
+        getDataFromNet(1, true);
     }
 
     /**
@@ -138,11 +137,11 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
     /**
      * 获取数据
      */
-    private void getDataFromNet(final int page) {
+    private void getDataFromNet(final int page, boolean showloading) {
         //平台消息
         if (type == Type_System) {
             Flowable<HttpResultModel<SystemMessageResults>> fr = DataService.getSystemMessage(new SinglePageRequestBody(page));
-            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<SystemMessageResults>>() {
+            RxLoadingUtils.subscribeWithReload(mContent, fr, bindToLifecycle(), new Consumer<HttpResultModel<SystemMessageResults>>() {
                 @Override
                 public void accept(HttpResultModel<SystemMessageResults> systemMessageResultsHttpResultModel) throws Exception {
                     if (!systemMessageResultsHttpResultModel.isSucceful()) {
@@ -160,13 +159,13 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                     showError(netError);
                     Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
                 }
-            });
+            }, null, showloading);
         }
 
         //系统消息
         if (type == Type_Platform) {
             Flowable<HttpResultModel<PlatformMessageResults>> fr = DataService.getPlatformMessage(new SinglePageRequestBody(page));
-            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
+            RxLoadingUtils.subscribeWithReload(mContent, fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
                 @Override
                 public void accept(HttpResultModel<PlatformMessageResults> platformMessageResultsHttpResultModel) throws Exception {
                     if (!platformMessageResultsHttpResultModel.isSucceful()) {
@@ -184,7 +183,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                     showError(netError);
                     Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
                 }
-            });
+            }, null, showloading);
         }
     }
 

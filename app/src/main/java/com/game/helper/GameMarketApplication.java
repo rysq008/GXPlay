@@ -12,7 +12,6 @@ import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.views.widget.TotoroToast;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -20,12 +19,13 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.uploadlog.UMLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xdroidmvp.net.NetProvider;
 import cn.droidlover.xdroidmvp.net.RequestHandler;
@@ -144,8 +144,17 @@ public class GameMarketApplication extends MultiDexApplication {
             @Override
             public boolean handleError(NetError error) {
                 if (error.getType() == NetError.AuthError) {
-                    TotoroToast.makeText(getApplicationContext(), error.getMessage(), 1).show();
-                    DetailFragmentsActivity.launch(GameMarketApplication.this,null, Intent.FLAG_ACTIVITY_NEW_TASK, LoginFragment.newInstance());
+//                    TotoroToast.makeText(getApplicationContext(), error.getMessage(), 1).show();
+                    SharedPreUtil.clearSessionId();
+                    SharedPreUtil.cleanLoginUserInfo();
+                    ILFactory.getLoader().clearMemoryCache(context);
+                    Executors.newSingleThreadExecutor().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            ILFactory.getLoader().clearDiskCache(context);
+                        }
+                    });
+                    DetailFragmentsActivity.launch(GameMarketApplication.this, null, Intent.FLAG_ACTIVITY_NEW_TASK, LoginFragment.newInstance());
                     return true;
                 }
                 return false;
@@ -159,7 +168,7 @@ public class GameMarketApplication extends MultiDexApplication {
         options.setTenantId("51593");//必填项，tenantId获取地址：kefu.easemob.com，“管理员模式 > 设置 > 企业信息”页面的“租户ID”
 
         // Kefu SDK 初始化
-        if (!ChatClient.getInstance().init(this, options)){
+        if (!ChatClient.getInstance().init(this, options)) {
             return;
         }
         // Kefu EaseUI的初始化

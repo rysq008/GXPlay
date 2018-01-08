@@ -23,6 +23,7 @@ import cn.droidlover.xdroidmvp.router.Router;
 
 public class DetailFragmentsActivity extends XDetailBaseActivity {
     public static final String TAG = "DetailFragmentsActivity";
+    public static long PressTime = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,9 +40,13 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
     }
 
     public static void launchForResult(Activity context, Fragment fra, int flag, Bundle bundle, int requestCode) {
-        currentFragment = fra;
-        currentFragment.setArguments(bundle);
-        Router.newIntent(context).to(DetailFragmentsActivity.class).addFlags(flag).data(bundle).requestCode(requestCode).launch();
+        long NowTime = System.currentTimeMillis();
+        if (NowTime - PressTime > 1000) {
+            PressTime = NowTime;
+            currentFragment = fra;
+            currentFragment.setArguments(bundle);
+            Router.newIntent(context).to(DetailFragmentsActivity.class).addFlags(flag).data(bundle).requestCode(requestCode).launch();
+        }
     }
 
     /**
@@ -49,11 +54,15 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
      * 如果希望在Fragment的onActivityResult接收数据，就要调用Fragment.startActivityForResult，而不是Fragment.getActivity().startActivityForResult。
      */
     public static void launchForResult(Fragment from, Fragment to, int flag, Bundle bundle, int requestCode) {
-        currentFragment = to;
-        currentFragment.setArguments(bundle);
-        Intent it = new Intent(from.getActivity(), DetailFragmentsActivity.class);
-        it.setFlags(flag);
-        from.startActivityForResult(it, requestCode, bundle);
+        long NowTime = System.currentTimeMillis();
+        if (NowTime - PressTime > 1000) {
+            PressTime = NowTime;
+            currentFragment = to;
+            currentFragment.setArguments(bundle);
+            Intent it = new Intent(from.getActivity(), DetailFragmentsActivity.class);
+            it.setFlags(flag);
+            from.startActivityForResult(it, requestCode, bundle);
+        }
     }
 
     public static void launch(Context context, Bundle bundle, final Fragment fra) {
@@ -61,13 +70,17 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
     }
 
     public static void launch(Context context, Bundle bundle, int flag, final Fragment fra) {
-        Intent intent = new Intent(context, DetailFragmentsActivity.class);
-        if (flag != 0)
-            intent.addFlags(flag);
-        currentFragment = fra;
-        if (null != bundle)
-            currentFragment.setArguments(bundle);
-        context.startActivity(intent);
+        long NowTime = System.currentTimeMillis();
+        if (NowTime - PressTime > 1000) {
+            PressTime = NowTime;
+            Intent intent = new Intent(context, DetailFragmentsActivity.class);
+            if (flag != 0)
+                intent.addFlags(flag);
+            currentFragment = fra;
+            if (null != bundle)
+                currentFragment.setArguments(bundle);
+            context.startActivity(intent);
+        }
     }
 
     @Override

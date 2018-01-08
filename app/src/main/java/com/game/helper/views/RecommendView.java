@@ -12,18 +12,14 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.ChannelListFragment;
-import com.game.helper.fragments.GameDetailFragment;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
-
-import static com.umeng.socialize.utils.DeviceConfig.context;
 
 /**
  * Created by zr on 2017-10-13.
@@ -73,7 +69,9 @@ public class RecommendView extends LinearLayout {
 
         ILFactory.getLoader().loadNet(roundedIv, Api.API_PAY_OR_IMAGE_URL.concat(data.logo), ILoader.Options.defaultOptions());
         nameTv.setText(data.name.replace(" ", ""));
-        discountTv.setText(data.game_package.get("zhekou_shouchong").toString().replace(" ", ""));
+        Float zhekou_shouchong = data.game_package.get("zhekou_shouchong");
+        Float discount_activity = data.game_package.get("discount_activity");
+        discountTv.setText(discount_activity == 0 ? zhekou_shouchong.toString() : discount_activity.toString());
         typeTv.setText(data.type.get("name").replace(" ", ""));
         sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
         descTv.setText(data.intro.replace(" ", ""));
@@ -81,8 +79,8 @@ public class RecommendView extends LinearLayout {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putInt("gameId",data.id);
-                DetailFragmentsActivity.launch(getContext(),bundle, ChannelListFragment.newInstance());
+                bundle.putInt("gameId", data.id);
+                DetailFragmentsActivity.launch(getContext(), bundle, ChannelListFragment.newInstance());
             }
         });
     }

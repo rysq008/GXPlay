@@ -317,7 +317,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
         mloadingView.setVisibility(View.VISIBLE);
     }
 
-    private void dismissWaittingDialog(){
+    private void dismissWaittingDialog() {
         mRootContent.setVisibility(View.VISIBLE);
         mloadingView.setVisibility(View.GONE);
     }
@@ -490,7 +490,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
                 if (notConcernResultsHttpResultModel.isSucceful()) {
                 } else {
                 }
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "修改成功"/*notConcernResultsHttpResultModel.getResponseMsg()*/, Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
@@ -511,7 +511,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
                 if (notConcernResultsHttpResultModel.isSucceful()) {
                 } else {
                 }
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "修改成功"/*notConcernResultsHttpResultModel.getResponseMsg()*/, Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override

@@ -28,14 +28,15 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/hot_more_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_10"
             android:drawablePadding="@dimen/dp_5"
             android:drawableRight="@mipmap/ic_arrow_right"
             android:text="@string/common_more"
             android:textColor="@color/colorShadow"
-            android:textSize="@dimen/text_size_small"
-            android:layout_marginRight="@dimen/dp_10"/>
+            android:textSize="@dimen/text_size_small" />
     </LinearLayout>
 
     <cn.droidlover.xrecyclerview.XRecyclerView

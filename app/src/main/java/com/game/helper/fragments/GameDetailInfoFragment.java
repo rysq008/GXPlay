@@ -57,6 +57,8 @@ public class GameDetailInfoFragment extends XBaseFragment {
             if (gameId > 0) {
                 loadTata(true);
             }
+        }else{
+            xrcontorller.showEmpty();
         }
     }
 

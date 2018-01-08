@@ -8,13 +8,13 @@ import com.game.helper.model.BaseModel.XBaseModel;
 
 public class GamePackageInfoResult extends XBaseModel {
 
-
     /**
      * game : {"class_type":{"id":1,"name":"网游"},"url":"http://www.baidu.com","intro":"集结，被选召的孩子们，冒险再次起程！","logo":"/upload/image/20161210/20161210162000_239.jpg","download_count":0,"type":{"id":9,"name":"角色"},"id":47,"name":"数码大冒险"}
      * zhekou_xuchong : 6.6
      * filesize : 172.7
      * discount_vip : 4.4
      * zhekou_shouchong : 5.5
+     * discount_activity: 3.5,
      * id : 22893
      * name_package : com.netease.my.ewan.kaopu
      * path : http://www.6y.com.cn/ajax/game/download/315/317
@@ -26,6 +26,7 @@ public class GamePackageInfoResult extends XBaseModel {
     private double filesize;
     private double discount_vip;
     private double zhekou_shouchong;
+    private double discount_activity;
     private int id;
     private String name_package;
     private String path;
@@ -70,6 +71,13 @@ public class GamePackageInfoResult extends XBaseModel {
     public void setZhekou_shouchong(double zhekou_shouchong) {
         this.zhekou_shouchong = zhekou_shouchong;
     }
+    public double getDiscount_activity() {
+        return discount_activity;
+    }
+
+    public void setDiscount_activity(double discount_activity) {
+        this.discount_activity = discount_activity;
+    }
 
     public int getId() {
         return id;
@@ -103,7 +111,7 @@ public class GamePackageInfoResult extends XBaseModel {
         this.channel = channel;
     }
 
-    public static class GameBean {
+    public static class GameBean extends XBaseModel {
         /**
          * class_type : {"id":1,"name":"网游"}
          * url : http://www.baidu.com
@@ -188,7 +196,7 @@ public class GamePackageInfoResult extends XBaseModel {
             this.name = name;
         }
 
-        public static class ClassTypeBean {
+        public static class ClassTypeBean  extends XBaseModel{
             /**
              * id : 1
              * name : 网游
@@ -214,7 +222,7 @@ public class GamePackageInfoResult extends XBaseModel {
             }
         }
 
-        public static class TypeBean {
+        public static class TypeBean  extends XBaseModel{
             /**
              * id : 9
              * name : 角色
@@ -241,7 +249,7 @@ public class GamePackageInfoResult extends XBaseModel {
         }
     }
 
-    public static class ChannelBean {
+    public static class ChannelBean  extends XBaseModel {
         /**
          * id : 15
          * name : 当乐

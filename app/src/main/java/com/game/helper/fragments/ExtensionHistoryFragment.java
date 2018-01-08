@@ -3,7 +3,6 @@ package com.game.helper.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
@@ -16,24 +15,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.adapters.RechargeCommonAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.BaseModel.XBaseModel;
-import com.game.helper.model.ConsumeListResults;
 import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.InvatationResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
-import com.game.helper.net.api.ApiService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
-import com.game.helper.views.widget.StateView;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
@@ -41,19 +34,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.RecyclerAdapter;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import okhttp3.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
  * 邀请记录
  */
-public class ExtensionHistoryFragment extends XBaseFragment implements View.OnClickListener{
+public class ExtensionHistoryFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = ExtensionHistoryFragment.class.getSimpleName();
 
     @BindView(R.id.action_bar_back)
@@ -70,7 +61,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
     XReloadableRecyclerContentLayout mContent;
     private ExtensionHistoryAdapter mAdapter;
 
-    public static ExtensionHistoryFragment newInstance(){
+    public static ExtensionHistoryFragment newInstance() {
         return new ExtensionHistoryFragment();
     }
 
@@ -88,7 +79,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         return R.layout.fragment_extension_history;
     }
 
-    private void initView(){
+    private void initView() {
         mSetting.setVisibility(View.VISIBLE);
         mIcon.setVisibility(View.GONE);
         mAction.setVisibility(View.VISIBLE);
@@ -102,7 +93,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         getDataFromNet(1);
     }
 
-    private void initList(){
+    private void initList() {
         mAdapter = null;
         mAdapter = new ExtensionHistoryAdapter(getContext(), null);
         mContent.getLoadingView().setVisibility(View.GONE);
@@ -126,14 +117,14 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     /**
      * 获取数据
-     * */
-    private void getDataFromNet(final int page){
+     */
+    private void getDataFromNet(final int page) {
         Flowable<HttpResultModel<InvatationResults>> fr = DataService.getInvatationList(new SinglePageRequestBody(page));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<InvatationResults>>() {
             @Override
             public void accept(HttpResultModel<InvatationResults> invatationResultsHttpResultModel) throws Exception {
-                notifyData(invatationResultsHttpResultModel.data,page);
-                mContent.getRecyclerView().setPage(invatationResultsHttpResultModel.current_page,invatationResultsHttpResultModel.total_page);
+                notifyData(invatationResultsHttpResultModel.data, page);
+                mContent.getRecyclerView().setPage(invatationResultsHttpResultModel.current_page, invatationResultsHttpResultModel.total_page);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -144,14 +135,14 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         });
     }
 
-    private void notifyData(InvatationResults data, int page){
-        mAdapter.setData(data,page == 1 ? true : false);
+    private void notifyData(InvatationResults data, int page) {
+        mAdapter.setData(data, page == 1 ? true : false);
         mContent.getLoadingView().setVisibility(View.GONE);
         mContent.refreshState(false);
-        if (mAdapter.getItemCount()<1){
+        if (mAdapter.getItemCount() < 1) {
             mContent.showEmpty();
             return;
-        }else {
+        } else {
             mContent.showContent();
         }
     }
@@ -164,10 +155,10 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
-        if (v == mAction){
+        if (v == mAction) {
             fetchShareIncomeUrl();
         }
     }
@@ -203,7 +194,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
         return null;
     }
 
-    class ExtensionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    class ExtensionHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private List data = new ArrayList();
         private Context context;
 
@@ -221,7 +212,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            if (holder instanceof ExtensionHistoryHolder){
+            if (holder instanceof ExtensionHistoryHolder) {
                 ExtensionHistoryHolder extensionHistoryHolder = (ExtensionHistoryHolder) holder;
                 extensionHistoryHolder.onBind(position);
             }
@@ -232,7 +223,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             return data.size();
         }
 
-        public void setData(InvatationResults data, boolean clear){
+        public void setData(InvatationResults data, boolean clear) {
             if (data == null) return;
             List list = data.list;
             if (clear) this.data = list;
@@ -240,7 +231,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             notifyDataSetChanged();
         }
 
-        class ExtensionHistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        class ExtensionHistoryHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private int position = 0;
             private View rootView;
             private RoundedImageView avatar;
@@ -259,17 +250,17 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
                 content = view.findViewById(R.id.tv_content);
             }
 
-            public void onBind(int position){
+            public void onBind(int position) {
                 this.position = position;
                 rootView.setOnClickListener(this);
                 InvatationResults.InvatationListItem item = (InvatationResults.InvatationListItem) data.get(position);
 //                Glide.with(context).load(Api.API_BASE_URL+item.member.icon).into(avatar);
-                ILFactory.getLoader().loadNet(avatar,Api.API_BASE_URL.concat(item.member.icon),null);
+                ILFactory.getLoader().loadNet(avatar, Api.API_BASE_URL.concat(item.member.icon), null);
                 vip.setImageResource(Utils.getExtensionVipIcon(item.member.vip_level.level));
                 name.setText(item.member.nick_name);
                 String[] split = item.member.user.date_joined.split(" ");
                 time.setText(split[0]);
-                content.setText(item.member.signature);
+                content.setText(Kits.Empty.check(item.member.signature) ? "这家伙很懒，什么也没留下。" : item.member.signature);
             }
 
             @Override
