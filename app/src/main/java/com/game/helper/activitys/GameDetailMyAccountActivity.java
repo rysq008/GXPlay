@@ -9,10 +9,7 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.adapters.MyAccountAdapter;
-import com.game.helper.event.BusProvider;
-import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.GameDetailRechargeFragment;
-import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GamePackageInfoResult;
@@ -21,6 +18,7 @@ import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
+import com.game.helper.views.widget.TotoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,27 +47,22 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
     public int option_game_id;
     public int option_channel_id;
     private GamePackageInfoResult gameDetailInfo;
-    public static boolean needClose = false;
+    private boolean isfirstEnter = true;
 
     @Override
     protected void onResume() {
         super.onResume();
-//        if (needClose) {
-//            onBackPressed();
-//            needClose = false;
-//        }
-        BusProvider.getBus().receive(MsgEvent.class).doOnNext(new Consumer<MsgEvent>() {
-            @Override
-            public void accept(MsgEvent msgEvent) throws Exception {
-                if (msgEvent.getData() instanceof LoginFragment) {
-                    if (SharedPreUtil.isLogin()) {
-                        getGameAccountInfo(1, true);
-                    } else {
-                        onBackPressed();
-                    }
-                }
+        if (isfirstEnter) {
+            getGameAccountInfo(1, true);
+            isfirstEnter = false;
+        } else {
+            if (SharedPreUtil.isLogin()) {
+                getGameAccountInfo(1, true);
+            } else {
+//                TotoroToast.makeText(this, "finish", 1000).show();
+                finish();
             }
-        });
+        }
     }
 
     @Override
@@ -77,7 +70,6 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
         initIntentData(getIntent());
         initView();
         initAdapter();
-        getGameAccountInfo(1, true);
     }
 
     private void initIntentData(Intent intent) {
@@ -89,6 +81,7 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
         } else {
             xRecyclerContentLayout.showEmpty();
         }
+
     }
 
     private void initView() {
@@ -104,13 +97,12 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
             mAdapter.addOnItemCheckListener(this);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
-        xRecyclerContentLayout.refreshEnabled(false);
+        xRecyclerContentLayout.getRecyclerView().setRefreshEnabled(false);
     }
 
     private void getGameAccountInfo(int page, boolean showLoading) {
-
         Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page, 1, option_game_id, option_channel_id));
-        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
             @Override
             public void accept(HttpResultModel<GameAccountResultModel> recommendResultsHttpResultModel) throws Exception {
                 List<GameAccountResultModel.ListBean> list = new ArrayList<>();

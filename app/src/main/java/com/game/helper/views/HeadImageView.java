@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -96,7 +95,7 @@ public class HeadImageView extends FrameLayout {
                 BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
                 Fragment fragment = DetailFragmentsActivity.getCurrentFragment();
                 if (null != fragment && fragment instanceof SettingUserFragment) {
-                    Toast.makeText(getContext(), "ssss", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "ssss", Toast.LENGTH_SHORT).show();
                 } else {
                     DetailFragmentsActivity.launch(getContext(), null, SettingUserFragment.newInstance());
                 }
