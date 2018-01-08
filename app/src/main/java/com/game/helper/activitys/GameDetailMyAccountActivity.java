@@ -14,6 +14,8 @@ import com.game.helper.fragments.GameDetailRechargeFragment;
 import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.GamePackageInfoResult;
+import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -33,6 +35,7 @@ import io.reactivex.functions.Consumer;
 public class GameDetailMyAccountActivity extends XBaseActivity implements View.OnClickListener, MyAccountAdapter.OnItemCheckListener {
 
     public static final String TAG = "MyAccountActivity";
+    public static final String GAME_RECHARGE_INFO = "game_recharge_info";
 
     @BindView(R.id.action_bar_back)
     View mHeadBack;
@@ -48,6 +51,7 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
 
     public int option_game_id;
     public int option_channel_id;
+    private GamePackageInfoResult gameDetailInfo;
 
     @Override
     protected void onResume() {
@@ -63,8 +67,15 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
     }
 
     private void initIntentData(Intent intent) {
-        option_game_id = SPUtils.getInt(context,SPUtils.GAME_ID,0);
-        option_channel_id = SPUtils.getInt(context,SPUtils.CHANNEL_ID,0);
+        Bundle extras = intent.getExtras();
+        if(extras != null){
+            gameDetailInfo = (GamePackageInfoResult) extras.getSerializable(GAME_RECHARGE_INFO);
+            option_game_id = gameDetailInfo.getGame().getId();
+            option_channel_id = gameDetailInfo.getChannel().getId();
+        }else{
+            xRecyclerContentLayout.showEmpty();
+        }
+
     }
 
     private void initView() {
@@ -125,8 +136,9 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
                 break;
             case R.id.addAccount_game_detail://添加账户
                 Intent intent = new Intent(GameDetailMyAccountActivity.this, GameDetailAddAccountActivity.class);
-                intent.putExtra(AddAccountActivity.GAME_ID,option_game_id);
-                intent.putExtra(AddAccountActivity.CHANNEL_ID,option_channel_id);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(GameDetailAddAccountActivity.GAME_MY_ACCOUNT_INFO,gameDetailInfo);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 break;
 

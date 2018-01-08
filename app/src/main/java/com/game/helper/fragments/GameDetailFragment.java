@@ -10,7 +10,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -40,6 +42,7 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.ToastUtil;
+import com.game.helper.views.XReloadableStateContorller;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -54,10 +57,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
-import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.disposables.Disposable;
@@ -72,7 +76,7 @@ import static zlc.season.rxdownload2.function.Utils.dispose;
 
 public class GameDetailFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = GameDetailFragment.class.getSimpleName();
-    List<Fragment> list = new ArrayList<Fragment>();
+    List<Fragment> list = new ArrayList();
     @BindView(R.id.action_bar_tittle)
     TextView mTvTittle;
     @BindView(R.id.iv_game_detail_logothumb)
@@ -119,11 +123,13 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     RelativeLayout llProgressBar;
     @BindView(R.id.ll_discount_navigation_game_detail)
     LinearLayout llNavigation;
+    @BindView(R.id.xreload_game_detail_loading)
+    XReloadableStateContorller xreload;
+
     private H5UrlListResults mH5UrlList;
+    public static final String GAME_DETAIL_INFO = "game_detail_info";
 
     private int gamepackeId;
-    private int gameId;
-    private int channelId;
     private String path;
     private String pkg;
     private GameDetailInfoFragment gameDetailInfoFragment;
@@ -146,39 +152,43 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     @Override
     public void initData(Bundle savedInstanceState) {
         mTvTittle.setText("游戏详情");
-        Bundle arguments = getArguments();
         tvDiscountCommon.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         tvDiscountVip.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+        Bundle arguments = getArguments();
         if (arguments != null) {
             gamepackeId = arguments.getInt("gamepackeId");
-            gameId = arguments.getInt("gameId");
-            channelId = arguments.getInt("channelId");
             path = arguments.getString("path", "");
             pkg = arguments.getString("pkg", "");
-            initGamePackage();
+            initGamePackage(true);
+            mDownloadController = new DownloadController(mStatusText, btnLoad, tvBottomDownload);
+        }else{
+            xreload.showEmpty();
         }
+    }
+
+    private void initViewPager(GamePackageInfoResult packageInfo) {
         if (gameDetailInfoFragment == null) {
             gameDetailInfoFragment = GameDetailInfoFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putInt("gameId", gameId);
+            bundle.putInt("gameId", packageInfo.getGame().getId());
             gameDetailInfoFragment.setArguments(bundle);
         }
         if (rechargeGameFragment == null) {
             rechargeGameFragment = GameDetailRechargeFragment.newInstance();
             Bundle bundle = new Bundle();
-
-            //rechargeGameFragment.setArguments(bundle);
+            bundle.putSerializable(GAME_DETAIL_INFO, packageInfo);
+            rechargeGameFragment.setArguments(bundle);
         }
         if (gameDetailGiftFragment == null) {
             gameDetailGiftFragment = GameDetailGiftFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putInt("gameId", gameId);
+            bundle.putInt("gameId", packageInfo.getGame().getId());
             gameDetailGiftFragment.setArguments(bundle);
         }
         if (gameDetailCommunityFragment == null) {
             gameDetailCommunityFragment = GameDetailCommunityFragment.newInstance();
             Bundle bundle = new Bundle();
-            bundle.putInt("gameId", gameId);
+            bundle.putInt("gameId", packageInfo.getGame().getId());
             gameDetailCommunityFragment.setArguments(bundle);
         }
         list.add(rechargeGameFragment);
@@ -234,10 +244,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             }
         });
         loadData();
-        mDownloadController = new DownloadController(mStatusText, btnLoad, tvBottomDownload);
     }
 
-    private void initGamePackage() {
+    private void initGamePackage(Boolean showLoading) {
         Flowable<GameDetailAllResults> fa;
         Flowable<HttpResultModel<GamePackageInfoResult>> fg = DataService.getGamePackageInfo(new GamePackageInfoRequestBody(gamepackeId));
         Flowable<HttpResultModel<H5UrlListResults>> fh = DataService.getH5UrlList();
@@ -262,54 +271,55 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             });
         }
 
-        RxLoadingUtils.subscribe(fa, this.bindToLifecycle(), new Consumer<GameDetailAllResults>() {
+        RxLoadingUtils.subscribeWithReload(xreload,fa, this.bindToLifecycle(), new Consumer<GameDetailAllResults>() {
             @Override
             public void accept(GameDetailAllResults gameDetailAllResults) throws Exception {
-                if (gameDetailAllResults.h5UrlListResults != null) {
-                    mH5UrlList = gameDetailAllResults.h5UrlListResults;
-                }
-                if (gameDetailAllResults.gamePackageInfoResult != null) {
-                    packageInfo = gameDetailAllResults.gamePackageInfoResult;
-                    ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(packageInfo.getGame().getLogo()), ILoader.Options.defaultOptions());
-                    tvName.setText(packageInfo.getGame().getName());
-                    tvDiscount.setText(String.valueOf(packageInfo.getDiscount_vip()));
-                    tvTypeName.setText(packageInfo.getGame().getType().getName());
-                    tvPackageFilesize.setText(String.valueOf(packageInfo.getFilesize() + "M"));
-                    tvContent.setText(packageInfo.getGame().getIntro());
-                    tvPlat.setText(packageInfo.getChannel().getName());
-                    SPUtils.putString(context, SPUtils.CHANNEL_NAME, packageInfo.getChannel().getName());
-                    SPUtils.putString(context, SPUtils.GAME_NAME, packageInfo.getGame().getName());
-                    SPUtils.putInt(context, SPUtils.CHANNEL_ID, packageInfo.getChannel().getId());
-                    SPUtils.putInt(context, SPUtils.GAME_ID, packageInfo.getGame().getId());
-                    downloadBean = new DownloadBean
-                            .Builder(packageInfo.getPath())
-                            .setSaveName(null)      //not need.
-                            .setSavePath(null)      //not need
-                            .setExtra1(packageInfo.getGame().getLogo())   //save extra info into database.
-                            .setExtra2(packageInfo.getGame().getName())  //save extra info into database.
-                            .setExtra3(packageInfo.getName_package())
-                            .build();
-                    path = packageInfo.getPath();
-                    pkg = packageInfo.getName_package();
-                    disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, path, pkg, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
-                        @Override
-                        public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
-                            updateProgressStatus(event.getDownloadStatus());
-                            if (isDisposable) {
-                                dispose(disposable);
+                if(gameDetailAllResults != null){
+                    xreload.showContent();
+                    if (gameDetailAllResults.h5UrlListResults != null) {
+                        mH5UrlList = gameDetailAllResults.h5UrlListResults;
+                    }
+                    if (gameDetailAllResults.gamePackageInfoResult != null) {
+                        packageInfo = gameDetailAllResults.gamePackageInfoResult;
+                        setGameView();
+                        initViewPager(packageInfo);
+                        downloadBean = new DownloadBean
+                                .Builder(packageInfo.getPath())
+                                .setSaveName(null)      //not need.
+                                .setSavePath(null)      //not need
+                                .setExtra1(packageInfo.getGame().getLogo())   //save extra info into database.
+                                .setExtra2(packageInfo.getGame().getName())  //save extra info into database.
+                                .setExtra3(packageInfo.getName_package())
+                                .build();
+                        path = packageInfo.getPath();
+                        pkg = packageInfo.getName_package();
+                        disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, path, pkg, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
+                            @Override
+                            public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
+                                updateProgressStatus(event.getDownloadStatus());
+                                if (isDisposable) {
+                                    dispose(disposable);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
+                    if (gameDetailAllResults.memberInfoResults != null) {
+                        memberInfoResults = gameDetailAllResults.memberInfoResults;
+                    }
                 }
-                if (gameDetailAllResults.memberInfoResults != null) {
-                    memberInfoResults = gameDetailAllResults.memberInfoResults;
-                }
+
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-            }
-        });
+        }, null,null,showLoading);
+    }
+
+    private void setGameView() {
+        ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(packageInfo.getGame().getLogo()), ILoader.Options.defaultOptions());
+        tvName.setText(packageInfo.getGame().getName());
+        tvDiscount.setText(String.valueOf(packageInfo.getDiscount_vip()));
+        tvTypeName.setText(packageInfo.getGame().getType().getName());
+        tvPackageFilesize.setText(String.valueOf(packageInfo.getFilesize() + "M"));
+        tvContent.setText(packageInfo.getGame().getIntro());
+        tvPlat.setText(packageInfo.getChannel().getName());
     }
 
     private void updateProgressStatus(DownloadStatus status) {
@@ -435,7 +445,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 if (content.length() == 0) {
                     ToastUtil.showToast("内容不能为空");
                 } else {
-                    sendCommentContent(gameId, content);
+                    sendCommentContent(packageInfo.getGame().getId(), content);
                 }
                 break;
             case R.id.tv_discount_game_detail_common:
@@ -565,7 +575,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
-        //dialog.setView(v);// 设置布局
+        //dialog.setGameView(v);// 设置布局
         Window dialogWindow = dialog.getWindow();
         /*实例化Window*/
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -597,7 +607,11 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         TextView goFirstCharge = v.findViewById(R.id.tv_first_go_recharge_common_dialog);
         TextView tvDiscountAdd = v.findViewById(R.id.tv_add_recharge_discount_common_dialog);
         TextView goAddCharge = v.findViewById(R.id.tv_add_go_recharge_common_dialog);
-        tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getDiscount_vip() + "折)");
+        if(packageInfo.getDiscount_activity() > 0){
+            tvDiscountFirst.setText("(限时" + packageInfo.getDiscount_activity() + "折)");
+        }else{
+            tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getDiscount_vip() + "折)");
+        }
         tvDiscountAdd.setText(+packageInfo.getZhekou_xuchong() + "折");
         final AlertDialog CommonDialog = new AlertDialog.Builder(context, R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
@@ -607,7 +621,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         //实例化Window操作者
         //lp.x = 100; // 新位置X坐标
         lp.y = view.getTop();
-        ; // 新位置Y坐标
+        // 新位置Y坐标
         dialogWindow.setAttributes(lp);
         Log.d(TAG, "dialogWindow的坐标" + lp.x + "----------" + lp.y);
         // 不可以用“返回键”取消

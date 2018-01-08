@@ -98,19 +98,17 @@ public class BannerView extends LinearLayout {
             @Override
             public void onBannerItemClick(BGABanner banner, View view, Object model, int position) {
                 BannerResults.BannerItem item = (BannerResults.BannerItem) model;
-                if(item.type == 1){
+                if (item.type == 1) {
                     //H5界面
                     Bundle bundle = new Bundle();
-                    bundle.putString("h5url",item.url);
-                    DetailFragmentsActivity.launch(getContext(),bundle, BannerH5Fragment.newInstance());
-                }else if(item.type == 2){
+                    bundle.putString("h5url", item.url);
+                    DetailFragmentsActivity.launch(getContext(), bundle, BannerH5Fragment.newInstance());
+                } else if (item.type == 2) {
                     //2为游戏
                     Bundle bundle = new Bundle();
-                    bundle.putInt("gamepackeId",item.game_package_id);
-                    bundle.putInt("gameId",item.game_id);
-                    DetailFragmentsActivity.launch(getContext(),bundle, GameDetailFragment.newInstance());
+                    bundle.putInt("gamepackeId", item.game_package_id);
+                    DetailFragmentsActivity.launch(getContext(), bundle, GameDetailFragment.newInstance());
                 }
-
             }
         });
 //        mBanner.setData(Arrays.asList(R.mipmap.guide1, R.mipmap.guide2, R.mipmap.guide3, R.mipmap.guide4), null);

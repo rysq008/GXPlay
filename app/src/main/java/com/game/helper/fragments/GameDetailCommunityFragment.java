@@ -46,6 +46,21 @@ public class GameDetailCommunityFragment extends XBaseFragment {
         return fragment;
     }
 
+    @Override
+    public void initData(Bundle savedInstanceState) {
+        Log.d(TAG, "----------------==================3");
+        initAdapter();
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            gameId = arguments.getInt("gameId");
+            if (gameId > 0) {
+                loadAdapterData(1, gameId, true);
+            } else {
+                xRecyclerContentLayout.showEmpty();
+            }
+        }
+    }
+
     private void initAdapter() {
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (mAdapter == null) {
@@ -97,20 +112,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     }
 
 
-    @Override
-    public void initData(Bundle savedInstanceState) {
-        Log.d(TAG, "----------------==================3");
-        initAdapter();
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            gameId = arguments.getInt("gameId");
-            if (gameId > 0) {
-                loadAdapterData(1, gameId, true);
-            } else {
-                xRecyclerContentLayout.showEmpty();
-            }
-        }
-    }
+
 
 
     @Override
