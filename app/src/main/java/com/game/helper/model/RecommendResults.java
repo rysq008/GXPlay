@@ -7,8 +7,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import java.util.Map;
 
-import zlc.season.practicalrecyclerview.ItemType;
-
 public class RecommendResults extends XBaseModel {
 
     @SerializedName("list")
@@ -20,13 +18,12 @@ public class RecommendResults extends XBaseModel {
     }
 
 
-    public static class RecommendItem implements ItemType {
+    public static class RecommendItem extends XBaseModel {
         //        {
 //            "game_package": {
-//         "zhekou_shouchong": 3.4,
-//                 "zhekou_xuchong": 5.5,
-//                 "filesize": 35.4,
-//                 "discount_vip": 0
+//         * "zhekou_shouchong": 4.2,
+//                 * "discount_activity": 3.5,
+//                 * "filesize": 211,
 //        },
 //            "name": "少年西游记",
 //                "logothumb": "/media/game_logo/f0cf3e7ec227f67918d94237aecd7959.jpg",

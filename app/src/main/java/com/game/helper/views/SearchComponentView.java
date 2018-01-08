@@ -67,6 +67,7 @@ public class SearchComponentView extends LinearLayout {
         String right_res_id_txt = typedArray.getString(R.styleable.CommonSearchView_right_tv_res_txt);
         int color = typedArray.getColor(R.styleable.CommonSearchView_right_tv_res_color, Color.WHITE);
         boolean isSearchpage = typedArray.getBoolean(R.styleable.CommonSearchView_is_search_page, false);
+        int backgroud = typedArray.getResourceId(R.styleable.CommonSearchView_layout_back_ground, R.color.app_color);
         typedArray.recycle();
 
         inflate(context, R.layout.common_search_layout, this);
@@ -102,6 +103,7 @@ public class SearchComponentView extends LinearLayout {
                 }
             });
         }
+        setBackgroundResource(backgroud);
     }
 
     public String getTextContent() {
@@ -112,7 +114,7 @@ public class SearchComponentView extends LinearLayout {
         et_center.setText(str);
     }
 
-    public void setHitText(String hitText){
+    public void setHitText(String hitText) {
         et_center.setHint(hitText);
     }
 

@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             app:center_et_res="请输入游戏名称"
+            app:layout_back_ground="@color/color_transparent"
             app:right_tv_res_img="@mipmap/icon_download" />
     </RelativeLayout>
 </com.game.helper.views.XReloadableStateContorller>

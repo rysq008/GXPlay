@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.ChannelListFragment;
+import com.game.helper.fragments.GameListFragment;
 import com.game.helper.model.HotResults;
 import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -33,6 +34,8 @@ public class HotView extends LinearLayout {
 
     @BindView(R.id.hot_item_title_tv)
     TextView textView;
+    @BindView(R.id.hot_more_tv)
+    TextView tvMore;
     @BindView(R.id.hot_item_body_recycle)
     XRecyclerView recyclerView;
 
@@ -51,15 +54,20 @@ public class HotView extends LinearLayout {
         setupView(context);
     }
 
-    public void setupView(Context context) {
+    public void setupView(final Context context) {
         inflate(context, R.layout.activity_hot_item_layout, this);
         ButterKnife.bind(this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        //recyclerView.setHasFixedSize(true);
-        //recyclerView.horizontalDivider(R.color.white,R.dimen.dp_0);
-        recyclerView.verticalDivider(R.color.white,R.dimen.dp_5);//设置divider
+        recyclerView.verticalDivider(R.color.white, R.dimen.dp_5);//设置divider
+        tvMore.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //recyclerView.horizontalDivider(R.color.white,R.dimen.dp_0);
+                DetailFragmentsActivity.launch(context, null, GameListFragment.newInstance(0, 0));
+            }
+        });
     }
 
     public void setData(final HotResults data) {
@@ -84,7 +92,10 @@ public class HotView extends LinearLayout {
         @Override
         public void onBindViewHolder(HViewHolder holder, int position) {
             final HotResults.HotItem itemData = data.list.get(position);
-            holder.discount.setPrimaryText(itemData.game_package.get("zhekou_shouchong").toString() + "折");
+//            holder.discount.setPrimaryText(itemData.game_package.get("zhekou_shouchong").toString() + "折");
+            Float zhekou_shouchong = itemData.game_package.get("zhekou_shouchong");
+            Float discount_activity = itemData.game_package.get("discount_activity");
+            holder.discount.setPrimaryText(discount_activity == 0 ? zhekou_shouchong + "折" : discount_activity + "折");
             holder.name.setText(itemData.name);
             ILFactory.getLoader().loadNet(holder.riv, Api.API_PAY_OR_IMAGE_URL.concat(itemData.logo), null);
             holder.riv.setOnClickListener(new OnClickListener() {

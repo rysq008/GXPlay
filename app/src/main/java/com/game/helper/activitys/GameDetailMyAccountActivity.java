@@ -3,32 +3,29 @@ package com.game.helper.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.adapters.MyAccountAdapter;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.GameDetailRechargeFragment;
-import com.game.helper.fragments.recharge.RechargeGameFragment;
+import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GamePackageInfoResult;
-import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
+import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
-import com.game.helper.views.widget.StateView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
@@ -52,11 +49,27 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
     public int option_game_id;
     public int option_channel_id;
     private GamePackageInfoResult gameDetailInfo;
+    public static boolean needClose = false;
 
     @Override
     protected void onResume() {
-        getGameAccountInfo(1,true);
         super.onResume();
+//        if (needClose) {
+//            onBackPressed();
+//            needClose = false;
+//        }
+        BusProvider.getBus().receive(MsgEvent.class).doOnNext(new Consumer<MsgEvent>() {
+            @Override
+            public void accept(MsgEvent msgEvent) throws Exception {
+                if (msgEvent.getData() instanceof LoginFragment) {
+                    if (SharedPreUtil.isLogin()) {
+                        getGameAccountInfo(1, true);
+                    } else {
+                        onBackPressed();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -64,18 +77,18 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
         initIntentData(getIntent());
         initView();
         initAdapter();
+        getGameAccountInfo(1, true);
     }
 
     private void initIntentData(Intent intent) {
         Bundle extras = intent.getExtras();
-        if(extras != null){
+        if (extras != null) {
             gameDetailInfo = (GamePackageInfoResult) extras.getSerializable(GAME_RECHARGE_INFO);
             option_game_id = gameDetailInfo.getGame().getId();
             option_channel_id = gameDetailInfo.getChannel().getId();
-        }else{
+        } else {
             xRecyclerContentLayout.showEmpty();
         }
-
     }
 
     private void initView() {
@@ -91,19 +104,20 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
             mAdapter.addOnItemCheckListener(this);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
-        xRecyclerContentLayout.getRecyclerView().setRefreshEnabled(false);
+        xRecyclerContentLayout.refreshEnabled(false);
     }
 
-    private void getGameAccountInfo(int page,boolean showLoading) {
+    private void getGameAccountInfo(int page, boolean showLoading) {
+
         Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page, 1, option_game_id, option_channel_id));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
+        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
             @Override
             public void accept(HttpResultModel<GameAccountResultModel> recommendResultsHttpResultModel) throws Exception {
                 List<GameAccountResultModel.ListBean> list = new ArrayList<>();
                 list.addAll(recommendResultsHttpResultModel.data.getList());
                 showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
             }
-        }, null,null,showLoading);
+        }, null, null, showLoading);
 
     }
 
@@ -137,7 +151,7 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
             case R.id.addAccount_game_detail://添加账户
                 Intent intent = new Intent(GameDetailMyAccountActivity.this, GameDetailAddAccountActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(GameDetailAddAccountActivity.GAME_MY_ACCOUNT_INFO,gameDetailInfo);
+                bundle.putSerializable(GameDetailAddAccountActivity.GAME_MY_ACCOUNT_INFO, gameDetailInfo);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;

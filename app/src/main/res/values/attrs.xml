@@ -84,44 +84,38 @@
         <attr name="is_back" format="boolean" />
         <attr name="left_iv_res" format="reference" />
         <attr name="center_et_res" format="reference|string" />
-        <attr name="right_tv_res_img" format="reference|integer" />
+        <attr name="right_tv_res_img" format="reference|color" />
         <attr name="right_tv_res_txt" format="reference|string" />
         <attr name="right_tv_res_color" format="reference|color" />
         <attr name="is_search_page" format="boolean" />
+        <attr name="layout_back_ground" format="color|reference" />
     </declare-styleable>
 
     <declare-styleable name="EditInputView">
-        <attr name="eiv_type" >
-            <enum name="type_account" value="0"/>
-            <enum name="type_password" value="1"/>
-            <enum name="type_code" value="2"/>
-            <enum name="type_trde_password" value="3"/>
+        <attr name="eiv_type">
+            <enum name="type_account" value="0" />
+            <enum name="type_password" value="1" />
+            <enum name="type_code" value="2" />
+            <enum name="type_trde_password" value="3" />
         </attr>
-        <attr name="eiv_hint" format="string"/>
-        <attr name="eiv_maxlength" format="integer"/>
+        <attr name="eiv_hint" format="string" />
+        <attr name="eiv_maxlength" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="ToggleButton">
-        <attr name="borderWidth" format="dimension">
-        </attr>
-        <attr name="offBorderColor" format="reference|color">
-        </attr>
-        <attr name="offColor" format="reference|color">
-        </attr>
-        <attr name="onColor" format="reference|color">
-        </attr>
-        <attr name="spotColor" format="reference|color">
-        </attr>
-        <attr name="animate" format="reference|boolean">
-        </attr>
-        <attr name="isDefaultOn" format="reference|boolean">
-        </attr>
+        <attr name="borderWidth" format="dimension"></attr>
+        <attr name="offBorderColor" format="reference|color"></attr>
+        <attr name="offColor" format="reference|color"></attr>
+        <attr name="onColor" format="reference|color"></attr>
+        <attr name="spotColor" format="reference|color"></attr>
+        <attr name="animate" format="reference|boolean"></attr>
+        <attr name="isDefaultOn" format="reference|boolean"></attr>
     </declare-styleable>
 
     <!--仿支付宝密码输入框-->
     <declare-styleable name="PasswordEditText">
         <!-- 密码的个数 -->
-        <attr name="passwordNumber" format="integer"/>
+        <attr name="passwordNumber" format="integer" />
         <!-- 密码圆点的半径 -->
         <attr name="passwordRadius" format="dimension" />
         <!-- 密码圆点的颜色 -->
@@ -135,23 +129,23 @@
         <!-- 背景边框的大小 -->
         <attr name="bgSize" format="dimension" />
         <!-- 背景边框的圆角大小 -->
-        <attr name="bgCorner" format="dimension"/>
+        <attr name="bgCorner" format="dimension" />
         <!--明文字体颜色-->
-        <attr name="visibleColor" format="color"/>
+        <attr name="visibleColor" format="color" />
         <!--明文字体尺寸-->
-        <attr name="visibleSize" format="dimension"/>
+        <attr name="visibleSize" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="wheelview">
         <attr name="gravity">
-            <enum name="center" value="17"/>
-            <enum name="left" value="3"/>
-            <enum name="right" value="5"/>
+            <enum name="center" value="17" />
+            <enum name="left" value="3" />
+            <enum name="right" value="5" />
         </attr>
-        <attr name="textSize" format="dimension"/>
-        <attr name="textColorOut" format="color"/>
-        <attr name="textColorCenter" format="color"/>
-        <attr name="dividerColor" format="color"/>
+        <attr name="textSize" format="dimension" />
+        <attr name="textColorOut" format="color" />
+        <attr name="textColorCenter" format="color" />
+        <attr name="dividerColor" format="color" />
     </declare-styleable>
     <declare-styleable name="CircleImageView">
         <attr name="border_width" format="dimension" />

@@ -1,9 +1,7 @@
 package com.game.helper.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import com.game.helper.activitys.HotRecommandGameListActivity;
 import com.game.helper.adapters.HomeItemAdapter;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
@@ -48,9 +46,9 @@ public class HomePagerFragment extends HomeBasePagerFragment {
                             //bundle.putInt("gamepackeId",holder);
 
                             break;
-                        case RxConstant.HomeModeType.Hot_Model_Type:
-                            startActivity(new Intent(getActivity(), HotRecommandGameListActivity.class));
-                            break;
+//                        case RxConstant.HomeModeType.Hot_Model_Type:
+//                            startActivity(new Intent(getActivity(), HotRecommandGameListActivity.class));
+//                            break;
                     }
                 }
             });
