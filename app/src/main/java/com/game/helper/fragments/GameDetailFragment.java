@@ -558,9 +558,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         } else {
             currentVip.setVisibility(View.GONE);
         }
-        Log.d(TAG, "createVipDialog: tvVip1是否可以点击" + tvVip1.isClickable());
-        Log.d(TAG, "createVipDialog: tvVip2是否可以点击" + tvVip2.isClickable());
-        Log.d(TAG, "createVipDialog: tvVip3是否可以点击" + tvVip3.isClickable());
+        //Log.d(TAG, "createVipDialog: tvVip1是否可以点击" + tvVip1.isClickable());
+        //Log.d(TAG, "createVipDialog: tvVip2是否可以点击" + tvVip2.isClickable());
+        //Log.d(TAG, "createVipDialog: tvVip3是否可以点击" + tvVip3.isClickable());
 
         //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
         // 不可以用“返回键”取消

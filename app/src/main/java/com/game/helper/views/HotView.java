@@ -57,8 +57,9 @@ public class HotView extends LinearLayout {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.verticalDivider(R.color.white, R.dimen.dp_20);//设置divide
+        //recyclerView.setHasFixedSize(true);
+        //recyclerView.horizontalDivider(R.color.white,R.dimen.dp_0);
+        recyclerView.verticalDivider(R.color.white,R.dimen.dp_5);//设置divider
     }
 
     public void setData(final HotResults data) {
