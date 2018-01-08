@@ -60,6 +60,10 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
+    @BindView(R.id.sv_content)
+    View mRootContent;
+    @BindView(R.id.aiv_loading)
+    View mloadingView;
     @BindView(R.id.ll_avatar)
     View mItemAvatar;
     @BindView(R.id.hv_avatar)
@@ -103,8 +107,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
 
     //avatar
     private AvatarEditDialog dialog;
-    private ProgressDialog loading;
-    
+
     public static SettingUserFragment newInstance() {
         return new SettingUserFragment();
     }
@@ -242,7 +245,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             mAlipayStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        loading.dismiss();
+        dismissWaittingDialog();
     }
 
     @Override
@@ -310,12 +313,13 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     }
 
     private void showWaittingDialog() {
-        loading = null;
-        loading = new ProgressDialog(getContext(), ProgressDialog.STYLE_SPINNER);
-        loading.setCancelable(true);
-        loading.setCanceledOnTouchOutside(false);
-        loading.setMessage("加载中...");
-        loading.show();
+        mRootContent.setVisibility(View.GONE);
+        mloadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void dismissWaittingDialog(){
+        mRootContent.setVisibility(View.VISIBLE);
+        mloadingView.setVisibility(View.GONE);
     }
 
     /**************************         safe mannage         ***************************/

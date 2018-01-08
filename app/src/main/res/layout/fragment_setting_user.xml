@@ -1,7 +1,8 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/colorBackground"
     tools:context="com.game.helper.fragments.SettingUserFragment">
@@ -10,7 +11,22 @@
         android:id="@+id/action_bar"
         layout="@layout/layout_action_bar"/>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/aiv_loading"
+            style="@style/AVLoadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:indicatorColor="@color/colorPrimary"
+            app:indicatorName="LineScaleIndicator" />
+    </FrameLayout>
     <ScrollView
+        android:id="@+id/sv_content"
+        android:layout_below="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -330,4 +346,4 @@
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+</RelativeLayout>
