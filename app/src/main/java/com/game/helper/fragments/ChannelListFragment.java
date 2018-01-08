@@ -74,6 +74,7 @@ public class ChannelListFragment extends XBaseFragment {
                     bundle.putInt("channelId", itemDate.getChannel().getId());
                     bundle.putString("path", itemDate.getPath());
                     bundle.putString("pkg", itemDate.getName_package());
+                    //bundle.putSerializable(GameDetailFragment.GAME_DETAIL_INFO,itemDate);
                     DetailFragmentsActivity.launch(context, bundle, GameDetailFragment.newInstance());
                 }
             });

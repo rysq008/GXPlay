@@ -63,6 +63,8 @@ public class GameDetailGiftFragment extends XBaseFragment {
         if (arguments != null) {
             gameId = arguments.getInt("gameId");
             loadAdapterData(1, gameId,true);
+        }else{
+            xRecyclerContentLayout.showEmpty();
         }
     }
 
