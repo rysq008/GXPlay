@@ -1,114 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:id="@+id/root_view"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/dp_10"
+    android:paddingTop="@dimen/dp_10"
+    android:background="@color/white">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/iv_detail_special_logothumb"
+        android:layout_width="@dimen/dp_64"
+        android:layout_height="@dimen/dp_64"
+        android:layout_marginLeft="@dimen/margin_10"
+        android:layout_marginRight="@dimen/margin_9"
+        android:background="@mipmap/icon_game_default"
+        android:scaleType="fitXY"
+        app:riv_corner_radius="6dip" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/margin_12"
-        android:layout_marginTop="@dimen/margin_12">
-
-        <ImageView
-            android:id="@+id/iv_detail_special_logothumb"
-            android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginRight="@dimen/margin_9"
-            android:background="@mipmap/guide1"
-            android:scaleType="fitXY" />
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_8"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/iv_detail_special_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/margin_5"
-                    android:text="大话西游"
-                    android:textColor="@color/color_333"
-                    android:textSize="@dimen/size_14sp" />
-
-                <TextView
-                    android:id="@+id/iv_detail_special_discount_vip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@mipmap/wz_bg"
-                    android:gravity="center"
-                    android:text="5折"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/size_14sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_10"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/iv_detail_special_type_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="策略游戏"
-                    android:textColor="@color/color_999"
-                    android:textSize="@dimen/size_12sp" />
-
-                <ImageView
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/margin_5"
-                    android:layout_marginRight="@dimen/margin_5"
-                    android:background="@color/color_999" />
-
-                <TextView
-                    android:id="@+id/iv_detail_special_package_filesize"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="221M"
-                    android:textColor="@color/color_999"
-                    android:textSize="@dimen/size_12sp" />
-
-            </LinearLayout>
+            android:layout_marginBottom="@dimen/margin_8"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/iv_detail_special_intro"
+                android:id="@+id/tv_detail_special_name"
+                android:maxLength="7"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="最休闲的新派放置RPG游戏！"
-                android:textColor="@color/color_999"
+                android:layout_marginRight="@dimen/margin_5"
+                android:text="大话西游"
+                android:textColor="@color/color_333"
+                android:textSize="@dimen/size_14sp" />
+
+            <TextView
+                android:id="@+id/tv_detail_special_discount_vip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/wz_bg"
+                android:gravity="center"
+                android:text="5折"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_14sp"
+                android:layout_marginRight="@dimen/margin_5"/>
+            <TextView
+                android:id="@+id/tv_detail_special_activity_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_8"
+                android:paddingRight="@dimen/dp_8"
+                android:background="@drawable/shape_bg_activity_discount"
+                android:gravity="center"
+                android:text="5折"
+                android:textColor="@color/white"
+                android:textSize="@dimen/size_12sp"
+                android:layout_marginRight="@dimen/margin_5"/>
+            <TextView
+                android:id="@+id/tv_detail_special_matching_activity_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5折"
+                android:textColor="@color/color_cecece"
                 android:textSize="@dimen/size_12sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_detail_special_type_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="策略游戏"
+                android:textColor="@color/color_999"
+                android:textSize="@dimen/size_12sp" />
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_5"
+                android:layout_marginRight="@dimen/margin_5"
+                android:background="@color/color_999" />
+
+            <TextView
+                android:id="@+id/tv_detail_special_package_filesize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="221M"
+                android:textColor="@color/color_999"
+                android:textSize="@dimen/size_12sp" />
+
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/iv_detail_special_into"
-            android:layout_width="@dimen/view_59"
-            android:layout_height="@dimen/view_29"
-            android:layout_marginRight="@dimen/margin_21"
-            android:background="@mipmap/btn_jr"
-            android:gravity="center"
-            android:text="进入"
-            android:textColor="#00aeff"
-            android:textSize="@dimen/size_13sp" />
+            android:id="@+id/tv_detail_special_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="最休闲的新派放置RPG游戏！"
+            android:textColor="@color/color_999"
+            android:textSize="@dimen/size_12sp"
+            android:maxLines="2"
+            android:ellipsize="end"/>
     </LinearLayout>
+
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#dfdfdd"/>
+        android:id="@+id/iv_detail_special_into"
+        android:layout_width="@dimen/view_59"
+        android:layout_height="@dimen/view_29"
+        android:layout_marginRight="@dimen/margin_21"
+        android:src="@mipmap/iv_btn_jr" />
+</LinearLayout>
+
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="#dfdfdd" />
 
 </LinearLayout>

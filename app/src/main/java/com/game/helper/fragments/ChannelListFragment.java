@@ -52,10 +52,14 @@ public class ChannelListFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        Bundle arguments = getArguments();
-        gameId = arguments.getInt(GAME_ID);
         initAdapter();
-        loadAdapterData(1, true);
+        Bundle arguments = getArguments();
+        if(arguments != null){
+            gameId = arguments.getInt(GAME_ID);
+            loadAdapterData(1, true);
+        }else{
+            xrclChannelList.showEmpty();
+        }
     }
 
     private void initAdapter() {
@@ -93,8 +97,7 @@ public class ChannelListFragment extends XBaseFragment {
             }
         });
     }
-
-    private void loadAdapterData(int page, boolean showLoading) {
+    private void loadAdapterData(int page, Boolean showLoading) {
         Flowable<HttpResultModel<GamePackageListResult>> fr = DataService.getGamePackageList(new GamePackageRequestBody(page, gameId, 1));
         RxLoadingUtils.subscribeWithReload(xrclChannelList, fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageListResult>>() {
             @Override
@@ -113,12 +116,12 @@ public class ChannelListFragment extends XBaseFragment {
         } else {
             mAdapter.setData(model);
         }
-        xrclChannelList.getRecyclerView().setPage(cur_page, total_page);
         if (mAdapter.getItemCount() < 1) {
             xrclChannelList.showEmpty();
         } else {
             xrclChannelList.showContent();
         }
+        xrclChannelList.getRecyclerView().setPage(cur_page, total_page);
     }
 
     @Override

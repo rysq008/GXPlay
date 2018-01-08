@@ -1,6 +1,7 @@
 package com.game.helper.views;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -41,6 +42,10 @@ public class RecommendView extends LinearLayout {
     TextView descTv;
     @BindView(R.id.recommend_item_launch_iv)
     ImageView launchIv;
+    @BindView(R.id.recommend_item_activity_discount_tv)
+    TextView activityDiscount;
+    @BindView(R.id.recommend_item_discount_tv_matching_activity_discount)
+    TextView matchingActivityDiscount;
 
     private Context mContext;
 
@@ -71,7 +76,18 @@ public class RecommendView extends LinearLayout {
         nameTv.setText(data.name.replace(" ", ""));
         Float zhekou_shouchong = data.game_package.get("zhekou_shouchong");
         Float discount_activity = data.game_package.get("discount_activity");
-        discountTv.setText(discount_activity == 0 ? zhekou_shouchong.toString() : discount_activity.toString());
+        if (discount_activity >0) {
+            discountTv.setVisibility(GONE);
+            activityDiscount.setVisibility(VISIBLE);
+            matchingActivityDiscount.setVisibility(VISIBLE);
+            matchingActivityDiscount.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
+            activityDiscount.setText(discount_activity.toString()+"折");
+            matchingActivityDiscount.setText(zhekou_shouchong.toString()+"折");
+        } else {
+            activityDiscount.setVisibility(GONE);
+            matchingActivityDiscount.setVisibility(GONE);
+            discountTv.setText(zhekou_shouchong.toString()+"折");
+        }
         typeTv.setText(data.type.get("name").replace(" ", ""));
         sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
         descTv.setText(data.intro.replace(" ", ""));
