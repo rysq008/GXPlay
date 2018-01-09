@@ -52,7 +52,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_8"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:id="@+id/tv_game_detail_name"
@@ -66,18 +67,39 @@
                             android:id="@+id/tv_game_detail_discount_vip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@mipmap/wz_bg"
+                            android:background="@drawable/shape_bg_discount_vip"
                             android:gravity="center"
                             android:text="5折"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/size_14sp" />
+                            android:textSize="@dimen/size_9sp" />
+                        <TextView
+                            android:id="@+id/tv_game_detail_activity_discount_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_bg_activity_discount"
+                            android:gravity="center"
+                            android:text="0折"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/size_9sp"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:visibility="gone"/>
+                        <TextView
+                            android:id="@+id/tv_game_detail_matching_activity_discount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="0折"
+                            android:textColor="@color/color_cecece"
+                            android:textSize="@dimen/size_9sp"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_10"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:id="@+id/tv_game_detail_type_name"
@@ -89,7 +111,7 @@
 
                         <ImageView
                             android:layout_width="1dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/dp_12"
                             android:layout_marginLeft="@dimen/margin_5"
                             android:layout_marginRight="@dimen/margin_5"
                             android:background="@color/colorDivider" />
@@ -104,7 +126,7 @@
 
                         <ImageView
                             android:layout_width="1dp"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/dp_12"
                             android:layout_marginLeft="@dimen/margin_5"
                             android:layout_marginRight="@dimen/margin_5"
                             android:background="@color/colorDivider" />

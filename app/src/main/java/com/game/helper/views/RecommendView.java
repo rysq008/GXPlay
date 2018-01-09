@@ -46,6 +46,8 @@ public class RecommendView extends LinearLayout {
     TextView activityDiscount;
     @BindView(R.id.recommend_item_discount_tv_matching_activity_discount)
     TextView matchingActivityDiscount;
+    @BindView(R.id.recommend_item_hand_type_tv)
+    TextView handType;
 
     private Context mContext;
 
@@ -86,11 +88,13 @@ public class RecommendView extends LinearLayout {
         } else {
             activityDiscount.setVisibility(GONE);
             matchingActivityDiscount.setVisibility(GONE);
+            discountTv.setVisibility(VISIBLE);
             discountTv.setText(zhekou_shouchong.toString()+"折");
         }
         typeTv.setText(data.type.get("name").replace(" ", ""));
         sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
         descTv.setText(data.intro.replace(" ", ""));
+        handType.setText(data.class_type.get("name"));
         launchIv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

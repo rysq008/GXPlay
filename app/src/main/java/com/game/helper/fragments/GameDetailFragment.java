@@ -10,9 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -39,7 +37,6 @@ import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
 import com.game.helper.utils.DownLoadReceiveUtils;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.ToastUtil;
 import com.game.helper.views.XReloadableStateContorller;
@@ -57,9 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -125,6 +120,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     LinearLayout llNavigation;
     @BindView(R.id.xreload_game_detail_loading)
     XReloadableStateContorller xreload;
+    @BindView(R.id.tv_game_detail_activity_discount_tv)
+    TextView mTvActivityDiscount;
+    @BindView(R.id.tv_game_detail_matching_activity_discount)
+    TextView mTvMatchingActivityDiscount;
 
     private H5UrlListResults mH5UrlList;
     public static final String GAME_DETAIL_INFO = "game_detail_info";
@@ -161,7 +160,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             pkg = arguments.getString("pkg", "");
             initGamePackage(true);
             mDownloadController = new DownloadController(mStatusText, btnLoad, tvBottomDownload);
-        }else{
+        } else {
             xreload.showEmpty();
         }
     }
@@ -271,10 +270,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             });
         }
 
-        RxLoadingUtils.subscribeWithReload(xreload,fa, this.bindToLifecycle(), new Consumer<GameDetailAllResults>() {
+        RxLoadingUtils.subscribeWithReload(xreload, fa, this.bindToLifecycle(), new Consumer<GameDetailAllResults>() {
             @Override
             public void accept(GameDetailAllResults gameDetailAllResults) throws Exception {
-                if(gameDetailAllResults != null){
+                if (gameDetailAllResults != null) {
                     xreload.showContent();
                     if (gameDetailAllResults.h5UrlListResults != null) {
                         mH5UrlList = gameDetailAllResults.h5UrlListResults;
@@ -309,13 +308,26 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 }
 
             }
-        }, null,null,showLoading);
+        }, null, null, showLoading);
     }
 
     private void setGameView() {
+        Double discount_vip = packageInfo.getDiscount_vip();
+        Double discount_activity = packageInfo.getDiscount_activity();
+        if (discount_activity > 0) {
+            tvDiscount.setVisibility(View.GONE);
+            mTvActivityDiscount.setVisibility(View.VISIBLE);
+            mTvMatchingActivityDiscount.setVisibility(View.VISIBLE);
+            mTvMatchingActivityDiscount.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            mTvActivityDiscount.setText(discount_activity.toString() + "折");
+            mTvMatchingActivityDiscount.setText(discount_vip.toString() + "折");
+        } else {
+            mTvActivityDiscount.setVisibility(View.GONE);
+            mTvMatchingActivityDiscount.setVisibility(View.GONE);
+            tvDiscount.setText(discount_vip.toString() + "折");
+        }
         ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(packageInfo.getGame().getLogo()), ILoader.Options.defaultOptions());
         tvName.setText(packageInfo.getGame().getName());
-        tvDiscount.setText(String.valueOf(packageInfo.getDiscount_vip()));
         tvTypeName.setText(packageInfo.getGame().getType().getName());
         tvPackageFilesize.setText(String.valueOf(packageInfo.getFilesize() + "M"));
         tvContent.setText(packageInfo.getGame().getIntro());
@@ -607,9 +619,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         TextView goFirstCharge = v.findViewById(R.id.tv_first_go_recharge_common_dialog);
         TextView tvDiscountAdd = v.findViewById(R.id.tv_add_recharge_discount_common_dialog);
         TextView goAddCharge = v.findViewById(R.id.tv_add_go_recharge_common_dialog);
-        if(packageInfo.getDiscount_activity() > 0){
+        if (packageInfo.getDiscount_activity() > 0) {
             tvDiscountFirst.setText("(限时" + packageInfo.getDiscount_activity() + "折)");
-        }else{
+        } else {
             tvDiscountFirst.setText("(享受皇冠会员" + packageInfo.getDiscount_vip() + "折)");
         }
         tvDiscountAdd.setText(+packageInfo.getZhekou_xuchong() + "折");

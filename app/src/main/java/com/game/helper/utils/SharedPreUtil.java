@@ -3,6 +3,7 @@ package com.game.helper.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.SharedPreferencesCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -38,6 +39,7 @@ public class SharedPreUtil {
     public static final String H5_URL_ACCOUNT_GUIDE = "account_guide_url";
     public static final String EXPECTED_URL = "expected_url";
     public static final String SHARE_DISCOUNT_URL = "share_discount_url";
+    public static final String TEMP_HUANXIN_NAME = "temp_hanxin_name";
 
     private static SharedPreferences sp;
 
@@ -246,6 +248,29 @@ public class SharedPreUtil {
         }
         return t;
     }
+
+    public static void putString(String key, String value) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, value);
+        SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
+    }
+
+    public static String getString(String key, String defValue) {
+        return sp.getString(key, defValue);
+    }
+
+    /**
+     * 移除某个key值已经对应的值
+     * @param key
+     */
+    public static void remove(String key) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.remove(key);
+        SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
+    }
+
     /*****************************          public method end                 ******************************/
+
+
 
 }

@@ -1,6 +1,7 @@
 package com.game.helper.adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,6 +22,8 @@ import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import zlc.season.practicalrecyclerview.ItemType;
+
+import static android.view.View.GONE;
 
 /**
  *
@@ -85,6 +88,12 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
         TextView descTv;
         @BindView(R.id.recommend_item_launch_iv)
         ImageView launchIv;
+        @BindView(R.id.recommend_item_activity_discount_tv)
+        TextView activityDiscount;
+        @BindView(R.id.recommend_item_discount_tv_matching_activity_discount)
+        TextView matchingActivityDiscount;
+        @BindView(R.id.recommend_item_hand_type_tv)
+        TextView handType;
 
 
         public void setDisplay(ItemType itemType) {
@@ -94,10 +103,24 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
 
             Float zhekou_shouchong = data.game_package.get("zhekou_shouchong");
             Float discount_activity = data.game_package.get("discount_activity");
+            if (discount_activity >0) {
+                discountTv.setVisibility(GONE);
+                activityDiscount.setVisibility(View.VISIBLE);
+                matchingActivityDiscount.setVisibility(View.VISIBLE);
+                matchingActivityDiscount.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
+                activityDiscount.setText(discount_activity.toString()+"折");
+                matchingActivityDiscount.setText(zhekou_shouchong.toString()+"折");
+            } else {
+                activityDiscount.setVisibility(GONE);
+                matchingActivityDiscount.setVisibility(GONE);
+                discountTv.setVisibility(View.VISIBLE);
+                discountTv.setText(zhekou_shouchong.toString()+"折");
+            }
             discountTv.setText(discount_activity == 0 ? zhekou_shouchong.toString() : discount_activity.toString());
             typeTv.setText(data.type.get("name").replace(" ", ""));
             sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
             descTv.setText(data.intro.replace(" ", ""));
+            handType.setText(data.class_type.get("name"));
 
         }
 
