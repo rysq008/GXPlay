@@ -50,6 +50,7 @@ public class SpecialDetailResults extends XBaseModel {
             public double zhekou_xuchong;
             public double filesize;
             public double discount_vip;
+            public double discount_activity;
 
         }
 

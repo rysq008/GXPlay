@@ -1,7 +1,10 @@
 package com.game.helper.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.adapters.SearchListAdapter;
@@ -31,6 +34,12 @@ import zlc.season.practicalrecyclerview.ItemType;
 
 public class GameListFragment extends XBaseFragment {
 
+    @BindView(R.id.action_bar)
+    RelativeLayout actionBar;
+    @BindView(R.id.action_bar_back)
+    View mHeadBack;
+    @BindView(R.id.action_bar_tittle)
+    TextView mHeadTittle;
     @BindView(R.id.game_list_layout)
     XReloadableRecyclerContentLayout xRecyclerContentLayout;
     @BindView(R.id.game_list_move_top_iv)
@@ -48,6 +57,16 @@ public class GameListFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        actionBar.setVisibility((classical_type == 0 && common_type == 0) ? View.VISIBLE : View.GONE);
+        if (actionBar.getVisibility() == View.VISIBLE) {
+            mHeadTittle.setText("热门推荐");
+            mHeadBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            });
+        }
         initAdapter();
         loadGmaeAdapterData(true, 1, classical_type, common_type);
     }

@@ -23,6 +23,8 @@ import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.GamePackageInfoResult;
+import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
@@ -101,6 +103,8 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     public static final int RESULT_CODE = 98;
     private GXPlayDialog dialog;
 
+    private GamePackageInfoResult gameDetailInfo = null;
+
     public GameDetailRechargeFragment() {
         // Required empty public constructor
     }
@@ -122,15 +126,26 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
 
     private void initView() {
         setCheckStatus(-1, true);
-        if (getArguments() != null) {
-            setChooseGameData(true);
+        Bundle arguments = getArguments();
+        if (arguments!= null) {
+            //setChooseGameData(true);
+            gameDetailInfo = (GamePackageInfoResult) arguments.getSerializable(GameDetailFragment.GAME_DETAIL_INFO);
+
         }
         //getVipLevel();//获取最高vip
-
         discount_high_vip = getResources().getString(R.string.recharge_high_vip_discount);
         discount_vip = getResources().getString(R.string.recharge_vip_discount);
         discount_member = getResources().getString(R.string.recharge_member_discount);
-
+        if(gameDetailInfo != null){
+            //显示游戏的折扣
+            if(gameDetailInfo.getDiscount_activity()>0){
+                mDiscount1.setText("首充限时" + gameDetailInfo.getDiscount_activity() + "折");
+            }else{
+                mDiscount1.setText(discount_high_vip +gameDetailInfo.getDiscount_vip() + "折");
+            }
+            mDiscount2.setText(discount_member + gameDetailInfo.getZhekou_shouchong() + "折");
+            mDiscount3.setText(discount_vip + gameDetailInfo.getZhekou_xuchong() + "折");
+        }
         mItemAccount.setOnClickListener(this);
         mItemDiscount1.setOnClickListener(this);
         mItemDiscount2.setOnClickListener(this);
@@ -179,7 +194,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             setCheckStatus(0, false);
             mItemDiscount1.performClick();
         }
-        getGameAccountDiscount(gameBean.getId());
+        //getGameAccountDiscount(gameBean.getId());
     }
 
     private void setVipHint(int count) {
@@ -362,7 +377,11 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     @Override
     public void onClick(View v) {
         if (v == mItemAccount) {
-            startActivityForResult(new Intent(getActivity(), GameDetailMyAccountActivity.class), REQUEST_CODE);
+            Intent intent = new Intent(getActivity(), GameDetailMyAccountActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(GameDetailMyAccountActivity.GAME_RECHARGE_INFO,gameDetailInfo);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, REQUEST_CODE);
         }
         if (v == mItemDiscount1) {
             if (mCbDiscount1.isEnabled()) return;

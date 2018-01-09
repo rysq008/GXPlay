@@ -17,8 +17,8 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.NotConcernResults;
-import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.PlatformMessageResults;
+import com.game.helper.model.SystemMessageResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.UpdateMsgStatusRequestBody;
@@ -88,23 +88,22 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
         mContent.showLoading();
         initList();
-        getDataFromNet(1);
+        getDataFromNet(1, true);
     }
 
     private void initList() {
-        mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
         mContent.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
         mContent.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                getDataFromNet(1);
+                getDataFromNet(1, false);
             }
 
             @Override
             public void onLoadMore(int page) {
-                getDataFromNet(page);
+                getDataFromNet(page, false);
             }
         });
         mContent.getRecyclerView().useDefLoadMoreView();
@@ -122,7 +121,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             type = Type_Platform;
         }
         setmAdapter();
-        getDataFromNet(1);
+        getDataFromNet(1, true);
     }
 
     /**
@@ -138,11 +137,11 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
     /**
      * 获取数据
      */
-    private void getDataFromNet(final int page) {
+    private void getDataFromNet(final int page, boolean showloading) {
         //平台消息
         if (type == Type_System) {
             Flowable<HttpResultModel<SystemMessageResults>> fr = DataService.getSystemMessage(new SinglePageRequestBody(page));
-            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<SystemMessageResults>>() {
+            RxLoadingUtils.subscribeWithReload(mContent, fr, bindToLifecycle(), new Consumer<HttpResultModel<SystemMessageResults>>() {
                 @Override
                 public void accept(HttpResultModel<SystemMessageResults> systemMessageResultsHttpResultModel) throws Exception {
                     if (!systemMessageResultsHttpResultModel.isSucceful()) {
@@ -160,13 +159,13 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                     showError(netError);
                     Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
                 }
-            });
+            }, null, showloading);
         }
 
         //系统消息
         if (type == Type_Platform) {
             Flowable<HttpResultModel<PlatformMessageResults>> fr = DataService.getPlatformMessage(new SinglePageRequestBody(page));
-            RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
+            RxLoadingUtils.subscribeWithReload(mContent, fr, bindToLifecycle(), new Consumer<HttpResultModel<PlatformMessageResults>>() {
                 @Override
                 public void accept(HttpResultModel<PlatformMessageResults> platformMessageResultsHttpResultModel) throws Exception {
                     if (!platformMessageResultsHttpResultModel.isSucceful()) {
@@ -184,7 +183,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                     showError(netError);
                     Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
                 }
-            });
+            }, null, showloading);
         }
     }
 
@@ -310,6 +309,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
 
         class SystemMessageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private View rootView;
+            private View redBot;
             private SwipeLayout mSwipeLayout;
             private View mSwipeDelete;
             public View contentView;
@@ -322,6 +322,7 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
             public SystemMessageHolder(View itemView) {
                 super(itemView);
                 rootView = itemView.findViewById(R.id.root_layout);
+                redBot = itemView.findViewById(R.id.iv_red);
                 mSwipeLayout = itemView.findViewById(R.id.swipeLayout);
                 mSwipeDelete = itemView.findViewById(R.id.tv_del);
                 mTittle = itemView.findViewById(R.id.tv_tittle);
@@ -335,6 +336,8 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                 this.itemPosition = position;
                 SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mData.get(position);
                 rootView.setOnClickListener(this);
+                rootView.setTag(results);
+                redBot.setVisibility(results.is_read == 0 ? View.VISIBLE : View.GONE);
                 mTittle.setText(results.title);
                 mTime.setText(StringUtils.isEmpty(results.create_time) ? "" : results.create_time);
                 mContent.setText(results.content);
@@ -378,23 +381,34 @@ public class MessageFragment extends XBaseFragment implements View.OnClickListen
                     mSwipeLayout.close();
                     mArrow.setSelected(!mArrow.isSelected());
                     contentView.setVisibility(mArrow.isSelected() ? View.VISIBLE : View.GONE);
+
+                    if (redBot.getVisibility() == View.VISIBLE){
+                        redBot.setVisibility(View.GONE);
+                        SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) rootView.getTag();
+                        updateMsgStatus(results.id + "", UpdateMsgStatusRequestBody.MESSAGE_OPTION_READ);
+                    }
                 }
                 if (v == mSwipeDelete) {
                     rootView.performClick();
                     SystemMessageResults.SystemMessageItem results = (SystemMessageResults.SystemMessageItem) mSwipeDelete.getTag();
-                    updateMsgStatus(results.id + "");
+                    updateMsgStatus(results.id + "",UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE);
                 }
             }
 
-            private void updateMsgStatus(String id) {
-                Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateMsgStatus(new UpdateMsgStatusRequestBody(id, UpdateMsgStatusRequestBody.MESSAGE_SYSTEM, UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE));
+            private void updateMsgStatus(String id, final String action) {
+                Flowable<HttpResultModel<NotConcernResults>> fr = DataService.updateMsgStatus(new UpdateMsgStatusRequestBody(id, UpdateMsgStatusRequestBody.MESSAGE_SYSTEM, action));
                 RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
                     @Override
                     public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
-                        Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                         if (notConcernResultsHttpResultModel.isSucceful()) {
-                            mData.remove(itemPosition);
-                            mAdapter.notifyDataSetChanged();
+                            if (action.equals(UpdateMsgStatusRequestBody.MESSAGE_OPTION_DELETE)) {
+                                mData.remove(itemPosition);
+                                mAdapter.notifyDataSetChanged();
+                                Toast.makeText(getContext(), "删除成功！", Toast.LENGTH_SHORT).show();
+                            }else if (action.equals(UpdateMsgStatusRequestBody.MESSAGE_OPTION_READ)){
+                            }
+                        }else {
+                            Toast.makeText(getContext(), notConcernResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Consumer<NetError>() {

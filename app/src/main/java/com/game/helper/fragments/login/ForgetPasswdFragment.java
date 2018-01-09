@@ -144,16 +144,15 @@ public class ForgetPasswdFragment extends XBaseFragment implements View.OnClickL
             return;
         }
 
-        mCountDownText.setCountDownTimer(60 * 1000,1000);
-        mCountDownText.startTimer();
-
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_LOGIN));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
             public void accept(HttpResultModel<VerifyResults> verifyResultsHttpResultModel ) throws Exception {
                 if (verifyResultsHttpResultModel.isSucceful()) {
+                    mCountDownText.setCountDownTimer(60 * 1000,1000);
+                    mCountDownText.startTimer();
                 }else {
-                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {

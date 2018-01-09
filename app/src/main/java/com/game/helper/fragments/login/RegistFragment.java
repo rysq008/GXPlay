@@ -107,7 +107,7 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
 //        String marketNum = mInvatation.getText().toString().trim();
 
         String errorMsg = null;
-        if (StringUtils.isEmpty(account)) errorMsg = getResources().getString(R.string.login_hint_without_account);
+        if (StringUtils.isEmpty(account) || account.length() != 11) errorMsg = getResources().getString(R.string.login_hint_without_account);
         else if (StringUtils.isEmpty(passWord)) errorMsg = getResources().getString(R.string.login_hint_without_passwd);
         else if (StringUtils.isEmpty(passWord1)) errorMsg = getResources().getString(R.string.login_hint_without_confirm_passwd);
         else if (passWord != null && passWord1 != null && !passWord.equals(passWord1)) errorMsg = getResources().getString(R.string.login_hint_wrong_notequal_passwd);
@@ -153,21 +153,20 @@ public class RegistFragment extends XBaseFragment implements View.OnClickListene
     private void getVerify(){
         String account = mAccount.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)){
+        if (StringUtils.isEmpty(account) || account.length() != 11){
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        mCountDownText.setCountDownTimer(60 * 1000,1000);
-        mCountDownText.startTimer();
 
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_REGIST));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
             public void accept(HttpResultModel<VerifyResults> verifyResultsHttpResultModel ) throws Exception {
-                if (verifyResultsHttpResultModel.isSucceful()) {
+                if (verifyResultsHttpResultModel.isSucceful()){
+                    mCountDownText.setCountDownTimer(60 * 1000, 1000);
+                    mCountDownText.startTimer();
                 }else {
-                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {

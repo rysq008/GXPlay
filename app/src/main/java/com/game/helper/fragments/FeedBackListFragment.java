@@ -44,6 +44,10 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
     TextView mHeadTittle;
     @BindView(R.id.rc_feedback_list)
     RecyclerView mList;
+    @BindView(R.id.v_empty)
+    View emptyView;
+    @BindView(R.id.v_loading)
+    View loadingView;
 
     private List<FeedbackListResults.FeedbackItem> mData = new ArrayList<>();
     private FeedBackListAdapter adapter;
@@ -65,6 +69,7 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
     private void initView() {
         mHeadTittle.setText(getResources().getString(R.string.feedback_list_tittle));
         mHeadBack.setOnClickListener(this);
+        emptyView.setOnClickListener(this);
 
         initList();
         feedbackList();
@@ -79,12 +84,21 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
     }
 
     private void feedbackList() {
+        loadingView.setVisibility(View.VISIBLE);
         Flowable<HttpResultModel<FeedbackListResults>> fr = DataService.feedBackList();
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FeedbackListResults>>() {
             @Override
             public void accept(HttpResultModel<FeedbackListResults> feedbackListResultsHttpResultModel) throws Exception {
+                loadingView.setVisibility(View.GONE);
                 if (feedbackListResultsHttpResultModel.isSucceful()) {
-                    adapter.notifyData(feedbackListResultsHttpResultModel.data.list);
+                    if (feedbackListResultsHttpResultModel.data.list.isEmpty()){
+                        emptyView.setVisibility(View.VISIBLE);
+                        mList.setVisibility(View.GONE);
+                    }else {
+                        mList.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.GONE);
+                        adapter.notifyData(feedbackListResultsHttpResultModel.data.list);
+                    }
                 } else {
                     Toast.makeText(getContext(), feedbackListResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -92,6 +106,9 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
+                loadingView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+                mList.setVisibility(View.GONE);
                 Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
             }
         });
@@ -101,6 +118,9 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
     public void onClick(View v) {
         if (v == mHeadBack) {
             getActivity().onBackPressed();
+        }
+        if (v == emptyView){
+            feedbackList();
         }
     }
 
@@ -213,14 +233,18 @@ public class FeedBackListFragment extends XBaseFragment implements View.OnClickL
             RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
                 @Override
                 public void accept(HttpResultModel<NotConcernResults> feedbackListResultsHttpResultModel) throws Exception {
-                    if (feedbackListResultsHttpResultModel.isSucceful() && status == 1){
-                        cancelImg.setSelected(false);
-                        confirmImg.setSelected(true);
+                    if (feedbackListResultsHttpResultModel.isSucceful()) {
+                        if (status == 1) {
+                            cancelImg.setSelected(false);
+                            confirmImg.setSelected(true);
+                        } else {
+                            cancelImg.setSelected(true);
+                            confirmImg.setSelected(false);
+                        }
+                        Toast.makeText(getContext(), "反馈成功！", Toast.LENGTH_SHORT).show();
                     }else {
-                        cancelImg.setSelected(true);
-                        confirmImg.setSelected(false);
+                        Toast.makeText(getContext(), feedbackListResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                     }
-                    Toast.makeText(getContext(), feedbackListResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }, new Consumer<NetError>() {
                 @Override

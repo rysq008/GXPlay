@@ -64,6 +64,11 @@ public class StateCode {
     public static final String STATE_0232 = "0232";
     public static final String STATE_0233 = "0233";
     public static final String STATE_0234 = "0234";
+    public static final String STATE_0241 = "0241";
+    public static final String STATE_0242 = "0242";
+    public static final String STATE_0243 = "0243";
+    public static final String STATE_0244 = "0244";
+    public static final String STATE_0245 = "0245";
     /* 游戏接口 */
     public static final String STATE_0301 = "0301";
     public static final String STATE_0302 = "0302";
@@ -197,6 +202,16 @@ public class StateCode {
                 return "支付用途有误";
             case STATE_0234:
                 return "会员等级有误";
+            case STATE_0241:
+                return "验签失败";
+            case STATE_0242:
+                return "支付失败";
+            case STATE_0243:
+                return "充值订单不存在";
+            case STATE_0244:
+                return "订单处理中";
+            case STATE_0245:
+                return "未支付";
             case STATE_0301:
                 return "没有对应的游戏";
             case STATE_0302:

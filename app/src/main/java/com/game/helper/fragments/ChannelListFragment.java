@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xrecyclerview.RecyclerItemCallback;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
@@ -51,10 +52,14 @@ public class ChannelListFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        Bundle arguments = getArguments();
-        gameId = arguments.getInt(GAME_ID);
         initAdapter();
-        loadAdapterData(1, true);
+        Bundle arguments = getArguments();
+        if(arguments != null){
+            gameId = arguments.getInt(GAME_ID);
+            loadAdapterData(1, true);
+        }else{
+            xrclChannelList.showEmpty();
+        }
     }
 
     private void initAdapter() {
@@ -74,6 +79,7 @@ public class ChannelListFragment extends XBaseFragment {
                     bundle.putInt("channelId", itemDate.getChannel().getId());
                     bundle.putString("path", itemDate.getPath());
                     bundle.putString("pkg", itemDate.getName_package());
+                    //bundle.putSerializable(GameDetailFragment.GAME_DETAIL_INFO,itemDate);
                     DetailFragmentsActivity.launch(context, bundle, GameDetailFragment.newInstance());
                 }
             });
@@ -91,14 +97,14 @@ public class ChannelListFragment extends XBaseFragment {
             }
         });
     }
-
-    private void loadAdapterData(int page, boolean showLoading) {
+    private void loadAdapterData(int page, Boolean showLoading) {
         Flowable<HttpResultModel<GamePackageListResult>> fr = DataService.getGamePackageList(new GamePackageRequestBody(page, gameId, 1));
         RxLoadingUtils.subscribeWithReload(xrclChannelList, fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageListResult>>() {
             @Override
             public void accept(HttpResultModel<GamePackageListResult> gameListResultModelHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
-                list.addAll(gameListResultModelHttpResultModel.data.getList());
+                if (!Kits.Empty.check(gameListResultModelHttpResultModel.data.getList()))
+                    list.addAll(gameListResultModelHttpResultModel.data.getList());
                 showData(gameListResultModelHttpResultModel.current_page, gameListResultModelHttpResultModel.total_page, list);
             }
         }, null, null, showLoading);
@@ -110,12 +116,12 @@ public class ChannelListFragment extends XBaseFragment {
         } else {
             mAdapter.setData(model);
         }
-        xrclChannelList.getRecyclerView().setPage(cur_page, total_page);
         if (mAdapter.getItemCount() < 1) {
             xrclChannelList.showEmpty();
         } else {
             xrclChannelList.showContent();
         }
+        xrclChannelList.getRecyclerView().setPage(cur_page, total_page);
     }
 
     @Override
@@ -137,7 +143,7 @@ public class ChannelListFragment extends XBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdapter != null) {
+        if (mAdapter != null && mAdapter.getItemCount() > 0) {
             mAdapter.notifyDataSetChanged();
         }
     }

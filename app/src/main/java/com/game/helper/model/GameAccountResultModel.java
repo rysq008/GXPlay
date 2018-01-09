@@ -2,20 +2,11 @@ package com.game.helper.model;
 
 import com.game.helper.model.BaseModel.XBaseModel;
 
-import java.io.Serializable;
 import java.util.List;
 
-import zlc.season.practicalrecyclerview.ItemType;
-
-public class GameAccountResultModel extends XBaseModel{
-
+public class GameAccountResultModel extends XBaseModel {
 
     private List<ListBean> list;
-
-    @Override
-    public boolean isNull() {
-        return list == null || list.isEmpty();
-    }
 
     public List<ListBean> getList() {
         return list;
@@ -25,8 +16,7 @@ public class GameAccountResultModel extends XBaseModel{
         this.list = list;
     }
 
-
-    public class ListBean implements ItemType,Serializable {
+    public class ListBean extends XBaseModel {
 
         /**
          * game_account : 15201675725
@@ -181,11 +171,6 @@ public class GameAccountResultModel extends XBaseModel{
 
         public void setGame_channel_id(int game_channel_id) {
             this.game_channel_id = game_channel_id;
-        }
-
-        @Override
-        public int itemType() {
-            return 0;
         }
     }
 

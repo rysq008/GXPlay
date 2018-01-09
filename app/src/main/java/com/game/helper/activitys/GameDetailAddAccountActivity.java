@@ -13,12 +13,14 @@ import android.widget.Toast;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.model.LogoutResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SimpleTextWatcher;
+import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.ChannelPopupWindow;
 import com.game.helper.views.widget.GamePopupWindow;
 
@@ -30,8 +32,7 @@ import io.reactivex.functions.Consumer;
 public class GameDetailAddAccountActivity extends XBaseActivity implements View.OnClickListener {
 
     public static final String TAG = "GameDetailAddAccountActivity";
-    public static final String GAME_ID = "game_id";
-    public static final String CHANNEL_ID = "channel_id";
+    public static final String GAME_MY_ACCOUNT_INFO = "game_my_account_info";
 
 
     @BindView(R.id.action_bar_back)
@@ -50,9 +51,11 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
     TextView selectChannel;
     @BindView(R.id.submitTv_add_account_game_detail)
     TextView submitTv;
+    @BindView(R.id.xreload_add_account_game_detail)
+    XReloadableStateContorller xreload;
 
-    private String mGameId = "16";
-    private String mChannelId;
+    private int mGameId = 16;
+    private int mChannelId;
     private boolean canEdit = true;
 
     private GamePopupWindow mGameWindow;
@@ -74,12 +77,17 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
     }
 
     private void initIntentData(Intent intent) {
-        mGameId = String.valueOf(intent.getIntExtra(GAME_ID,0));
-        mChannelId = String.valueOf(intent.getIntExtra(CHANNEL_ID,0));
-        String gameName = SPUtils.getString(context,SPUtils.GAME_NAME,"");
-        gameEdit.setText(gameName);
-        String channelName = SPUtils.getString(context,SPUtils.CHANNEL_NAME,"");
-        channelEdit.setText(channelName);
+        Bundle extras = intent.getExtras();
+        if(extras != null){
+            xreload.showContent();
+            GamePackageInfoResult gameDetailInfo = (GamePackageInfoResult) extras.getSerializable(GAME_MY_ACCOUNT_INFO);
+            mGameId = gameDetailInfo.getGame().getId();
+            mChannelId = gameDetailInfo.getChannel().getId();
+            gameEdit.setText(gameDetailInfo.getGame().getName());
+            channelEdit.setText(gameDetailInfo.getChannel().getName());
+        }else{
+            xreload.showEmpty();
+        }
 
 //        if(!TextUtils.isEmpty(mGameId) && !TextUtils.isEmpty(mChannelId)){
 //            canEdit = false;
@@ -127,9 +135,9 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
     /**
      * 提交，添加账户
      */
-    private void addGameAccount(int game_id, int channel_id, String game_account) {
+    private void addGameAccount(int game_id, int channel_id, String game_account,Boolean showLoading) {
         Flowable<HttpResultModel<LogoutResults>> fr = DataService.addGameAccount(new AddGameAccountRequestBody(game_id, 1, channel_id, game_account));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<LogoutResults>>() {
+        RxLoadingUtils.subscribeWithReload(xreload,fr, bindToLifecycle(), new Consumer<HttpResultModel<LogoutResults>>() {
             @Override
             public void accept(HttpResultModel<LogoutResults> recommendResultsHttpResultModel) throws Exception {
                 if (recommendResultsHttpResultModel.isSucceful()) {
@@ -139,12 +147,7 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
                     Toast.makeText(GameDetailAddAccountActivity.this, "添加账户失败", Toast.LENGTH_SHORT).show();
                 }
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-//                showError(netError);
-            }
-        });
+        }, null,null,showLoading);
 
     }
 
@@ -167,7 +170,7 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
         }
         gameEdit.setText(name);
         gameEdit.setSelection(getGameName().length());
-        this.mGameId = String.valueOf(game_id);
+        this.mGameId = game_id;
         Toast.makeText(GameDetailAddAccountActivity.this, "游戏Id：" + game_id, Toast.LENGTH_SHORT).show();
     }
 
@@ -178,7 +181,7 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
         }
         channelEdit.setText(name);
         channelEdit.setSelection(getChannelName().length());
-        this.mChannelId = String.valueOf(channel_id);
+        this.mChannelId = channel_id;
         Toast.makeText(GameDetailAddAccountActivity.this, "平台Id：" + channel_id, Toast.LENGTH_SHORT).show();
     }
 
@@ -231,7 +234,7 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
                     return;
                 }
 
-                addGameAccount(Integer.parseInt(mGameId), Integer.parseInt(mChannelId), getAccountname());
+                addGameAccount(mGameId, mChannelId, getAccountname(),true);
 
                 break;
             default:

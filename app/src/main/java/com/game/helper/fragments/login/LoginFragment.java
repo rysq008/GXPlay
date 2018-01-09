@@ -13,7 +13,10 @@ import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.activitys.GameDetailMyAccountActivity;
 import com.game.helper.data.RxConstant;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LoginResults;
@@ -120,7 +123,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         String account = mAccount.getText().toString().trim();
         String code = mPassWord.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)) {
+        if (StringUtils.isEmpty(account) || account.length() != 11) {
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -148,8 +151,9 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                     }
 
                     if (!loginResultsHttpResultModel.data.has_passwd) {
-                        if (loginDialog == null) loginDialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", getResources().getString(R.string.common_set_password_hint));
-                        loginDialog.show(getChildFragmentManager(),GXPlayDialog.TAG);
+                        if (loginDialog == null)
+                            loginDialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Single_Confirm, "温馨提示", getResources().getString(R.string.common_set_password_hint));
+                        loginDialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
                         loginDialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
                             @Override
                             public void onCancel() {
@@ -163,7 +167,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                                 DetailFragmentsActivity.launch(getContext(), null, SetPasswordFragment.newInstance());
                             }
                         });
-                    }else {
+                    } else {
                         getActivity().onBackPressed();
                     }
                 } else {
@@ -181,21 +185,20 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     private void getVerify() {
         String account = mAccount.getText().toString().trim();
 
-        if (StringUtils.isEmpty(account)) {
+        if (StringUtils.isEmpty(account) || account.length() != 11) {
             Toast.makeText(getContext(), getResources().getString(R.string.login_hint_without_account), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        mCountDownText.setCountDownTimer(60 * 1000, 1000);
-        mCountDownText.startTimer();
 
         Flowable<HttpResultModel<VerifyResults>> fr = DataService.getVerify(new VerifyRequestBody(account, RxConstant.VERIFY_USER_FOR_LOGIN));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
             public void accept(HttpResultModel<VerifyResults> verifyResultsHttpResultModel) throws Exception {
-                if (verifyResultsHttpResultModel.isSucceful()) {
-                } else {
-                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                if (verifyResultsHttpResultModel.isSucceful()){
+                    mCountDownText.setCountDownTimer(60 * 1000, 1000);
+                    mCountDownText.startTimer();
+                }else {
+                    Toast.makeText(getContext(), verifyResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
@@ -221,8 +224,8 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         if (v == mGotoRegist) {
             DetailFragmentsActivity.launch(getContext(), null, RegistFragment.newInstance());
         }
-        if (v == mForgetPasswd){
-            DetailFragmentsActivity.launch(getContext(),null,ForgetPasswdFragment.newInstance());
+        if (v == mForgetPasswd) {
+            DetailFragmentsActivity.launch(getContext(), null, ForgetPasswdFragment.newInstance());
         }
         if (v == mTabMessage) {
             switchLoginType(LOGIN_TYPE_MESSAGE);
@@ -259,6 +262,8 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     public void onDestroy() {
         super.onDestroy();
         mCountDownText.destroy();
+//        GameDetailMyAccountActivity.needClose = !SharedPreUtil.isLogin();
+        BusProvider.getBus().post(new MsgEvent<LoginFragment>(this));
     }
 
     @Override
