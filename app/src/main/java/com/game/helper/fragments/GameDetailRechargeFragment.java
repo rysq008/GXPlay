@@ -24,7 +24,6 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.GamePackageInfoResult;
-import com.game.helper.model.GamePackageListResult;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
@@ -127,7 +126,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     private void initView() {
         setCheckStatus(-1, true);
         Bundle arguments = getArguments();
-        if (arguments!= null) {
+        if (arguments != null) {
             //setChooseGameData(true);
             gameDetailInfo = (GamePackageInfoResult) arguments.getSerializable(GameDetailFragment.GAME_DETAIL_INFO);
 
@@ -136,12 +135,12 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         discount_high_vip = getResources().getString(R.string.recharge_high_vip_discount);
         discount_vip = getResources().getString(R.string.recharge_vip_discount);
         discount_member = getResources().getString(R.string.recharge_member_discount);
-        if(gameDetailInfo != null){
+        if (gameDetailInfo != null) {
             //显示游戏的折扣
-            if(gameDetailInfo.getDiscount_activity()>0){
-                mDiscount1.setText("首充限时" + gameDetailInfo.getDiscount_activity() + "折");
-            }else{
-                mDiscount1.setText(discount_high_vip +gameDetailInfo.getDiscount_vip() + "折");
+            if (gameDetailInfo.getDiscount_activity() > 0) {
+                mDiscount1.setText("首充限时活动" + gameDetailInfo.getDiscount_activity() + "折");
+            } else {
+                mDiscount1.setText(discount_high_vip + gameDetailInfo.getDiscount_vip() + "折");
             }
             mDiscount2.setText(discount_member + gameDetailInfo.getZhekou_shouchong() + "折");
             mDiscount3.setText(discount_vip + gameDetailInfo.getZhekou_xuchong() + "折");
@@ -194,6 +193,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             setCheckStatus(0, false);
             mItemDiscount1.performClick();
         }
+        getCheckDiscount();
         //getGameAccountDiscount(gameBean.getId());
     }
 
@@ -258,7 +258,6 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
                 mDiscount2.setText(discount_member + discountList.member_discount + "折");
                 mDiscount3.setText(discount_vip + discountList.vip_discount + "折");
 
-                getCheckDiscount();
             }
         }, new Consumer<NetError>() {
             @Override
@@ -344,31 +343,36 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     }
 
     private void getCheckDiscount() {
-        if (discountList == null) {
-            caculateBalanceVlue();
+        if (gameDetailInfo == null) {
+            calculateBalanceValue();
             return;
         }
         if (mCbDiscount1.isChecked()) {
-            mTotalDiscountValue = discountList.high_vip_discount;
+            if (gameDetailInfo.getDiscount_activity() > 0) {
+                mTotalDiscountValue = (float) gameDetailInfo.getDiscount_activity();
+            } else {
+                mTotalDiscountValue = (float) gameDetailInfo.getZhekou_shouchong();
+            }
+
         } else if (mCbDiscount2.isChecked()) {
-            mTotalDiscountValue = discountList.member_discount;
+            mTotalDiscountValue = (float) gameDetailInfo.getZhekou_xuchong();
         } else if (mCbDiscount3.isChecked()) {
-            mTotalDiscountValue = discountList.vip_discount;
+            mTotalDiscountValue = (float) gameDetailInfo.getDiscount_vip();
         }
         mTotalDiscount.setText(mTotalDiscountValue + "折");
-        caculateBalanceVlue();
+        calculateBalanceValue();
     }
 
-    private void caculateBalanceVlue() {
-        int inputVlaue = 0;
+    private void calculateBalanceValue() {
+        int inputValue = 0;
         try {
-            inputVlaue = Integer.parseInt(mBalance.getText().toString());
+            inputValue = Integer.parseInt(mBalance.getText().toString());
         } catch (NumberFormatException e) {
-        }
 
-        if (mTotalDiscountValue < 0 || inputVlaue <= 0) return;
+        }
+        if (mTotalDiscountValue < 0 || inputValue <= 0) return;
         if (mTotalDiscountValue == 0) mTotalDiscountValue = 10;
-        else mTotalBalanceValue = (float) (inputVlaue * mTotalDiscountValue / 10.0);
+        else mTotalBalanceValue = (float) (inputValue * mTotalDiscountValue / 10.0);
 
         mTotalBalanceValue = Utils.m2(mTotalBalanceValue);
         mTotalBalance.setText(mTotalBalanceValue + "元");
@@ -379,7 +383,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         if (v == mItemAccount) {
             Intent intent = new Intent(getActivity(), GameDetailMyAccountActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable(GameDetailMyAccountActivity.GAME_RECHARGE_INFO,gameDetailInfo);
+            bundle.putSerializable(GameDetailMyAccountActivity.GAME_RECHARGE_INFO, gameDetailInfo);
             intent.putExtras(bundle);
             startActivityForResult(intent, REQUEST_CODE);
         }
@@ -517,7 +521,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         mDiscount1.setText(discount_high_vip);
         mDiscount2.setText(discount_member);
         mDiscount3.setText(discount_vip);
-        caculateBalanceVlue();
+        calculateBalanceValue();
     }
 
 
