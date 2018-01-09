@@ -125,6 +125,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     LinearLayout llNavigation;
     @BindView(R.id.xreload_game_detail_loading)
     XReloadableStateContorller xreload;
+    @BindView(R.id.tv_game_detail_activity_discount_tv)
+    TextView mTvActivityDiscount;
+    @BindView(R.id.tv_game_detail_matching_activity_discount)
+    TextView mTvMatchingActivityDiscount;
 
     private H5UrlListResults mH5UrlList;
     public static final String GAME_DETAIL_INFO = "game_detail_info";
@@ -313,9 +317,22 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     }
 
     private void setGameView() {
+        Double discount_vip = packageInfo.getDiscount_vip();
+        Double discount_activity = packageInfo.getDiscount_activity();
+        if (discount_activity >0) {
+            tvDiscount.setVisibility(View.GONE);
+            mTvActivityDiscount.setVisibility(View.VISIBLE);
+            mTvMatchingActivityDiscount.setVisibility(View.VISIBLE);
+            mTvMatchingActivityDiscount.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
+            mTvActivityDiscount.setText(discount_activity.toString()+"折");
+            mTvMatchingActivityDiscount.setText(discount_vip.toString()+"折");
+        } else {
+            mTvActivityDiscount.setVisibility(View.GONE);
+            mTvMatchingActivityDiscount.setVisibility(View.GONE);
+            tvDiscount.setText(discount_vip.toString()+"折");
+        }
         ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(packageInfo.getGame().getLogo()), ILoader.Options.defaultOptions());
         tvName.setText(packageInfo.getGame().getName());
-        tvDiscount.setText(String.valueOf(packageInfo.getDiscount_vip()));
         tvTypeName.setText(packageInfo.getGame().getType().getName());
         tvPackageFilesize.setText(String.valueOf(packageInfo.getFilesize() + "M"));
         tvContent.setText(packageInfo.getGame().getIntro());

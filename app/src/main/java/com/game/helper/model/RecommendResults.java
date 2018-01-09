@@ -24,6 +24,8 @@ public class RecommendResults extends XBaseModel {
 //         * "zhekou_shouchong": 4.2,
 //                 * "discount_activity": 3.5,
 //                 * "filesize": 211,
+//                 *  "discount_vip": 4,
+
 //        },
 //            "name": "少年西游记",
 //                "logothumb": "/media/game_logo/f0cf3e7ec227f67918d94237aecd7959.jpg",

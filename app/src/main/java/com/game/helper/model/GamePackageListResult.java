@@ -29,6 +29,7 @@ public class GamePackageListResult extends XBaseModel {
          * zhekou_xuchong : 6
          * filesize : 258.67
          * zhekou_shouchong : 5
+         * discount_activity: 3.5,
          * name_package : com.shanghailvbing.hhw.guopan
          * path : http://down2.guopan.cn/andl/dda.php?appid=101147&cid=3714&t=1508722296
          * id : 22874
@@ -39,6 +40,10 @@ public class GamePackageListResult extends XBaseModel {
         private GameBean game;
         private float zhekou_xuchong;
         private double filesize;
+        private float discount_activity;
+
+
+
         private float zhekou_shouchong;
         private String name_package;
         private String path;
@@ -46,7 +51,13 @@ public class GamePackageListResult extends XBaseModel {
         private ChannelBean channel;
         public Disposable disposable;
 
+        public float getDiscount_activity() {
+            return discount_activity;
+        }
 
+        public void setDiscount_activity(float discount_activity) {
+            this.discount_activity = discount_activity;
+        }
         public float getDiscount_vip() {
             return discount_vip;
         }
