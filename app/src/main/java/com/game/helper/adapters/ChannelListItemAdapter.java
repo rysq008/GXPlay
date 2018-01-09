@@ -2,6 +2,7 @@ package com.game.helper.adapters;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -94,6 +95,10 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         Button ivChannelListLoad;
         @BindView(R.id.tv_channel_list_package_plat)
         TextView tvChannelPlat;
+        @BindView(R.id.tv_channel_list_activity_discount)
+        TextView tvActivityDiscount;
+        @BindView(R.id.tv_channel_list_matching_activity_discount)
+        TextView tvMatchingActivityDiscount;
 
         private DownloadBean downloadBean;
         private int flag;
@@ -110,8 +115,22 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         public void setDisplay(final int position, final GamePackageListResult.ListBean itemDate) {
             mData = itemDate;
             ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.getGame().getLogo()), null);
+            Float discount_vip = mData.getDiscount_vip();
+            Float discount_activity = mData.getDiscount_activity();
+            if (discount_activity >0) {
+                tvDiscountVip.setVisibility(View.GONE);
+                tvActivityDiscount.setVisibility(View.VISIBLE);
+                tvMatchingActivityDiscount.setVisibility(View.VISIBLE);
+                tvMatchingActivityDiscount.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
+                tvActivityDiscount.setText(discount_activity.toString()+"折");
+                tvMatchingActivityDiscount.setText(discount_vip.toString()+"折");
+            } else {
+                tvDiscountVip.setVisibility(View.VISIBLE);
+                tvActivityDiscount.setVisibility(View.GONE);
+                tvMatchingActivityDiscount.setVisibility(View.GONE);
+                tvDiscountVip.setText(discount_vip.toString()+"折");
+            }
             tvtName.setText(itemDate.getGame().getName());
-            tvDiscountVip.setText(String.valueOf(itemDate.getDiscount_vip()));
             tvTypeName.setText(itemDate.getGame().getType().getName());
             tvPackageFilesize.setText(String.valueOf(itemDate.getFilesize()) + "M");
             tvtSource.setText(itemDate.getChannel().getName());

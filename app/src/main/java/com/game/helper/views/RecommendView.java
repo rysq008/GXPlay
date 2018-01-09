@@ -86,6 +86,7 @@ public class RecommendView extends LinearLayout {
         } else {
             activityDiscount.setVisibility(GONE);
             matchingActivityDiscount.setVisibility(GONE);
+            discountTv.setVisibility(VISIBLE);
             discountTv.setText(zhekou_shouchong.toString()+"折");
         }
         typeTv.setText(data.type.get("name").replace(" ", ""));

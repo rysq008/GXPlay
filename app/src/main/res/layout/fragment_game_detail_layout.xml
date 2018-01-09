@@ -71,6 +71,28 @@
                             android:text="5折"
                             android:textColor="@color/white"
                             android:textSize="@dimen/size_14sp" />
+                        <TextView
+                            android:id="@+id/tv_game_detail_activity_discount_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="@dimen/dp_8"
+                            android:paddingRight="@dimen/dp_8"
+                            android:background="@drawable/shape_bg_activity_discount"
+                            android:gravity="center"
+                            android:text="0折"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/size_12sp"
+                            android:layout_marginRight="@dimen/margin_5"
+                            android:visibility="gone"/>
+                        <TextView
+                            android:id="@+id/tv_game_detail_matching_activity_discount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="0折"
+                            android:textColor="@color/color_cecece"
+                            android:textSize="@dimen/size_12sp"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                     <LinearLayout
