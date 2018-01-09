@@ -245,7 +245,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                     MineGiftlistResults.MineGiftlistItem item = (MineGiftlistResults.MineGiftlistItem) rootView.getTag();
                     if (v == rootView){
                         if (dialog != null) dialog.show(getChildFragmentManager(),GiftDescDialog.TAG);
-                        else getDialogDataFromNet(item.gift_code.id,true);
+                        else getDialogDataFromNet(item.gift_code.gift.id,true);
                     }
                     if (v == copy){
                         Utils.copyToClipboard(getContext(),item.gift_code.code);

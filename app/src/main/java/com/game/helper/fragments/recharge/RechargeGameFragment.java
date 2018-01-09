@@ -151,7 +151,11 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String inputValue = s.toString().trim();
-                if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue))<=0) return;
+                if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue))<=0) {
+                    mTotalBalanceValue = 0;
+                    mTotalBalance.setText(mTotalBalanceValue+"元");
+                    return;
+                }
                 getCheckDiscount();
             }
 
@@ -401,9 +405,6 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             }else {
                 showVipHintDialog(0);
             }
-
-            setCheckStatus(0,true);
-            setChecked(2);
         }
     }
 
@@ -434,6 +435,9 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             @Override
             public void onConfirm() {
                 dialog.dismiss();
+                setCheckStatus(0,true);
+                setChecked(2);
+
                 if (type == 2) goToKefu();
                 if (type == 1) goToVipLevel();
             }

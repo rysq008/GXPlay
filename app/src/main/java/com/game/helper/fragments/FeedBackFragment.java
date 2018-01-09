@@ -103,9 +103,10 @@ public class FeedBackFragment extends XBaseFragment implements View.OnClickListe
             public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
                 if (notConcernResultsHttpResultModel.isSucceful()) {
                     mCntent.setText("");
+                    Toast.makeText(getContext(), "反馈成功！", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(getContext(), notConcernResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
