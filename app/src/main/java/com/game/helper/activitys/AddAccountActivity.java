@@ -1,13 +1,11 @@
 package com.game.helper.activitys;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +17,6 @@ import com.game.helper.model.LogoutResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SimpleTextWatcher;
 import com.game.helper.views.widget.ChannelPopupWindow;
 import com.game.helper.views.widget.GamePopupWindow;
@@ -172,7 +169,6 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
         gameEdit.setText(name);
         gameEdit.setSelection(getGameName().length());
         this.mGameId = String.valueOf(game_id);
-        Toast.makeText(AddAccountActivity.this, "游戏Id：" + game_id, Toast.LENGTH_SHORT).show();
     }
 
     //选择平台
@@ -183,7 +179,6 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
         channelEdit.setText(name);
         channelEdit.setSelection(getChannelName().length());
         this.mChannelId = String.valueOf(channel_id);
-        Toast.makeText(AddAccountActivity.this, "平台Id：" + channel_id, Toast.LENGTH_SHORT).show();
     }
 
 
