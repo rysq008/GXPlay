@@ -3,7 +3,9 @@ package com.game.helper.fragments;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -27,18 +29,8 @@ import zlc.season.practicalrecyclerview.ItemType;
 
 public class GamePagerFragment extends GameBasePagerFragment {
 
-    FragmentPagerAdapter mAdapter;
-    SparseArray sparseArray = new SparseArray<Fragment>();
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-////        if (getUserVisibleHint())
-//        {
-//            LoginUserInfo info = SharedPreUtil.getLoginUserInfo();
-//            BusProvider.getBus().post(new MsgEvent<String>(RxConstant.Head_Image_Change_Type, RxConstant.Head_Image_Change_Type, info == null ? "" : info.icon));
-//        }
-//    }
+    PagerAdapter mAdapter;
+//    SparseArray sparseArray = new SparseArray<Fragment>();
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -50,24 +42,26 @@ public class GamePagerFragment extends GameBasePagerFragment {
     }
 
     @Override
-    public FragmentPagerAdapter getPageAdapter(final List<ItemType> list) {
+    public PagerAdapter getPageAdapter(final List<ItemType> list) {
         if (mAdapter == null) {
-            mAdapter = new FragmentPagerAdapter(getChildFragmentManager()) {
+            mAdapter = new FragmentStatePagerAdapter(getChildFragmentManager()) {
                 @Override
                 public Fragment getItem(int position) {
                     ItemType itemType = list.get(position);
-                    if (null == sparseArray.get(position)) {
+//                    if (null == sparseArray.get(position))
+                    {
                         if (itemType instanceof ClassicalResults.ClassicalItem) {
                             Fragment fragment = GameListFragment.newInstance(((ClassicalResults.ClassicalItem) itemType).id, 0);
-                            sparseArray.put(position, fragment);
+//                            sparseArray.put(position, fragment);
                             return fragment;
                         } else if (itemType instanceof CommonResults.CommonItem) {
                             Fragment fragment = GameListFragment.newInstance(0, ((CommonResults.CommonItem) itemType).id);
-                            sparseArray.put(position, fragment);
+//                            sparseArray.put(position, fragment);
                             return fragment;
                         }
                     }
-                    return (Fragment) sparseArray.get(position);
+//                    return (Fragment) sparseArray.get(position);
+                    return null;
                 }
 
                 @Override

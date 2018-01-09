@@ -50,7 +50,7 @@ public class XReloadableStateContorller extends XStateController {
 //        if (getLoadingView() != null) {
 //            setDisplayState(STATE_LOADING);
 //        } else {
-        setDisplayState(STATE_LOADING);
+        setDisplayState(STATE_CONTENT);
 //        }
     }
 

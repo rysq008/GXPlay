@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.game.helper.R;
 
+import cn.droidlover.xrecyclerview.XRecyclerAdapter;
 import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 
 
@@ -61,8 +62,18 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
         //        for (int index = 0; index < getChildCount(); index++) {
 //            getChildAt(index).setVisibility(GONE);
 //        }
-        setDisplayState(STATE_LOADING);
+//        setDisplayState(STATE_CONTENT);
     }
+
+//    @Override
+//    public void setDisplayState(int displayState) {
+//        super.setDisplayState(displayState);
+//        XRecyclerAdapter adapter = getRecyclerView().getAdapter();
+//        if (adapter != null && adapter.getItemCount() > 1) {
+//            super.setDisplayState(STATE_CONTENT);
+//            return;
+//        }
+//    }
 
     @Override
     public void showEmpty() {
@@ -71,9 +82,9 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
                 @Override
                 public void onClick(View v) {
                     if (XReloadableRecyclerContentLayout.this.onReloadListener != null) {
-                        if (null == getLoadingView()) {
-                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
-                        }
+//                        if (null == getLoadingView()) {
+//                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+//                        }
 //                        if (null == getEmptyView()) {
 //                            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
 //                        }
@@ -82,8 +93,6 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
                     }
                 }
             });
-        } else {
-            return;
         }
         super.showEmpty();
     }
@@ -95,9 +104,9 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
                 @Override
                 public void onClick(View v) {
                     if (XReloadableRecyclerContentLayout.this.onReloadListener != null) {
-                        if (null == getLoadingView()) {
-                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
-                        }
+//                        if (null == getLoadingView()) {
+//                            loadingView(View.inflate(getContext(), R.layout.view_loading, null));
+//                        }
 //                        if (null == getEmptyView()) {
 //                            emptyView(View.inflate(getContext(), R.layout.view_empty_state, null));
 //                        }
@@ -109,5 +118,11 @@ public class XReloadableRecyclerContentLayout extends XRecyclerContentLayout {
         }
         super.showError();
     }
-    
+
+    @Override
+    public void showContent() {
+        if (getState() == STATE_CONTENT)
+            super.showLoading();
+        super.showContent();
+    }
 }

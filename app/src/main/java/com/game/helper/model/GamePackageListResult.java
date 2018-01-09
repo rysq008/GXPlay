@@ -24,16 +24,34 @@ public class GamePackageListResult extends XBaseModel {
 
     public static class ListBean extends XBaseModel {
         /**
-         * discount_vip : 4
-         * game : {"logo":"/upload/image/20161209/20161209114359_333.jpg","type":{"id":17,"name":"卡牌"},"id":1,"logothumb":"","name":"航海王强者之路"}
-         * zhekou_xuchong : 6
-         * filesize : 258.67
-         * zhekou_shouchong : 5
-         * discount_activity: 3.5,
-         * name_package : com.shanghailvbing.hhw.guopan
-         * path : http://down2.guopan.cn/andl/dda.php?appid=101147&cid=3714&t=1508722296
-         * id : 22874
-         * channel : {"id":20,"name":"果盘"}
+         * {
+         * "discount_vip": 4,
+         * "game": {
+         * "class_type": {
+         * "id": 1,
+         * "name": "网游"
+         * },
+         * "logo": "/upload/image/20161209/20161209114359_333.jpg",
+         * "type": {
+         * "id": 17,
+         * "name": "卡牌"
+         * },
+         * "id": 1,
+         * "logothumb": "",
+         * "name": "航海王强者之路"
+         * },
+         * "zhekou_xuchong": 6,
+         * "filesize": 258.67,
+         * "zhekou_shouchong": 5,
+         * "discount_activity": 3.5,
+         * "name_package": "com.shanghailvbing.hhw.guopan",
+         * "path": "http://down2.guopan.cn/andl/dda.php?appid=101147&cid=3714&t=1508722296",
+         * "id": 22874,
+         * "channel": {
+         * "id": 20,
+         * "name": "果盘"
+         * }
+         * }
          */
 
         private float discount_vip;
@@ -41,7 +59,6 @@ public class GamePackageListResult extends XBaseModel {
         private float zhekou_xuchong;
         private double filesize;
         private float discount_activity;
-
 
 
         private float zhekou_shouchong;
@@ -58,6 +75,7 @@ public class GamePackageListResult extends XBaseModel {
         public void setDiscount_activity(float discount_activity) {
             this.discount_activity = discount_activity;
         }
+
         public float getDiscount_vip() {
             return discount_vip;
         }

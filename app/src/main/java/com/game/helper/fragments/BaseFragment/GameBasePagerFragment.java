@@ -5,7 +5,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.CheckedTextView;
+import android.widget.ImageView;
 
 import com.game.helper.R;
 import com.game.helper.model.ClassicalResults;
@@ -26,10 +35,15 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
+
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import zlc.season.practicalrecyclerview.ItemType;
+
+import static android.view.View.OVER_SCROLL_NEVER;
 
 /**
  * Created by wanglei on 2016/12/31.
@@ -45,6 +59,8 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     SearchComponentView searchComponentView;
     @BindView(R.id.game_tabs)
     MagicIndicator tabStrip;
+    @BindView(R.id.game_extran_iv)
+    ImageView iv;
 
     List<ItemType> list = new ArrayList<ItemType>();
 
@@ -56,7 +72,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
 
     private void initAdapter() {
         viewPager.setAdapter(getPageAdapter(list));
-        viewPager.setOffscreenPageLimit(2);
+//        viewPager.setOffscreenPageLimit(2);
     }
 
     public abstract PagerAdapter getPageAdapter(List<ItemType> list);
@@ -70,7 +86,39 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
         } else {
             xStateController.showContent();
             list.addAll(model);
-            CommonNavigator commonNavigator = new CommonNavigator(context);
+            CommonNavigator commonNavigator = new CommonNavigator(context) {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    ItemType itemType = list.get(position);
+                    if (viewPager.getTag() == null && position == 0) {
+                        if (itemType instanceof ClassicalResults.ClassicalItem) {
+                            (((ClassicalResults.ClassicalItem) itemType)).isCheck = true;
+                        } else {
+                            (((CommonResults.CommonItem) itemType)).isCheck = true;
+                        }
+                        viewPager.setTag(itemType);
+                    } else {
+                        if (itemType.equals(viewPager.getTag())) {
+                            return;
+                        } else {
+                            ItemType oldType = (ItemType) viewPager.getTag();
+                            if (oldType instanceof ClassicalResults.ClassicalItem) {
+                                (((ClassicalResults.ClassicalItem) oldType)).isCheck = false;
+                            } else {
+                                (((CommonResults.CommonItem) oldType)).isCheck = false;
+                            }
+/*****************************************************************************************************************************/
+                            if (itemType instanceof ClassicalResults.ClassicalItem) {
+                                (((ClassicalResults.ClassicalItem) itemType)).isCheck = true;
+                            } else {
+                                (((CommonResults.CommonItem) itemType)).isCheck = true;
+                            }
+                            viewPager.setTag(itemType);
+                        }
+                    }
+                }
+            };
             commonNavigator.setAdapter(new CommonNavigatorAdapter() {
 
                 @Override
@@ -83,11 +131,13 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                     ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
                     colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
                     colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
-                    ItemType itemType = list.get(index);
+                    final ItemType itemType = list.get(index);
                     if (itemType instanceof ClassicalResults.ClassicalItem) {
                         colorTransitionPagerTitleView.setText(((ClassicalResults.ClassicalItem) itemType).name);
+                        (((ClassicalResults.ClassicalItem) itemType)).isCheck = true;
                     } else {
                         colorTransitionPagerTitleView.setText(((CommonResults.CommonItem) itemType).name);
+                        (((CommonResults.CommonItem) itemType)).isCheck = true;
                     }
                     colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -119,6 +169,96 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     @Override
     public GameFragmentPresent newP() {
         return new GameFragmentPresent();
+    }
+
+    @OnClick(R.id.game_extran_iv)
+    public void OnClick(View v) {
+//        Dialog dialog = new Dialog(context, R.style.umeng_socialize_popup_dialog);
+        // 显示透明的对话框
+        final AlertDialog dialog = new AlertDialog.Builder(context).create();
+        RecyclerView recyclerView = new RecyclerView(context);
+        recyclerView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
+        recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+        recyclerView.setAdapter(new RecyclerView.Adapter() {
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                CheckedTextView tv = new CheckedTextView(context);
+                tv.setBackgroundResource(R.drawable.retry_btn_selector);
+                return new TViewHolder(tv);
+            }
+
+            @Override
+            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                ItemType itemType = list.get(position);
+                ((TViewHolder) holder).setDisplay(itemType, position);
+            }
+
+            @Override
+            public int getItemCount() {
+                return list == null ? 0 : list.size();
+            }
+
+            class TViewHolder extends RecyclerView.ViewHolder {
+                boolean mIsCheck;
+
+                public TViewHolder(View itemView) {
+                    super(itemView);
+                }
+
+                public void setData(ItemType itemType, boolean isCheck) {
+                    if (itemType.equals(viewPager.getTag())) {
+                        return;
+                    }
+                    if (itemType instanceof ClassicalResults.ClassicalItem) {
+                        ((CheckedTextView) itemView).setText(((ClassicalResults.ClassicalItem) itemType).name);
+                        (((ClassicalResults.ClassicalItem) itemType)).isCheck = isCheck;
+                    } else {
+                        ((CheckedTextView) itemView).setText(((CommonResults.CommonItem) itemType).name);
+                        (((CommonResults.CommonItem) itemType)).isCheck = isCheck;
+                    }
+//                    mIsCheck = isCheck;
+                    ((CheckedTextView) itemView).setChecked(isCheck);
+                }
+
+                public void setDisplay(final ItemType itemType, final int pos) {
+                    if (viewPager.getTag() == null && pos == 0) {
+                        viewPager.setTag(itemType);
+                        mIsCheck = true;
+                    } else {
+                        if (itemType.equals(viewPager.getTag())) {
+                            mIsCheck = true;
+                        }
+                    }
+                    setData(itemType, mIsCheck);
+                    ((CheckedTextView) itemView).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            viewPager.setCurrentItem(pos);
+                            setData(itemType, !mIsCheck);
+                            viewPager.setTag(itemType);
+                            dialog.cancel();
+                        }
+                    });
+                }
+            }
+        });
+        dialog.setView(recyclerView);
+
+        //获取到当前Activity的Window
+        Window dialog_window = dialog.getWindow();
+        dialog_window.getDecorView().setPadding(0, 0, 0, 0);
+        //设置对话框的位置
+        dialog_window.setGravity(Gravity.CENTER);
+        //获取到LayoutParams
+        WindowManager.LayoutParams dialog_window_attributes = dialog_window.getAttributes();
+        dialog_window_attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
+        dialog_window_attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        //设置对话框位置的偏移量
+        dialog_window_attributes.x = 0;
+        dialog_window_attributes.y = (int) (v.getY() + v.getBottom());
+        dialog_window.setAttributes(dialog_window_attributes);
+        dialog.show();
     }
 
 }

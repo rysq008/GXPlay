@@ -16,10 +16,24 @@
             android:layout_height="wrap_content"
             android:visibility="visible" />
 
-        <net.lucode.hackware.magicindicator.MagicIndicator
-            android:id="@+id/game_tabs"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="wrap_content">
+
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/game_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_toLeftOf="@id/game_extran_iv" />
+
+            <ImageView
+                android:id="@+id/game_extran_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_download" />
+        </RelativeLayout>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/game_viewpager"
