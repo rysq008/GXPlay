@@ -18,14 +18,12 @@ import com.game.helper.model.LogoutResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SimpleTextWatcher;
 import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.ChannelPopupWindow;
 import com.game.helper.views.widget.GamePopupWindow;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 

@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.activitys.GameDetailMyAccountActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
@@ -26,7 +25,6 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.model.LoginRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.views.EditInputView;
@@ -284,8 +282,8 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         ChatClient.getInstance().logout(true, new Callback() {
             @Override
             public void onSuccess() {
-                SPUtils.remove(context, SPUtils.TEMP_HUANXIN_NAME);
-                Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
+                SharedPreUtil.remove(SharedPreUtil.TEMP_HUANXIN_NAME);
+                Log.d(TAG, "已清除SharedPreUtil.TEMP_HUANXIN_NAME:" + SharedPreUtil.getString(SharedPreUtil.TEMP_HUANXIN_NAME, ""));
             }
 
             @Override

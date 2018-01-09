@@ -27,7 +27,6 @@ import com.game.helper.model.LoginUserInfo;
 import com.game.helper.net.DataService;
 import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.widget.CustomBadgeItem;
 import com.game.helper.views.widget.TotoroToast;
@@ -326,8 +325,8 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             ChatClient.getInstance().logout(true, new Callback() {
                 @Override
                 public void onSuccess() {
-                    SPUtils.remove(context, SPUtils.TEMP_HUANXIN_NAME);
-                    Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SPUtils.getString(context, SPUtils.TEMP_HUANXIN_NAME, ""));
+                    SharedPreUtil.remove(SharedPreUtil.TEMP_HUANXIN_NAME);
+                    Log.d(TAG, "SharedPreUtil.TEMP_HUANXIN_NAME:" + SharedPreUtil.getString(SharedPreUtil.TEMP_HUANXIN_NAME, ""));
 
                 }
 

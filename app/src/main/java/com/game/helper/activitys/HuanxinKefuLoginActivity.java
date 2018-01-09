@@ -28,7 +28,6 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.EasemobAccountResults;
 import com.game.helper.net.DataService;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.utils.SPUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.Error;
@@ -84,13 +83,13 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
                 easemobIM();
             }
         } else {
-            String tempName = SPUtils.getString(this, SPUtils.TEMP_HUANXIN_NAME, "");
+            String tempName = SharedPreUtil.getString(SharedPreUtil.TEMP_HUANXIN_NAME, "");
             // Log.d(TAG, "获取SP文件里环信的临时账号：" + tempName);
             if (tempName.length() <= 0) {
                 //生成一个随机的环信账号，和密码
                 String account = getRandomAccount();
                 //Log.d(TAG, "创建SP文件里环信的临时账号：" + account);
-                SPUtils.putString(this, SPUtils.TEMP_HUANXIN_NAME, account);
+                SharedPreUtil.putString(SharedPreUtil.TEMP_HUANXIN_NAME, account);
                 //创建一个用户并登录环信服务器
                 createAccountThenLoginChatServer(account);
             } else {
@@ -325,8 +324,8 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
         ChatClient.getInstance().logout(true, new Callback() {
             @Override
             public void onSuccess() {
-                SPUtils.remove(HuanxinKefuLoginActivity.this, SPUtils.TEMP_HUANXIN_NAME);
-                Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SPUtils.getString(HuanxinKefuLoginActivity.this, SPUtils.TEMP_HUANXIN_NAME, ""));
+                SharedPreUtil.remove(SharedPreUtil.TEMP_HUANXIN_NAME);
+                Log.d(TAG, "已清除SPUtils.TEMP_HUANXIN_NAME:" + SharedPreUtil.getString(SharedPreUtil.TEMP_HUANXIN_NAME, ""));
             }
 
             @Override

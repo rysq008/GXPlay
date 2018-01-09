@@ -130,6 +130,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 tvMatchingActivityDiscount.setVisibility(View.GONE);
                 tvDiscountVip.setText(discount_vip.toString()+"折");
             }
+            //if(mData.){}
             tvtName.setText(itemDate.getGame().getName());
             tvTypeName.setText(itemDate.getGame().getType().getName());
             tvPackageFilesize.setText(String.valueOf(itemDate.getFilesize()) + "M");
