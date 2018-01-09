@@ -152,6 +152,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String inputValue = s.toString().trim();
                 if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue))<=0) {
+                    mTotalBalanceValue = 0;
                     mTotalBalance.setText(mTotalBalanceValue+"元");
                     return;
                 }
