@@ -181,6 +181,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                 tv.setBackgroundDrawable(drawable2);
                 tv.setPadding(10, 20, 10, 20);
                 tv.setGravity(Gravity.CENTER);
+
                 return new TViewHolder(tv);
             }
 
@@ -209,7 +210,6 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                         ((TextView) itemView).setTextColor(getResources().getColor(R.color.black));
                         setDataByItemType(itemType, isCheck, (TextView) itemView);
                     }
-
                 }
 
                 public void setDisplay(final ItemType itemType, final int pos) {

@@ -57,6 +57,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     private static final int check_disable_color = R.color.colorShadow;
     private String discount_high_vip;
     private String discount_vip;
+    private String discount_activity;
     private String discount_member;
     private boolean is_vip;
 
@@ -107,6 +108,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
 
     public GameDetailRechargeFragment() {
         // Required empty public constructor
+
     }
 
     @Override
@@ -123,7 +125,6 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     public int getLayoutId() {
         return R.layout.fragment_recharge_game_detail;
     }
-
     private void initView(){
         setCheckStatus(-1,true);
         if (getArguments() != null) {
@@ -132,6 +133,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         }
         //getVipLevel();//获取最高vip
 
+        discount_activity = getResources().getString(R.string.recharge_activity_discount);
         discount_high_vip = getResources().getString(R.string.recharge_high_vip_discount);
         discount_vip = getResources().getString(R.string.recharge_vip_discount);
         discount_member = getResources().getString(R.string.recharge_member_discount);
@@ -153,7 +155,11 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String inputValue = s.toString().trim();
-                if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue))<=0) return;
+                if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue))<=0) {
+                    mTotalBalanceValue = 0;
+                    mTotalBalance.setText(mTotalBalanceValue+"元");
+                    return;
+                }
                 getCheckDiscount();
             }
 
@@ -243,6 +249,9 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             public void accept(HttpResultModel<GameAccountDiscountResults> gameAccountDiscountResultsHttpResultModel ) throws Exception {
                 discountList = gameAccountDiscountResultsHttpResultModel.data;
                 mDiscount1.setText(discount_high_vip+discountList.high_vip_discount+"折");
+                if (discountList.discount_activity != 0){
+                    mDiscount1.setText(discount_activity+discountList.discount_activity+"折");
+                }
                 mDiscount2.setText(discount_member+discountList.member_discount+"折");
                 mDiscount3.setText(discount_vip+discountList.vip_discount+"折");
 
@@ -338,6 +347,9 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         }
         if (mCbDiscount1.isChecked()){
             mTotalDiscountValue = discountList.high_vip_discount;
+            if (discountList.discount_activity != 0){
+                mTotalDiscountValue = discountList.discount_activity;
+            }
         }
         else if (mCbDiscount2.isChecked()){
             mTotalDiscountValue = discountList.member_discount;
@@ -393,9 +405,6 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             }else {
                 showVipHintDialog(0);
             }
-
-            setCheckStatus(0,true);
-            setChecked(2);
         }
     }
 
@@ -426,6 +435,9 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             @Override
             public void onConfirm() {
                 dialog.dismiss();
+                setCheckStatus(0,true);
+                setChecked(2);
+
                 if (type == 2) goToKefu();
                 if (type == 1) goToVipLevel();
             }
@@ -470,6 +482,11 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     }
 
     @Override
+    public Object newP() {
+        return null;
+    }
+
+    @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         getCheckDiscount();
     }
@@ -505,10 +522,9 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         caculateBalanceVlue();
     }
 
-    @Override
-    public Object newP() {
-        return null;
-    }
+
+
+
 
     @OnClick({R.id.ll_connect_kefu_recharge_game_detail, R.id.tv_confirm_order_recharge_game_detail})
     public void onViewClicked(View view) {

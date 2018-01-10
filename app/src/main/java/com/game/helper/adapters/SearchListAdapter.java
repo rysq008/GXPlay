@@ -116,9 +116,8 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
                 discountTv.setVisibility(View.VISIBLE);
                 discountTv.setText(zhekou_shouchong.toString()+"折");
             }
-            discountTv.setText(discount_activity == 0 ? zhekou_shouchong.toString() : discount_activity.toString());
             typeTv.setText(data.type.get("name").replace(" ", ""));
-            sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
+            sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", "")+"M");
             descTv.setText(data.intro.replace(" ", ""));
             handType.setText(data.class_type.get("name"));
 

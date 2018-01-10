@@ -10,6 +10,7 @@ import com.game.helper.R;
 import com.game.helper.adapters.SpecialDetailAdapter;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
@@ -129,13 +130,13 @@ public class SpecialDetailFragment extends XBaseFragment {
     }
 
     private void loadAdapterData(int page, int specialId, boolean showLoading) {
-        Flowable<HttpResultModel<SpecialDetailResults>> fr = DataService.getSpecialDetailList(new SpecialDetailRequestBody(specialId, page));
-        RxLoadingUtils.subscribeWithReload(mXRv, fr, bindToLifecycle(), new Consumer<HttpResultModel<SpecialDetailResults>>() {
+        Flowable<HttpResultModel<RecommendResults>> fr = DataService.getSpecialDetailList(new SpecialDetailRequestBody(specialId, page));
+        RxLoadingUtils.subscribeWithReload(mXRv, fr, bindToLifecycle(), new Consumer<HttpResultModel<RecommendResults>>() {
             @Override
-            public void accept(HttpResultModel<SpecialDetailResults> specialDetailResultsHttpResultModel) throws Exception {
+            public void accept(HttpResultModel<RecommendResults> recommendResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
-                list.addAll(specialDetailResultsHttpResultModel.data.list);
-                showData(specialDetailResultsHttpResultModel.current_page, specialDetailResultsHttpResultModel.total_page, list);
+                list.addAll(recommendResultsHttpResultModel.data.list);
+                showData(recommendResultsHttpResultModel.current_page, recommendResultsHttpResultModel.total_page, list);
             }
         }, null, null, showLoading);
     }

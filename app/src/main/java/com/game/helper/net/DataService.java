@@ -400,7 +400,7 @@ public class DataService {
         return Api.CreateApiService().getMarketExpectedFlowList(singlePageRequestBody);
     }
 
-    public static Flowable<HttpResultModel<SpecialDetailResults>> getSpecialDetailList(@Body SpecialDetailRequestBody specialDetailRequestBody) {
+    public static Flowable<HttpResultModel<RecommendResults>> getSpecialDetailList(@Body SpecialDetailRequestBody specialDetailRequestBody) {
         return Api.CreateApiService().getSpecialDetailList(specialDetailRequestBody);
     }
 
