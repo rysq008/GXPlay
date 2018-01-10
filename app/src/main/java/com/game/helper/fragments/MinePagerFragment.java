@@ -214,8 +214,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                 R.mipmap.ic_mine_yaoqing,
                 R.mipmap.ic_mine_tuiguang,
                 R.mipmap.ic_mine_kefu,
-                R.mipmap.ic_mine_kefu,
-                R.mipmap.ic_mine_kefu,
+                R.mipmap.ic_mine_account,
+                R.mipmap.ic_mine_download,
                 R.mipmap.ic_mine_fankui,
                 R.mipmap.ic_mine_setting};
         resName = new int[]{

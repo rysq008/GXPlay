@@ -458,7 +458,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
     private void goToKefu(){
         //跳转客服
         mItemDiscount2.performClick();
-        Toast.makeText(getContext(), "最高等级vip，跳转客服", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "最高等级vip，跳转客服", Toast.LENGTH_SHORT).show();
     }
 
     public GameAccountResultModel.ListBean getGameBean() {

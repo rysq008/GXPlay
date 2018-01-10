@@ -227,7 +227,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             double inputValue = rechargeGameFragment.getInputValue();
             boolean is_vip = rechargeGameFragment.getIs_VIP();
             if (gameBean == null || totalBalanceValue <= 0 || inputValue <= 0) {
-                Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "请输入正确的金额！", Toast.LENGTH_SHORT).show();
             } else {
 //                Bundle bundle = new Bundle();
 //                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
@@ -253,7 +253,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             int select_pay_mode = rechargeGoldFragment.getSelect_pay_mode();
             int totalChargeGold = rechargeGoldFragment.getmTotalChrgeGold();
             if (totalChargeGold <= 0 || select_pay_mode == -1) {
-                Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "请输入正确的金额！", Toast.LENGTH_SHORT).show();
                 return;
             }
             if (select_pay_mode == RechargeGoldFragment.Pay_Type_Wechat) {
@@ -421,7 +421,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         }
         if (v == mHeadAction){
             // TODO: 2017/12/29 补全跳转
-            Toast.makeText(getContext(), "跳转说明", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "跳转说明", Toast.LENGTH_SHORT).show();
         }
     }
 
