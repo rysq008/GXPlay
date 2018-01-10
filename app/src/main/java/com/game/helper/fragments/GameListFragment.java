@@ -77,6 +77,7 @@ public class GameListFragment extends XBaseFragment {
             mAdapter = new SearchListAdapter(context);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
+        xRecyclerContentLayout.getRecyclerView().setVerticalScrollBarEnabled(false);
         xRecyclerContentLayout.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
@@ -90,7 +91,7 @@ public class GameListFragment extends XBaseFragment {
         });
 
         xRecyclerContentLayout.getRecyclerView().useDefLoadMoreView();
-        xRecyclerContentLayout.showLoading();
+//        xRecyclerContentLayout.showLoading();
 
     }
 
@@ -107,7 +108,6 @@ public class GameListFragment extends XBaseFragment {
         xRecyclerContentLayout.getRecyclerView().setPage(cur_page, total_page);
         if (mAdapter.getItemCount() < 1) {
             xRecyclerContentLayout.showEmpty();
-            return;
         } else {
             xRecyclerContentLayout.showContent();
         }

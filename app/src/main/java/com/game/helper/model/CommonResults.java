@@ -43,6 +43,7 @@ public class CommonResults extends XBaseModel {
 //        ]
         public int id;
         public String name;
+        public boolean isCheck;
 
         @Override
         public int itemType() {

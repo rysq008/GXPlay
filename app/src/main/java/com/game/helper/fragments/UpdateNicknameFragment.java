@@ -10,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.NotConcernResults;
@@ -104,9 +103,10 @@ public class UpdateNicknameFragment extends XBaseFragment implements View.OnClic
             public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
                 if (notConcernResultsHttpResultModel.isSucceful()) {
                     getActivity().onBackPressed();
+                    Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override

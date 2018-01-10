@@ -12,6 +12,7 @@ import io.reactivex.disposables.Disposable;
 
 public class GamePackageListResult extends XBaseModel {
 
+
     private List<ListBean> list;
 
     public List<ListBean> getList() {
@@ -25,11 +26,11 @@ public class GamePackageListResult extends XBaseModel {
     public static class ListBean extends XBaseModel {
         /**
          * discount_vip : 4
-         * game : {"logo":"/upload/image/20161209/20161209114359_333.jpg","type":{"id":17,"name":"卡牌"},"id":1,"logothumb":"","name":"航海王强者之路"}
+         * game : {"class_type":{"id":1,"name":"网游"},"logo":"/upload/image/20161209/20161209114359_333.jpg","type":{"id":17,"name":"卡牌"},"id":1,"logothumb":"","name":"航海王强者之路"}
          * zhekou_xuchong : 6
          * filesize : 258.67
          * zhekou_shouchong : 5
-         * discount_activity: 3.5,
+         * discount_activity : 3.5
          * name_package : com.shanghailvbing.hhw.guopan
          * path : http://down2.guopan.cn/andl/dda.php?appid=101147&cid=3714&t=1508722296
          * id : 22874
@@ -40,11 +41,8 @@ public class GamePackageListResult extends XBaseModel {
         private GameBean game;
         private float zhekou_xuchong;
         private double filesize;
-        private float discount_activity;
-
-
-
         private float zhekou_shouchong;
+        private float discount_activity;
         private String name_package;
         private String path;
         private int id;
@@ -137,6 +135,7 @@ public class GamePackageListResult extends XBaseModel {
 
         public static class GameBean {
             /**
+             * class_type : {"id":1,"name":"网游"}
              * logo : /upload/image/20161209/20161209114359_333.jpg
              * type : {"id":17,"name":"卡牌"}
              * id : 1
@@ -144,11 +143,20 @@ public class GamePackageListResult extends XBaseModel {
              * name : 航海王强者之路
              */
 
+            private ClassTypeBean class_type;
             private String logo;
             private TypeBean type;
             private int id;
             private String logothumb;
             private String name;
+
+            public ClassTypeBean getClass_type() {
+                return class_type;
+            }
+
+            public void setClass_type(ClassTypeBean class_type) {
+                this.class_type = class_type;
+            }
 
             public String getLogo() {
                 return logo;
@@ -188,6 +196,32 @@ public class GamePackageListResult extends XBaseModel {
 
             public void setName(String name) {
                 this.name = name;
+            }
+
+            public static class ClassTypeBean {
+                /**
+                 * id : 1
+                 * name : 网游
+                 */
+
+                private int id;
+                private String name;
+
+                public int getId() {
+                    return id;
+                }
+
+                public void setId(int id) {
+                    this.id = id;
+                }
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
             }
 
             public static class TypeBean {

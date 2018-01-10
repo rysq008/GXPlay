@@ -3,7 +3,9 @@ package com.game.helper.adapters;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,10 +13,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.DownLoad.DownloadController;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.api.Api;
 import com.game.helper.utils.DownLoadReceiveUtils;
+import com.game.helper.utils.SharedPreUtil;
+import com.game.helper.utils.Utils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
@@ -83,13 +89,13 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         TextView tvPackageFilesize;
         @BindView(R.id.tv_channel_list_source)
         TextView tvtSource;
-        @BindView(R.id.percent)
+        @BindView(R.id.percent_channel_list_item)
         TextView mPercent;
-        @BindView(R.id.size)
+        @BindView(R.id.size_channel_list_item)
         TextView mSize;
-        @BindView(R.id.status)
+        @BindView(R.id.status_channel_list_item)
         TextView mStatusText;
-        @BindView(R.id.pb_channel_list)
+        @BindView(R.id.pb_channel_list_item)
         ProgressBar pbChannel;
         @BindView(R.id.btn_channel_list_load)
         Button ivChannelListLoad;
@@ -104,6 +110,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         private int flag;
         private DownloadController mDownloadController;
         private GamePackageListResult.ListBean mData;
+        private Boolean isWebGame;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -117,20 +124,27 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
             ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.getGame().getLogo()), null);
             Float discount_vip = mData.getDiscount_vip();
             Float discount_activity = mData.getDiscount_activity();
-            if (discount_activity >0) {
+            if (discount_activity > 0) {
                 tvDiscountVip.setVisibility(View.GONE);
                 tvActivityDiscount.setVisibility(View.VISIBLE);
                 tvMatchingActivityDiscount.setVisibility(View.VISIBLE);
-                tvMatchingActivityDiscount.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
-                tvActivityDiscount.setText(discount_activity.toString()+"折");
-                tvMatchingActivityDiscount.setText(discount_vip.toString()+"折");
+                tvMatchingActivityDiscount.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                tvActivityDiscount.setText(discount_activity.toString() + "折");
+                tvMatchingActivityDiscount.setText(discount_vip.toString() + "折");
             } else {
                 tvDiscountVip.setVisibility(View.VISIBLE);
                 tvActivityDiscount.setVisibility(View.GONE);
                 tvMatchingActivityDiscount.setVisibility(View.GONE);
-                tvDiscountVip.setText(discount_vip.toString()+"折");
+                tvDiscountVip.setText(discount_vip.toString() + "折");
             }
-            //if(mData.){}
+            String classTypeName = mData.getGame().getClass_type().getName();
+            int filesize = (int) mData.getFilesize();
+            String packageName = mData.getName_package();
+            if ("手机页游".equals(classTypeName) && filesize <= 0 && TextUtils.isEmpty(packageName)) {
+                isWebGame = true;
+            } else {
+                isWebGame = false;
+            }
             tvtName.setText(itemDate.getGame().getName());
             tvTypeName.setText(itemDate.getGame().getType().getName());
             tvPackageFilesize.setText(String.valueOf(itemDate.getFilesize()) + "M");
@@ -232,11 +246,26 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
         }
 
         private void updateProgressStatus(DownloadEvent event) {
-            if (event.getFlag() == DownloadFlag.INSTALLED) {
+            if (isWebGame) {
+                event.setFlag(DownloadFlag.INSTALLED);
+                mDownloadController.setEvent(event);
+                dispose(mData.disposable);
+            }
+            if (event.getFlag() == DownloadFlag.INSTALLED || event.getFlag() == DownloadFlag.NORMAL) {
                 pbChannel.setVisibility(View.GONE);
                 mPercent.setVisibility(View.GONE);
                 mSize.setVisibility(View.GONE);
+                mStatusText.setVisibility(View.GONE);
+            }else if(event.getFlag() == DownloadFlag.COMPLETED){
+                pbChannel.setVisibility(View.GONE);
+                mPercent.setVisibility(View.GONE);
+                mSize.setVisibility(View.GONE);
+                mStatusText.setVisibility(View.VISIBLE);
             } else {
+                mStatusText.setVisibility(View.VISIBLE);
+                pbChannel.setVisibility(View.VISIBLE);
+                mPercent.setVisibility(View.VISIBLE);
+                mSize.setVisibility(View.VISIBLE);
                 pbChannel.setIndeterminate(event.getDownloadStatus().isChunked);
                 pbChannel.setMax((int) event.getDownloadStatus().getTotalSize());
                 pbChannel.setProgress((int) event.getDownloadStatus().getDownloadSize());
@@ -270,9 +299,19 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
 
                 @Override
                 public void openApp() {
-                    DownLoadReceiveUtils.openApp(context, mData.getName_package());
+                    if (isWebGame) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(WebviewFragment.PARAM_URL, mData.getPath());
+                        bundle.putString(WebviewFragment.PARAM_TITLE, mData.getGame().getName());
+                        DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
+                    } else {
+                        DownLoadReceiveUtils.openApp(context, mData.getName_package());
+                    }
+
                 }
             });
+
+
         }
 
     }

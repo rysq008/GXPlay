@@ -19,7 +19,7 @@ public class DownloadController {
     public DownloadController(TextView status, Button action) {
         mStatus = status;
         mAction = action;
-        mExtraView = mStatus;
+        mExtraView = new TextView(status.getContext());
         setState(new Normal());
     }
 

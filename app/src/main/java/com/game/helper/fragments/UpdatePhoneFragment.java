@@ -142,9 +142,10 @@ public class UpdatePhoneFragment extends XBaseFragment implements View.OnClickLi
             public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
                 if (notConcernResultsHttpResultModel.isSucceful()) {
                     getActivity().onBackPressed();
+                    Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override

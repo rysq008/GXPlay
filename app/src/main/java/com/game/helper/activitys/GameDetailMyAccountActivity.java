@@ -18,7 +18,6 @@ import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
-import com.game.helper.views.widget.TotoroToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,6 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
         } else {
             xRecyclerContentLayout.showEmpty();
         }
-
     }
 
     private void initView() {
@@ -97,12 +95,12 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
             mAdapter.addOnItemCheckListener(this);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
-        xRecyclerContentLayout.getRecyclerView().setRefreshEnabled(false);
+        xRecyclerContentLayout.refreshEnabled(false);
     }
 
     private void getGameAccountInfo(int page, boolean showLoading) {
         Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page, 1, option_game_id, option_channel_id));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
+        RxLoadingUtils.subscribeWithReload(xRecyclerContentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
             @Override
             public void accept(HttpResultModel<GameAccountResultModel> recommendResultsHttpResultModel) throws Exception {
                 List<GameAccountResultModel.ListBean> list = new ArrayList<>();

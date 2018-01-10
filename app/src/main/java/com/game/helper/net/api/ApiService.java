@@ -235,7 +235,7 @@ public interface ApiService {
 
     //获取某个主题游戏列表接口
     @POST("/game/get_theme_game_list/")
-    Flowable<HttpResultModel<SpecialDetailResults>> getSpecialDetailList(@Body SpecialDetailRequestBody specialDetailRequestBody);
+    Flowable<HttpResultModel<RecommendResults>> getSpecialDetailList(@Body SpecialDetailRequestBody specialDetailRequestBody);
 
     //获取游戏安装包列表
     @POST("/game/get_game_package_list/")

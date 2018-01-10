@@ -54,9 +54,9 @@
                     android:background="@drawable/shape_bg_discount_vip"
                     android:gravity="center"
                     android:text="5折"
-                    android:textColor="@color/white"
+                    android:textColor="@color/color_333"
                     android:layout_marginRight="@dimen/margin_5"
-                    android:textSize="@dimen/size_9sp" />
+                    android:textSize="@dimen/size_10sp" />
                 <TextView
                     android:id="@+id/tv_channel_list_activity_discount"
                     android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
                     android:gravity="center"
                     android:text="0折"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/size_9sp"
+                    android:textSize="@dimen/size_10sp"
                     android:layout_marginRight="@dimen/margin_5"
                     android:visibility="visible"/>
                 <TextView
@@ -75,7 +75,7 @@
                     android:gravity="center"
                     android:text="0折"
                     android:textColor="@color/color_cecece"
-                    android:textSize="@dimen/size_9sp"
+                    android:textSize="@dimen/size_10sp"
                     android:visibility="visible"/>
             </LinearLayout>
 
@@ -99,7 +99,7 @@
                     android:layout_height="@dimen/dp_12"
                     android:layout_marginLeft="@dimen/margin_5"
                     android:layout_marginRight="@dimen/margin_5"
-                    android:background="@color/color_999" />
+                    android:background="@color/color_dddddd" />
 
                 <TextView
                     android:id="@+id/tv_channel_list_package_filesize"
@@ -114,7 +114,7 @@
                     android:layout_height="@dimen/dp_12"
                     android:layout_marginLeft="@dimen/margin_5"
                     android:layout_marginRight="@dimen/margin_5"
-                    android:background="@color/color_999" />
+                    android:background="@color/color_dddddd" />
 
                 <TextView
                     android:id="@+id/tv_channel_list_package_plat"
@@ -154,7 +154,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/percent"
+                    android:id="@+id/percent_channel_list_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -163,21 +163,21 @@
                     android:textSize="@dimen/size_12sp" />
 
                 <ProgressBar
-                    android:id="@+id/pb_channel_list"
+                    android:id="@+id/pb_channel_list_item"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="7dp"
-                    android:layout_below="@id/percent"
+                    android:layout_below="@id/percent_channel_list_item"
                     android:layout_marginBottom="@dimen/margin_3"
                     android:layout_marginTop="@dimen/margin_3"
                     android:progress="0"
                     android:visibility="visible" />
 
                 <TextView
-                    android:id="@+id/status"
+                    android:id="@+id/status_channel_list_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/pb_channel_list"
+                    android:layout_below="@id/pb_channel_list_item"
                     android:layout_gravity="start"
                     android:layout_marginEnd="20dp"
                     android:layout_marginRight="20dp"
@@ -186,11 +186,11 @@
                     tools:text="正在下载中" />
 
                 <TextView
-                    android:id="@+id/size"
+                    android:id="@+id/size_channel_list_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@id/pb_channel_list"
+                    android:layout_below="@id/pb_channel_list_item"
                     android:layout_gravity="end"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp"

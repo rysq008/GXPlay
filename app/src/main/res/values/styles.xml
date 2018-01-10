@@ -80,10 +80,44 @@
         <item name="android:width">@dimen/dp_20</item>
         <item name="android:height">@dimen/dp_20</item>
     </style>
+
     <style name="CustomAlertDialogBackground" parent="@android:style/Theme.Holo.Dialog">
         <!--<item name="android:background">@mipmap/pthy_bg</item>-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="FullScreenDialog" parent="android:style/Theme.Dialog">
+
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:windowFrame">@null</item>
+
+        <item name="android:windowIsFloating">true</item>
+
+        <item name="android:windowIsTranslucent">false</item>
+
+        <item name="android:background">@android:color/transparent</item>
+
+        <item name="android:windowBackground">@null</item>
+
+        <item name="android:backgroundDimEnabled">true</item>
+
+        <item name="android:windowAnimationStyle">@android:style/Animation.InputMethod</item>
+    </style>
+    <!--自定义dialog背景全透明无边框theme -->
+    <style name="MyDialog" parent="android:style/Theme.Dialog">
+        <!--背景颜色及和透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否去除边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊-->
+        <item name="android:backgroundDimEnabled">false</item>
     </style>
 
 </resources>

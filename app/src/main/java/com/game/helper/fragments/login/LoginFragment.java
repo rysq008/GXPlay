@@ -11,11 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.BuildConfig;
+import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
-import com.game.helper.event.BusProvider;
-import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LoginResults;
@@ -192,10 +191,10 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VerifyResults>>() {
             @Override
             public void accept(HttpResultModel<VerifyResults> verifyResultsHttpResultModel) throws Exception {
-                if (verifyResultsHttpResultModel.isSucceful()){
+                if (verifyResultsHttpResultModel.isSucceful()) {
                     mCountDownText.setCountDownTimer(60 * 1000, 1000);
                     mCountDownText.startTimer();
-                }else {
+                } else {
                     Toast.makeText(getContext(), verifyResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -261,7 +260,6 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         super.onDestroy();
         mCountDownText.destroy();
 //        GameDetailMyAccountActivity.needClose = !SharedPreUtil.isLogin();
-        BusProvider.getBus().post(new MsgEvent<LoginFragment>(this));
     }
 
     @Override
@@ -284,6 +282,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
             public void onSuccess() {
                 SharedPreUtil.remove(SharedPreUtil.TEMP_HUANXIN_NAME);
                 Log.d(TAG, "已清除SharedPreUtil.TEMP_HUANXIN_NAME:" + SharedPreUtil.getString(SharedPreUtil.TEMP_HUANXIN_NAME, ""));
+
             }
 
             @Override
