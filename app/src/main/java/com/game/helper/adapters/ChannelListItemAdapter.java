@@ -256,6 +256,11 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 mPercent.setVisibility(View.GONE);
                 mSize.setVisibility(View.GONE);
                 mStatusText.setVisibility(View.GONE);
+            }else if(event.getFlag() == DownloadFlag.COMPLETED){
+                pbChannel.setVisibility(View.GONE);
+                mPercent.setVisibility(View.GONE);
+                mSize.setVisibility(View.GONE);
+                mStatusText.setVisibility(View.VISIBLE);
             } else {
                 mStatusText.setVisibility(View.VISIBLE);
                 pbChannel.setVisibility(View.VISIBLE);

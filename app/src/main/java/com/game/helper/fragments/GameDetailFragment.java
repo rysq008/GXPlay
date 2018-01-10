@@ -355,6 +355,11 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             mPercent.setVisibility(View.GONE);
             mSize.setVisibility(View.GONE);
             mStatusText.setVisibility(View.GONE);
+        }else if(event.getFlag() == DownloadFlag.COMPLETED){
+            pb.setVisibility(View.GONE);
+            mPercent.setVisibility(View.GONE);
+            mSize.setVisibility(View.GONE);
+            mStatusText.setVisibility(View.VISIBLE);
         } else {
             mStatusText.setVisibility(View.VISIBLE);
             pb.setVisibility(View.VISIBLE);

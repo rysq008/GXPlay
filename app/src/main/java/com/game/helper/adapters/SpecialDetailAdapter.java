@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.ChannelListFragment;
+import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.net.api.Api;
@@ -49,14 +50,15 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ItemType item = data.get(position);
-        SpecialDetailResults.ListBean itemDate = (SpecialDetailResults.ListBean) data.get(position);
-        Float discount_activity = (float) itemDate.game_package.discount_activity;
-        Float zhekou_shouchong = (float) itemDate.game_package.zhekou_shouchong;
+        RecommendResults.RecommendItem itemDate = (RecommendResults.RecommendItem) data.get(position);
+        Float zhekou_shouchong = itemDate.game_package.get("zhekou_shouchong");
+        Float discount_activity = itemDate.game_package.get("discount_activity");
         ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.logo), ILoader.Options.defaultOptions());
         holder.ivName.setText(itemDate.name);
-        holder.ivTypeName.setText(itemDate.type.name);
-        holder.ivPackageFilesize.setText(String.valueOf(itemDate.game_package.filesize));
+        holder.ivTypeName.setText(itemDate.type.get("name").replace(" ", ""));
+        holder.ivPackageFilesize.setText(String.valueOf(itemDate.game_package.get("filesize").toString().replace(" ", "")+"M"));
         holder.ivntro.setText(itemDate.intro);
+        holder.tvTypeClass.setText(itemDate.class_type.get("name"));
         if (discount_activity >0) {
             holder.ivDiscountVip.setVisibility(View.GONE);
             holder.tvActivityDiscoun.setVisibility(View.VISIBLE);
@@ -78,6 +80,7 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
                 }
             }
         });
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -97,6 +100,8 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
         TextView tvActivityDiscoun;
         @BindView(R.id.tv_detail_special_matching_activity_discount)
         TextView tvMatchingActivityDiscoun;
+        @BindView(R.id.tv_detail_special_type_class)
+        TextView tvTypeClass;
         public int gameId;
         public ViewHolder(View itemView) {
             super(itemView);

@@ -180,9 +180,11 @@ public class GameDetailGiftFragment extends XBaseFragment {
                     RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<Object>>() {
                         @Override
                         public void accept(HttpResultModel<Object> gameListResult) throws Exception {
-                            ToastUtil.showToast(gameListResult.getResponseMsg());
                             if(gameListResult.isSucceful()){
                                 loadAdapterData(1,gameId,false);
+                                ToastUtil.showToast("领取成功");
+                            }else{
+                                ToastUtil.showToast(gameListResult.getResponseMsg());
                             }
                         }
                     }, null);
