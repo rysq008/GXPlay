@@ -2,7 +2,9 @@ package com.game.helper.fragments.BaseFragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -34,8 +36,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -175,16 +175,17 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     public void OnClick(View v) {
 //        Dialog dialog = new Dialog(context, R.style.umeng_socialize_popup_dialog);
         // 显示透明的对话框
-        final AlertDialog dialog = new AlertDialog.Builder(context).create();
+        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.FullScreenDialog).create();
         RecyclerView recyclerView = new RecyclerView(context);
         recyclerView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+        recyclerView.setBackgroundResource(R.color.white);
         recyclerView.setAdapter(new RecyclerView.Adapter() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 CheckedTextView tv = new CheckedTextView(context);
-                tv.setBackgroundResource(R.drawable.retry_btn_selector);
+                tv.setPadding(10, 10, 10, 10);
                 return new TViewHolder(tv);
             }
 
@@ -206,6 +207,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                     super(itemView);
                 }
 
+                @RequiresApi(api = Build.VERSION_CODES.M)
                 public void setData(ItemType itemType, boolean isCheck) {
                     if (itemType.equals(viewPager.getTag())) {
                         return;
@@ -217,8 +219,8 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                         ((CheckedTextView) itemView).setText(((CommonResults.CommonItem) itemType).name);
                         (((CommonResults.CommonItem) itemType)).isCheck = isCheck;
                     }
-//                    mIsCheck = isCheck;
                     ((CheckedTextView) itemView).setChecked(isCheck);
+                    ((CheckedTextView) itemView).setTextColor(isCheck?getResources().getColor(R.color.red):getResources().getColor(R.color.black));
                 }
 
                 public void setDisplay(final ItemType itemType, final int pos) {
@@ -243,13 +245,14 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                 }
             }
         });
-        dialog.setView(recyclerView);
+        dialog.show();
 
         //获取到当前Activity的Window
         Window dialog_window = dialog.getWindow();
+        dialog_window.setContentView(recyclerView);
         dialog_window.getDecorView().setPadding(0, 0, 0, 0);
         //设置对话框的位置
-        dialog_window.setGravity(Gravity.CENTER);
+        dialog_window.setGravity(Gravity.CENTER | Gravity.TOP);
         //获取到LayoutParams
         WindowManager.LayoutParams dialog_window_attributes = dialog_window.getAttributes();
         dialog_window_attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -258,7 +261,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
         dialog_window_attributes.x = 0;
         dialog_window_attributes.y = (int) (v.getY() + v.getBottom());
         dialog_window.setAttributes(dialog_window_attributes);
-        dialog.show();
+//        dialog.show();
     }
 
 }
