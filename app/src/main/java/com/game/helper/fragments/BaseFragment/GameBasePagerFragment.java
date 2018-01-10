@@ -2,6 +2,9 @@ package com.game.helper.fragments.BaseFragment;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,8 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.model.ClassicalResults;
@@ -34,8 +37,6 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -92,28 +93,16 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                     super.onPageSelected(position);
                     ItemType itemType = list.get(position);
                     if (viewPager.getTag() == null && position == 0) {
-                        if (itemType instanceof ClassicalResults.ClassicalItem) {
-                            (((ClassicalResults.ClassicalItem) itemType)).isCheck = true;
-                        } else {
-                            (((CommonResults.CommonItem) itemType)).isCheck = true;
-                        }
+                        setDataByItemType(itemType, true, null);
                         viewPager.setTag(itemType);
                     } else {
                         if (itemType.equals(viewPager.getTag())) {
-                            return;
+                            setDataByItemType(itemType, true, null);
                         } else {
                             ItemType oldType = (ItemType) viewPager.getTag();
-                            if (oldType instanceof ClassicalResults.ClassicalItem) {
-                                (((ClassicalResults.ClassicalItem) oldType)).isCheck = false;
-                            } else {
-                                (((CommonResults.CommonItem) oldType)).isCheck = false;
-                            }
+                            setDataByItemType(oldType, false, null);
 /*****************************************************************************************************************************/
-                            if (itemType instanceof ClassicalResults.ClassicalItem) {
-                                (((ClassicalResults.ClassicalItem) itemType)).isCheck = true;
-                            } else {
-                                (((CommonResults.CommonItem) itemType)).isCheck = true;
-                            }
+                            setDataByItemType(itemType, true, null);
                             viewPager.setTag(itemType);
                         }
                     }
@@ -134,10 +123,8 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                     final ItemType itemType = list.get(index);
                     if (itemType instanceof ClassicalResults.ClassicalItem) {
                         colorTransitionPagerTitleView.setText(((ClassicalResults.ClassicalItem) itemType).name);
-                        (((ClassicalResults.ClassicalItem) itemType)).isCheck = true;
                     } else {
                         colorTransitionPagerTitleView.setText(((CommonResults.CommonItem) itemType).name);
-                        (((CommonResults.CommonItem) itemType)).isCheck = true;
                     }
                     colorTransitionPagerTitleView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -175,16 +162,25 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     public void OnClick(View v) {
 //        Dialog dialog = new Dialog(context, R.style.umeng_socialize_popup_dialog);
         // 显示透明的对话框
-        final AlertDialog dialog = new AlertDialog.Builder(context).create();
+        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.FullScreenDialog).create();
         RecyclerView recyclerView = new RecyclerView(context);
         recyclerView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+        recyclerView.setBackgroundResource(R.color.white);
         recyclerView.setAdapter(new RecyclerView.Adapter() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                CheckedTextView tv = new CheckedTextView(context);
-                tv.setBackgroundResource(R.drawable.retry_btn_selector);
+                TextView tv = new TextView(context);
+                //矩形形状
+                RectShape rectShape = new RectShape();
+                ShapeDrawable drawable2 = new ShapeDrawable(rectShape);
+                drawable2.getPaint().setColor(Color.RED);
+                drawable2.setIntrinsicWidth(2);
+                drawable2.getPaint().setStyle(Paint.Style.STROKE);
+                tv.setBackgroundDrawable(drawable2);
+                tv.setPadding(10, 20, 10, 20);
+                tv.setGravity(Gravity.CENTER);
                 return new TViewHolder(tv);
             }
 
@@ -208,17 +204,12 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
 
                 public void setData(ItemType itemType, boolean isCheck) {
                     if (itemType.equals(viewPager.getTag())) {
-                        return;
-                    }
-                    if (itemType instanceof ClassicalResults.ClassicalItem) {
-                        ((CheckedTextView) itemView).setText(((ClassicalResults.ClassicalItem) itemType).name);
-                        (((ClassicalResults.ClassicalItem) itemType)).isCheck = isCheck;
+                        setDataByItemType(itemType, true, ((TextView) itemView));
                     } else {
-                        ((CheckedTextView) itemView).setText(((CommonResults.CommonItem) itemType).name);
-                        (((CommonResults.CommonItem) itemType)).isCheck = isCheck;
+                        ((TextView) itemView).setTextColor(getResources().getColor(R.color.black));
+                        setDataByItemType(itemType, isCheck, (TextView) itemView);
                     }
-//                    mIsCheck = isCheck;
-                    ((CheckedTextView) itemView).setChecked(isCheck);
+
                 }
 
                 public void setDisplay(final ItemType itemType, final int pos) {
@@ -231,7 +222,7 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                         }
                     }
                     setData(itemType, mIsCheck);
-                    ((CheckedTextView) itemView).setOnClickListener(new View.OnClickListener() {
+                    ((TextView) itemView).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             viewPager.setCurrentItem(pos);
@@ -243,22 +234,39 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                 }
             }
         });
-        dialog.setView(recyclerView);
+        dialog.show();
 
         //获取到当前Activity的Window
         Window dialog_window = dialog.getWindow();
+        dialog_window.setContentView(recyclerView);
         dialog_window.getDecorView().setPadding(0, 0, 0, 0);
         //设置对话框的位置
-        dialog_window.setGravity(Gravity.CENTER);
+        dialog_window.setGravity(Gravity.CENTER | Gravity.TOP);
         //获取到LayoutParams
         WindowManager.LayoutParams dialog_window_attributes = dialog_window.getAttributes();
         dialog_window_attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
         dialog_window_attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
         //设置对话框位置的偏移量
         dialog_window_attributes.x = 0;
-        dialog_window_attributes.y = (int) (v.getY() + v.getBottom());
+        dialog_window_attributes.y = (int) (v.getY() + 10);
         dialog_window.setAttributes(dialog_window_attributes);
-        dialog.show();
+//        dialog.show();
     }
 
+
+    public void setDataByItemType(ItemType itemType, boolean ischeck, TextView textView) {
+        if (itemType instanceof ClassicalResults.ClassicalItem) {
+            if (null != textView) {
+                textView.setText(((ClassicalResults.ClassicalItem) itemType).name);
+                textView.setTextColor(ischeck ? getResources().getColor(R.color.red) : getResources().getColor(R.color.black));
+            }
+            (((ClassicalResults.ClassicalItem) itemType)).isCheck = ischeck;
+        } else {
+            if (null != textView) {
+                textView.setText(((CommonResults.CommonItem) itemType).name);
+                textView.setTextColor(ischeck ? getResources().getColor(R.color.red) : getResources().getColor(R.color.black));
+            }
+            (((CommonResults.CommonItem) itemType)).isCheck = ischeck;
+        }
+    }
 }

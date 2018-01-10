@@ -11,14 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
-import com.game.helper.views.EditInputView;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -28,7 +26,7 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UpdateSignFragment extends XBaseFragment implements View.OnClickListener{
+public class UpdateSignFragment extends XBaseFragment implements View.OnClickListener {
     public static final String TAG = UpdateSignFragment.class.getSimpleName();
 
     @BindView(R.id.action_bar_back)
@@ -44,7 +42,7 @@ public class UpdateSignFragment extends XBaseFragment implements View.OnClickLis
     @BindView(R.id.iv_action)
     ImageView mHeadActionImg;
 
-    public static UpdateSignFragment newInstance(){
+    public static UpdateSignFragment newInstance() {
         return new UpdateSignFragment();
     }
 
@@ -62,7 +60,7 @@ public class UpdateSignFragment extends XBaseFragment implements View.OnClickLis
         return R.layout.fragment_update_sign;
     }
 
-    private void initView(){
+    private void initView() {
         mHeadTittle.setText(getResources().getString(R.string.common_update_sign));
         mSetting.setVisibility(View.VISIBLE);
         mHeadActionImg.setVisibility(View.GONE);
@@ -81,7 +79,7 @@ public class UpdateSignFragment extends XBaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
         if (v == mSetting) {
@@ -98,9 +96,10 @@ public class UpdateSignFragment extends XBaseFragment implements View.OnClickLis
             public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
                 if (notConcernResultsHttpResultModel.isSucceful()) {
                     getActivity().onBackPressed();
+                    Toast.makeText(getContext(), "修改成功", Toast.LENGTH_SHORT).show();
                 } else {
+                    Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
             }
         }, new Consumer<NetError>() {
             @Override
