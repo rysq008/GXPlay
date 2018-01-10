@@ -2,6 +2,8 @@ package com.game.helper.model;
 
 import com.game.helper.model.BaseModel.XBaseModel;
 
+import io.reactivex.disposables.Disposable;
+
 /**
  * Created by Tian on 2017/12/22.
  */
@@ -31,6 +33,7 @@ public class GamePackageInfoResult extends XBaseModel {
     private String name_package;
     private String path;
     private ChannelBean channel;
+    public Disposable disposable;
 
     public GameBean getGame() {
         return game;

@@ -92,7 +92,7 @@ public class RecommendView extends LinearLayout {
             discountTv.setText(zhekou_shouchong.toString()+"折");
         }
         typeTv.setText(data.type.get("name").replace(" ", ""));
-        sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", ""));
+        sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", "")+"M");
         descTv.setText(data.intro.replace(" ", ""));
         handType.setText(data.class_type.get("name"));
         launchIv.setOnClickListener(new OnClickListener() {

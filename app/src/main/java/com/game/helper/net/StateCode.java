@@ -77,6 +77,7 @@ public class StateCode {
     public static final String STATE_0305 = "0305";
     public static final String STATE_0306 = "0306";
     public static final String STATE_0307 = "0307";
+    public static final String STATE_0310 = "0310";
     /* 消息接口 */
     public static final String STATE_0401 = "0401";
     public static final String STATE_0402 = "0402";
@@ -226,6 +227,8 @@ public class StateCode {
                 return "礼包还不能领取";
             case STATE_0307:
                 return "没有对应的游戏主题";
+            case STATE_0310:
+                return "没有可用的礼包码";
             case STATE_0401:
                 return "未知的消费类型";
             case STATE_0402:

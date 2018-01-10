@@ -99,7 +99,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
     }
 
     public void showData(int cur_page, int total_page, List model) {
-        if (model.size() < 1 || model == null) {
+        if (model.size() < 1 ) {
             xRecyclerContentLayout.showEmpty();
         } else {
             if (cur_page > 1) {
@@ -148,7 +148,7 @@ public class GameDetailCommunityFragment extends XBaseFragment {
             final ItemType item = data.get(position);
             final GameCommentListResult.ListBean itemDate = (GameCommentListResult.ListBean) data.get(position);
             if (itemDate.getMember().getIcon().length() > 0) {
-                ILFactory.getLoader().loadNet(holder.ivAvatar, Api.API_BASE_URL.concat(itemDate.getMember().getIcon_thumb()), ILoader.Options.defaultOptions());
+                ILFactory.getLoader().loadNet(holder.ivAvatar, Api.API_BASE_URL.concat(itemDate.getMember().getIcon()), ILoader.Options.defaultOptions());
             }else{
                 holder.ivAvatar.setImageResource(R.mipmap.ic_default_avatar_circle);
             }

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -65,7 +66,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function3;
 import zlc.season.rxdownload2.entity.DownloadBean;
 import zlc.season.rxdownload2.entity.DownloadEvent;
-import zlc.season.rxdownload2.entity.DownloadStatus;
+import zlc.season.rxdownload2.entity.DownloadFlag;
 
 import static zlc.season.rxdownload2.function.Utils.dispose;
 
@@ -140,6 +141,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private Disposable disposable;
     private DownloadController mDownloadController;
     private DownloadBean downloadBean;
+    private Boolean mIsWebGame;
 
     long lastClickTime = 0;
 
@@ -295,7 +297,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                         disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, path, pkg, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
                             @Override
                             public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
-                                updateProgressStatus(event.getDownloadStatus());
+                                updateProgressStatus(event);
                                 if (isDisposable) {
                                     dispose(disposable);
                                 }
@@ -332,14 +334,40 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         tvPackageFilesize.setText(String.valueOf(packageInfo.getFilesize() + "M"));
         tvContent.setText(packageInfo.getGame().getIntro());
         tvPlat.setText(packageInfo.getChannel().getName());
+        String classTypeName = packageInfo.getGame().getClass_type().getName();
+        int filesize = (int) packageInfo.getFilesize();
+        String packageName = packageInfo.getName_package();
+        if ("手机页游".equals(classTypeName) && filesize <= 0 && TextUtils.isEmpty(packageName)) {
+            mIsWebGame = true;
+        } else {
+            mIsWebGame = false;
+        }
     }
 
-    private void updateProgressStatus(DownloadStatus status) {
-        pb.setIndeterminate(status.isChunked);
-        pb.setMax((int) status.getTotalSize());
-        pb.setProgress((int) status.getDownloadSize());
-        mPercent.setText(status.getPercent());
-        mSize.setText(status.getFormatStatusString());
+    private void updateProgressStatus(DownloadEvent event) {
+        if (mIsWebGame) {
+            event.setFlag(DownloadFlag.INSTALLED);
+            mDownloadController.setEvent(event);
+            dispose(packageInfo.disposable);
+        }
+        if (event.getFlag() == DownloadFlag.INSTALLED || event.getFlag() == DownloadFlag.NORMAL) {
+            pb.setVisibility(View.GONE);
+            mPercent.setVisibility(View.GONE);
+            mSize.setVisibility(View.GONE);
+            mStatusText.setVisibility(View.GONE);
+        } else {
+            mStatusText.setVisibility(View.VISIBLE);
+            pb.setVisibility(View.VISIBLE);
+            mPercent.setVisibility(View.VISIBLE);
+            mSize.setVisibility(View.VISIBLE);
+            pb.setIndeterminate(event.getDownloadStatus().isChunked);
+            pb.setMax((int) event.getDownloadStatus().getTotalSize());
+            pb.setProgress((int) event.getDownloadStatus().getDownloadSize());
+            mPercent.setText(event.getDownloadStatus().getPercent());
+            if (event.getDownloadStatus().getDownloadSize() > 0 && event.getDownloadStatus().getTotalSize() > 0)
+                mSize.setText(event.getDownloadStatus().getFormatStatusString());
+        }
+
     }
 
     @OnClick({R.id.btn_game_detail_load, R.id.action_bar_back, R.id.iv_action, R.id.tv_game_detail_bottom_download})
@@ -369,7 +397,14 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
                     @Override
                     public void openApp() {
-                        DownLoadReceiveUtils.openApp(context, pkg);
+                        if (mIsWebGame) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString(WebviewFragment.PARAM_URL, packageInfo.getPath());
+                            bundle.putString(WebviewFragment.PARAM_TITLE, packageInfo.getGame().getName());
+                            DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
+                        } else {
+                            DownLoadReceiveUtils.openApp(context, pkg);
+                        }
                     }
                 });
                 break;
@@ -665,7 +700,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         disposable = DownLoadReceiveUtils.receiveDownloadEvent(context, path, pkg, mDownloadController, new DownLoadReceiveUtils.OnDownloadEventReceiveListener() {
             @Override
             public void receiveDownloadEvent(DownloadEvent event, boolean isDisposable) {
-                updateProgressStatus(event.getDownloadStatus());
+                updateProgressStatus(event);
                 if (isDisposable) {
                     dispose(disposable);
                 }
