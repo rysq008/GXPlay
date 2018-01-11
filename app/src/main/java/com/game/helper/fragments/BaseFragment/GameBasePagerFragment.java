@@ -1,8 +1,10 @@
 package com.game.helper.fragments.BaseFragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
@@ -42,8 +44,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 import zlc.season.practicalrecyclerview.ItemType;
 
+import static android.util.TypedValue.COMPLEX_UNIT_SP;
 import static android.view.View.OVER_SCROLL_NEVER;
 
 /**
@@ -161,9 +165,10 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
     @OnClick(R.id.game_extran_iv)
     public void OnClick(View v) {
 //        Dialog dialog = new Dialog(context, R.style.umeng_socialize_popup_dialog);
+        iv.setImageResource(R.mipmap.game_arrow_up);
         // 显示透明的对话框
-        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.FullScreenDialog).create();
-        RecyclerView recyclerView = new RecyclerView(context);
+        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.FullScreenDialog).setTitle("all type").create();
+        XRecyclerView recyclerView = new XRecyclerView(context);
         recyclerView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         recyclerView.setLayoutManager(new GridLayoutManager(context, 4));
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
@@ -172,15 +177,16 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 TextView tv = new TextView(context);
+                tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) Kits.Dimens.dpToPx(context, 39)));
                 //矩形形状
                 RectShape rectShape = new RectShape();
                 ShapeDrawable drawable2 = new ShapeDrawable(rectShape);
-                drawable2.getPaint().setColor(Color.RED);
-                drawable2.setIntrinsicWidth(2);
+                drawable2.getPaint().setColor(getResources().getColor(R.color.color_dfdfdd));
+                drawable2.setIntrinsicWidth(1);
                 drawable2.getPaint().setStyle(Paint.Style.STROKE);
                 tv.setBackgroundDrawable(drawable2);
-                tv.setPadding(10, 20, 10, 20);
                 tv.setGravity(Gravity.CENTER);
+                tv.setTextSize(COMPLEX_UNIT_SP, 14);
 
                 return new TViewHolder(tv);
             }
@@ -234,23 +240,48 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                 }
             }
         });
-        dialog.show();
+        final TextView titleTv = new TextView(context);
+        titleTv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Kits.Dimens.dpToPxInt(context, 39)));
+        titleTv.setText("全部类型");    //内容
+        titleTv.setHeight(Kits.Dimens.dpToPxInt(context, 39));
+        titleTv.setTextSize(COMPLEX_UNIT_SP, 16);//字体大小
+        titleTv.setGravity(Gravity.CENTER_VERTICAL);
+        titleTv.setPadding(30, 0, Kits.Dimens.dpToPxInt(context, 12), 0);//位置
+        titleTv.setTextColor(getResources().getColor(R.color.app_color));//颜色
+        Drawable drawable = getResources().getDrawable(R.mipmap.game_arrow_up);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        titleTv.setCompoundDrawables(null, null, drawable, null);
+        titleTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Drawable drawable = getResources().getDrawable(R.mipmap.game_arrow_down);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                titleTv.setCompoundDrawables(null, null, drawable, null);
+                dialog.cancel();
+            }
+        });
+        recyclerView.addHeaderView(titleTv);
 
-        //获取到当前Activity的Window
+        dialog.show();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                iv.setImageResource(R.mipmap.game_arrow_down);
+            }
+        });
+
         Window dialog_window = dialog.getWindow();
         dialog_window.setContentView(recyclerView);
-        dialog_window.getDecorView().setPadding(0, 0, 0, 0);
+//        dialog_window.getDecorView().setPadding(0, 0, 0, 0);
         //设置对话框的位置
         dialog_window.setGravity(Gravity.CENTER | Gravity.TOP);
-        //获取到LayoutParams
         WindowManager.LayoutParams dialog_window_attributes = dialog_window.getAttributes();
         dialog_window_attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
         dialog_window_attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        //设置对话框位置的偏移量
         dialog_window_attributes.x = 0;
-        dialog_window_attributes.y = (int) (v.getY() + 10);
+//        final int[] location = new int[2];110,0,0,0,117,0,210    20,0,0,0,135,0,210
+        dialog_window_attributes.y = searchComponentView.getBottom();
         dialog_window.setAttributes(dialog_window_attributes);
-//        dialog.show();
     }
 
 
@@ -258,13 +289,13 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
         if (itemType instanceof ClassicalResults.ClassicalItem) {
             if (null != textView) {
                 textView.setText(((ClassicalResults.ClassicalItem) itemType).name);
-                textView.setTextColor(ischeck ? getResources().getColor(R.color.red) : getResources().getColor(R.color.black));
+                textView.setTextColor(ischeck ? getResources().getColor(R.color.app_color) : getResources().getColor(R.color.gray_normal));
             }
             (((ClassicalResults.ClassicalItem) itemType)).isCheck = ischeck;
         } else {
             if (null != textView) {
                 textView.setText(((CommonResults.CommonItem) itemType).name);
-                textView.setTextColor(ischeck ? getResources().getColor(R.color.red) : getResources().getColor(R.color.black));
+                textView.setTextColor(ischeck ? getResources().getColor(R.color.app_color) : getResources().getColor(R.color.gray_normal));
             }
             (((CommonResults.CommonItem) itemType)).isCheck = ischeck;
         }

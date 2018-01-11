@@ -88,4 +88,5 @@
 
     <color name="colorDivider">@color/colorWhiteTrans</color>
     <color name="colorBackground">@color/colorWhiteDark</color>
+
 </resources>
