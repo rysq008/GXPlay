@@ -158,7 +158,7 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @Override
         public void onClick(View v) {
             if (v == rootView){
-                Toast.makeText(context, "未使用！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "未使用！", Toast.LENGTH_SHORT).show();
                 container.setVisibility(container.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
             }
         }
@@ -198,7 +198,7 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @Override
         public void onClick(View v) {
             if (v == rootView){
-                Toast.makeText(context, "已使用！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "已使用！", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -237,7 +237,7 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @Override
         public void onClick(View v) {
             if (v == rootView){
-                Toast.makeText(context, "已过期！", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "已过期！", Toast.LENGTH_SHORT).show();
             }
         }
     }

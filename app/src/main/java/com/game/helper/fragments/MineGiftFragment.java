@@ -232,7 +232,7 @@ public class MineGiftFragment extends XBaseFragment implements View.OnClickListe
                 desc.setText("礼包码："+item.gift_code.code);
                 rootView.setTag(item);
                 copy.setTag(item);
-                getDialogDataFromNet(item.gift_code.id,false);
+                getDialogDataFromNet(item.gift_code.gift.id,false);
             }
 
             @Override
