@@ -72,7 +72,8 @@ public class NoticeView extends LinearLayout {
         //viewFlipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
     }
 
-    @OnClick({R.id.activity_notice_item_vflipper, R.id.notice_vip_layout, R.id.notice_rechange_layout})
+    @OnClick({R.id.activity_notice_item_vflipper, R.id.notice_vip_layout, R.id.notice_rechange_layout
+    ,R.id.notice_new_hand_layout})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.notice_rechange_layout:
@@ -86,6 +87,12 @@ public class NoticeView extends LinearLayout {
                 break;
             case R.id.activity_notice_item_vflipper:
                 DetailFragmentsActivity.launch(getContext(), null, MessageFragment.newInstance());
+                break;
+            case R.id.notice_new_hand_layout:
+                Bundle newHand = new Bundle();
+                newHand.putString(WebviewFragment.PARAM_URL, h5Results.account_guide_url);
+                newHand.putString(WebviewFragment.PARAM_TITLE, "新手必读");
+                DetailFragmentsActivity.launch(getContext(), newHand, WebviewFragment.newInstance());
                 break;
         }
     }
