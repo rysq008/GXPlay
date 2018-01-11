@@ -148,7 +148,8 @@
     <dimen name="home_head_height">45dp</dimen>
     <dimen name="home_head_icon_height">25dp</dimen>
     <dimen name="home_notice_height">140dp</dimen>
-    <dimen name="home_notice_icon_height">45dp</dimen>
+    <dimen name="home_notice_icon_height">40dp</dimen>
+    <dimen name="home_notice_icon_width">41dp</dimen>
     <dimen name="home_game_height">220dp</dimen>
     <dimen name="home_hot_hothorizatol_recyclerview_height">80dp</dimen>
     <dimen name="home_hot_hothorizatol_icon_height">55dp</dimen>

@@ -28,6 +28,7 @@ import com.game.helper.net.DataService;
 import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
+import com.game.helper.utils.ToastUtil;
 import com.game.helper.views.widget.CustomBadgeItem;
 import com.game.helper.views.widget.TotoroToast;
 import com.hyphenate.chat.ChatClient;
@@ -302,7 +303,8 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     public void onBackPressed() {
         long curTime = System.currentTimeMillis();
         if (curTime - pressTime > 2000) {
-            TotoroToast.makeText(context, "再次点击退出", 20).show();
+            //TotoroToast.makeText(context, "再次点击退出", 20).show();
+            ToastUtil.showToast("再次点击退出");
             pressTime = curTime;
         } else {
             super.onBackPressed();

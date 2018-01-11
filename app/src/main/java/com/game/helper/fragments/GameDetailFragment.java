@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -545,14 +546,14 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
     public void createVipDialog(View view) {
         final AlertDialog dialog = new AlertDialog.Builder(context, R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
-        View v = View.inflate(context, R.layout.dialog_vip, null);
-        LinearLayout currentVip = v.findViewById(R.id.ll_current_vip_dialog_game_detail);
-        TextView tvDiscount1 = v.findViewById(R.id.tv_discount1_dialog_game_detail);
-        TextView tvDiscount2 = v.findViewById(R.id.tv_discount2_dialog_game_detail);
-        TextView tvDiscount3 = v.findViewById(R.id.tv_discount3_dialog_game_detail);
-        final TextView tvVip1 = v.findViewById(R.id.tv_vip1_dialog_game_detail);
-        final TextView tvVip2 = v.findViewById(R.id.tv_vip2_dialog_game_detail);
-        final TextView tvVip3 = v.findViewById(R.id.tv_vip3_dialog_game_detail);
+        View contentVIPView = View.inflate(context, R.layout.dialog_vip, null);
+        LinearLayout currentVip = contentVIPView.findViewById(R.id.ll_current_vip_dialog_game_detail);
+        TextView tvDiscount1 = contentVIPView.findViewById(R.id.tv_discount1_dialog_game_detail);
+        TextView tvDiscount2 = contentVIPView.findViewById(R.id.tv_discount2_dialog_game_detail);
+        TextView tvDiscount3 = contentVIPView.findViewById(R.id.tv_discount3_dialog_game_detail);
+        final TextView tvVip1 = contentVIPView.findViewById(R.id.tv_vip1_dialog_game_detail);
+        final TextView tvVip2 = contentVIPView.findViewById(R.id.tv_vip2_dialog_game_detail);
+        final TextView tvVip3 = contentVIPView.findViewById(R.id.tv_vip3_dialog_game_detail);
         tvVip1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -575,12 +576,12 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             }
         });
         //用户当前的信息
-        final ImageView ivVipLevel = v.findViewById(R.id.iv_vip_level_user_dialog_game_detail);
-        final TextView tvNameLevel = v.findViewById(R.id.tv_name_level_user_dialog_game_detail);
-        final TextView tvDiscount = v.findViewById(R.id.tv_discount_level_user_dialog_game_detail);
+        final ImageView ivVipLevel = contentVIPView.findViewById(R.id.iv_vip_level_user_dialog_game_detail);
+        final TextView tvNameLevel = contentVIPView.findViewById(R.id.tv_name_level_user_dialog_game_detail);
+        final TextView tvDiscount = contentVIPView.findViewById(R.id.tv_discount_level_user_dialog_game_detail);
 
         tvDiscount1.setText(String.valueOf(packageInfo.getZhekou_shouchong()) + "折");
-        tvDiscount2.setText(String.valueOf(packageInfo.getZhekou_shouchong()) + "折");
+        tvDiscount2.setText(String.valueOf(packageInfo.getDiscount_vip()) + "折");
         tvDiscount3.setText(String.valueOf(packageInfo.getDiscount_vip()) + "折");
         boolean b = SharedPreUtil.isLogin();
         //用户已登录，就可以拿到用户详情信息
@@ -628,18 +629,33 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
         //dialog.setGameView(v);// 设置布局
-        Window dialogWindow = dialog.getWindow();
-        /*实例化Window*/
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        //实例化Window操作者
-        //lp.x = 100; // 新位置X坐标
-        lp.y = view.getBottom() + 20; // 新位置Y坐标
-        dialogWindow.setAttributes(lp);
         // 不可以用“返回键”取消
         dialog.setCancelable(true);
-        dialog.setView(v, 30, 0, 30, 0);// 设置布局
+        dialog.setView(contentVIPView);// 设置布局
         dialog.show();
 
+        /*设置dialog的大小,坐标位置*/
+        Window dialogWindow = dialog.getWindow();
+        /*手机屏幕的宽高*/
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        dialogWindow.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+        //int width = outMetrics.widthPixels;
+        int height = outMetrics.heightPixels;
+        int PhoneWidth = outMetrics.widthPixels;
+        /*实例化Window*/
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        //dialog的dialog内容布局的宽高
+        int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        contentVIPView.measure(w, h);
+        int contentViewHeight = contentVIPView.getMeasuredHeight();
+        //lp.x = 100; // 新位置X坐标
+        Log.d(TAG, "createVipDialog: 弹出指定view的底部.getBottom():" + view.getBottom());
+        Log.d(TAG, "createVipDialog: 屏幕的高度的一半:" + height/2);
+        Log.d(TAG, "createVipDialog: dialog内容布局的高度的一半:" + contentViewHeight/2);
+        lp.y = view.getBottom()+contentViewHeight/2-height/2; // 新位置Y坐标
+        dialogWindow.setLayout((int) (PhoneWidth*0.95),WindowManager.LayoutParams.WRAP_CONTENT);
+        dialogWindow.setAttributes(lp);
 
     }
 
@@ -654,11 +670,11 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
 
     public void createCommonDialog(View view) {
-        View v = View.inflate(context, R.layout.dialog_common_discount, null);
-        TextView tvDiscountFirst = v.findViewById(R.id.tv_first_recharge_discount_common_dialog);
-        TextView goFirstCharge = v.findViewById(R.id.tv_first_go_recharge_common_dialog);
-        TextView tvDiscountAdd = v.findViewById(R.id.tv_add_recharge_discount_common_dialog);
-        TextView goAddCharge = v.findViewById(R.id.tv_add_go_recharge_common_dialog);
+        View CommonDiscountView = View.inflate(context, R.layout.dialog_common_discount, null);
+        TextView tvDiscountFirst = CommonDiscountView.findViewById(R.id.tv_first_recharge_discount_common_dialog);
+        TextView goFirstCharge = CommonDiscountView.findViewById(R.id.tv_first_go_recharge_common_dialog);
+        TextView tvDiscountAdd = CommonDiscountView.findViewById(R.id.tv_add_recharge_discount_common_dialog);
+        TextView goAddCharge = CommonDiscountView.findViewById(R.id.tv_add_go_recharge_common_dialog);
         if (packageInfo.getDiscount_activity() > 0) {
             tvDiscountFirst.setText("(限时" + packageInfo.getDiscount_activity() + "折)");
         } else {
@@ -666,22 +682,41 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         }
         tvDiscountAdd.setText(+packageInfo.getZhekou_xuchong() + "折");
         final AlertDialog CommonDialog = new AlertDialog.Builder(context, R.style.CustomAlertDialogBackground).create();// 创建自定义样式dialog
-        //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
-        Window dialogWindow = CommonDialog.getWindow();
-        //实例化Window
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        //实例化Window操作者
-        //lp.x = 100; // 新位置X坐标
-        lp.y = view.getTop();
-        // 新位置Y坐标
-        dialogWindow.setAttributes(lp);
-        Log.d(TAG, "dialogWindow的坐标" + lp.x + "----------" + lp.y);
-        // 不可以用“返回键”取消
+        // 可以用“返回键”取消
         CommonDialog.setCancelable(true);
-        CommonDialog.setView(v, 30, 0, 30, 0);// 设置布局
+        CommonDialog.setView(CommonDiscountView);// 设置布局
         CommonDialog.show();
         //CommonDialog.setContentView(v);
         //CommonDialog.getWindow().setLayout(v.getWidth(), v.getHeight());
+        //dialog.setCanceledOnTouchOutside(false);// 点击空白区域消失
+        //设置dialog的宽高,坐标位置
+        Window dialogWindow = CommonDialog.getWindow();
+        //实例化Window
+        WindowManager.LayoutParams commonlp = dialogWindow.getAttributes();
+        /*手机屏幕的宽高*/
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        dialogWindow.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+        //int width = outMetrics.widthPixels;
+        int PhoneHeight = outMetrics.heightPixels;
+        int PhoneWidth = outMetrics.widthPixels;
+        /*实例化Window*/
+        //dialog的dialog内容布局的宽高
+        int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        CommonDiscountView.measure(w, h);
+        int contentViewHeight = CommonDiscountView.getMeasuredHeight();
+        //lp.x = 100; // 新位置X坐标
+        Log.d(TAG, "createCommonDialog: 弹出指定view的底部.getBottom():" + view.getBottom());
+        Log.d(TAG, "createCommonDialog: 屏幕的高度的一半:" + PhoneHeight/2);
+        Log.d(TAG, "createCommonDialog: dialog内容布局的高度的一半:" + contentViewHeight/2+"宽度"+PhoneWidth);
+        // 新位置Y坐标
+        commonlp.y = view.getBottom()+contentViewHeight/2-PhoneHeight/2;
+        //dialog宽度
+        //commonlp.width = (int) (PhoneWidth*0.65);
+        dialogWindow.setLayout((int) (PhoneWidth*0.95),WindowManager.LayoutParams.WRAP_CONTENT);
+        dialogWindow.setAttributes(commonlp);
+        //Log.d(TAG, "dialogWindow中心的坐标" + commonlp.x + "----------" + commonlp.y);
+        Log.d(TAG, "dialogWindow宽度和高度" + commonlp.width + "----------" + commonlp.height);
         goFirstCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -3,7 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
    android:background="@mipmap/hyzk_bg"
-    android:layout_marginTop="@dimen/margin_10">
+    android:layout_marginTop="@dimen/margin_10"
+    android:layout_gravity="center"
+    android:gravity="center">
     <LinearLayout
         android:id="@+id/ll_current_vip_dialog_game_detail"
         android:layout_width="match_parent"

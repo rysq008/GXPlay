@@ -223,8 +223,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="@color/colorDivider" />
-            <!--折扣-->
+            <!--折扣步骤-->
             <LinearLayout
+                android:id="@+id/ll_discount_navigation_game_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
@@ -232,7 +233,6 @@
                 android:padding="@dimen/margin_10">
 
                 <LinearLayout
-                    android:id="@+id/ll_discount_navigation_game_detail"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/dp_5"
@@ -261,7 +261,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_43">
+                        android:layout_marginLeft="@dimen/dp_37">
 
                         <TextView
                             android:id="@+id/tv_discount_game_detail_vip"
@@ -269,7 +269,8 @@
                             android:layout_height="wrap_content"
                             android:text="@string/common_discount_member"
                             android:textColor="@color/color_00aeff"
-                            android:textSize="@dimen/text_size_medium" />
+                            android:textSize="@dimen/text_size_medium"
+                            android:padding="@dimen/margin_5"/>
 
                         <TextView
                             android:id="@+id/tv_discount_game_detail_common"
@@ -277,7 +278,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/dp_10"
                             android:text="@string/common_discount_putong"
-
+                            android:padding="@dimen/margin_5"
                             android:textColor="@color/color_00aeff"
                             android:textSize="@dimen/text_size_medium" />
                     </LinearLayout>
@@ -293,7 +294,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="@color/colorDivider" />
-
+            <!--四个Tab-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -317,62 +318,8 @@
                     app:recyclerScrollbarStyle="outsideOverlay" />
             </LinearLayout>
 
-            <!--<include layout="@layout/layout_game_detail_dicount" />-->
-
-            <!--<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <com.game.helper.views.RecommendView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:background="@color/colorWhite"
-                    android:orientation="vertical">
-
-                    <net.lucode.hackware.magicindicator.MagicIndicator
-                        android:id="@+id/game_detail_tabs"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_gravity="center" />
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/game_detail_viewpager"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        app:recyclerBackgroundColor="#f5f5f5"
-                        app:recyclerScrollbarNone="true"
-                        app:recyclerScrollbarStyle="outsideOverlay" />
-                </LinearLayout>
-            </LinearLayout>-->
-
-            <!-- <RelativeLayout
-                 android:id="@+id/game_detail_bottom_bar"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_alignParentBottom="true"
-                 android:background="@color/colorWhite">
-
-
-
-
-
-
-                 <View
-                     android:layout_width="match_parent"
-                     android:layout_height="@dimen/tabbar_divider_height"
-                     android:background="@color/colorDivider" />
-             </RelativeLayout>-->
         </LinearLayout>
-
+        <!--发送评论-->
         <LinearLayout
             android:id="@+id/ll_comment_game_detail"
             android:layout_width="match_parent"
