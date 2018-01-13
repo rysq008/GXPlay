@@ -1,10 +1,15 @@
 package com.game.helper.fragments;
 
+import android.content.DialogInterface;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,11 +18,16 @@ import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LogoutResults;
+import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VersionCheckResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.VersionCheckRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
+import com.game.helper.utils.ToastUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
+import com.game.helper.views.XReloadableStateContorller;
 
 import java.util.concurrent.Executors;
 
@@ -26,6 +36,8 @@ import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+
+import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +57,10 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
     TextView mCache;
     @BindView(R.id.ll_clear_cache)
     View mClearCache;
+    @BindView(R.id.xstate_setting_system)
+    XReloadableStateContorller mXState;
+    @BindView(R.id.ll_update_version_setting_system)
+    LinearLayout mLlUpdateVersion;
 
     private Handler handler = new Handler();
 
@@ -78,6 +94,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         mAboutUs.setOnClickListener(this);
         mExit.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
+        mLlUpdateVersion.setOnClickListener(this);
     }
 
     private void loginOut() {
@@ -164,5 +181,48 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             });
             dialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
         }
+        if (v == mLlUpdateVersion) {
+            updateVersion(true);
+        }
+    }
+
+    private void updateVersion(boolean showLoading) {
+        PackageInfo packageInfo = null;
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
+        Flowable<HttpResultModel<VersionCheckResults>> fv = DataService.updateVersion(new VersionCheckRequestBody(packageInfo.versionName));
+        RxLoadingUtils.subscribeWithReload(mXState, fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
+            @Override
+            public void accept(HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
+                if (versionCheckResultsHttpResultModel.isSucceful()) {
+                    mXState.showContent();
+                    if (versionCheckResultsHttpResultModel.data.isHas_new()) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("亲,确定更新版本吗?")
+                                .setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .create().show();
+                    } else {
+                        ToastUtil.showToast("已经是最新的版本");
+                    }
+                }
+
+            }
+        }, null, null, showLoading);
     }
 }

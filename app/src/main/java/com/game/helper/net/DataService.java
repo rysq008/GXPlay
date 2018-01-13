@@ -60,9 +60,12 @@ import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VersionCheckResults;
 import com.game.helper.model.VersionInfoResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.model.huanxin.HanXinResponse;
+import com.game.helper.model.huanxin.RobotMenuBean;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.AddGameAccountRequestBody;
@@ -112,6 +115,7 @@ import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
+import com.game.helper.net.model.VersionCheckRequestBody;
 import com.game.helper.utils.UploadUtils;
 
 import java.io.File;
@@ -515,4 +519,12 @@ public class DataService {
         return Api.CreateApiService().updateMsgStatus(updateMsgStatusRequestBody);
     }
 
+    public static Flowable<HanXinResponse<RobotMenuBean>> getHanXinRobotMenu() {
+        return Api.CreateHanXinApiService().getHuanXinRobotMenu();
+    }
+
+    public static Flowable<HttpResultModel<VersionCheckResults>> updateVersion(VersionCheckRequestBody versionCheckRequestBody) {
+        return Api.CreateApiService().updateVersion(versionCheckRequestBody);
+
+    }
 }

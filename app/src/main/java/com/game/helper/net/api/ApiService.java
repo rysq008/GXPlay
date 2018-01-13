@@ -1,5 +1,6 @@
 package com.game.helper.net.api;
 
+import com.game.helper.GameMarketApplication;
 import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BannerResults;
@@ -54,15 +55,17 @@ import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
-import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
 import com.game.helper.model.VIPUpGradeCostResults;
 import com.game.helper.model.VerifyResults;
+import com.game.helper.model.VersionCheckResults;
 import com.game.helper.model.VersionInfoResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
+import com.game.helper.model.huanxin.HanXinResponse;
+import com.game.helper.model.huanxin.RobotMenuBean;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
@@ -112,11 +115,13 @@ import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
+import com.game.helper.net.model.VersionCheckRequestBody;
 
 import io.reactivex.Flowable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -493,4 +498,11 @@ public interface ApiService {
     @POST("/sys/update_message_status/")
     Flowable<HttpResultModel<NotConcernResults>> updateMsgStatus(@Body UpdateMsgStatusRequestBody updateMsgStatusRequestBody);
 
+    //获取环信机器人菜单
+    @GET(GameMarketApplication.G9_HUANXIN_TANNID +"/robots/visitor/greetings/app")
+    Flowable<HanXinResponse<RobotMenuBean>> getHuanXinRobotMenu();
+
+    //获取更新版本
+    @POST("/sys/get_update_version/")
+    Flowable<HttpResultModel<VersionCheckResults>> updateVersion(@Body VersionCheckRequestBody versionCheckRequestBody);
 }

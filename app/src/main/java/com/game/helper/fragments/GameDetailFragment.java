@@ -7,11 +7,13 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -356,7 +358,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             mPercent.setVisibility(View.GONE);
             mSize.setVisibility(View.GONE);
             mStatusText.setVisibility(View.GONE);
-        }else if(event.getFlag() == DownloadFlag.COMPLETED){
+        } else if (event.getFlag() == DownloadFlag.COMPLETED) {
             pb.setVisibility(View.GONE);
             mPercent.setVisibility(View.GONE);
             mSize.setVisibility(View.GONE);
@@ -470,6 +472,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             public IPagerIndicator getIndicator(Context context) {
                 LinePagerIndicator indicator = new LinePagerIndicator(context);
                 indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+                indicator.setColors(getResources().getColor(R.color.color_00aeff));
                 return indicator;
             }
         });
@@ -639,23 +642,14 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         /*手机屏幕的宽高*/
         DisplayMetrics outMetrics = new DisplayMetrics();
         dialogWindow.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-        //int width = outMetrics.widthPixels;
-        int height = outMetrics.heightPixels;
         int PhoneWidth = outMetrics.widthPixels;
         /*实例化Window*/
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        //dialog的dialog内容布局的宽高
-        int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        contentVIPView.measure(w, h);
-        int contentViewHeight = contentVIPView.getMeasuredHeight();
-        //lp.x = 100; // 新位置X坐标
-        Log.d(TAG, "createVipDialog: 弹出指定view的底部.getBottom():" + view.getBottom());
-        Log.d(TAG, "createVipDialog: 屏幕的高度的一半:" + height/2);
-        Log.d(TAG, "createVipDialog: dialog内容布局的高度的一半:" + contentViewHeight/2);
-        lp.y = view.getBottom()+contentViewHeight/2-height/2; // 新位置Y坐标
-        dialogWindow.setLayout((int) (PhoneWidth*0.95),WindowManager.LayoutParams.WRAP_CONTENT);
+        dialogWindow.setGravity(Gravity.CENTER | Gravity.TOP);
+        lp.y = view.getBottom(); // 新位置Y坐标
+        dialogWindow.setLayout((int) (PhoneWidth * 0.95), WindowManager.LayoutParams.WRAP_CONTENT);
         dialogWindow.setAttributes(lp);
+
 
     }
 
@@ -692,31 +686,20 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         //设置dialog的宽高,坐标位置
         Window dialogWindow = CommonDialog.getWindow();
         //实例化Window
-        WindowManager.LayoutParams commonlp = dialogWindow.getAttributes();
+        dialogWindow.setGravity(Gravity.CENTER | Gravity.TOP);
         /*手机屏幕的宽高*/
         DisplayMetrics outMetrics = new DisplayMetrics();
         dialogWindow.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
         //int width = outMetrics.widthPixels;
-        int PhoneHeight = outMetrics.heightPixels;
         int PhoneWidth = outMetrics.widthPixels;
+        dialogWindow.setLayout((int) (PhoneWidth * 0.95), WindowManager.LayoutParams.WRAP_CONTENT);
         /*实例化Window*/
-        //dialog的dialog内容布局的宽高
-        int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        int h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        CommonDiscountView.measure(w, h);
-        int contentViewHeight = CommonDiscountView.getMeasuredHeight();
-        //lp.x = 100; // 新位置X坐标
-        Log.d(TAG, "createCommonDialog: 弹出指定view的底部.getBottom():" + view.getBottom());
-        Log.d(TAG, "createCommonDialog: 屏幕的高度的一半:" + PhoneHeight/2);
-        Log.d(TAG, "createCommonDialog: dialog内容布局的高度的一半:" + contentViewHeight/2+"宽度"+PhoneWidth);
         // 新位置Y坐标
-        commonlp.y = view.getBottom()+contentViewHeight/2-PhoneHeight/2;
+        WindowManager.LayoutParams commonlp = dialogWindow.getAttributes();
+        commonlp.y = view.getBottom();
         //dialog宽度
-        //commonlp.width = (int) (PhoneWidth*0.65);
-        dialogWindow.setLayout((int) (PhoneWidth*0.95),WindowManager.LayoutParams.WRAP_CONTENT);
         dialogWindow.setAttributes(commonlp);
         //Log.d(TAG, "dialogWindow中心的坐标" + commonlp.x + "----------" + commonlp.y);
-        Log.d(TAG, "dialogWindow宽度和高度" + commonlp.width + "----------" + commonlp.height);
         goFirstCharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

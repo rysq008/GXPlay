@@ -34,4 +34,14 @@ public class Api {
         }
         return PayService;
     }
+    public static ApiService CreateHanXinApiService() {
+        if (PayService == null) {
+            synchronized (Api.class) {
+                if (PayService == null) {
+                    PayService = XApi.getInstance().getRetrofit("http://kefu.easemob.com/v1/Tenants/", true).create(ApiService.class);
+                }
+            }
+        }
+        return PayService;
+    }
 }

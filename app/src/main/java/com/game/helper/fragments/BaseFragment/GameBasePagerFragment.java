@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -143,6 +144,8 @@ public abstract class GameBasePagerFragment extends XBaseFragment<GameFragmentPr
                 public IPagerIndicator getIndicator(Context context) {
                     LinePagerIndicator indicator = new LinePagerIndicator(context);
                     indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+                    indicator.setColors(getResources().getColor(R.color.color_00aeff));
+                    indicator.setColors(ContextCompat.getColor(context, R.color.color_00aeff));
                     return indicator;
                 }
             });

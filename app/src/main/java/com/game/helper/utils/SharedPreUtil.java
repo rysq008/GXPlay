@@ -40,6 +40,7 @@ public class SharedPreUtil {
     public static final String EXPECTED_URL = "expected_url";
     public static final String SHARE_DISCOUNT_URL = "share_discount_url";
     public static final String TEMP_HUANXIN_NAME = "temp_hanxin_name";
+    private static final String HUAN_XIN_GREETING_TEXT = "huan_xin_greeting_text";
 
     private static SharedPreferences sp;
 
@@ -272,5 +273,18 @@ public class SharedPreUtil {
     /*****************************          public method end                 ******************************/
 
 
+    /*****************************          huanxin about start                 ******************************/
+    public static void saveRobot(String value) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(HUAN_XIN_GREETING_TEXT, value);
+        SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
+    }
+
+    public static String getRobot( String defValue) {
+        return sp.getString(HUAN_XIN_GREETING_TEXT, defValue);
+    }
+
+
+    /*****************************          huanxin about end                 ******************************/
 
 }
