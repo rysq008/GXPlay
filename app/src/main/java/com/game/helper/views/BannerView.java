@@ -12,6 +12,7 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BannerH5Fragment;
 import com.game.helper.fragments.GameDetailFragment;
+import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.net.api.Api;
 
@@ -101,8 +102,9 @@ public class BannerView extends LinearLayout {
                 if (item.type == 1) {
                     //H5界面
                     Bundle bundle = new Bundle();
-                    bundle.putString("h5url", item.url);
-                    DetailFragmentsActivity.launch(getContext(), bundle, BannerH5Fragment.newInstance());
+                    bundle.putString(WebviewFragment.PARAM_URL, item.url);
+                    bundle.putString(WebviewFragment.PARAM_TITLE, item.name);
+                    DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 } else if (item.type == 2) {
                     //2为游戏
                     Bundle bundle = new Bundle();

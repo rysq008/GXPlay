@@ -13,11 +13,13 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.UpdateTradePasswordFragment;
+import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.fragments.recharge.RechargeSuccFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CashToResults;
 import com.game.helper.model.CheckTradePasswdResults;
 import com.game.helper.model.ConsumeListResults;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.CashToRequestBody;
@@ -272,13 +274,29 @@ public class CashFragment extends XBaseFragment implements View.OnClickListener,
             apply();
         }
         if (v == mHelp){
-            // TODO: 2017/12/29 补全跳转
-            Toast.makeText(getContext(), "提现规则", Toast.LENGTH_SHORT).show();
+            getCash();
         }
     }
 
     @Override
     public Object newP() {
         return null;
+    }
+
+    private void getCash() {
+        Flowable<HttpResultModel<H5UrlListResults>> fh = DataService.getH5UrlList();
+        RxLoadingUtils.subscribeWithDialog(context, fh, bindToLifecycle(), new Consumer<HttpResultModel<H5UrlListResults>>() {
+            @Override
+            public void accept(HttpResultModel<H5UrlListResults> h5UrlListResultsHttpResultModel) throws Exception {
+                if (h5UrlListResultsHttpResultModel.isSucceful()) {
+                    String reflect_dsc_url = h5UrlListResultsHttpResultModel.data.reflect_dsc_url;
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WebviewFragment.PARAM_URL,reflect_dsc_url);
+                    bundle.putString(WebviewFragment.PARAM_TITLE,"提现规则");
+                    DetailFragmentsActivity.launch(context,bundle, WebviewFragment.newInstance());
+                }
+            }
+        });
     }
 }

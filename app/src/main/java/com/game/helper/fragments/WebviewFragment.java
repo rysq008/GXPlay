@@ -128,7 +128,7 @@ public class WebviewFragment extends XBaseFragment {
                             contentLayout.showContent();
                     }
                     if (webView != null)
-                        url = webView.getUrl();
+                    url = webView.getUrl();
                 } else {
                     if (contentLayout != null)
                         contentLayout.showLoading();

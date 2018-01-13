@@ -42,7 +42,7 @@ public class GameMarketApplication extends MultiDexApplication {
     private static Context context;
     public static IWXAPI api;
     private static GameMarketApplication gminstance;
-    public static final int G9_HUANXIN_TANNID = 51593;
+    public static final int G9_HUANXIN_TANNID = 49770;
 
     @Override
     public void onCreate() {
@@ -165,7 +165,7 @@ public class GameMarketApplication extends MultiDexApplication {
 
     private void initHuanXin() {
         ChatClient.Options options = new ChatClient.Options();
-        options.setAppkey("1179180103178449#g9youxi");//必填项，appkey获取地址：kefu.easemob.com，“管理员模式 > 渠道管理 > 手机APP”页面的关联的“AppKey”
+        options.setAppkey("1174171113178603#g9game");//必填项，appkey获取地址：kefu.easemob.com，“管理员模式 > 渠道管理 > 手机APP”页面的关联的“AppKey”
         options.setTenantId(String.valueOf(G9_HUANXIN_TANNID));//必填项，tenantId获取地址：kefu.easemob.com，“管理员模式 > 设置 > 企业信息”页面的“租户ID”
 
         // Kefu SDK 初始化

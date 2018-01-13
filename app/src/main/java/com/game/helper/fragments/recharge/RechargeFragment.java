@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebViewFragment;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,12 +23,15 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
+import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.HuanxinKefuLoginActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
+import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountResultModel;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.WxPayInfoBean;
 import com.game.helper.model.model.PayResultModel;
 import com.game.helper.net.DataService;
@@ -125,6 +129,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         mHeadBack.setOnClickListener(this);
         mConfirmOrder.setOnClickListener(this);
         mConnectKefu.setOnClickListener(this);
+        mIvAction.setOnClickListener(this);
 
         if (getArguments() != null){
             level = getArguments().getString(TAG);
@@ -411,6 +416,11 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
+        if (v == mIvAction) {
+            //充值说明
+            rechargeAlert();
+
+        }
         if (v == mConfirmOrder) {
             confirmOrder();
         }
@@ -423,6 +433,23 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             // TODO: 2017/12/29 补全跳转
             //Toast.makeText(getContext(), "跳转说明", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void rechargeAlert() {
+        Flowable<HttpResultModel<H5UrlListResults>> fh = DataService.getH5UrlList();
+        RxLoadingUtils.subscribeWithDialog(context, fh, bindToLifecycle(), new Consumer<HttpResultModel<H5UrlListResults>>() {
+            @Override
+            public void accept(HttpResultModel<H5UrlListResults> h5UrlListResultsHttpResultModel) throws Exception {
+                if (h5UrlListResultsHttpResultModel.isSucceful()) {
+                    String recharge_dsc_url = h5UrlListResultsHttpResultModel.data.recharge_dsc_url;
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString(WebviewFragment.PARAM_URL,recharge_dsc_url);
+                    bundle.putString(WebviewFragment.PARAM_TITLE,"充值说明");
+                    DetailFragmentsActivity.launch(context,bundle, WebviewFragment.newInstance());
+                }
+            }
+        });
     }
 
     @Override
