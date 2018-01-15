@@ -19,7 +19,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -27,12 +26,8 @@ import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.fragments.login.RegistFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
-import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
-import com.game.helper.model.GeneralizeAccountInfoResultModel;
-import com.game.helper.net.DataService;
 import com.game.helper.share.UMengShare;
-import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableStateContorller;
 import com.jude.swipbackhelper.SwipeBackHelper;
@@ -42,8 +37,6 @@ import java.util.Map;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -65,6 +58,7 @@ public class WebviewFragment extends XBaseFragment {
     public static String PARAM_VIP = "";
     public static final String PARAM_URL = "url";
     public static final String PARAM_TITLE = "title";
+    public static int requestCode = -1;
 
     public static WebviewFragment newInstance() {
         return new WebviewFragment();
@@ -113,22 +107,22 @@ public class WebviewFragment extends XBaseFragment {
                 if (newProgress == 100) {
                     swipeRefreshLayout.setRefreshing(false);
                     if (contentLayout != null) {
-                        if ("分享收益".equals(title) && Kits.Empty.check(shareUrl)) {
-                            Flowable<HttpResultModel<GeneralizeAccountInfoResultModel>> fr = DataService.getGeneralizeAccountInfo();
-                            RxLoadingUtils.subscribeWithReload(contentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<GeneralizeAccountInfoResultModel>>() {
-                                @Override
-                                public void accept(HttpResultModel<GeneralizeAccountInfoResultModel> generalizeAccountInfoResultModelHttpResultModel) throws Exception {
-                                    contentLayout.showContent();
-                                    if (generalizeAccountInfoResultModelHttpResultModel.isSucceful()) {
-                                        shareUrl = generalizeAccountInfoResultModelHttpResultModel.data.getUrl();
-                                    }
-                                }
-                            }, null, null, true);
-                        } else
-                            contentLayout.showContent();
+//                        if ("分享收益".equals(title) && Kits.Empty.check(shareUrl)) {
+//                            Flowable<HttpResultModel<GeneralizeAccountInfoResultModel>> fr = DataService.getGeneralizeAccountInfo();
+//                            RxLoadingUtils.subscribeWithReload(contentLayout, fr, bindToLifecycle(), new Consumer<HttpResultModel<GeneralizeAccountInfoResultModel>>() {
+//                                @Override
+//                                public void accept(HttpResultModel<GeneralizeAccountInfoResultModel> generalizeAccountInfoResultModelHttpResultModel) throws Exception {
+//                                    contentLayout.showContent();
+//                                    if (generalizeAccountInfoResultModelHttpResultModel.isSucceful()) {
+//                                        shareUrl = generalizeAccountInfoResultModelHttpResultModel.data.getUrl();
+//                                    }
+//                                }
+//                            }, null, null, true);
+//                        } else
+                        contentLayout.showContent();
                     }
                     if (webView != null)
-                    url = webView.getUrl();
+                        url = webView.getUrl();
                 } else {
                     if (contentLayout != null)
                         contentLayout.showLoading();
@@ -187,7 +181,7 @@ public class WebviewFragment extends XBaseFragment {
              * @param message
              */
             @JavascriptInterface
-            public void JavaCallBack(int code, String message) {
+            public void JavaCallBack(int code, final String message) {
                 switch (code) {
                     case 1:
                         getActivity().runOnUiThread(new Runnable() {
@@ -201,7 +195,7 @@ public class WebviewFragment extends XBaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                DetailFragmentsActivity.launchForResult(WebviewFragment.this, LoginFragment.newInstance(), 0, null, 0);
+                                DetailFragmentsActivity.launchForResult(WebviewFragment.this, LoginFragment.newInstance(), 0, null, requestCode);
                             }
                         });
                         break;
@@ -217,6 +211,9 @@ public class WebviewFragment extends XBaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                if (requestCode == 1) {
+                                    shareUrl = message;
+                                }
                                 UMengShare share = new UMengShare(getActivity());
                                 CommonShareResults shareResults = new CommonShareResults(shareUrl, "推广收益", "", SharedPreUtil.getLoginUserInfo().icon);
                                 share.shareLinkWithBoard(shareResults, null);
@@ -354,11 +351,20 @@ public class WebviewFragment extends XBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 0:
+            case 0://from vip
                 if (resultCode == RESULT_OK) {
                     getActivity().onBackPressed();
                     Bundle bundle = new Bundle();
                     bundle.putString(PARAM_URL, WebviewFragment.PARAM_VIP);
+                    DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
+                }
+                break;
+            case 1://from generalize
+                if (resultCode == RESULT_OK) {
+                    getActivity().onBackPressed();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_MARKET).concat("?" + SharedPreUtil.getSessionId()));
+                    bundle.putString(WebviewFragment.PARAM_TITLE, "分享收益");
                     DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 }
                 break;

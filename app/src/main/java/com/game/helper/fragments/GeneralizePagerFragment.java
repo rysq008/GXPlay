@@ -217,11 +217,13 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 //取Market_url
                 String market_url = SharedPreUtil.getH5url(SharedPreUtil.H5_URL_MARKET);
                 Bundle bundle = new Bundle();
+                WebviewFragment.requestCode = 1;
                 bundle.putString(WebviewFragment.PARAM_URL, market_url.concat("?" + SharedPreUtil.getSessionId()));
                 bundle.putString(WebviewFragment.PARAM_TITLE, "分享收益");
                 DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 break;
             case R.id.shareDiscount://分享折扣
+                WebviewFragment.requestCode = 1;
                 fetchShareInfo();
                 break;
             case R.id.loginTv://登录

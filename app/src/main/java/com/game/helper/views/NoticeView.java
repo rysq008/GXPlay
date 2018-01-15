@@ -72,7 +72,7 @@ public class NoticeView extends LinearLayout {
     }
 
     @OnClick({R.id.activity_notice_item_vflipper, R.id.notice_vip_layout, R.id.notice_rechange_layout
-    ,R.id.notice_new_hand_layout})
+            , R.id.notice_new_hand_layout})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.notice_rechange_layout:
@@ -82,6 +82,7 @@ public class NoticeView extends LinearLayout {
                 Bundle bundle = new Bundle();
                 WebviewFragment.PARAM_VIP = h5Results.vip_url;
                 bundle.putString(PARAM_URL, WebviewFragment.PARAM_VIP);
+                WebviewFragment.requestCode = 0;
                 DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 break;
             case R.id.activity_notice_item_vflipper:
