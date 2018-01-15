@@ -394,6 +394,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                         //如果仅使用下载功能，downloadUrl是必须的
                         builder.setOnlyDownload(true)
                                 .setShowNotification(true)
+                                .setForceRedownload(versionCheckResultsHttpResultModel.data.getIs_force_update())
                                 .setDownloadAPKPath(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath()+"/G9Game")
                                 .setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
                                 //.setDownloadUrl("http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk")

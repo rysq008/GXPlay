@@ -558,7 +558,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(OrderConfirmActivity.BUNDLE_GAME_BEAN, gameBean);
-            bundle.putDouble(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
+            bundle.putInt(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
             bundle.putDouble(OrderConfirmActivity.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
             bundle.putString(OrderConfirmActivity.PAYPURPOSE, "1");
             bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");

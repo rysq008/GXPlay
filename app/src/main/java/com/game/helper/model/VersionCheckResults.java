@@ -13,10 +13,20 @@ public class VersionCheckResults extends XBaseModel {
      * version : 2.0.6
      * has_new : true
      * desc: 1.更新啦 2.很好玩,
+     * is_force_update: false,
      */
 
     private String url;
     private String desc;
+    private Boolean is_force_update;
+
+    public Boolean getIs_force_update() {
+        return is_force_update;
+    }
+
+    public void setIs_force_update(Boolean is_force_update) {
+        this.is_force_update = is_force_update;
+    }
 
     public String getDesc() {
         return desc;
