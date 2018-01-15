@@ -1,24 +1,23 @@
 package com.game.helper.fragments;
 
-import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allenliu.versionchecklib.core.AllenChecker;
+import com.allenliu.versionchecklib.core.VersionParams;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LogoutResults;
-import com.game.helper.model.VerifyResults;
 import com.game.helper.model.VersionCheckResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.VersionCheckRequestBody;
@@ -27,7 +26,6 @@ import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.ToastUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
-import com.game.helper.views.XReloadableStateContorller;
 
 import java.util.concurrent.Executors;
 
@@ -37,6 +35,8 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 /**
@@ -57,8 +57,6 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
     TextView mCache;
     @BindView(R.id.ll_clear_cache)
     View mClearCache;
-    @BindView(R.id.xstate_setting_system)
-    XReloadableStateContorller mXState;
     @BindView(R.id.ll_update_version_setting_system)
     LinearLayout mLlUpdateVersion;
 
@@ -182,11 +180,11 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             dialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
         }
         if (v == mLlUpdateVersion) {
-            updateVersion(true);
+            updateVersion();
         }
     }
 
-    private void updateVersion(boolean showLoading) {
+    private void updateVersion() {
         PackageInfo packageInfo = null;
         PackageManager packageManager = context.getPackageManager();
         try {
@@ -195,13 +193,12 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
 
         }
         Flowable<HttpResultModel<VersionCheckResults>> fv = DataService.updateVersion(new VersionCheckRequestBody(packageInfo.versionName));
-        RxLoadingUtils.subscribeWithReload(mXState, fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
+        RxLoadingUtils.subscribeWithDialog(context, fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
             @Override
-            public void accept(HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
+            public void accept(final HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
                 if (versionCheckResultsHttpResultModel.isSucceful()) {
-                    mXState.showContent();
                     if (versionCheckResultsHttpResultModel.data.isHas_new()) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle("亲,确定更新版本吗?")
                                 .setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -213,16 +210,36 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
                                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+
                                         dialog.dismiss();
                                     }
                                 })
-                                .create().show();
+                                .create().show();*/
+                        VersionParams.Builder builder = new VersionParams.Builder();
+                        //如果仅使用下载功能，downloadUrl是必须的
+                        builder.setOnlyDownload(true)
+                                .setShowNotification(true)
+                                .setDownloadAPKPath(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath()+"/G9Game")
+                                .setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
+                                //.setDownloadUrl("http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk")
+                                .setTitle("检测到新版本")
+                                .setUpdateMsg(versionCheckResultsHttpResultModel.data.getDesc());
+
+                        AllenChecker.startVersionCheck(context.getApplication(), builder.build());
+                        AllenChecker.init(true);
+
+
+
+
+
                     } else {
                         ToastUtil.showToast("已经是最新的版本");
                     }
                 }
 
             }
-        }, null, null, showLoading);
+        });
     }
+
+
 }

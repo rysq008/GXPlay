@@ -18,6 +18,16 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
+
+
+    <!--网络权限问题-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--8.0安装需要的权限-->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!--读写权限-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".GameMarketApplication"
         android:allowBackup="true"
@@ -184,10 +194,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity
-            android:name=".activitys.HotRecommandGameListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/activityTheme02" />
         <activity
             android:name=".activitys.CommonWebviewActivity"
             android:screenOrientation="portrait"

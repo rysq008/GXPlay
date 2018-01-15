@@ -473,12 +473,12 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
         return is_vip;
     }
 
-    public double getInputValue() {
+    public int getInputValue() {
         String inputValue = mBalance.getText().toString().trim();
         if(TextUtils.isEmpty(inputValue)){
-            inputValue = "0.0";
+            inputValue = "0";
         }
-        return Double.parseDouble(inputValue);
+        return Integer.valueOf(inputValue);
     }
 
     @Override
@@ -543,7 +543,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     private void confirmOrder() {
         GameAccountResultModel.ListBean gameBean = getGameBean();
         double totalBalanceValue = getTotalBalanceValue();
-        double inputValue = getInputValue();
+        int inputValue = getInputValue();
         if (gameBean == null || totalBalanceValue <= 0 || inputValue <= 0) {
             Toast.makeText(getContext(), "数据异常！请重试", Toast.LENGTH_SHORT).show();
         } else {

@@ -114,4 +114,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0' //其他版本也可以
     //EaseUI中，fragment用到了android-support-v4包
     compile 'com.android.support:support-v4:23.1.1' //其他版本也可以
+    //更新APP
+    //compile 'com.github.czy1121:update:1.1.1'
+    compile 'com.allenliu.versionchecklib:library:1.8.8'
 }

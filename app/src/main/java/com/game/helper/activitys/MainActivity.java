@@ -1,6 +1,8 @@
 package com.game.helper.activitys;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import com.allenliu.versionchecklib.core.AllenChecker;
+import com.allenliu.versionchecklib.core.VersionParams;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.game.helper.R;
@@ -24,7 +28,9 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.LoginUserInfo;
+import com.game.helper.model.VersionCheckResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.VersionCheckRequestBody;
 import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
@@ -45,6 +51,10 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
+import static android.os.Environment.getExternalStoragePublicDirectory;
+import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -192,6 +202,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
         //h5
         getH5UrlFromNet();
+        updateVersion();
     }
 
     @Override
@@ -344,5 +355,64 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             });
         }
 
+    }
+
+
+
+    private void updateVersion() {
+        PackageInfo packageInfo = null;
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+
+        }
+        Flowable<HttpResultModel<VersionCheckResults>> fv = DataService.updateVersion(new VersionCheckRequestBody(packageInfo.versionName));
+        RxLoadingUtils.subscribeWithDialog(context, fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
+            @Override
+            public void accept(final HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
+                if (versionCheckResultsHttpResultModel.isSucceful()) {
+                    if (versionCheckResultsHttpResultModel.data.isHas_new()) {
+                        /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("亲,确定更新版本吗?")
+                                .setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .create().show();*/
+                        VersionParams.Builder builder = new VersionParams.Builder();
+                        //如果仅使用下载功能，downloadUrl是必须的
+                        builder.setOnlyDownload(true)
+                                .setShowNotification(true)
+                                .setDownloadAPKPath(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath()+"/G9Game")
+                                .setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
+                                //.setDownloadUrl("http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk")
+                                .setTitle("检测到新版本")
+                                .setUpdateMsg(versionCheckResultsHttpResultModel.data.getDesc());
+
+                        AllenChecker.startVersionCheck(context.getApplication(), builder.build());
+                        AllenChecker.init(true);
+
+
+
+
+
+                    } else {
+                        ToastUtil.showToast("已经是最新的版本");
+                    }
+                }
+
+            }
+        });
     }
 }
