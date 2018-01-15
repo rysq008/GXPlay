@@ -473,12 +473,12 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
         return is_vip;
     }
 
-    public double getInputValue() {
+    public int getInputValue() {
         String inputValue = mBalance.getText().toString().trim();
         if(TextUtils.isEmpty(inputValue)){
-            inputValue = "0.0";
+            inputValue = "0";
         }
-        return Double.parseDouble(inputValue);
+        return Integer.parseInt(inputValue);
     }
 
     @Override

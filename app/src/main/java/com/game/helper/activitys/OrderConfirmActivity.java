@@ -129,7 +129,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     private GameAccountResultModel.ListBean gameBean;//整个bean
     private Double totalBalance = 0.0;//充值页面传过来的计算折扣以后的金额
-    private Double inputBalance = 0.0;//充值页面用户输入的金额
+    private Integer inputBalance = 0;//充值页面用户输入的金额
 
     /**
      * 游戏名称
@@ -526,7 +526,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         if (bundle != null) {
             gameBean = (GameAccountResultModel.ListBean) bundle.getSerializable(BUNDLE_GAME_BEAN);
             totalBalance = bundle.getDouble(BUNDLE_TOTAL_BALANCE);
-            inputBalance = bundle.getDouble(BUNDLE_INPUT_VALUE);
+            inputBalance = bundle.getInt(BUNDLE_INPUT_VALUE);
             payPurpose = bundle.getString(PAYPURPOSE);
             vipLevel = bundle.getString(VIPLEVEL);
             is_vip = bundle.getBoolean(IS_VIP);

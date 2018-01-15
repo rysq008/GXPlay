@@ -229,7 +229,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         if (current_page == 0) {
             GameAccountResultModel.ListBean gameBean = rechargeGameFragment.getGameBean();
             double totalBalanceValue = rechargeGameFragment.getTotalBalanceValue();
-            double inputValue = rechargeGameFragment.getInputValue();
+            int inputValue = rechargeGameFragment.getInputValue();
             boolean is_vip = rechargeGameFragment.getIs_VIP();
             if (gameBean == null || totalBalanceValue <= 0 || inputValue <= 0) {
                 Toast.makeText(getContext(), "请输入正确的金额！", Toast.LENGTH_SHORT).show();
@@ -245,7 +245,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                 Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(OrderConfirmActivity.BUNDLE_GAME_BEAN, gameBean);
-                bundle.putDouble(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
+                bundle.putInt(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
                 bundle.putDouble(OrderConfirmActivity.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
                 bundle.putString(OrderConfirmActivity.PAYPURPOSE, "1");
                 bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
