@@ -284,14 +284,14 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
         if (!HuanxinKefuLoginActivity.this.isFinishing())
             progressDialog.dismiss();
 
-        //显示机器欢迎语
+       /* //显示机器欢迎语
         Message message = Message.createReceiveMessage(Message.Type.TXT);
         //从本地获取保存的string
         String str = SharedPreUtil.getRobot("");
         EMTextMessageBody body = null;
         //判断是否是菜单消息的string，这是自己实现的一个方法
         body = new EMTextMessageBody(str);
-        /*if(!isRobotMenu(str)){
+        *//*if(!isRobotMenu(str)){
             //文字消息直接去设置给消息
             body = new EMTextMessageBody(str);
         }else{
@@ -303,13 +303,13 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
             }catch (Exception e){
                 Toast.makeText(this,"exception="+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
-        }*/
+        }*//*
         message.setFrom("imkefu");//这里传IM服务号
         message.setBody(body);
         message.setMessageTime(System.currentTimeMillis());
         message.setStatus(Message.Status.SUCCESS);
         message.setMsgId(UUID.randomUUID().toString());
-        ChatClient.getInstance().chatManager().saveMessage(message);//插入消息到本地
+        ChatClient.getInstance().chatManager().saveMessage(message);//插入消息到本地*/
 
         //此处演示设置技能组,如果后台设置的技能组名称为[shouqian|shouhou],这样指定即分配到技能组中.
         //为null则不按照技能组分配,同理可以设置直接指定客服scheduleAgent
