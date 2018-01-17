@@ -5,7 +5,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.game.helper.R;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.net.DataService;
+import com.game.helper.net.model.ReportedRequestBody;
+import com.game.helper.utils.RxLoadingUtils;
 
+import io.reactivex.Flowable;
+import io.reactivex.FlowableTransformer;
+import io.reactivex.functions.Consumer;
 import zlc.season.rxdownload2.entity.DownloadEvent;
 import zlc.season.rxdownload2.entity.DownloadFlag;
 
@@ -13,8 +20,14 @@ public class DownloadController {
     private TextView mStatus;
     private Button mAction;
     private static TextView mExtraView;
-
+    private static FlowableTransformer flowableTransformer;
+    private static ReportedRequestBody reportedRequestBody;
     private DownloadState mState;
+
+    public void setReportedRequestBody(ReportedRequestBody reportedRequestBody, FlowableTransformer transformer) {
+        this.reportedRequestBody = reportedRequestBody;
+        this.flowableTransformer = transformer;
+    }
 
     public DownloadController(TextView status, Button action) {
         mStatus = status;
@@ -104,6 +117,17 @@ public class DownloadController {
         @Override
         void handleClick(Callback callback) {
             callback.startDownload();
+            if (null != reportedRequestBody && null != flowableTransformer) {
+                Flowable<HttpResultModel> flowable = DataService.reportedData(reportedRequestBody);
+                RxLoadingUtils.subscribe(flowable, flowableTransformer, new Consumer<HttpResultModel>() {
+                    @Override
+                    public void accept(HttpResultModel httpResultModel) throws Exception {
+
+                    }
+                });
+                reportedRequestBody = null;
+                flowableTransformer = null;
+            }
         }
     }
 

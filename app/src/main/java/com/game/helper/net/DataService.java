@@ -54,7 +54,6 @@ import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
-import com.game.helper.model.SpecialDetailResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
@@ -97,6 +96,7 @@ import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.ReportedRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
@@ -120,6 +120,7 @@ import com.game.helper.utils.UploadUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Flowable;
 import okhttp3.MultipartBody;
@@ -181,6 +182,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<MemberInfoResults>> getMemberInfo() {
         return Api.CreateApiService().getApiMemberInfo();
+    }
+
+    public static Flowable<HttpResultModel<Map<String,Integer>>> getCouponCount() {
+        return Api.CreateApiService().getApiCouponCount();
     }
 
     public static Flowable<HttpResultModel<VerifyResults>> getVerify(VerifyRequestBody verifyRequestBody) {
@@ -525,6 +530,11 @@ public class DataService {
 
     public static Flowable<HttpResultModel<VersionCheckResults>> updateVersion(VersionCheckRequestBody versionCheckRequestBody) {
         return Api.CreateApiService().updateVersion(versionCheckRequestBody);
+
+    }
+
+    public static Flowable<HttpResultModel> reportedData(ReportedRequestBody reportedRequestBody) {
+        return Api.CreateApiService().reportedData(reportedRequestBody);
 
     }
 }

@@ -53,7 +53,7 @@ public class DownLoadReceiveUtils {
                         return downloadEvent.getFlag() == DownloadFlag.STARTED;
                     }
                 })
-                .throttleFirst(200, TimeUnit.MILLISECONDS);
+                .throttleFirst(1000, TimeUnit.MILLISECONDS);
         Observable<DownloadEvent> noProgress = replayDownloadStatus
                 .filter(new Predicate<DownloadEvent>() {
                     @Override
@@ -222,5 +222,16 @@ public class DownLoadReceiveUtils {
         listPopupWindow.setAnchorView(view);
         listPopupWindow.setModal(false);
         listPopupWindow.show();
+    }
+
+    public static void reportedData(Object obj) {
+//        if(obj instanceof DownloadBean){
+//
+//        }
+//        if(obj instanceof DownloadItem){
+//
+//        }
+//        Flowable<HttpResultModel> reportedData = DataService.reportedData(new ReportedRequestBody())
+//        RxLoadingUtils.subscribe(reportedData,);
     }
 }

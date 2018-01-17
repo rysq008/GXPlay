@@ -51,7 +51,7 @@ public class RxBusImpl implements IBus {
     }
 
     public <T> Flowable<T> receive(Class<T> clz) {
-        return bus.ofType(clz);
+        return bus.ofType(clz).onBackpressureBuffer();
     }
 
     public boolean hasSubscribers() {

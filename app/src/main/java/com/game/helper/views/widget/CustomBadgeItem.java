@@ -1,6 +1,7 @@
 package com.game.helper.views.widget;
 
 import android.content.Context;
+import android.graphics.LinearGradient;
 import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -68,8 +69,7 @@ public class CustomBadgeItem extends BadgeItem {
     public GradientDrawable getBadgePointerDrawable(BadgeItem badgeItem, Context context) {
         GradientDrawable shape = new GradientDrawable();
         shape.setShape(GradientDrawable.OVAL);
-        shape
-                .setCornerRadius(context.getResources().getDimensionPixelSize(R.dimen.badge_corner_radius));
+        shape.setCornerRadius(context.getResources().getDimensionPixelSize(R.dimen.badge_corner_radius));
         shape.setColor(this.getBackgroundColor(context));
         shape.setStroke(this.getBorderWidth(), this.getBorderColor(context));
         shape.setSize(1, 1);

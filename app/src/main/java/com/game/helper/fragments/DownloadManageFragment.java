@@ -341,7 +341,7 @@ public class DownloadManageFragment extends XBaseFragment {
 
                             @Override
                             public void openApp() {
-                                Toast.makeText(context, "open", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(context, "open", Toast.LENGTH_SHORT).show();
                                 DownLoadReceiveUtils.openApp(context, mData.record.getExtra3());
                             }
                         });

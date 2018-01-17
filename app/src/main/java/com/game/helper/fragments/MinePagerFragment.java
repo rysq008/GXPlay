@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.HuanxinKefuLoginActivity;
+import com.game.helper.activitys.MainActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
@@ -28,6 +30,7 @@ import com.game.helper.fragments.login.RegistFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.fragments.wallet.WalletFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.MemberInfoResults;
 import com.game.helper.net.DataService;
@@ -37,9 +40,12 @@ import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.HeadImageView;
 
+import java.util.Map;
+
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -88,6 +94,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     TextView mLogin;
     @BindView(R.id.tv_recharge)
     TextView mRecharge;
+    @BindView(R.id.mine_coupon_count_tv)
+    TextView couponTv;
 
     //args
     private SettingListAdapter mAdapter;
@@ -96,6 +104,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
 
     private MemberInfoResults userInfo;
     private boolean enable_click = false;//防止多重点击
+    private int couponCount = 0;
 
     public static MinePagerFragment newInstance() {
         return new MinePagerFragment();
@@ -354,22 +363,57 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
     }
 
     private void getMemberInfo() {
+        final ArrayMap map = new ArrayMap();
         Flowable<HttpResultModel<MemberInfoResults>> fr = DataService.getMemberInfo();
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MemberInfoResults>>() {
+        Flowable<HttpResultModel<Map<String, Integer>>> fc = DataService.getCouponCount();
+        Flowable<MineData> fa = Flowable.zip(fr, fc, new BiFunction<HttpResultModel<MemberInfoResults>, HttpResultModel<Map<String, Integer>>, MineData>() {
             @Override
-            public void accept(HttpResultModel<MemberInfoResults> memberInfoResultsHttpResultModel) throws Exception {
-                if (memberInfoResultsHttpResultModel.isSucceful()) {
-                    userInfo = memberInfoResultsHttpResultModel.data;
-                    setUserData(memberInfoResultsHttpResultModel.data);
-                } else {
-                    Toast.makeText(getContext(), memberInfoResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
-                }
+            public MineData apply(HttpResultModel<MemberInfoResults> memberInfoResultsHttpResultModel, HttpResultModel<Map<String, Integer>> mapHttpResultModel) throws Exception {
+//                map.put(0, memberInfoResultsHttpResultModel.data);
+//                map.put(1, mapHttpResultModel.data);
+                MineData data = new MineData();
+                data.memberInfoResults = memberInfoResultsHttpResultModel.data;
+                data.coupon = mapHttpResultModel.data;
+                couponCount = mapHttpResultModel.data.get("red_count");
+                return data;
+            }
+        });
+//        RxLoadingUtils.subscribe(fa, bindToLifecycle(), new Consumer<ArrayMap>() {
+//            @Override
+//            public void accept(ArrayMap arrayMap) throws Exception {
+////                if (true/*memberInfoResultsHttpResultModel.isSucceful()*/) {
+//////                    userInfo = memberInfoResultsHttpResultModel.data;
+////                    userInfo = (MemberInfoResults) arrayMap.get(0);
+////                    setUserData(userInfo);
+////                } else {
+////                    Toast.makeText(getContext(), memberInfoResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+////                }
+////            }
+//        }, new Consumer<NetError>() {
+//            @Override
+//            public void accept(NetError netError) throws Exception {
+//                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+//            }
+//        });
+        RxLoadingUtils.subscribeWithDialog(context, fa, this.bindToLifecycle(), new Consumer<MineData>() {
+            @Override
+            public void accept(MineData mineData) throws Exception {
+                userInfo = mineData.memberInfoResults;
+                setUserData(userInfo);
+                couponTv.setText(couponCount + "");
+                couponTv.setVisibility(couponCount > 0 ? View.VISIBLE : View.GONE);
+//                BusProvider.getBus().post(new MsgEvent<String>(couponCount, 3, "CustomBadgeItem"));
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    class MineData extends XBaseModel {
+        MemberInfoResults memberInfoResults;
+        Map<String, Integer> coupon;
     }
 }

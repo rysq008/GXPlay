@@ -96,6 +96,7 @@ import com.game.helper.net.model.PayRequestBody;
 import com.game.helper.net.model.ReceiveGiftRequestBody;
 import com.game.helper.net.model.RecommendRequestBody;
 import com.game.helper.net.model.RegistRequestBody;
+import com.game.helper.net.model.ReportedRequestBody;
 import com.game.helper.net.model.ResetAlipayRequestBody;
 import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
@@ -116,6 +117,8 @@ import com.game.helper.net.model.UpdateSignatrueRequestBody;
 import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.net.model.VersionCheckRequestBody;
+
+import java.util.Map;
 
 import io.reactivex.Flowable;
 import okhttp3.MultipartBody;
@@ -193,6 +196,10 @@ public interface ApiService {
     //会员信息
     @POST("/member/info/")
     Flowable<HttpResultModel<MemberInfoResults>> getApiMemberInfo();
+
+    //可用红包数量
+    @POST("/activity/get_red_packet_count/")
+    Flowable<HttpResultModel<Map<String,Integer>>> getApiCouponCount();
 
     //验证码
     @POST("/public/get_tel_verify/")
@@ -303,7 +310,7 @@ public interface ApiService {
     Flowable<HttpResultModel<ResetTradeResults>> resetTradePassword(@Body ResetTradeRequestBody resetTradeRequestBody);
 
     @POST("/member/set_trade_password/")
-    //设置交易密码
+        //设置交易密码
     Flowable<HttpResultModel<ResetTradeResults>> setTradePassword(@Body SetTradeRequestBody setTradeRequestBody);
 
     @POST("/member/set_passwd/")
@@ -399,39 +406,39 @@ public interface ApiService {
 
 
     @POST("/marketing/get_marketing_info/")
-    //推广账号详情
+        //推广账号详情
     Flowable<HttpResultModel<MarketInfoResults>> getMarketInfo();
 
     @POST("/marketing/get_marketing_flow_list/")
-    //推广收益列表
+        //推广收益列表
     Flowable<HttpResultModel<MarketFlowlistResults>> getMarketFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/marketing/get_expected_flow_list/")
-    //推广预期收益列表
+        //推广预期收益列表
     Flowable<HttpResultModel<MarketExpectedFlowlistResults>> getMarketExpectedFlowList(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/member/get_my_game_list/")
-    //获取我的游戏列表
+        //获取我的游戏列表
     Flowable<HttpResultModel<MineGamelistResults>> getMineGameList(@Body MineGameRequestBody mineGameRequestBody);
 
     @POST("/member/get_my_gift_code_list/")
-    //获取我的礼包列表
+        //获取我的礼包列表
     Flowable<HttpResultModel<MineGiftlistResults>> getMineGiftList(@Body MineGameRequestBody mineGameRequestBody);
 
     @POST("/account/get_game_consume_list/")
-    //获取我的订单列表
+        //获取我的订单列表
     Flowable<HttpResultModel<MineOrderlistResults>> getMineOrderList(@Body SinglePageRequestBody singlePageRequestBody);
 
     @POST("/member/delete_my_gift_code/")
-    //删除游戏礼包
+        //删除游戏礼包
     Flowable<HttpResultModel<DeleteMineGiftResults>> deleteMineGiftCode(@Body DeleteGiftRequestBody deleteGiftRequestBody);
 
     @POST("/member/delete_my_game/")
-    //删除游戏
+        //删除游戏
     Flowable<HttpResultModel<NotConcernResults>> deleteMineGame(@Body DeleteGameRequestBody deleteGameRequestBody);
 
     @POST("/game/get_gift_info/")
-    //游戏礼包详情
+        //游戏礼包详情
     Flowable<HttpResultModel<MineGiftInfoResults>> getMineGiftCodeInfo(@Body MineGiftInfoRequestBody mineGiftInfoRequestBody);
 
     //获取游戏详情之详情
@@ -441,6 +448,7 @@ public interface ApiService {
     //删除游戏账号
     @POST("/member/delete_game_account/")
     Flowable<HttpResultModel<NotConcernResults>> deleteGameAccount(@Body SingleGameIdRequestBody singleGameIdRequestBody);
+
     //获取游戏礼包列表接口
     @POST("/game/get_game_gift_list/")
     Flowable<HttpResultModel<GameGiftListResult>> getGameGiftList(@Body GameInfoGiftListRequestBody gameInfoGiftListRequestBody);
@@ -499,10 +507,14 @@ public interface ApiService {
     Flowable<HttpResultModel<NotConcernResults>> updateMsgStatus(@Body UpdateMsgStatusRequestBody updateMsgStatusRequestBody);
 
     //获取环信机器人菜单
-    @GET(GameMarketApplication.G9_HUANXIN_TANNID +"/robots/visitor/greetings/app")
+    @GET(GameMarketApplication.G9_HUANXIN_TANNID + "/robots/visitor/greetings/app")
     Flowable<HanXinResponse<RobotMenuBean>> getHuanXinRobotMenu();
 
     //获取更新版本
     @POST("/sys/get_update_version/")
     Flowable<HttpResultModel<VersionCheckResults>> updateVersion(@Body VersionCheckRequestBody versionCheckRequestBody);
+
+    //下载游戏上报
+    @POST("/game/download/")
+    Flowable<HttpResultModel> reportedData(@Body ReportedRequestBody reportedRequestBody);
 }

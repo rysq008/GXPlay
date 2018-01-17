@@ -14,10 +14,12 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.fragments.ChannelListFragment;
 import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.DownLoad.DownloadController;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.api.Api;
+import com.game.helper.net.model.ReportedRequestBody;
 import com.game.helper.utils.DownLoadReceiveUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.Utils;
@@ -28,6 +30,7 @@ import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
+import cn.droidlover.xdroidmvp.mvp.XActivity;
 import zlc.season.practicalrecyclerview.ItemType;
 import zlc.season.rxdownload2.RxDownload;
 import zlc.season.rxdownload2.db.DataBaseHelper;
@@ -243,6 +246,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                     }
                 }
             });
+            mDownloadController.setReportedRequestBody(new ReportedRequestBody(mData.getGame().getId(),mData.getChannel().getId(),1),((XActivity)context).bindToLifecycle());
         }
 
         private void updateProgressStatus(DownloadEvent event) {

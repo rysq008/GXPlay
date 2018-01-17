@@ -87,6 +87,7 @@
         <attr name="right_tv_res_img" format="reference|color" />
         <attr name="right_tv_res_txt" format="reference|string" />
         <attr name="right_tv_res_color" format="reference|color" />
+        <attr name="center_et_bg" format="reference|color" />
         <attr name="is_search_page" format="boolean" />
         <attr name="layout_back_ground" format="color|reference" />
     </declare-styleable>

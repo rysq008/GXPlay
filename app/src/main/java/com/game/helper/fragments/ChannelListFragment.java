@@ -54,10 +54,10 @@ public class ChannelListFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         initAdapter();
         Bundle arguments = getArguments();
-        if(arguments != null){
+        if (arguments != null) {
             gameId = arguments.getInt(GAME_ID);
             loadAdapterData(1, true);
-        }else{
+        } else {
             xrclChannelList.showEmpty();
         }
     }
@@ -97,6 +97,7 @@ public class ChannelListFragment extends XBaseFragment {
             }
         });
     }
+
     private void loadAdapterData(int page, Boolean showLoading) {
         Flowable<HttpResultModel<GamePackageListResult>> fr = DataService.getGamePackageList(new GamePackageRequestBody(page, gameId, 1));
         RxLoadingUtils.subscribeWithReload(xrclChannelList, fr, this.bindToLifecycle(), new Consumer<HttpResultModel<GamePackageListResult>>() {

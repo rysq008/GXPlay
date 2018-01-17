@@ -19,6 +19,8 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.GamePagerFragment;
 import com.game.helper.fragments.GeneralizePagerFragment;
 import com.game.helper.fragments.HomePagerFragment;
@@ -36,7 +38,6 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.ToastUtil;
 import com.game.helper.views.widget.CustomBadgeItem;
-import com.game.helper.views.widget.TotoroToast;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.jude.swipbackhelper.SwipeBackHelper;
@@ -54,7 +55,6 @@ import io.reactivex.functions.Consumer;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 import static android.os.Environment.getExternalStoragePublicDirectory;
-import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -63,20 +63,33 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     @BindView(R.id.bottom_bar)
     BottomNavigationBar bottomBar;
 
-
     private List<Fragment> radioFragmentList = new ArrayList<>();
 
     private boolean isFirst = false;
 
-    CustomBadgeItem numberBadgeItem;
+    CustomBadgeItem[] numberBadgeItem = new CustomBadgeItem[4];
 
     private BottomNavigationItem getTabItemBuilder(int drawableRes, int stringRes) {
         final BottomNavigationItem bottomNavigationItem =
                 new BottomNavigationItem(drawableRes, stringRes).setActiveColor(getResources().getColor(R.color.app_color))
                         .setInActiveColor(getResources().getColor(R.color.defaultColor));
-        if (drawableRes == R.mipmap.tabbar_home_selected) {
-            numberBadgeItem = new CustomBadgeItem();
-            bottomNavigationItem.setBadgeItem(numberBadgeItem);
+        switch (drawableRes) {
+            case R.mipmap.tabbar_home_selected:
+                numberBadgeItem[0] = new CustomBadgeItem();
+                bottomNavigationItem.setBadgeItem(numberBadgeItem[0]);
+                break;
+            case R.mipmap.tabbar_game_selected:
+                numberBadgeItem[1] = new CustomBadgeItem();
+                bottomNavigationItem.setBadgeItem(numberBadgeItem[1]);
+                break;
+            case R.mipmap.tabbar_extension_selected:
+                numberBadgeItem[2] = new CustomBadgeItem();
+                bottomNavigationItem.setBadgeItem(numberBadgeItem[2]);
+                break;
+            case R.mipmap.tabbar_mine_selected:
+                numberBadgeItem[3] = new CustomBadgeItem();
+                bottomNavigationItem.setBadgeItem(numberBadgeItem[3]);
+                break;
         }
         return bottomNavigationItem;
     }
@@ -101,16 +114,12 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     private void initBottomNavigationBar() {
         int pos = bottomBar.getCurrentSelectedPosition();
         bottomBar.clearAll();
-        numberBadgeItem = null;
+//        numberBadgeItem = null;
         bottomBar.setMode(BottomNavigationBar.MODE_FIXED);
-        bottomBar
-                .addItem(getTabItemBuilder(R.mipmap.tabbar_home_selected, R.string.home_tab_index));
-        bottomBar
-                .addItem(getTabItemBuilder(R.mipmap.tabbar_game_selected, R.string.home_tab_game));
-        bottomBar
-                .addItem(getTabItemBuilder(R.mipmap.tabbar_extension_selected, R.string.home_tab_extension));
-        bottomBar
-                .addItem(getTabItemBuilder(R.mipmap.tabbar_mine_selected, R.string.home_tab_mine));
+        bottomBar.addItem(getTabItemBuilder(R.mipmap.tabbar_home_selected, R.string.home_tab_index));
+        bottomBar.addItem(getTabItemBuilder(R.mipmap.tabbar_game_selected, R.string.home_tab_game));
+        bottomBar.addItem(getTabItemBuilder(R.mipmap.tabbar_extension_selected, R.string.home_tab_extension));
+        bottomBar.addItem(getTabItemBuilder(R.mipmap.tabbar_mine_selected, R.string.home_tab_mine));
 
         bottomBar.initialise();
 
@@ -133,23 +142,33 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             }
         });
         bottomBar.selectTab(pos > 0 ? pos : 0);
-        long n = 0;
-        numberBadgeItem.setBorderColor(Color.TRANSPARENT)// Badge的Border颜色
-                .setBackgroundColor(Color.TRANSPARENT);// Badge背景颜色
-//        if (null != agentTaskCollect)
-        {
-            n = 0;
-            if (n > 0) {
-                numberBadgeItem.setBorderWidth(0)// Badge的Border(边界)宽度
-                        .setBorderColor(getResources().getColor(R.color.colorOrangeDepth))// Badge的Border颜色
-                        .setBackgroundColor(getResources().getColor(R.color.colorOrangeDepth))// Badge背景颜色
-                        .setGravity(Gravity.RIGHT | Gravity.TOP)// 位置，默认右上角
-                        .setText(String.valueOf(n));// 显示的文本
-            }
+        for (CustomBadgeItem item : numberBadgeItem) {
+            item.setBorderColor(Color.TRANSPARENT)// Badge的Border颜色
+                    .setBackgroundColor(Color.TRANSPARENT);// Badge背景颜色
+            item.setPoint(true);
+            item.refreshDrawable();
         }
-        numberBadgeItem.setPoint(n == 0);
-        numberBadgeItem.refreshDrawable();
 
+        BusProvider.getBus().receive(MsgEvent.class).doOnNext(new Consumer<MsgEvent>() {
+            @Override
+            public void accept(MsgEvent msgEvent) throws Exception {
+                if ("CustomBadgeItem".equals(msgEvent.getData())) {
+                    int position = msgEvent.getType();
+                    int n = msgEvent.getRequestCode();
+                    numberBadgeItem[position].setBorderColor(Color.TRANSPARENT)// Badge的Border颜色
+                            .setBackgroundColor(Color.TRANSPARENT);// Badge背景颜色
+                    if (n > 0) {
+                        numberBadgeItem[position].setBorderWidth(0)// Badge的Border(边界)宽度
+                                .setBorderColor(getResources().getColor(R.color.colorOrangeDepth))// Badge的Border颜色
+                                .setBackgroundColor(getResources().getColor(R.color.colorOrangeDepth))// Badge背景颜色
+                                .setGravity(Gravity.RIGHT | Gravity.TOP)// 位置，默认右上角
+                                .setText(String.valueOf(n));// 显示的文本
+                    }
+                    numberBadgeItem[position].setPoint(n == 0);
+                    numberBadgeItem[position].refreshDrawable();
+                }
+            }
+        });
     }
 
     private void initView() {
@@ -161,8 +180,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         radioFragmentList.add(MinePagerFragment.newInstance());
 
         fragmentsViewPager.setOffscreenPageLimit(3);
-        fragmentsViewPager.setAdapter(
-                new SwitchFragmentsAdapter(getSupportFragmentManager()));
+        fragmentsViewPager.setAdapter(new SwitchFragmentsAdapter(getSupportFragmentManager()));
         fragmentsViewPager.addOnPageChangeListener(this);
 
         if (isFirst) {
@@ -313,7 +331,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     @Override
     public void onBackPressed() {
         long curTime = System.currentTimeMillis();
-        if (curTime - pressTime > 2000) {
+        if (curTime - pressTime > 1000) {
             //TotoroToast.makeText(context, "再次点击退出", 20).show();
             ToastUtil.showToast("再次点击退出");
             pressTime = curTime;
@@ -358,7 +376,6 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     }
 
 
-
     private void updateVersion() {
         PackageInfo packageInfo = null;
         PackageManager packageManager = context.getPackageManager();
@@ -395,7 +412,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                         builder.setOnlyDownload(true)
                                 .setShowNotification(true)
                                 .setForceRedownload(versionCheckResultsHttpResultModel.data.getIs_force_update())
-                                .setDownloadAPKPath(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath()+"/G9Game")
+                                .setDownloadAPKPath(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath() + "/G9Game")
                                 .setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
                                 //.setDownloadUrl("http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk")
                                 .setTitle("检测到新版本")
@@ -405,11 +422,8 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                         AllenChecker.init(true);
 
 
-
-
-
                     } else {
-                        ToastUtil.showToast("已经是最新的版本");
+//                        ToastUtil.showToast("已经是最新的版本");
                     }
                 }
 

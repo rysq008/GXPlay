@@ -63,6 +63,7 @@ public class SearchComponentView extends LinearLayout {
         boolean is_back = typedArray.getBoolean(R.styleable.CommonSearchView_is_back, false);
         int left_res_id = typedArray.getResourceId(R.styleable.CommonSearchView_left_iv_res, RES_NONE);
         String center_res_str = typedArray.getString(R.styleable.CommonSearchView_center_et_res);
+        int center_bg = typedArray.getResourceId(R.styleable.CommonSearchView_center_et_bg, R.drawable.bg_gradient_radius_hoop_white);
         Drawable right_res_id_img = typedArray.getDrawable(R.styleable.CommonSearchView_right_tv_res_img);
         String right_res_id_txt = typedArray.getString(R.styleable.CommonSearchView_right_tv_res_txt);
         int color = typedArray.getColor(R.styleable.CommonSearchView_right_tv_res_color, Color.WHITE);
@@ -88,6 +89,7 @@ public class SearchComponentView extends LinearLayout {
             iv_back.setVisibility(GONE);
         }
         et_center.setHint(Kits.Empty.check(center_res_str) ? "" : center_res_str);
+        et_center.setBackgroundResource(center_bg);
 
         tv_right.setBackgroundDrawable(right_res_id_img);
         tv_right.setText(right_res_id_txt);

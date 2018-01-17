@@ -7,12 +7,10 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -39,11 +37,13 @@ import com.game.helper.net.DataService;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.GameDetailSendCommentContentRequestBody;
 import com.game.helper.net.model.GamePackageInfoRequestBody;
+import com.game.helper.net.model.ReportedRequestBody;
 import com.game.helper.utils.DownLoadReceiveUtils;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.ToastUtil;
 import com.game.helper.views.XReloadableStateContorller;
+import com.jude.swipbackhelper.SwipeBackHelper;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -168,6 +168,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         } else {
             xreload.showEmpty();
         }
+        SwipeBackHelper.getCurrentPage(getActivity()).setDisallowInterceptTouchEvent(true);
     }
 
     private void initViewPager(GamePackageInfoResult packageInfo) {
@@ -306,6 +307,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                                 }
                             }
                         });
+                        mDownloadController.setReportedRequestBody(new ReportedRequestBody(packageInfo.getGame().getId(), packageInfo.getChannel().getId(), 1), GameDetailFragment.this.bindToLifecycle());
                     }
                     if (gameDetailAllResults.memberInfoResults != null) {
                         memberInfoResults = gameDetailAllResults.memberInfoResults;
