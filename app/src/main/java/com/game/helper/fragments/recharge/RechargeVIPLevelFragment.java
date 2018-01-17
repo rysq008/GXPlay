@@ -46,6 +46,13 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
     TextView tvTotal;
     @BindView(R.id.xController_vip_level_recharge)
     XReloadableStateContorller xController;
+
+    @BindView(R.id.tv_bind_account_vip1_recharge_vip_level)
+    TextView bindAccountVip1;
+    @BindView(R.id.tv_bind_account_vip2_recharge_vip_level)
+    TextView bindAccountVip2;
+    @BindView(R.id.tv_bind_account_vip3_recharge_vip_level)
+    TextView bindAccountVip3;
     private boolean isWeixin = true;//true 默认是微信，false 是支付宝
     private int currentVIPLevel = 0;//当前用户的等级
     private int selectedVIPLevel = 0;//选中VIP的等级
@@ -167,13 +174,16 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
 
     }
 
-    public void setVipLevelYearFree(int vipLevel, String cost) {
-        if (vipLevel == 1) {
-            tvVip1.setText(String.valueOf(cost));
-        } else if (vipLevel == 2) {
-            tvVip2.setText(String.valueOf(cost));
-        } else if (vipLevel == 3) {
-            tvVip3.setText(String.valueOf(cost));
+    public void setVipLevelYearFree(VipLevelResults.VipBean vipLevel) {
+        if (vipLevel.level == 1) {
+            tvVip1.setText(String.valueOf(vipLevel.year_fee));
+            bindAccountVip1.setText("2、黑钻会员可以绑定"+vipLevel.num_account+"个享受VIP折扣价格的游戏帐号");
+        } else if (vipLevel.level == 2) {
+            tvVip2.setText(String.valueOf(vipLevel.year_fee));
+            bindAccountVip2.setText("3、红钻会员可以绑定"+vipLevel.num_account+"个享受VIP折扣价格的游戏帐号");
+        } else if (vipLevel.level  == 3) {
+            tvVip3.setText(String.valueOf(vipLevel.year_fee));
+            bindAccountVip3.setText("4、皇冠会员可以绑定"+vipLevel.num_account+"个享受VIP折扣价格的游戏帐号");
         }
     }
 
@@ -233,7 +243,7 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                     VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
                     vipBeans = levelResults.list;
                     for (VipLevelResults.VipBean vipBean : vipBeans) {
-                        setVipLevelYearFree(vipBean.level, vipBean.year_fee);
+                        setVipLevelYearFree(vipBean);
                     }
                 } else {
                     xController.showEmpty();

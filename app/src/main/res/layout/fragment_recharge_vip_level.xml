@@ -205,7 +205,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_5"
 
-                android:text="实际支付金额："
+                android:text="实付金额："
                 android:textColor="@color/color_333"
                 android:textSize="@dimen/size_14sp" />
 
@@ -231,22 +231,44 @@
         </LinearLayout>
 
         <TextView
+
             android:paddingLeft="@dimen/margin_14"
             android:paddingRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="实际支付金额 = 预升级VIP等级金额 - 当前会员等级金额 / 12 * （12 - 所使用月数 ）"
-            android:textSize="@dimen/size_12sp"
+            android:text="1、实付金额 = 预升级VIP等级金额 - 当前会员等级金额"
+            android:textSize="@dimen/size_13sp"
             android:textColor="@color/color_333"/>
         <TextView
+            android:id="@+id/tv_bind_account_vip1_recharge_vip_level"
             android:paddingLeft="@dimen/margin_14"
             android:paddingRight="@dimen/margin_10"
             android:layout_marginTop="@dimen/margin_5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="所使用月数规则：未满15天按0.5个月计算，满15天按1个月计算。"
-            android:textSize="@dimen/size_12sp"
+            android:text=""
+            android:textSize="@dimen/size_13sp"
+            android:textColor="@color/color_333"/>
+        <TextView
+            android:id="@+id/tv_bind_account_vip2_recharge_vip_level"
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/size_13sp"
+            android:textColor="@color/color_333"/>
+        <TextView
+            android:id="@+id/tv_bind_account_vip3_recharge_vip_level"
+            android:paddingLeft="@dimen/margin_14"
+            android:paddingRight="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="@dimen/size_13sp"
             android:textColor="@color/color_333"/>
     </LinearLayout>
 </com.game.helper.views.XReloadableStateContorller>

@@ -276,7 +276,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             int totalCharge = rechargeVIPLevelFragment.getTotal();
             String selectVIPLevel = rechargeVIPLevelFragment.getSelectedVIPLevel();
             if (totalCharge <= 0 ) {
-                ToastUtil.showToast("实付金额为0元，无法充值");
+                ToastUtil.showToast("请选择一个会员等级金额");
             }else{
                 if (payType ) {
                     //微信支付
