@@ -402,7 +402,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                 setUserData(userInfo);
                 couponTv.setText(couponCount + "");
                 couponTv.setVisibility(couponCount > 0 ? View.VISIBLE : View.GONE);
-//                BusProvider.getBus().post(new MsgEvent<String>(couponCount, 3, "CustomBadgeItem"));
+                BusProvider.getBus().post(new MsgEvent<String>(couponCount, 3, "CustomBadgeItem"));
             }
         }, new Consumer<NetError>() {
             @Override

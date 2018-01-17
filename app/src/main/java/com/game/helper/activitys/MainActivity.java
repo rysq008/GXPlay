@@ -149,10 +149,10 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             item.refreshDrawable();
         }
 
-        BusProvider.getBus().receive(MsgEvent.class).doOnNext(new Consumer<MsgEvent>() {
+        BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
             @Override
             public void accept(MsgEvent msgEvent) throws Exception {
-                if ("CustomBadgeItem".equals(msgEvent.getData())) {
+                if ("CustomBadgeItem".equals(msgEvent.getMsg())) {
                     int position = msgEvent.getType();
                     int n = msgEvent.getRequestCode();
                     numberBadgeItem[position].setBorderColor(Color.TRANSPARENT)// Badge的Border颜色

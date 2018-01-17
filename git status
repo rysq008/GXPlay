@@ -1,0 +1,1718 @@
+[33mcommit b89c9592ee60a3327db31141de1c49a3c478266d[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: ba8210b 8695fba
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 17 19:16:30 2018 +0800
+
+    modify tmpe
+
+[33mcommit ba8210bf5258a8816ad86d52dd10683a8b80f178[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 17 19:14:21 2018 +0800
+
+    modify home page
+
+[33mcommit 8695fba30d5202d2b38de715a7c45dac9ab0e182[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 17 14:33:15 2018 +0800
+
+    优化主题界面
+
+[33mcommit eaa400a0ecd05e205141a82e71e91b0ca232a3b7[m
+Author: tian <1055480407@qq.com>
+Date:   Tue Jan 16 13:54:21 2018 +0800
+
+    环信直接入客服,机器人暂时不用
+
+[33mcommit e637bf30c620c2fd73584aab6dac4723d656145f[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Jan 15 21:03:13 2018 +0800
+
+    merge and fix 2018.1.15
+
+[33mcommit c48e266713ab2b844166596fc98d205360d125c2[m
+Author: tian <1055480407@qq.com>
+Date:   Mon Jan 15 20:57:03 2018 +0800
+
+    优化修改充值金额
+
+[33mcommit 743de6678060c7ed2febb6b114b86c99a5c803d2[m
+Author: tian <1055480407@qq.com>
+Date:   Mon Jan 15 18:24:32 2018 +0800
+
+    添加更新APP,和修改充值金额为int类型
+
+[33mcommit fbc76e672a3b46fc094eb6bb42167b68c66226cc[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Jan 15 11:54:40 2018 +0800
+
+    modify rechange
+
+[33mcommit 2f33f6861c5b0c556e79fd12ed37fb69ee2a6888[m
+Author: tian <1055480407@qq.com>
+Date:   Sat Jan 13 20:41:34 2018 +0800
+
+    添加提现说明和充值说明
+
+[33mcommit f398401db4c6a07b6ad1c802af683a7f91b7d33a[m
+Author: tian <1055480407@qq.com>
+Date:   Sat Jan 13 15:34:04 2018 +0800
+
+    环信客服添加机器人菜单,目前环信在修复菜单.优化关于我们,和版本检测
+
+[33mcommit 22edb8724a987559cd984f9537d8e92e71a270b2[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Jan 11 17:30:14 2018 +0800
+
+    modify dialog about game detail
+
+[33mcommit 1a2074d329b4fe1751ca51d0bf8cacf3cc87262a[m
+Author: tian <1055480407@qq.com>
+Date:   Thu Jan 11 17:18:22 2018 +0800
+
+    优化游戏详情的的dialog界面
+
+[33mcommit f26ce848b7e4f82c555228d493322ee410cb0524[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Jan 11 17:03:57 2018 +0800
+
+    merge and fix 2018.1.11
+
+[33mcommit 5a093374992000f854a1363dcd4358206113626c[m
+Merge: 76d294a 4c32bfa
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Jan 11 17:03:24 2018 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit 76d294a1a3d6cce2dcc2e39bf89c123c21e0905e[m
+Author: tian <1055480407@qq.com>
+Date:   Thu Jan 11 11:50:59 2018 +0800
+
+    优化主页的noticeView
+
+[33mcommit 4c32bfa0ac3fd541c5c4cf0bed2e78f2d02c9379[m[33m ([m[1;31morigin/dev_sung[m[33m)[m
+Merge: c3314c8 8697633
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Jan 10 22:14:41 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit c3314c8eab92e9989cc6efb430aab0c30ee8c70c[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Jan 10 22:14:23 2018 +0800
+
+    bug
+
+[33mcommit 86976336754ccf287c6b89c4bcfe6de84e40a01b[m
+Merge: f47af64 42cb326
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 10 18:44:23 2018 +0800
+
+    merge and fix 2018.1.10
+
+[33mcommit f47af64bece3c6b7afac6a8e2d03e63cf59ec6cb[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 10 17:02:52 2018 +0800
+
+    modify refresh fremwork
+
+[33mcommit 42cb326d53ce6c095b9b3e0af1c2574869a6729c[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 10 18:34:25 2018 +0800
+
+    增加礼包领取成功提示
+
+[33mcommit 3f13c80695c2d0942a8b8a547a76b17498be3c42[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 10 17:24:05 2018 +0800
+
+    优化下载界面,修复bug
+
+[33mcommit 9328727c02de0d4907e0ee6d42293b090b7b39a8[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 10 17:02:52 2018 +0800
+
+    modify refresh fremwork
+
+[33mcommit 58ab5cf7903c4b2e3a695aff72172a68d6ebb680[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Jan 9 22:47:52 2018 +0800
+
+    merge and fix 2018.1.9
+
+[33mcommit ad548138a2556a607b39516fad9fdafa2af89eba[m
+Merge: 1f710b1 e405f3b
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Jan 9 22:44:06 2018 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit 1f710b1345827b682aa09f5192ccf2fb46232170[m
+Merge: b1f1943 7b9bfdb
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Jan 9 22:43:35 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit e405f3b0561f2126e1879014a862b369b316ddf1[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Jan 9 21:52:29 2018 +0800
+
+    bug
+
+[33mcommit 6d0c8291a54457fb5746adf5341c6fd5a07401ab[m
+Merge: 23a74ae 7b9bfdb
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Jan 9 21:36:36 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit 23a74aeb2b38c44b13d29e6e1237c17af0e1f634[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Jan 9 21:36:17 2018 +0800
+
+    bug
+
+[33mcommit 7b9bfdbe94144bd08f03f61f6d5b4a196ee435dc[m
+Author: tian <1055480407@qq.com>
+Date:   Tue Jan 9 19:12:59 2018 +0800
+
+    游戏列表item增加显示游戏类别
+
+[33mcommit 6a22e765987e2b84b3f780ede5c8ced79fae19b3[m
+Merge: 90c33b7 e15c98c
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Tue Jan 9 17:59:39 2018 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 90c33b71a352e2a18d60e76042ddb13c23003b7b[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Tue Jan 9 17:59:20 2018 +0800
+
+    去掉toast
+
+[33mcommit e15c98cfb5992ca9dcc40bc01ecc5b68dee2dae5[m
+Author: tian <1055480407@qq.com>
+Date:   Tue Jan 9 15:24:35 2018 +0800
+
+    优化限时折扣图标
+
+[33mcommit 8e9a9c4f453b3ff9808d6a5ed23420af43efe11d[m
+Merge: 724823c baf4fc0 200c0ec
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Tue Jan 9 14:31:20 2018 +0800
+
+    Merge branches 'dev_sung' and 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit b1f1943946e0a5661e9c10a8e35987ef4a0900d7[m
+Merge: baf4fc0 200c0ec
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Jan 9 13:32:43 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 200c0ecb73f3a74ed65662b1f6f3cc1de905bfa7[m
+Author: tian <1055480407@qq.com>
+Date:   Tue Jan 9 11:31:58 2018 +0800
+
+    添加所有的限时折扣
+
+[33mcommit baf4fc0a99713658d8c23651d8b959c99d591590[m
+Merge: 0caaa45 b8b69b3
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Jan 8 23:35:12 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit 0caaa45acb168484bcfee18182a1a6c5d3a73545[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Jan 8 23:34:46 2018 +0800
+
+    bug
+
+[33mcommit b8b69b37ab2782417db041756746ea54ef38a034[m
+Author: tian <1055480407@qq.com>
+Date:   Mon Jan 8 21:46:56 2018 +0800
+
+    热门推荐和主题详情增加显示折扣
+
+[33mcommit 707df51af7ccdd321528d0b8ae667882ed5e98d1[m
+Merge: 42d4e88 09253ef
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Jan 8 21:44:57 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit 42d4e887f9f1a67a3ee0630ea6133e4519371b54[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Jan 8 21:44:35 2018 +0800
+
+    bug
+
+[33mcommit 09253ef3d0f211410f3960900eb8123288669898[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Jan 8 20:28:47 2018 +0800
+
+    modify about double tap bug
+
+[33mcommit 1b1b46bb093c15a103ecdc5b68a964073a1a7ce5[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Jan 8 17:25:22 2018 +0800
+
+    merge and fix
+
+[33mcommit d631e9e49611cb7b91880b1fe9b36e94459a4fd9[m
+Merge: 3ea1bd6 80b77db
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Jan 8 17:23:38 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 80b77dbdd7276602549e98d387e911ff86fb39cc[m
+Author: tian <1055480407@qq.com>
+Date:   Mon Jan 8 17:19:07 2018 +0800
+
+    优化游戏详情代码,在游戏详情增加限时折扣
+
+[33mcommit 3ea1bd6c1a2064688b1716def5b01c62046a89d0[m
+Merge: 6879be6 ee1cf75
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Jan 8 10:23:44 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit ee1cf75c9cd0db03c111e3a07cdb7ed1cd4d891b[m
+Author: tian <1055480407@qq.com>
+Date:   Mon Jan 8 10:14:32 2018 +0800
+
+    优化hotView界面
+
+[33mcommit 6879be636ae14c7bbf9eeb56cea879739d305f18[m
+Merge: 0f7cb07 b9b1734
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Jan 8 10:10:33 2018 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit 724823c07c7ba39e3dedaff2bb478123b766c2bf[m
+Merge: 0f7cb07 b9b1734
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Sun Jan 7 19:30:16 2018 +0800
+
+    Merge branches 'dev_sung' and 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 0f7cb073cc27533421eff21eaeb7587372e31f2e[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Sun Jan 7 19:29:37 2018 +0800
+
+    默认头像
+
+[33mcommit b9b1734a2631a31d1f552bcbd627ed7677fba229[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sun Jan 7 19:08:15 2018 +0800
+
+    消息新增删除／更换loading
+
+[33mcommit 01f18584f33a54f0fc3ca5283b96e7d02fca99e2[m
+Merge: 115e5d3 2e16adc
+Author: ssccbb <sung723@outlook.com>
+Date:   Sun Jan 7 19:03:01 2018 +0800
+
+    消息新增删除／更换loading
+
+[33mcommit 115e5d3af0b784e4805563dc1ca8c63b369d89c2[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sun Jan 7 18:57:00 2018 +0800
+
+    消息新增删除／更换loading
+
+[33mcommit 2e16adc34f8fe7068a5c2a813441fbd400c762b0[m
+Merge: f4727ae 883121d
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Jan 6 21:50:17 2018 +0800
+
+    modify hot view
+
+[33mcommit f4727ae99a3efffbb51bccdf149badd7b7c4de02[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Jan 6 21:48:15 2018 +0800
+
+    modify download part
+
+[33mcommit 883121dc3e0658883623fcd73d89b6f4fdeff8a0[m
+Author: tian <1055480407@qq.com>
+Date:   Sat Jan 6 16:05:35 2018 +0800
+
+    修复跳到主题详情数据展示状态
+
+[33mcommit eba77ef67fad78b1082eaec4feed81c3b9ac08b7[m
+Author: tian <1055480407@qq.com>
+Date:   Sat Jan 6 15:17:31 2018 +0800
+
+    首页热门推荐横向的recyclerView增加item间隔
+
+[33mcommit c9c931a28561219dd5746af5d9608e1c871dc465[m
+Merge: 50db9ae 04fb4a8
+Author: tian <1055480407@qq.com>
+Date:   Sat Jan 6 13:26:34 2018 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 50db9ae12079ffa0bcbde25d7135b91a6fe70861[m
+Author: tian <1055480407@qq.com>
+Date:   Sat Jan 6 13:26:07 2018 +0800
+
+    游戏详情:折扣步骤防止多次连续点击,多次跳转界面.修改支付的请求成功提示语
+
+[33mcommit 04fb4a80c65b871fb9e1b84cbcea9d677b9416b3[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 1 19:58:02 2017 +0800
+
+    开发主页和游戏列表两个模块的功能
+
+[33mcommit 20aa283847ba7f515287c428dbb28cd64c846b25[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Jan 6 13:16:02 2018 +0800
+
+    merge and fix 2018.1.6
+
+[33mcommit 667e3c1e6c813b662ec45c7e64f312d20b475077[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Jan 6 13:00:30 2018 +0800
+
+    bug
+
+[33mcommit 6698ed1cc9e585221e4242fcc8a072f70cd1b5f3[m
+Merge: ac483ea aaf27bb
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Jan 6 12:47:02 2018 +0800
+
+    bug
+
+[33mcommit ac483ea6e7d871d1a6a10704067266766b738c6f[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Jan 6 12:40:28 2018 +0800
+
+    bug
+
+[33mcommit aaf27bb231285fc69a3eccbca17a5e6307bc40e5[m
+Merge: 9ffec57 1426014
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Jan 6 11:00:51 2018 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit 1426014287aa967156edbe0eb6f6b76aa459f0bf[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Jan 6 00:57:25 2018 +0800
+
+    bug
+
+[33mcommit 9ffec57a965aa5f96bdce861e959a8e83152fd9d[m
+Merge: 77e94c8 b9a0640
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Sat Jan 6 00:00:10 2018 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 77e94c8fd98d7e0895d0a3e00ada7744e6693c59[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Jan 5 23:59:46 2018 +0800
+
+    命名
+
+[33mcommit b9a064018d5d059bad786964d9f03db926bfa02a[m
+Merge: 8caa5fb 220056f
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Jan 5 23:22:23 2018 +0800
+
+    merge and fix
+
+[33mcommit 8caa5fb4037f32e716e6d09a62201feb3e5778ed[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Jan 5 23:20:58 2018 +0800
+
+    modify and fix
+
+[33mcommit 220056fbe7a31b04d8602a833dbe1e5369b648f5[m
+Author: tian <1055480407@qq.com>
+Date:   Fri Jan 5 22:32:25 2018 +0800
+
+    完成首页的小喇叭通知
+
+[33mcommit 51dded3b521b7bd73523e6f330fcac414f347bf5[m
+Author: tian <1055480407@qq.com>
+Date:   Fri Jan 5 18:32:46 2018 +0800
+
+    修复界面bug
+
+[33mcommit 8490603badc44f2cf63c44fb75074ab745034d55[m
+Author: tian <1055480407@qq.com>
+Date:   Fri Jan 5 16:58:08 2018 +0800
+
+    优化VIP升级充值功能
+
+[33mcommit 6789bcbc85349418a02c4fdb85983edf46aa4b75[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Jan 5 14:41:02 2018 +0800
+
+    命名
+
+[33mcommit 69aa255ed7405548b595d7fcd0cd5fc7cd07bfcc[m
+Merge: cd68dcf d0cb86f
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Jan 5 14:37:42 2018 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit cd68dcf3c9e65d2f114154bb4e52813a786a56bb[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Jan 5 14:37:31 2018 +0800
+
+    消费榜
+
+[33mcommit d0cb86f0a28835cdf3daa4bb0a5ba9cfa016b3ee[m
+Author: tian <1055480407@qq.com>
+Date:   Fri Jan 5 13:19:57 2018 +0800
+
+    游戏详情：优化VIP升级弹窗，在gamePackageInfoResults增加字段
+
+[33mcommit d95e1d7b631829114d8e9636f40b68f8e45fd700[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Jan 5 12:33:54 2018 +0800
+
+    游戏分享增加折扣
+
+[33mcommit e57e0ec2a2fef55f97a00982822b73119bd9e8db[m
+Merge: 93f2292 8b35b59
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Jan 5 11:59:47 2018 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 8b35b590c50cdf8ada29386d557e046652bbac0f[m
+Merge: 4408fcd e6b3da6
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Jan 5 09:55:49 2018 +0800
+
+    merge and fix 2018.1.5
+
+[33mcommit 4408fcdd3d249c28fcca149d5679396c96838c09[m
+Merge: 71795f8 b0bc390
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Jan 5 09:46:54 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit e6b3da6fb958371e604f256401b5de6fcee5870b[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Jan 4 23:42:14 2018 +0800
+
+    bug
+
+[33mcommit b0bc39092741f61aa5b5d039e0a440dad7ff751c[m
+Author: tian <1055480407@qq.com>
+Date:   Thu Jan 4 18:58:16 2018 +0800
+
+    游戏详情：优化评论头像，和礼包
+
+[33mcommit 71795f88beaa9ff5f019cde95124500830ea11de[m
+Merge: 2a51c2d 25d5341
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Jan 4 18:46:08 2018 +0800
+
+    merge and fix and modify download
+
+[33mcommit 93f22922aa9f61182edbf36db351fa0617ad403e[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Jan 4 18:38:10 2018 +0800
+
+    选择红包返回问题
+
+[33mcommit 25d5341fb8b7352f93dbd3de6370c307053b1347[m
+Author: tian <1055480407@qq.com>
+Date:   Thu Jan 4 18:20:32 2018 +0800
+
+    集成环信客户互SDK，分为登录状态和没登录状态，完成联系客服功能
+
+[33mcommit 2a51c2d0967c8a91a5f72b78bae45fdc68b33011[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Jan 3 23:02:46 2018 +0800
+
+    bug
+
+[33mcommit c4e5c5cedb3c6aa282a7da2af558b6b7fa5a2599[m
+Merge: dbb6121 78e86a8
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Jan 3 22:57:53 2018 +0800
+
+    bug
+
+[33mcommit dbb612171ac12c0b47138ef19332da89a412a235[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Jan 3 22:48:34 2018 +0800
+
+    bug
+
+[33mcommit 78e86a81c75eddcc6393d0a18bb6182880e14dbe[m
+Merge: 0fe25f9 fcc9363
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 21:30:20 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 0fe25f9d34bc2293f9638cc39653a28fdbff1d39[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 21:29:33 2018 +0800
+
+    develop Download part
+
+[33mcommit fcc936348b1fb9d12a9101e002fd2e5de5a2203a[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 17:59:40 2018 +0800
+
+    选择红包返回问题
+
+[33mcommit ee8865f2e488a54b3d5fe69e4fe51fb3165cdca9[m
+Merge: 08caece bce84d9
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 17:58:20 2018 +0800
+
+    Merge remote-tracking branch 'origin/master'
+    
+    # Conflicts:
+    #       app/src/main/java/com/game/helper/fragments/recharge/RechargeVIPLevelFragment.java
+    #       app/src/main/java/com/game/helper/model/MemberInfoResults.java
+
+[33mcommit 08caecea326aae3354b88cd0ebb0bb9f5f36c61a[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 17:55:37 2018 +0800
+
+    选择红包返回问题
+
+[33mcommit bce84d9b8652686aa4970e80adf2a72d9e4425aa[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 3 14:54:46 2018 +0800
+
+    完成VIP升级界面
+
+[33mcommit 478b881db296fa26ae60f5f25155b026ba8ce218[m
+Merge: 92c8393 094aacf
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 13:35:39 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 92c83933cfd060854ff4d3f636f69859272e6807[m
+Merge: b1cc08a b84fd7d
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 13:18:55 2018 +0800
+
+    fix bug about vip rechange again
+
+[33mcommit 094aacfeffff92fd2c77fba148a0a8a96f13ba0e[m
+Merge: b1cc08a b84fd7d
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 13:18:55 2018 +0800
+
+    fix bug about vip rechange again
+
+[33mcommit b84fd7dcc92ac2b4339a35501630db9d1ee7063b[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 3 13:14:21 2018 +0800
+
+    fix bug about vip rechange
+
+[33mcommit b1cc08aff2906096a9dbf9f48f5627f7a1a04af0[m
+Merge: ce1a42f d5a1cff
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 13:03:46 2018 +0800
+
+    fix bug
+
+[33mcommit 6bd791ddb79b7ce32d6613d368910f4066ebde12[m
+Merge: ce1a42f d5a1cff
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 13:03:46 2018 +0800
+
+    fix bug
+
+[33mcommit d5a1cffe1a0cd161558c5372cf4ba8eee6713f32[m
+Merge: f4038f8 dc48e78
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 3 12:00:49 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit f4038f84a3b3497b0bd1cead044c525e7f32e715[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 3 12:00:29 2018 +0800
+
+    修复bug
+
+[33mcommit dc48e7806fd8d4932ffeace4f715efacfa68c598[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 11:59:42 2018 +0800
+
+    文档问题修改
+
+[33mcommit ce1a42fc4910ff02fde09143a381394ffa6d19a4[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Jan 3 11:52:18 2018 +0800
+
+    merge and fix 2018.1.3
+
+[33mcommit a6f21a9bd61424599ba518652b2e1c0493289f0d[m
+Merge: 412dafc b46b203
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 11:22:46 2018 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit b46b203d2c53d85cb142809014ab7c892194029a[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Jan 3 11:08:01 2018 +0800
+
+    优化游戏详情界面，在快速充值添加VIPTab界面
+
+[33mcommit 412dafcb7bc15169f02b1aef67d2a878caa072cf[m
+Merge: 1529b3c 230c0e4
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 09:49:00 2018 +0800
+
+    Merge branch 'dev_sung' of https://github.com/rysq008/GXPlay
+
+[33mcommit 1529b3c4627a2f8d4d7a199a8769a7232e9b01db[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 09:48:40 2018 +0800
+
+    两位小数问题
+
+[33mcommit 83431952413d904f987928ee55f3bcb3615e2749[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Jan 3 09:46:53 2018 +0800
+
+    文档问题修改
+
+[33mcommit 230c0e44be84cf0379f485b5c1111e9457d3a98e[m
+Merge: f462c9c 4366b7e
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Jan 2 23:39:34 2018 +0800
+
+    bug
+
+[33mcommit f462c9cb3c308d581b64795e371af59aa85f8e72[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Jan 2 23:28:29 2018 +0800
+
+    bug
+
+[33mcommit 4366b7e70f06ff2f5b0ea74af895fe1af2658e54[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Jan 2 21:42:30 2018 +0800
+
+    merge and fix
+
+[33mcommit d907c459c124cbe78b6ca675d717de0e41971152[m
+Author: tian <1055480407@qq.com>
+Date:   Tue Jan 2 16:23:34 2018 +0800
+
+    游戏详情：优化弹窗
+
+[33mcommit 51a4a72968facd4d47af0dcbda986f9ce1506649[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Tue Jan 2 15:13:00 2018 +0800
+
+    文档问题修改
+
+[33mcommit 095580089d9e51e8545b455974be5d1535e5737d[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Tue Jan 2 14:49:53 2018 +0800
+
+    文档问题修改
+
+[33mcommit 2dae8db4eb66281ade81f29b1c41504bb9608068[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Tue Jan 2 10:41:20 2018 +0800
+
+    分享超低折扣
+
+[33mcommit fc844f7629d1da62e30acfdbb4a3a39f59f54269[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sun Dec 31 18:37:39 2017 +0800
+
+    bug
+
+[33mcommit 549528dc696bae4677bdf87f67b0ef6d7f345e01[m
+Merge: 4045799 2a9d6fe
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 30 16:50:56 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit 40457995f8c9cc519ee15f9272c47489fe39835d[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 30 16:50:25 2017 +0800
+
+    aa
+
+[33mcommit 2a9d6fe109f338ee4695282fac9d78c1b6ff2b25[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 30 02:00:16 2017 +0800
+
+    fix bug about camaer open choise pic to reset head icon
+
+[33mcommit 03ba38fdcd80efb96481146d065f11ae400804ee[m
+Merge: 5dc0da5 5a9276c
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 29 21:40:37 2017 +0800
+
+    merge and fix bug
+
+[33mcommit 5dc0da5539697ddeb6987dc6ba6166b49bbfa897[m
+Author: tian <1055480407@qq.com>
+Date:   Fri Dec 29 19:16:03 2017 +0800
+
+    优化热门推荐界面，添加跳转
+
+[33mcommit 5a9276cf2ebe07d3487b7e55de313e7440da1c94[m
+Merge: 10d78b9 6c0ee4f
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 29 19:06:52 2017 +0800
+
+    bug
+
+[33mcommit 10d78b9476c0f980b5e6cac23d7de6538778bca4[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 29 19:05:26 2017 +0800
+
+    bug
+
+[33mcommit 6c0ee4f07c3e4369ad24a189470ec1cfeae18d67[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Dec 29 18:18:01 2017 +0800
+
+    分享超低折扣，分享model建立
+
+[33mcommit 337b0c065913605db7f37213cf7ba83f0047664e[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Dec 29 17:29:31 2017 +0800
+
+    12.29问题修复
+
+[33mcommit 8b70454de6f010093e45aca36b060ec78820ac67[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 28 23:41:37 2017 +0800
+
+    bug修复
+
+[33mcommit 5021578686d4d77383524681df7147e158c8a1e7[m
+Merge: bb895b2 c86e1fc
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 28 23:40:29 2017 +0800
+
+    aa
+
+[33mcommit bb895b2f438dfc3a0dc051fda48b34a07691c314[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 28 21:08:29 2017 +0800
+
+    ui
+
+[33mcommit c86e1fcd674739c66f109ef42d6657b93302592c[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Dec 28 20:18:01 2017 +0800
+
+    modify game detail gif list refresh
+
+[33mcommit 9e12d0fe5053e8a7666b20b3d17325ee965cf7f4[m
+Merge: f2325d3 4ac34b3
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Dec 28 19:56:09 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit f2325d36f68fdb64ee96bf774acc8a7da40466e1[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Dec 28 19:52:14 2017 +0800
+
+    merge and fix bug
+
+[33mcommit 4ac34b33cf923fcdec6007b91ffde5cb26c55eb2[m
+Author: tian <1055480407@qq.com>
+Date:   Thu Dec 28 19:51:59 2017 +0800
+
+    游戏详情：普通折扣的跳转，游戏礼包的领取
+
+[33mcommit 8612c1319f27333796c607fd12cb66614d3b2d55[m
+Author: tian <1055480407@qq.com>
+Date:   Thu Dec 28 18:12:17 2017 +0800
+
+    实现评论游戏功能，游戏详情的会员通道
+
+[33mcommit 4d98b8aabf526601c51ea8f9404a782ba11539b2[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Dec 28 16:22:52 2017 +0800
+
+    问题修改，游戏详情加了分享，推广收益分享
+
+[33mcommit 059dce74bea60fe5816ce9ad1eed2e57cede1318[m
+Merge: d9ad973 3234318
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Dec 28 16:22:18 2017 +0800
+
+    Merge remote-tracking branch 'origin/master'
+    
+    # Conflicts:
+    #       app/src/main/AndroidManifest.xml
+
+[33mcommit d9ad973f37f4106af315228ec42cf2d7bae77522[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Dec 28 16:20:57 2017 +0800
+
+    问题修改，游戏详情加了分享，推广收益分享
+
+[33mcommit 32343187ba032317f138ba11e3fdc735c5e71b75[m
+Merge: 103a6c1 8391bfd
+Author: tian <1055480407@qq.com>
+Date:   Wed Dec 27 18:00:38 2017 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 103a6c1f2cb2f792d7760bc65f861d6a2ae8403b[m
+Author: tian <1055480407@qq.com>
+Date:   Wed Dec 27 18:00:21 2017 +0800
+
+    处理游戏充值的bug,实现游戏条目的跳转，和banner的跳转
+
+[33mcommit 8391bfd0ed7368fcc697de515a0059a0f473e4e5[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Dec 27 11:34:47 2017 +0800
+
+    快速充值is_vip数据调整
+
+[33mcommit f4e6e2e61c445a973a2d38b1eb9331d00cee1fd4[m
+Merge: aafcf85 81eb024
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Dec 27 10:46:20 2017 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 81eb02430fd90e2e012df925346102e1841c42aa[m
+Merge: 62d7726 25cbed7
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Dec 27 10:27:39 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 62d7726c086ac00edc582a7f199925dbae7be0c3[m
+Merge: 53d60f6 9c3fee2
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Dec 27 10:26:42 2017 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit aafcf8539903400658b57c74d18bf2ccd3195149[m
+Merge: 25cbed7 9c3fee2
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Dec 27 09:54:34 2017 +0800
+
+    Merge branches 'dev_sung' and 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 25cbed7897e3033e412fddbf996842e9a76686de[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Dec 27 09:54:04 2017 +0800
+
+    选择红包页面
+
+[33mcommit fb73c4706f07e124b6950b3311881578201a1553[m
+Merge: d2d070f 34d3535
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Dec 27 09:47:24 2017 +0800
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit 9c3fee24d1414c7cc0a4756265b238cb51e37aea[m
+Merge: bcf58d2 34d3535
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 26 22:53:28 2017 +0800
+
+    bug修复
+
+[33mcommit bcf58d208dd1e1df3f9c433945c2b7394c1dbd72[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 26 22:49:05 2017 +0800
+
+    aaa
+
+[33mcommit 53d60f69e5edcfcbbc6b3d2ede3d91c4fe1f21ac[m
+Merge: 3a48cf0 1ceba60
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Dec 26 21:37:11 2017 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit 3a48cf0f8307d177834ee4c13081af4e78bf74ad[m
+Merge: 808af14 34d3535
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Dec 26 21:36:41 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 808af1457b69e655b265f4776c96357ae4182366[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Dec 26 21:36:31 2017 +0800
+
+    fix home special view not show
+
+[33mcommit 34d353507b7158a171c53fdff5b802a0d7a7bb5f[m
+Author: tian <1055480407@qq.com>
+Date:   Tue Dec 26 19:22:30 2017 +0800
+
+    游戏详情：游戏充值逻辑的实现，会员和普通折扣的弹窗
+
+[33mcommit 1ceba6083a3b877cdf01e3176178b03069c3b0da[m
+Merge: 3f1ac24 9eedeca
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 26 16:46:39 2017 +0800
+
+    修复选择bug
+
+[33mcommit 3f1ac2499279348dd6a66b169122b06307d341b5[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 26 16:45:48 2017 +0800
+
+    修复选择bug
+
+[33mcommit 9eedeca0476e1e75c8f8a36d4f83ba62eb62cc62[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Dec 26 16:12:53 2017 +0800
+
+    merge and fix bug and modify refresh view
+
+[33mcommit 60d85cd2f729daee8351bc0af188757a2daec3fb[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 26 15:14:32 2017 +0800
+
+    修复bug
+
+[33mcommit d2d070f1849523d4f1faf3c477fef5a4a7a5dabf[m
+Merge: f4abf14 657a5a9
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 25 16:37:40 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit f4abf145faf29228576ca0e79133ef6be8527f4c[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 25 16:37:20 2017 +0800
+
+    12.25doc问题修复
+
+[33mcommit 657a5a96287a9a6a259dc139893e9e9c2ecc6368[m
+Merge: e47a83f af2c5e7
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Dec 25 16:27:41 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit e47a83fe27138f2c00ac9340d3f713bc2d23c23a[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Dec 25 16:26:44 2017 +0800
+
+    merge and fix bug
+
+[33mcommit af2c5e7961263a5b968b6ae3c0acbc2ef11cc65c[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 25 15:16:28 2017 +0800
+
+    12.25doc问题修复
+
+[33mcommit c7c3ee9f3d63971f6a516349d9a82a74a82d938b[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 25 15:15:45 2017 +0800
+
+    12.25doc问题修复
+
+[33mcommit 24b56d27fa5dd9938da6abf454ae9060af4c9427[m
+Merge: f604853 9b7f5a3
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 25 11:15:47 2017 +0800
+
+    Merge branch 'dev_sung' of https://github.com/rysq008/GXPlay
+
+[33mcommit 9b7f5a3ee39a3a08f52d18949f81cafb4199afbc[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Dec 25 10:58:57 2017 +0800
+
+    add files
+
+[33mcommit f6048539e05d6c80cbaca0a9873cb3d349902fdc[m
+Merge: 2d99eb9 d8e12af
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Sat Dec 23 22:13:01 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 2d99eb94efb1a2327b5d1b85795b3543c84d95ec[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Sat Dec 23 22:12:31 2017 +0800
+
+    merge
+
+[33mcommit d8e12af8b538b03d4465dc8a082dec6620ec25a4[m
+Merge: f1a8b8d eb83328
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 23 21:29:39 2017 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit f1a8b8d82e59a053e559bd28a762cdb75c3696f2[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 23 19:00:06 2017 +0800
+
+    add swipe back helper
+
+[33mcommit 593b3682346685dabbc9dfd2aa813b271a30a010[m
+Merge: 4237fa5 868d95c
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 23 18:53:17 2017 +0800
+
+    merge and fix
+
+[33mcommit 868d95ce596d464c49686064352c61b7f087c933[m
+Author: tian <1055480407@qq.com>
+Date:   Sat Dec 23 18:23:50 2017 +0800
+
+    处理游戏详情界面返回到空白界面的bug
+
+[33mcommit 2c044133f343bc7c92d743170b2d3032cfa80250[m
+Author: tian <1055480407@qq.com>
+Date:   Sat Dec 23 17:59:59 2017 +0800
+
+    更改详情界面
+
+[33mcommit eb8332843507567f30832ea61d7681ab1ae2de9e[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 23 13:59:04 2017 +0800
+
+    修复提现
+
+[33mcommit dc4377e0c0c522f904d597c0136969d043e78111[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 23 12:24:14 2017 +0800
+
+    修复提现
+
+[33mcommit 4237fa51df88dde23d7a9d025fc56316ee1e85dd[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 23 00:14:50 2017 +0800
+
+    修复bug
+
+[33mcommit b9be78cc1d19e19de94bfd8b543ab0e2c83d0d44[m
+Merge: 7a82d34 c69e143
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 23 00:11:13 2017 +0800
+
+    修复bug
+
+[33mcommit 7a82d346296db80cd403c6e54586bb78b99bd088[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 23 00:02:26 2017 +0800
+
+    修复bug
+
+[33mcommit c69e1433f8bdb2513399985536d2daa05e16e0ff[m
+Merge: 6896828 03bbdb3
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Dec 22 22:00:29 2017 +0800
+
+    解决冲突
+
+[33mcommit 689682853866b42cdfb1551edc8d996d4c53901b[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Dec 22 21:58:34 2017 +0800
+
+    问题修复
+
+[33mcommit 03bbdb3515a6a92b426a3f37c66f28a41f9967bb[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 22 19:48:28 2017 +0800
+
+    merge and fix bug
+
+[33mcommit 210d81d80b2339f772418b9ff60e2250255c5933[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 22 17:37:29 2017 +0800
+
+    修改逻辑
+
+[33mcommit 75602bfe8fdea5ca2cedacc0f121a0f6566b07f2[m
+Merge: 3d18d55 4b69e32
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 22 17:01:34 2017 +0800
+
+    修改bug
+
+[33mcommit 3d18d558da8b94380fde77d843c20b1088cc954d[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 22 16:52:40 2017 +0800
+
+    修
+
+[33mcommit 4b69e32920b84b9397b7b5d2ad63cb4d2441e939[m
+Author: tian <1055480407@qq.com>
+Date:   Fri Dec 22 14:01:41 2017 +0800
+
+    处理主题更多的跳转
+
+[33mcommit 30a073b12e5a702884b1196f5124f83ea49c97ca[m
+Merge: 857f32a 3e8864d
+Author: tian <1055480407@qq.com>
+Date:   Fri Dec 22 13:59:15 2017 +0800
+
+    Merge remote-tracking branch 'origin/master'
+    
+    # Conflicts:
+    #       app/src/main/java/com/game/helper/net/api/ApiService.java
+
+[33mcommit 3e8864dc62c07886068df087ca7b0c0363d92fd2[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Dec 22 13:53:35 2017 +0800
+
+    热门推荐更多游戏
+
+[33mcommit 857f32af2fe7acef28c90342e7c2527910b6ce43[m
+Author: tian <1055480407@qq.com>
+Date:   Thu Dec 21 22:32:41 2017 +0800
+
+    setadapter添加了并取消注解,实现更多游戏主题界面和主题详情界面
+
+[33mcommit ed10d5bec4c5778a51d68d3b7111f1abb67d3dc6[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Dec 22 09:34:58 2017 +0800
+
+    热门推荐
+
+[33mcommit efebeb38e88c8d2f94e0e92aa56e9f49e5528b0a[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 21 23:26:43 2017 +0800
+
+    卡券
+
+[33mcommit 4e8ba411576dc9fe47d21da2c90632f4f1c5d587[m
+Merge: 09cf60d ee205ed
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 21 23:21:43 2017 +0800
+
+    卡券
+
+[33mcommit ee205ed8621ead1faf8ff9add0126b3eaff3ea84[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Dec 21 19:13:55 2017 +0800
+
+    推广收益跳转
+
+[33mcommit fbe17b8659459b23bd4528aaf818ac8406ccd250[m
+Merge: d11e20c ee6b3b3
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Dec 21 19:05:29 2017 +0800
+
+    解决冲突
+
+[33mcommit d11e20c02b0eab0a64d482bd88ee0dba14a74a97[m
+Merge: 4c6263f ccea007
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Dec 21 18:58:31 2017 +0800
+
+    订单页面
+
+[33mcommit 09cf60d32ead11f9fe3d8ae14435e7851f21a1ce[m
+Merge: b095f8e ee6b3b3
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 21 12:53:00 2017 +0800
+
+    完善
+
+[33mcommit b095f8e0af97b0190eebecf1aa63ca10d4dd2ad1[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 21 12:23:09 2017 +0800
+
+    礼包完善
+    git commit -am 礼包完善
+
+[33mcommit 10690da332bf37ccffda0f71ebe30d6e5595519c[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 21 10:20:10 2017 +0800
+
+    bug修复
+
+[33mcommit 7080a9c10d5608912cf4e03f8aa6efdf2c3b9c9d[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 21 00:10:13 2017 +0800
+
+    新增游戏／礼包／订单
+
+[33mcommit ee6b3b3f4370830722ea5b514a5e137427827e9c[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Dec 20 20:18:28 2017 +0800
+
+    排行版頭像錯亂的問題
+
+[33mcommit 980c6bfaeba0d68f1405b3191d0bf57534ac394b[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 20 19:41:29 2017 +0800
+
+    修改bug
+
+[33mcommit 1fa6e253ea4ffe7a73560544da8adf26db05d07b[m
+Merge: e6e7cba d6c0b16
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 20 14:42:29 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit e6e7cba369fa25f1f64c83851d7cb438cb5a39e2[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 20 14:42:11 2017 +0800
+
+    修复bug
+
+[33mcommit d6c0b169d1d06c83e566f0010cf7eb230114357c[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Dec 20 14:40:50 2017 +0800
+
+    添加多文件上传加进度监听
+
+[33mcommit e390a0438b0c6f6269c5b7a966393025f6b34eb7[m
+Merge: 9279e8c ccea007
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 20 14:06:09 2017 +0800
+
+    修复bug
+
+[33mcommit 9279e8c96ba7d2becc210d37d98820c51ff9a4c1[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 20 13:35:51 2017 +0800
+
+    修复bug
+
+[33mcommit 46ced4455e8eee7689fc64d175d151ca9c166894[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 20 13:34:34 2017 +0800
+
+    修复bug
+
+[33mcommit 4c6263f7806209ce1038ae29b528b6f6f48a663c[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Wed Dec 20 10:37:10 2017 +0800
+
+    订单页面部分逻辑完成
+
+[33mcommit ccea007a5b1ebeabca3a051d3afe63081a0ad69c[m
+Merge: c17427f 4b34cea
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Dec 20 01:47:27 2017 +0800
+
+    合并代码，解决冲突
+
+[33mcommit c17427f8ef554c6ba047418896c277fa252928bc[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Wed Dec 20 01:40:54 2017 +0800
+
+    添加文件上传功能和解决搜索页面的部分问题
+
+[33mcommit 9fd954393de23335c19ac462d6b818a617240e78[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 19 22:10:11 2017 +0800
+
+    修复观众端pk
+
+[33mcommit 4b34cea5bb724dc61a9a3bc2b922649dbc3777a4[m
+Merge: 7cac927 f6a1254
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 19 17:47:32 2017 +0800
+
+    个人信息&反馈
+
+[33mcommit 7cac9278b07ae4eaa4d6c7f38f37bd7377aacd76[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 19 17:42:33 2017 +0800
+
+    个人信息&反馈
+
+[33mcommit f6a1254220e1c48132eec60c883644b70b454c6f[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Dec 18 23:52:34 2017 +0800
+
+    合并代码 添加搜索功能，待完成
+
+[33mcommit fa1519d9b12e759fbec67a70954e51c88211c21b[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Dec 18 19:33:50 2017 +0800
+
+    添加金币充值逻辑
+
+[33mcommit 76f59e9b4e51669ac23c37773995a3c57ea6b168[m
+Merge: b0088e6 cc2fa0a
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 18 17:54:44 2017 +0800
+
+    Merge branch 'dev_sung' of https://github.com/rysq008/GXPlay
+
+[33mcommit b0088e698b72dfbf3bda1d5f862d7451e23d9888[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 18 17:54:17 2017 +0800
+
+    订单页面添加一些逻辑
+
+[33mcommit cc2fa0a57a14dcdea13e0bba0303744d27f1f07a[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Dec 18 17:46:45 2017 +0800
+
+    新增快速充值逻辑
+
+[33mcommit 84cd55330e3e56d589055e81581d8bdfd5ab4a1d[m
+Merge: 88408aa ecadff2
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Dec 18 17:37:02 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit 88408aa403c7cc43d00d064bc7087f185516c10e[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Dec 18 17:36:48 2017 +0800
+
+    新增快速充值页逻辑
+
+[33mcommit ecadff2e079b01242d4a9d078ba1c4a950e29687[m
+Merge: 143fe58 962f695
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 18 09:53:29 2017 +0800
+
+    解决冲突
+
+[33mcommit 143fe580414ffeb776dbd326e56f3360bdcdce7d[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Mon Dec 18 09:49:45 2017 +0800
+
+    添加页面标题
+
+[33mcommit 962f6952d607455c04fc52bb4a381f1db393f67e[m
+Merge: 468e1db 42ecf5e
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 16 23:10:11 2017 +0800
+
+    新增交易密码及支付宝账号设置
+
+[33mcommit 468e1db6051416a1ddf0c8f5aeeeff77aa55fbe3[m
+Merge: 03e8727 99d0ee7
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 16 23:05:53 2017 +0800
+
+    新增交易密码及支付宝账号设置
+
+[33mcommit 42ecf5ebac014d54ab84f61ad5839d535a834d10[m
+Merge: b25f5f0 b3748d5
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 16 21:13:10 2017 +0800
+
+    merge origin dev_sung and fix bug
+
+[33mcommit b25f5f0ec37a1aaebe52252fa963aa05e590e695[m
+Merge: 00cc264 99d0ee7
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 16 21:03:19 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 00cc26490212286881086761c43304227a255c6d[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 16 21:02:12 2017 +0800
+
+    合并主分支并解决滑到问题
+
+[33mcommit 03e8727c2f9748b8e90d69965782d9c3abd55e7e[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Sat Dec 16 19:32:55 2017 +0800
+
+    update
+
+[33mcommit 99d0ee732826f0a0aade121e0226034cf2923921[m
+Merge: becc743 1841b11
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Sat Dec 16 15:35:42 2017 +0800
+
+    添加账户
+
+[33mcommit 1841b11ddb36042a9a05eb4ecbbddb8d6a2d72b7[m
+Merge: 6c8b3fb 1ab40ef
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 16 15:13:38 2017 +0800
+
+    modify banner
+
+[33mcommit becc743dddd3da4b7f1aff8fd55e5362ff90f63e[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Fri Dec 15 22:37:20 2017 +0800
+
+    20171215 22:37
+
+[33mcommit b3748d5a3b55d2a67869090a40028c32a537cd4a[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 15 19:19:02 2017 +0800
+
+    添加二姐页面
+
+[33mcommit 2344d8b5ad0e2cdc6557b39558eb90987dd5d850[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 15 17:22:09 2017 +0800
+
+    dialog
+
+[33mcommit 9bec9e63f6c6afffcd0933990496aae79f4bf52f[m
+Merge: 7235eaf 6c8b3fb
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 15 12:20:02 2017 +0800
+
+    添加密码框
+
+[33mcommit 7235eaf1d1c8db5a6c4fabeb4b0d44e1fd33e041[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 15 12:16:15 2017 +0800
+
+    添加密码框
+
+[33mcommit 1ab40ef811b8a15feefe5feb4b2814287c642516[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 14 19:18:32 2017 +0800
+
+    update
+
+[33mcommit 6c8b3fb03903d1b9efdf04ac4a51b81fff843bce[m
+Merge: 348f05b e55a82e
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Dec 14 14:28:58 2017 +0800
+
+    merge part3 and part4
+
+[33mcommit c11c5db2078853e29b23e5f840d0d7d949285ade[m
+Merge: f8618cb 94df57f
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 13 19:20:21 2017 +0800
+
+    新增页面
+
+[33mcommit f8618cbd53d5520b96997c513ae74a25fce30462[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Wed Dec 13 14:58:28 2017 +0800
+
+    update
+
+[33mcommit 94df57f73d632012ac5fa513e159cfc5ce7ca662[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Tue Dec 12 21:12:52 2017 +0800
+
+    微信支付，Ali支付，排行榜页面，推广收益页面
+
+[33mcommit 20931e01f38b9f0a8f5ce25f5b72cc3e274d1bb6[m
+Merge: e3ca658 348f05b
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 12 17:49:45 2017 +0800
+
+    登陆注册逻辑
+
+[33mcommit e3ca6585754855d5d884abc655e03bc1eecf1d72[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 12 17:40:44 2017 +0800
+
+    登陆注册逻辑
+
+[33mcommit 348f05b7d11871620a020b85b41b44114d206e3a[m
+Merge: 2b765b9 1a34bc1
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Dec 12 12:51:50 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 2b765b9b8688bdaaeba4c3638e93d67ff6000da3[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 9 22:23:32 2017 +0800
+
+    modify game detai page
+
+[33mcommit e55a82e8c3b5de5b8e2a7f353029e00d6b60fe83[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Dec 11 16:11:21 2017 +0800
+
+    新增ui
+
+[33mcommit d7e176583d3d7bd2ec882e81f11c881fe0a6698b[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Mon Dec 11 12:34:38 2017 +0800
+
+    减少activity数量
+
+[33mcommit 5c020424696cfba9b523805c9aaebba96ed3400e[m
+Merge: 8b8b8b0 1a34bc1
+Author: ssccbb <sung723@outlook.com>
+Date:   Sun Dec 10 14:38:04 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay into dev_sung
+
+[33mcommit 1a34bc16bfa47c782e539a3e01a9220c0bc8f612[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Dec 9 22:23:32 2017 +0800
+
+    modify game detai page
+
+[33mcommit d118b6c2c58b96adbda7d7eab9fdea81b4bf0bf9[m
+Merge: e4aa27a cfdee9c
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 8 13:55:40 2017 +0800
+
+    Merge branch 'dev'
+
+[33mcommit e4aa27aa805cf215b693fc4daa519988ef215122[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 8 13:52:16 2017 +0800
+
+    del trashy file
+
+[33mcommit 8b8b8b0e07274fc62d24af48d039a0622026f363[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 8 11:52:20 2017 +0800
+
+    add
+
+[33mcommit 8eb14017f1177293b5b0499fa0c026a5354bc6db[m
+Merge: 558ec70 74a41cb
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 8 11:46:33 2017 +0800
+
+    Merge remote-tracking branch 'origin/dev_sung'
+
+[33mcommit cfdee9c4cdb07b47a2d95d6e6198dc573e8e9a73[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 8 10:43:33 2017 +0800
+
+    合并代码
+
+[33mcommit 4cbd7f21757cb6740625b9f37a49cf2223f21032[m
+Merge: ac15fdb 558ec70
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 8 10:39:05 2017 +0800
+
+    合并代码
+
+[33mcommit ac15fdbe80d30ffda90008a8864f5efa6e455f57[m
+Merge: f5d1349 0a33857
+Author: ssccbb <sung723@outlook.com>
+Date:   Fri Dec 8 10:31:36 2017 +0800
+
+    合并代码
+
+[33mcommit 558ec700dc1f5c9ddcce9b9ee2b1e4b25dac91dc[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 8 00:19:38 2017 +0800
+
+    modify generalize part refresh data
+
+[33mcommit f5d1349b326966c85f86f54a73461c4181632cc8[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Thu Dec 7 20:39:26 2017 +0800
+
+    添加我的相关逻辑
+
+[33mcommit 0a3385755eed99f7feeed05b3dd5a87f9a210436[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Dec 7 20:35:46 2017 +0800
+
+    merge umeng share sdk
+
+[33mcommit cf5c6e3fbff2599a3a7e299759d22ab9e94242b3[m
+Merge: 8ecbfac 75bdeed
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Dec 7 17:11:07 2017 +0800
+
+    Merge branch 'master' of https://github.com/rysq008/GXPlay
+
+[33mcommit 8ecbfacaf3c280a5acb4b6100ff6f781620fd9c2[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Thu Dec 7 16:47:26 2017 +0800
+
+    modify common search view style
+
+[33mcommit 75bdeed2d77b243283913d666b9836e58fd95d99[m
+Author: zhiqiang.zhang <zhiqiang.zhang@wealthbetter.com>
+Date:   Thu Dec 7 16:16:40 2017 +0800
+
+    UMeng Share
+
+[33mcommit 74a41cb416be51088b399c2a7d87f6b8e8d3f149[m
+Author: ssccbb <sung723@outlook.com>
+Date:   Tue Dec 5 15:27:43 2017 +0800
+
+    我的模块分支
+
+[33mcommit d02197361b762aa84176d7f32405d1508019098f[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Tue Dec 5 10:41:18 2017 +0800
+
+    modify game list refresh and generalize mine layout
+
+[33mcommit 9de1736b69bcb0e8cdcc89135faf6d8cea057a26[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Dec 1 23:20:21 2017 +0800
+
+    develop home and game two part about the app
+
+[33mcommit 414f341c33c93bc33f29edfa68f3dc744415a91d[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Mon Nov 27 00:08:01 2017 +0800
+
+    develepoe frame structure continue
+
+[33mcommit c5c44ad08d9c1ec838a7f972560f8f38beb1af37[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Nov 25 01:29:24 2017 +0800
+
+    develop frame structure
+
+[33mcommit 1de126948f16c0c7700c417374661555a990e4ed[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sat Oct 21 20:11:35 2017 +0800
+
+    modify about net part
+
+[33mcommit bf07cceb6b9a60ec1549c354f8b69f24a213c9f2[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Sun Oct 15 23:08:25 2017 +0800
+
+    modify xdroid and rxdownloiad applition
+
+[33mcommit 52e5625752e9aa45602d01baafa25e86731aaa8b[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Oct 13 08:55:48 2017 +0800
+
+    second commit
+
+[33mcommit ee1f85195e6825f9dd2862e947950e75f9c28046[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Oct 13 08:55:48 2017 +0800
+
+    second commit
+
+[33mcommit d18944eb44b31ff325e66e17dfcd07780ca5fb78[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Oct 13 08:48:48 2017 +0800
+
+    test
+
+[33mcommit 40b319dca355670c86420f19cd03dce4753dc3cb[m
+Author: rysq008 <rysq008@gmail.com>
+Date:   Fri Sep 29 00:23:57 2017 +0800
+
+    first commit
