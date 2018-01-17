@@ -98,6 +98,8 @@ public class SpecialView extends LinearLayout {
         class SViewHolder extends RecyclerView.ViewHolder {
             @BindView(R.id.special_item_iv)
             RoundedImageView riv;
+            @BindView(R.id.special_item_tv)
+            TextView mTv;
             SpecialResults.SpecialItem item;
 
             public SViewHolder(View itemView) {
@@ -107,6 +109,7 @@ public class SpecialView extends LinearLayout {
 
             public void setDisplay(SpecialResults.SpecialItem itemData) {
                 ILFactory.getLoader().loadNet(riv, Api.API_PAY_OR_IMAGE_URL.concat(itemData.image), null);
+                mTv.setText(itemData.name);
                 item = itemData;
             }
 

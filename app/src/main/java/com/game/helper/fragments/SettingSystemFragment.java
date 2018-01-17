@@ -1,13 +1,21 @@
 package com.game.helper.fragments;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +29,14 @@ import com.game.helper.model.LogoutResults;
 import com.game.helper.model.VersionCheckResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.VersionCheckRequestBody;
+import com.game.helper.utils.DownloadApkHelper;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.ToastUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
+import java.io.File;
 import java.util.concurrent.Executors;
 
 import butterknife.BindView;
@@ -61,6 +71,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
     LinearLayout mLlUpdateVersion;
 
     private Handler handler = new Handler();
+    private DownloadApkHelper downloadHelper;
 
     public static SettingSystemFragment newInstance() {
         return new SettingSystemFragment();
@@ -197,23 +208,34 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             @Override
             public void accept(final HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
                 if (versionCheckResultsHttpResultModel.isSucceful()) {
-                    if (versionCheckResultsHttpResultModel.data.isHas_new()) {
+                    boolean has_new = versionCheckResultsHttpResultModel.data.isHas_new();
+                    if (has_new) {
                         /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        View inflate = layoutInflater.inflate(R.layout.update_app_dialog, null);
+                        TextView message = inflate.findViewById(R.id.tv_update_app_message);
+                        final TextView percent = inflate.findViewById(R.id.tv_percent_update_app_dialog);
+                        final ProgressBar progressBar = inflate.findViewById(R.id.pb_update_app_dialog);
+                        message.setText(versionCheckResultsHttpResultModel.data.getVersion());
                         builder.setTitle("亲,确定更新版本吗?")
-                                .setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
+                                //.setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
                                 })
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("确定下载", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-
-                                        dialog.dismiss();
+                                        percent.setVisibility(View.VISIBLE);
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        String path = "http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk";
+                                        //downLoadApk(context, versionCheckResultsHttpResultModel.data.getUrl());
+                                        downLoadApk(context, path,progressBar);
+                                        //dialog.dismiss();
                                     }
                                 })
+                                .setView(inflate)
                                 .create().show();*/
                         VersionParams.Builder builder = new VersionParams.Builder();
                         //如果仅使用下载功能，downloadUrl是必须的
@@ -240,5 +262,65 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         });
     }
 
+    private void downLoadApk(final Context context, String urlApk, final ProgressBar progressBar) {
+        /*if (TextUtils.isEmpty(urlApk)) {
+            return;
+        }
+
+        if (downloadHelper == null) {
+            //btnStart.setText("下载中,点击取消下载");
+            DownloadApkHelper.Builder builder = new DownloadApkHelper.Builder(context).title("下载新版本")
+                    .description("系在")
+                    .downloadUrl(urlApk)
+                    .fileSaveName("g9game.apk").fileSavePath("g9game")
+                    .notifyVisible(true)
+                    .fileType(DownloadApkHelper.FileType.APK).apkInstallHint(true).onProgressListener(new DownloadApkHelper.OnDownloadProgressListener() {
+                        @Override
+                        public void onProgress(int downloadedSize, int totalSize) {
+
+                            int progress = (int) ((downloadedSize * 1.0f / totalSize) * 100);
+
+                            Log.d("onProgress", "progress=" + progress);
+                            progressBar.setProgress(progress);
+
+                        }
+
+                        @Override
+                        public void onSuccess(Uri fileUri) {
+                            Log.d("onProgress", "fileUri=" + fileUri);
+                            //btnStart.setText("停止下载并删除文件");
+                            //btnStart.setEnabled(true);
+
+                        }
+
+                        @Override
+                        public void onFail() {
+
+                        }
+
+                        @Override
+                        public void fileAlreadyExits(File file) {
+                            progressBar.setProgress(100);
+
+                            //btnStart.setText("停止下载并删除文件");
+                            ToastUtil.showToast("文件已下载");
+                        }
+                    });
+            downloadHelper = builder.build();
+            downloadHelper.start();
+        } else {
+
+
+            downloadHelper.deleteDownloadFile();
+             progressBar.setProgress(0);
+            //btnStart.setEnabled(true);
+
+            downloadHelper = null;
+
+        }*/
+
+    }
+
 
 }
+

@@ -1,5 +1,6 @@
 package com.game.helper.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -39,7 +40,7 @@ import zlc.season.practicalrecyclerview.ItemType;
  * Created by Tian on 2017/12/20.
  */
 
-public class SpecialMoreFragment extends XBaseFragment{
+public class SpecialMoreFragment extends XBaseFragment {
     public static final String TAG = SpecialMoreFragment.class.getSimpleName();
 
     public static SpecialMoreFragment newInstance() {
@@ -58,7 +59,7 @@ public class SpecialMoreFragment extends XBaseFragment{
     @Override
     public void initData(Bundle savedInstanceState) {
         initAdapter();
-        loadAdapterData(true,1);
+        loadAdapterData(true, 1);
     }
 
     private void initAdapter() {
@@ -71,15 +72,16 @@ public class SpecialMoreFragment extends XBaseFragment{
                 public void onItemClick(int position, ItemType model, int tag, SpecialMoreItemAdapter.ViewHolder holder) {
                     super.onItemClick(position, model, tag, holder);
                     Bundle bundle = new Bundle();
-                    bundle.putString("imagerurl",((SpecialResults.SpecialItem)model).image);
-                    bundle.putString("content",((SpecialResults.SpecialItem)model).content);
-                    bundle.putString("name",((SpecialResults.SpecialItem)model).name);
-                    bundle.putInt("id",((SpecialResults.SpecialItem)model).id);
+                    bundle.putString("imagerurl", ((SpecialResults.SpecialItem) model).image);
+                    bundle.putString("content", ((SpecialResults.SpecialItem) model).content);
+                    bundle.putString("name", ((SpecialResults.SpecialItem) model).name);
+                    bundle.putInt("id", ((SpecialResults.SpecialItem) model).id);
                     DetailFragmentsActivity.launch(context, bundle, SpecialDetailFragment.newInstance());
                 }
             });
         }
-       mXRv.getRecyclerView().setAdapter(mAdapter);
+        mXRv.getRecyclerView().setAdapter(mAdapter);
+        mXRv.getRecyclerView().horizontalDivider(R.color.color_dfdfdd, R.dimen.dp_4);
         /*int verticalSpace = Utils.dip2px(context,0);
         int horizontalSpace = Utils.dip2px(context,10);
         SparseArray<SCommonItemDecoration.ItemDecorationProps> propMap = new SparseArray<>();
@@ -90,28 +92,28 @@ public class SpecialMoreFragment extends XBaseFragment{
         mXRv.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                loadAdapterData(false,1);
+                loadAdapterData(false, 1);
             }
 
             @Override
             public void onLoadMore(int page) {
-                loadAdapterData(false,page);
+                loadAdapterData(false, page);
             }
         });
 
         mXRv.getRecyclerView().useDefLoadMoreView();
     }
 
-    private void loadAdapterData(boolean showLoading,int page) {
+    private void loadAdapterData(boolean showLoading, int page) {
         Flowable<HttpResultModel<SpecialResults>> fr = DataService.getSpecialMoreList(new BaseRequestBody(page));
-        RxLoadingUtils.subscribeWithReload(mXRv,fr, bindToLifecycle(), new Consumer<HttpResultModel<SpecialResults>>() {
+        RxLoadingUtils.subscribeWithReload(mXRv, fr, bindToLifecycle(), new Consumer<HttpResultModel<SpecialResults>>() {
             @Override
             public void accept(HttpResultModel<SpecialResults> specialResultsHttpResultModel) throws Exception {
                 List<ItemType> list = new ArrayList<>();
                 list.addAll(specialResultsHttpResultModel.data.list);
                 showData(specialResultsHttpResultModel.current_page, specialResultsHttpResultModel.total_page, list);
             }
-        }, null,null,showLoading);
+        }, null, null, showLoading);
     }
 
     @Override
@@ -141,7 +143,7 @@ public class SpecialMoreFragment extends XBaseFragment{
     }
 
     @OnClick(R.id.action_bar_back)
-    public void onClick(){
+    public void onClick() {
         getActivity().finish();
     }
 

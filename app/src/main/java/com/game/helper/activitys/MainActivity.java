@@ -409,7 +409,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
 
                     } else {
-                        ToastUtil.showToast("已经是最新的版本");
+                        //ToastUtil.showToast("已经是最新的版本");
                     }
                 }
 
