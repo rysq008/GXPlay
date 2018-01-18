@@ -72,6 +72,7 @@ import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.BindVipAccountNumRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
@@ -292,10 +293,14 @@ public class DataService {
     public static Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount() {
         return Api.CreateApiService().getVipGameAccount();
     }
+    /*public static Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount(BindVipAccountNumRequestBody bindVipAccountNumRequestBody) {
+        return Api.CreateApiService().getVipGameAccount(bindVipAccountNumRequestBody);
+    }*/
 
     public static Flowable<HttpResultModel<GameAccountDiscountResults>> getGameAccountDiscount(SingleGameIdRequestBody singleGameIdRequestBody) {
         return Api.CreateApiService().getGameAccountDiscount(singleGameIdRequestBody);
     }
+
 
     public static Flowable<HttpResultModel<VipLevelResults>> getVipLevel() {
         return Api.CreateApiService().getVipLevel();

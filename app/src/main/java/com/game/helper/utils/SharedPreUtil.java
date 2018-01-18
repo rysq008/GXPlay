@@ -253,7 +253,7 @@ public class SharedPreUtil {
     public static void putString(String key, String value) {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(key, value);
-        SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
+        editor.apply();
     }
 
     public static String getString(String key, String defValue) {
@@ -267,7 +267,7 @@ public class SharedPreUtil {
     public static void remove(String key) {
         SharedPreferences.Editor editor = sp.edit();
         editor.remove(key);
-        SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
+        editor.apply();
     }
 
     /*****************************          public method end                 ******************************/
@@ -277,7 +277,7 @@ public class SharedPreUtil {
     public static void saveRobot(String value) {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(HUAN_XIN_GREETING_TEXT, value);
-        SharedPreferencesCompat.EditorCompat.getInstance().apply(editor);
+        editor.apply();
     }
 
     public static String getRobot( String defValue) {

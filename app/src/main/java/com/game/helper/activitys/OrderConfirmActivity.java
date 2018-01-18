@@ -454,6 +454,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     public Double calcNeedPay() {
         double needPay = 0.0;
         if (useCoin) {
+            BigDecimal bg = new BigDecimal(mRealPay);
+            mRealPay = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             needPay = mRealPay - mAvailableCoin;
             if (needPay <= 0) {
                 needPayTv.setText(new BigDecimal(String.valueOf("0.0")).setScale(2, BigDecimal.ROUND_HALF_UP).toString());

@@ -26,6 +26,7 @@ import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.BindVipAccountNumRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
@@ -198,6 +199,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
     private void getVipGameAccount(){
         Flowable<HttpResultModel<VipGameAccountResults>> fr = DataService.getVipGameAccount();
+        //Flowable<HttpResultModel<VipGameAccountResults>> fr = DataService.getVipGameAccount(new BindVipAccountNumRequestBody(gameBean.getGame_id()));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VipGameAccountResults>>() {
             @Override
             public void accept(HttpResultModel<VipGameAccountResults> vipGameAccountResultsHttpResultModel ) throws Exception {
@@ -368,7 +370,7 @@ public class RechargeGameFragment extends XBaseFragment implements View.OnClickL
 
         if (mTotalDiscountValue < 0 || inputVlaue <= 0 ) return;
         if (mTotalDiscountValue == 0) mTotalDiscountValue = 10;
-        else mTotalBalanceValue = (float) (inputVlaue * mTotalDiscountValue / 10.0);
+        else mTotalBalanceValue = (float) (inputVlaue * (mTotalDiscountValue / 10.0));
 
         mTotalBalanceValue = Utils.m2(mTotalBalanceValue);
         mTotalBalance.setText(mTotalBalanceValue+"元");

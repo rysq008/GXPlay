@@ -72,6 +72,7 @@ import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
+import com.game.helper.net.model.BindVipAccountNumRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
@@ -325,6 +326,7 @@ public interface ApiService {
     //获取vip充值游戏账号数量
     @POST("/member/get_left_vip_game_count/")
     Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount();
+    //Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount(@Body BindVipAccountNumRequestBody bindVipAccountNumRequestBody);
 
     //获取游戏折扣
     @POST("/game/get_game_discount/")

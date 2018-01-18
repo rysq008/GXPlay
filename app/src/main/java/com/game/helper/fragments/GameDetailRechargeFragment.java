@@ -28,6 +28,7 @@ import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.BindVipAccountNumRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
@@ -40,6 +41,8 @@ import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+
+import static com.game.helper.fragments.recharge.RechargeFragment.Reset_Ui_Code;
 
 /**
  * Created by Tian on 2017/12/23.
@@ -199,6 +202,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
     }
 
     private void getVipGameAccount(){
+        //Flowable<HttpResultModel<VipGameAccountResults>> fr = DataService.getVipGameAccount(new BindVipAccountNumRequestBody(gameBean.getGame_id()));
         Flowable<HttpResultModel<VipGameAccountResults>> fr = DataService.getVipGameAccount();
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<VipGameAccountResults>>() {
             @Override
@@ -555,7 +559,7 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
 //                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
 
             //订单确认页面用OrderConfirmActivity
-            Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
+            /*Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(OrderConfirmActivity.BUNDLE_GAME_BEAN, gameBean);
             bundle.putInt(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
@@ -563,7 +567,18 @@ public class GameDetailRechargeFragment extends XBaseFragment implements View.On
             bundle.putString(OrderConfirmActivity.PAYPURPOSE, "1");
             bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
             intent.putExtra(OrderConfirmActivity.TAG, bundle);
-            startActivity(intent);
+            startActivity(intent);*/
+
+            Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(OrderConfirmActivity.BUNDLE_GAME_BEAN, gameBean);
+            bundle.putInt(OrderConfirmActivity.BUNDLE_INPUT_VALUE, inputValue);
+            bundle.putDouble(OrderConfirmActivity.BUNDLE_TOTAL_BALANCE, totalBalanceValue);
+            bundle.putString(OrderConfirmActivity.PAYPURPOSE, "1");
+            bundle.putString(OrderConfirmActivity.VIPLEVEL, "0");
+            bundle.putBoolean(OrderConfirmActivity.IS_VIP, is_vip);
+            intent.putExtra(OrderConfirmActivity.TAG, bundle);
+            startActivityForResult(intent, Reset_Ui_Code);
         }
     }
 
