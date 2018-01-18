@@ -102,7 +102,7 @@
 
     <LinearLayout
         style="?android:buttonBarStyle"
-        android:layout_width="80dp"
+        android:layout_width="85dp"
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal">
@@ -112,14 +112,14 @@
             style="?android:buttonBarButtonStyle"
             android:layout_width="@dimen/view_59"
             android:layout_height="@dimen/view_29"
-            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_8"
             android:background="@mipmap/bg_game_list_item_install"
             android:textColor="@color/colorAccent" />
 
         <Button
             android:id="@+id/more"
             style="?android:buttonBarButtonStyle"
-            android:layout_width="20dp"
+            android:layout_width="25dp"
             android:layout_height="20dp"
             android:background="@mipmap/ic_more_vert"
             android:textColor="@color/colorAccent" />

@@ -73,8 +73,8 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     }
 
     private void initIntentData(Intent intent) {
-        mGameId = String.valueOf(intent.getIntExtra(GAME_ID,0));
-        mChannelId = String.valueOf(intent.getIntExtra(CHANNEL_ID,0));
+        mGameId = String.valueOf(intent.getIntExtra(GAME_ID, 0));
+        mChannelId = String.valueOf(intent.getIntExtra(CHANNEL_ID, 0));
 
 //        if(!TextUtils.isEmpty(mGameId) && !TextUtils.isEmpty(mChannelId)){
 //            canEdit = false;

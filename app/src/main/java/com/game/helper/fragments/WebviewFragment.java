@@ -19,6 +19,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
@@ -26,8 +27,12 @@ import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.fragments.login.RegistFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
+import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
+import com.game.helper.model.ShareInfoResults;
+import com.game.helper.net.DataService;
 import com.game.helper.share.UMengShare;
+import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableStateContorller;
 import com.jude.swipbackhelper.SwipeBackHelper;
@@ -37,6 +42,9 @@ import java.util.Map;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
+import cn.droidlover.xdroidmvp.net.NetError;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -214,9 +222,24 @@ public class WebviewFragment extends XBaseFragment {
                                 if (requestCode == 1) {
                                     shareUrl = message;
                                 }
-                                UMengShare share = new UMengShare(getActivity());
-                                CommonShareResults shareResults = new CommonShareResults(shareUrl, "推广收益", "", SharedPreUtil.getLoginUserInfo().icon);
-                                share.shareLinkWithBoard(shareResults, null);
+                                Flowable<HttpResultModel<ShareInfoResults>> flowable = DataService.getApiShareInfoData();
+                                RxLoadingUtils.subscribeWithDialog(context, flowable, WebviewFragment.this.bindToLifecycle(), new Consumer<HttpResultModel<ShareInfoResults>>() {
+                                    @Override
+                                    public void accept(HttpResultModel<ShareInfoResults> shareInfoResultsHttpResultModel) throws Exception {
+                                        if (!shareInfoResultsHttpResultModel.isSucceful()) {
+                                            Toast.makeText(context, "分享失败", Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        UMengShare share = new UMengShare(getActivity());
+                                        CommonShareResults shareResults = new CommonShareResults(shareUrl, shareInfoResultsHttpResultModel.data.title, shareInfoResultsHttpResultModel.data.content, shareInfoResultsHttpResultModel.data.logo);
+                                        share.shareLinkWithBoard(shareResults, null);
+                                    }
+                                }, new Consumer<NetError>() {
+                                    @Override
+                                    public void accept(NetError netError) throws Exception {
+                                        Toast.makeText(context, "分享失败", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         });
                         break;

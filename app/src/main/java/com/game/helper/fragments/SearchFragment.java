@@ -87,7 +87,7 @@ public class SearchFragment extends XBaseFragment {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
                 HotWordResults.HotWordItem hot = hotWordList.get(position);
-                Toast.makeText(getActivity(), hot.name, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), hot.name, Toast.LENGTH_SHORT).show();
                 searchComponentView.setTextContent(hot.name);
                 loadSearchListData(true, 1, hot.name);
                 return true;
@@ -105,7 +105,7 @@ public class SearchFragment extends XBaseFragment {
         historyFlowlayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
-                Toast.makeText(getActivity(), historyWordList.get(position), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), historyWordList.get(position), Toast.LENGTH_SHORT).show();
                 searchComponentView.setTextContent(historyWordList.get(position));
                 loadSearchListData(true, 1, historyWordList.get(position));
                 return true;
@@ -218,13 +218,13 @@ public class SearchFragment extends XBaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Toast.makeText(context, s.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, s.toString(), Toast.LENGTH_SHORT).show();
             }
         });
         searchComponentView.setRightViewOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "search !", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "search !", Toast.LENGTH_SHORT).show();
                 String str = searchComponentView.getTextContent();
                 loadSearchListData(true, 1, str);
             }

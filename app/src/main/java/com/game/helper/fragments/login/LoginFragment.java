@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.BuildConfig;
-import com.game.helper.GameMarketApplication;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
@@ -168,7 +167,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
                         getActivity().onBackPressed();
                     }
                 } else {
-                    Toast.makeText(getContext(), loginResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), loginResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {

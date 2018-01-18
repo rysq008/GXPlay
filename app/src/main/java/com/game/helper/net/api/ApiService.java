@@ -55,6 +55,7 @@ import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
+import com.game.helper.model.ShareInfoResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
@@ -199,7 +200,7 @@ public interface ApiService {
 
     //可用红包数量
     @POST("/activity/get_red_packet_count/")
-    Flowable<HttpResultModel<Map<String,Integer>>> getApiCouponCount();
+    Flowable<HttpResultModel<Map<String, Integer>>> getApiCouponCount();
 
     //验证码
     @POST("/public/get_tel_verify/")
@@ -517,4 +518,9 @@ public interface ApiService {
     //下载游戏上报
     @POST("/game/download/")
     Flowable<HttpResultModel> reportedData(@Body ReportedRequestBody reportedRequestBody);
+
+    //获取推广分享信息接口
+    @POST("/marketing/get_marketing_share_info/")
+    Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData();
+
 }

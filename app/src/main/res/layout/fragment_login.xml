@@ -47,7 +47,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp" />
     <ImageView
-        android:src="@mipmap/logo"
+        android:src="@mipmap/app_icon"
         android:padding="3dp"
         android:layout_alignLeft="@+id/logo"
         android:layout_alignTop="@+id/logo"

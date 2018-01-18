@@ -54,6 +54,7 @@ import com.game.helper.model.ResetAlipayResults;
 import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.SearchListResults;
+import com.game.helper.model.ShareInfoResults;
 import com.game.helper.model.SpecialResults;
 import com.game.helper.model.SystemMessageResults;
 import com.game.helper.model.UnAvailableRedpackResultModel;
@@ -184,7 +185,7 @@ public class DataService {
         return Api.CreateApiService().getApiMemberInfo();
     }
 
-    public static Flowable<HttpResultModel<Map<String,Integer>>> getCouponCount() {
+    public static Flowable<HttpResultModel<Map<String, Integer>>> getCouponCount() {
         return Api.CreateApiService().getApiCouponCount();
     }
 
@@ -535,6 +536,11 @@ public class DataService {
 
     public static Flowable<HttpResultModel> reportedData(ReportedRequestBody reportedRequestBody) {
         return Api.CreateApiService().reportedData(reportedRequestBody);
+
+    }
+
+    public static Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData() {
+        return Api.CreateApiService().getApiShareInfoData();
 
     }
 }

@@ -331,7 +331,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     @Override
     public void onBackPressed() {
         long curTime = System.currentTimeMillis();
-        if (curTime - pressTime > 1000) {
+        if (curTime - pressTime > 2000) {
             //TotoroToast.makeText(context, "再次点击退出", 20).show();
             ToastUtil.showToast("再次点击退出");
             pressTime = curTime;
