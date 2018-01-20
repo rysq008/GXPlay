@@ -235,7 +235,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     String resultStatus = payResult.getResultStatus();
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
-                        Toast.makeText(OrderConfirmActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(OrderConfirmActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
                         doConsume(accountAmount, marketingAmount);
                     } else {
                         Toast.makeText(OrderConfirmActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
@@ -459,6 +459,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             needPay = mRealPay - mAvailableCoin;
             if (needPay <= 0) {
                 needPayTv.setText(new BigDecimal(String.valueOf("0.0")).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                needPay = 0;
             } else {
                 BigDecimal b = new BigDecimal(needPay + "");
                 String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
@@ -468,6 +469,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             needPay = mRealPay;
             if (needPay <= 0) {
                 needPayTv.setText(new BigDecimal(String.valueOf("0.0")).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+                needPay = 0;
             } else {
                 BigDecimal b = new BigDecimal(needPay + "");
                 String result = b.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
@@ -918,7 +920,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 + "redpacketType:::" + mRedpackType + "\r\n"
                 + "redpacketId:::" + mRedpackId + "\r\n");
 
-        Flowable<HttpResultModel<FeedbackListResults>> fr = DataService.consume(new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, "0", is_vip ? "1" : "0", password, mRedpackType, mRedpackId));
+        Flowable<HttpResultModel<FeedbackListResults>> fr = DataService.consume(new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, String.valueOf(mNeedPay), is_vip ? "1" : "0", password, mRedpackType, mRedpackId));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FeedbackListResults>>() {
             @Override
             public void accept(HttpResultModel<FeedbackListResults> checkTradePasswdResultsHttpResultModel) {
