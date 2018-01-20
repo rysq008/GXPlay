@@ -37,6 +37,7 @@ public class AvailableRedpackResultModel extends XBaseModel {
         private List<GameBean> games;//支持的游戏列表
         private String name;//红包名称
         private String end_date;
+        private String use_rule;
         private int my_red_id;//我的红包id 为0表示无效的
         private int type;//1为通用红包 2指定游戏红包
         private int kind;//1为单发红包 2为群发红包
@@ -70,6 +71,14 @@ public class AvailableRedpackResultModel extends XBaseModel {
 
         public void setRed_id(int red_id) {
             this.red_id = red_id;
+        }
+
+        public String getUse_rule() {
+            return use_rule;
+        }
+
+        public void setUse_rule(String use_rule) {
+            this.use_rule = use_rule;
         }
 
         public String getAmount() {

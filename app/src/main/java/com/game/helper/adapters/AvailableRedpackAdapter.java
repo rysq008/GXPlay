@@ -12,6 +12,7 @@ import com.game.helper.model.AvailableRedpackResultModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import zlc.season.practicalrecyclerview.ItemType;
 
 /**
@@ -44,7 +45,7 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
                 ((AvailableRedpackResultModel.ListBean) item).setSelect(!(((AvailableRedpackResultModel.ListBean) item).isSelect()));
                 notifyDataSetChanged();
                 if (onItemCheckListener != null) {
-                    onItemCheckListener.onItemCheked((AvailableRedpackResultModel.ListBean) item,data.size());
+                    onItemCheckListener.onItemCheked((AvailableRedpackResultModel.ListBean) item, data.size());
                 }
             }
         });
@@ -56,7 +57,7 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
     }
 
     public interface OnItemCheckListener {
-        void onItemCheked(AvailableRedpackResultModel.ListBean bean,int redPackNum);
+        void onItemCheked(AvailableRedpackResultModel.ListBean bean, int redPackNum);
     }
 
     public void addOnItemCheckListener(OnItemCheckListener onItemCheckListener) {
@@ -76,6 +77,8 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
         TextView redPackDesc;
         @BindView(R.id.redpackNum)
         TextView recpackNum;
+        @BindView(R.id.userule)
+        TextView rule;
         @BindView(R.id.timeLimit)
         TextView timeLimit;
         @BindView(R.id.rootRl)
@@ -106,6 +109,8 @@ public class AvailableRedpackAdapter extends SimpleRecAdapter<ItemType, Availabl
             recpackNum.setText(redPackName.getContext().getString(R.string.redpack_amount, data.getAmount()));
             //到期时间
             timeLimit.setText("有效期至" + data.getEnd_date());
+            //红包规则
+            rule.setText(Kits.Empty.check(data.getUse_rule()) ? "" : data.getUse_rule());
 
             if (data.isSelect()) {
                 rootRl.setSelected(true);

@@ -41,12 +41,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/redPackDesc"
-            android:layout_marginBottom="25dp"
             android:layout_marginLeft="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_5"
             android:textColor="#999"
             android:textSize="12sp"
             tools:text="1017-11-11" />
+
+        <TextView
+            android:id="@+id/userule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/timeLimit"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_5"
+            android:textColor="#666"
+            android:textSize="14sp"
+            tools:text="红包使用规则红包使用规则" />
 
         <LinearLayout
             android:layout_width="wrap_content"
