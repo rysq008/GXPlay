@@ -125,4 +125,6 @@ dependencies {
     //更新APP
     //compile 'com.github.czy1121:update:1.1.1'
     compile 'com.allenliu.versionchecklib:library:1.8.8'
+    compile 'com.github.rampo.updatechecker:library:2.1.8'
+    compile 'com.teprinciple:updateapputils:1.4'
 }

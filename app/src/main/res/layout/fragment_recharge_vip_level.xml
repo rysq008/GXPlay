@@ -249,7 +249,8 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="@dimen/size_13sp"
-            android:textColor="@color/color_333"/>
+            android:textColor="@color/color_333"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/tv_bind_account_vip2_recharge_vip_level"
             android:paddingLeft="@dimen/margin_14"
@@ -259,7 +260,8 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="@dimen/size_13sp"
-            android:textColor="@color/color_333"/>
+            android:textColor="@color/color_333"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/tv_bind_account_vip3_recharge_vip_level"
             android:paddingLeft="@dimen/margin_14"
@@ -269,6 +271,7 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="@dimen/size_13sp"
-            android:textColor="@color/color_333"/>
+            android:textColor="@color/color_333"
+            android:visibility="gone"/>
     </LinearLayout>
 </com.game.helper.views.XReloadableStateContorller>

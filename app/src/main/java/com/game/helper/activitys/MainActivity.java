@@ -1,20 +1,22 @@
 package com.game.helper.activitys;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
-import com.allenliu.versionchecklib.core.AllenChecker;
-import com.allenliu.versionchecklib.core.VersionParams;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.game.helper.R;
@@ -52,9 +54,7 @@ import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
-import static android.os.Environment.getExternalStoragePublicDirectory;
+import util.UpdateAppUtils;
 
 public class MainActivity extends XBaseActivity implements ViewPager.OnPageChangeListener {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -152,7 +152,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
             @Override
             public void accept(MsgEvent msgEvent) throws Exception {
-                if ("CustomBadgeItem".equals(msgEvent.getMsg())) {
+                if ("CustomBadgeItem" .equals(msgEvent.getMsg())) {
                     int position = msgEvent.getType();
                     int n = msgEvent.getRequestCode();
                     numberBadgeItem[position].setBorderColor(Color.TRANSPARENT)// Badge的Border颜色
@@ -220,7 +220,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
         //h5
         getH5UrlFromNet();
-        updateVersion();
+        G9RequestPermissions();
     }
 
     @Override
@@ -407,19 +407,16 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                                     }
                                 })
                                 .create().show();*/
-                        VersionParams.Builder builder = new VersionParams.Builder();
-                        //如果仅使用下载功能，downloadUrl是必须的
-                        builder.setOnlyDownload(true)
-                                .setShowNotification(true)
-                                .setForceRedownload(versionCheckResultsHttpResultModel.data.getIs_force_update())
-                                .setDownloadAPKPath(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath() + "/G9Game")
-                                .setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
-                                //.setDownloadUrl("http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk")
-                                .setTitle("检测到新版本")
-                                .setUpdateMsg(versionCheckResultsHttpResultModel.data.getDesc());
-
-                        AllenChecker.startVersionCheck(context.getApplication(), builder.build());
-                        AllenChecker.init(true);
+                        UpdateAppUtils.from(MainActivity.this)
+                                //.checkBy(UpdateAppUtils.CHECK_BY_VERSION_NAME) //更新检测方式，默认为VersionCode
+                                .serverVersionCode(versionCheckResultsHttpResultModel.data.getVersion_code())
+                                .serverVersionName(versionCheckResultsHttpResultModel.data.getVersion())
+                                .apkPath(versionCheckResultsHttpResultModel.data.getUrl())
+                                .showNotification(true) //是否显示下载进度到通知栏，默认为true
+                                .updateInfo(versionCheckResultsHttpResultModel.data.getDesc())  //更新日志信息 String
+                                //.downloadBy(UpdateAppUtils.DOWNLOAD_BY_BROWSER) //下载方式：app下载、手机浏览器下载。默认app下载
+                                .isForce(versionCheckResultsHttpResultModel.data.isIs_force_update()) //是否强制更新，默认false 强制更新情况下用户不同意更新则不能使用app
+                                .update();
 
 
                     } else {
@@ -430,5 +427,45 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
             }
         });
+    }
+
+
+
+
+    //权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case 1000:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    updateVersion();
+                } else {
+                    ToastUtil.showToast("没有打开权限,不能更新版本");
+                }
+                break;
+        }
+
+    }
+
+    private void G9RequestPermissions() {
+        // 检查是否获得了权限（Android6.0运行时权限）
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                ActivityCompat.requestPermissions(context,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1000);
+            }else{
+                ActivityCompat.requestPermissions(context,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1000);
+            }
+        } else {
+            updateVersion();
+        }
     }
 }

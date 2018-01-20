@@ -1,5 +1,6 @@
 package com.game.helper.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +27,7 @@ import com.allenliu.versionchecklib.core.AllenChecker;
 import com.allenliu.versionchecklib.core.VersionParams;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
+import com.game.helper.activitys.MainActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LogoutResults;
@@ -44,6 +49,7 @@ import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
+import util.UpdateAppUtils;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 import static android.os.Environment.getExternalStoragePublicDirectory;
@@ -72,6 +78,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
 
     private Handler handler = new Handler();
     private DownloadApkHelper downloadHelper;
+    private static final int REQUEST_CODE =1001;
 
     public static SettingSystemFragment newInstance() {
         return new SettingSystemFragment();
@@ -191,9 +198,11 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             dialog.show(getChildFragmentManager(), GXPlayDialog.TAG);
         }
         if (v == mLlUpdateVersion) {
-            updateVersion();
+            G9RequestPermissions();
         }
     }
+
+
 
     private void updateVersion() {
         PackageInfo packageInfo = null;
@@ -208,53 +217,39 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
             @Override
             public void accept(final HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
                 if (versionCheckResultsHttpResultModel.isSucceful()) {
-                    boolean has_new = versionCheckResultsHttpResultModel.data.isHas_new();
-                    if (has_new) {
+                    if (versionCheckResultsHttpResultModel.data.isHas_new()) {
                         /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        View inflate = layoutInflater.inflate(R.layout.update_app_dialog, null);
-                        TextView message = inflate.findViewById(R.id.tv_update_app_message);
-                        final TextView percent = inflate.findViewById(R.id.tv_percent_update_app_dialog);
-                        final ProgressBar progressBar = inflate.findViewById(R.id.pb_update_app_dialog);
-                        message.setText(versionCheckResultsHttpResultModel.data.getVersion());
                         builder.setTitle("亲,确定更新版本吗?")
-                                //.setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
+                                .setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
                                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
                                 })
-                                .setPositiveButton("确定下载", new DialogInterface.OnClickListener() {
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        percent.setVisibility(View.VISIBLE);
-                                        progressBar.setVisibility(View.VISIBLE);
-                                        String path = "http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk";
-                                        //downLoadApk(context, versionCheckResultsHttpResultModel.data.getUrl());
-                                        downLoadApk(context, path,progressBar);
-                                        //dialog.dismiss();
+
+                                        dialog.dismiss();
                                     }
                                 })
-                                .setView(inflate)
                                 .create().show();*/
-                        VersionParams.Builder builder = new VersionParams.Builder();
-                        //如果仅使用下载功能，downloadUrl是必须的
-                        builder.setOnlyDownload(true)
-                                .setShowNotification(true)
-                                .setForceRedownload(versionCheckResultsHttpResultModel.data.getIs_force_update())
-                                .setDownloadAPKPath(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).getPath() + "/G9Game")
-                                .setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
-                                //.setDownloadUrl("http://down1.uc.cn/down2/zxl107821.uc/miaokun1/UCBrowser_V11.5.8.945_android_pf145_bi800_(Build170627172528).apk")
-                                .setTitle("检测到新版本")
-                                .setUpdateMsg(versionCheckResultsHttpResultModel.data.getDesc());
-
-
-                        AllenChecker.startVersionCheck(context.getApplication(), builder.build());
-                        AllenChecker.init(true);
+                        UpdateAppUtils.from(getActivity())
+                                //.checkBy(UpdateAppUtils.CHECK_BY_VERSION_NAME) //更新检测方式，默认为VersionCode
+                                .serverVersionCode(versionCheckResultsHttpResultModel.data.getVersion_code())
+                                .serverVersionName(versionCheckResultsHttpResultModel.data.getVersion())
+                                .apkPath(versionCheckResultsHttpResultModel.data.getUrl())
+                                .showNotification(true) //是否显示下载进度到通知栏，默认为true
+                                .updateInfo(versionCheckResultsHttpResultModel.data.getDesc())  //更新日志信息 String
+                                //.downloadBy(UpdateAppUtils.DOWNLOAD_BY_BROWSER) //下载方式：app下载、手机浏览器下载。默认app下载
+                                .isForce(versionCheckResultsHttpResultModel.data.isIs_force_update()) //是否强制更新，默认false 强制更新情况下用户不同意更新则不能使用app
+                                .update();
 
 
                     } else {
                         ToastUtil.showToast("已经是最新的版本");
+
                     }
                 }
 
@@ -262,63 +257,37 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
         });
     }
 
-    private void downLoadApk(final Context context, String urlApk, final ProgressBar progressBar) {
-        /*if (TextUtils.isEmpty(urlApk)) {
-            return;
+
+
+
+    //权限请求结果
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    updateVersion();
+                } else {
+                    SettingSystemFragment.this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_CODE);
+                }
+                break;
         }
 
-        if (downloadHelper == null) {
-            //btnStart.setText("下载中,点击取消下载");
-            DownloadApkHelper.Builder builder = new DownloadApkHelper.Builder(context).title("下载新版本")
-                    .description("系在")
-                    .downloadUrl(urlApk)
-                    .fileSaveName("g9game.apk").fileSavePath("g9game")
-                    .notifyVisible(true)
-                    .fileType(DownloadApkHelper.FileType.APK).apkInstallHint(true).onProgressListener(new DownloadApkHelper.OnDownloadProgressListener() {
-                        @Override
-                        public void onProgress(int downloadedSize, int totalSize) {
+    }
 
-                            int progress = (int) ((downloadedSize * 1.0f / totalSize) * 100);
+    private void G9RequestPermissions() {
+        // 检查是否获得了权限（Android6.0运行时权限）
+        if (ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                            Log.d("onProgress", "progress=" + progress);
-                            progressBar.setProgress(progress);
-
-                        }
-
-                        @Override
-                        public void onSuccess(Uri fileUri) {
-                            Log.d("onProgress", "fileUri=" + fileUri);
-                            //btnStart.setText("停止下载并删除文件");
-                            //btnStart.setEnabled(true);
-
-                        }
-
-                        @Override
-                        public void onFail() {
-
-                        }
-
-                        @Override
-                        public void fileAlreadyExits(File file) {
-                            progressBar.setProgress(100);
-
-                            //btnStart.setText("停止下载并删除文件");
-                            ToastUtil.showToast("文件已下载");
-                        }
-                    });
-            downloadHelper = builder.build();
-            downloadHelper.start();
+            SettingSystemFragment.this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_CODE);
         } else {
-
-
-            downloadHelper.deleteDownloadFile();
-             progressBar.setProgress(0);
-            //btnStart.setEnabled(true);
-
-            downloadHelper = null;
-
-        }*/
-
+            updateVersion();
+        }
     }
 
 

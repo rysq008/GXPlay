@@ -35,6 +35,7 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
     AvailableRedpackAdapter mAdapter;
 
     private int option_game_id;
+    private int option_game_account_id;
     private String totalMoney;
     private AvailableRedpackResultModel.ListBean bean;
 
@@ -55,7 +56,7 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
      * 获取可用红包/卡券
      */
     private void fetchAvailableRedpackInfo(int page) {
-        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, option_game_id, totalMoney));
+        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, option_game_account_id, totalMoney));
         RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<AvailableRedpackResultModel>>() {
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
@@ -127,6 +128,7 @@ public class ChoiceRedPackActivity extends XBaseActivity implements View.OnClick
     private void getIntentData(Intent intent) {
         option_game_id = intent.getIntExtra(OrderConfirmActivity.OPTION_GAME_ID, 0);
         totalMoney = intent.getStringExtra(OrderConfirmActivity.RED_PACK_LIMIT);
+        option_game_account_id = intent.getIntExtra(OrderConfirmActivity.OPTION_GAME_ACCOUNT_ID,0);
         bean = (AvailableRedpackResultModel.ListBean) intent.getBundleExtra(OrderConfirmActivity.RED_PACK_BEAN).getSerializable(OrderConfirmActivity.RED_PACK_BEAN);
     }
 

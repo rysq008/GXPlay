@@ -57,6 +57,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     public static final String TAG = "OrderConfirmActivity";
     public static final String OPTION_GAME_ID = "option_game_id";
+    public static final String OPTION_GAME_ACCOUNT_ID = "option_game_account_id";
     public static final String RED_PACK_LIMIT = "red_pack_limit";
     public static final String BUNDLE_GAME_BEAN = "game_bean";
     public static final String BUNDLE_TOTAL_BALANCE = "after_diacount_total_balance";
@@ -236,7 +237,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
 //                        Toast.makeText(OrderConfirmActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
-                        doConsume(accountAmount, marketingAmount);
+                        doConsume(accountAmount, marketingAmount,String.valueOf(payWay));
                     } else {
                         Toast.makeText(OrderConfirmActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
                     }
@@ -353,7 +354,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     if (redPackEvent.getType() == RxConstant.WX_PAY) {
                         switch (redPackEvent.getData()) {
                             case 0:
-                                doConsume(accountAmount, marketingAmount);
+                                doConsume(accountAmount, marketingAmount,String.valueOf(payWay));
                                 break;
                             case -1:
 //                                Toast.makeText(OrderConfirmActivity.this, "充值失败，请重试", Toast.LENGTH_SHORT).show();
@@ -494,7 +495,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 获取可用红包/卡券
      */
     private void fetchAvailableRedpackInfo(int page) {
-        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, gameId, inputBalance + ""));
+        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, gameAccountId, inputBalance + ""));
         RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<AvailableRedpackResultModel>>() {
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
@@ -579,6 +580,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(RED_PACK_BEAN, bean);
                     intent.putExtra(OPTION_GAME_ID, gameId);
+                    intent.putExtra(OPTION_GAME_ACCOUNT_ID,gameAccountId);
                     intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
                     intent.putExtra(RED_PACK_BEAN, bundle);
                     startActivityForResult(intent, 0);
@@ -815,7 +817,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         if (mNeedPay > 0) {
             doCharge();
         } else {
-            doConsume(accountAmount, marketingAmount);
+            doConsume(accountAmount, marketingAmount,"");
         }
     }
 
@@ -908,7 +910,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     /**
      * 消费
      */
-    private void doConsume(String accountAmount, String marketingAmount) {
+    private void doConsume(String accountAmount, String marketingAmount ,String payWay) {
         Log.e("nuoyan", "gameAccountId：：：" + gameAccountId + "\r\n"
                 + "gameId：：：" + gameId + "\r\n"
                 + "consumeAmount:::" + inputBalance + "\r\n"
@@ -918,7 +920,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 + "is_vip:::" + is_vip + "\r\n"
                 + "tradePassword:::" + password + "\r\n"
                 + "redpacketType:::" + mRedpackType + "\r\n"
-                + "redpacketId:::" + mRedpackId + "\r\n");
+                + "redpacketId:::" + mRedpackId + "\r\n"
+                + "payWay:::" + payWay + "\r\n");
 
         Flowable<HttpResultModel<FeedbackListResults>> fr = DataService.consume(new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, String.valueOf(mNeedPay), is_vip ? "1" : "0", password, mRedpackType, mRedpackId));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FeedbackListResults>>() {
