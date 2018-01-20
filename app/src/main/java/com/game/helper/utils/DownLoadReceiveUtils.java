@@ -120,7 +120,7 @@ public class DownLoadReceiveUtils {
         if (files != null) {
             Uri uri = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                uri = FileProvider.getUriForFile(context, context.getApplicationInfo().packageName + ".provider", files[0]);
+                uri = FileProvider.getUriForFile(context, context.getApplicationInfo().packageName + ".fileprovider", files[0]);
             } else {
                 uri = Uri.fromFile(files[0]);
             }

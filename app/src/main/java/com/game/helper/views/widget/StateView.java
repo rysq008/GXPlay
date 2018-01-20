@@ -14,7 +14,6 @@ import com.game.helper.R;
 import com.game.helper.event.BusProvider;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerView;
@@ -134,27 +133,27 @@ public class StateView extends LinearLayout {
         if (error != null) {
             switch (error.getType()) {
                 case NetError.ParseError:
-                    setMsg("数据解析异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
+                    setMsg("数据解析异常:"/*.concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage())*/);
                     break;
 
                 case NetError.AuthError:
-                    setMsg("身份验证异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
+                    setMsg("身份验证异常:"/*.concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage())*/);
                     break;
 
                 case NetError.BusinessError:
-                    setMsg("业务异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
+                    setMsg("业务异常:"/*.concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage())*/);
                     break;
 
                 case NetError.NoConnectError:
-                    setMsg("网络无连接:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
+                    setMsg("网络无连接:"/*.concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage())*/);
                     break;
 
                 case NetError.NoDataError:
-                    setMsg("数据为空:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
+                    setMsg("数据为空:"/*.concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage())*/);
                     break;
 
                 case NetError.OtherError:
-                    setMsg("其他异常:".concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage()));
+                    setMsg("其他异常:"/*.concat(Kits.Empty.check(error.getMessage()) ? "" : error.getMessage())*/);
                     break;
             }
         }
