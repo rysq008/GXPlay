@@ -444,7 +444,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 计算实际支付
      */
     public String calcRealPay() {
-        mRealPay = totalBalance - mRedpackAmount;
+        //mRealPay = totalBalance - mRedpackAmount;
+        mRealPay = totalBalance ;
         String result = new BigDecimal(String.valueOf(mRealPay)).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
         return result;
     }
@@ -454,10 +455,10 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      */
     public Double calcNeedPay() {
         double needPay = 0.0;
+        BigDecimal bg = new BigDecimal(mRealPay);
+        mRealPay = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
         if (useCoin) {
-            BigDecimal bg = new BigDecimal(mRealPay);
-            mRealPay = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-            needPay = mRealPay - mAvailableCoin;
+            needPay = mRealPay - mAvailableCoin - mRedpackAmount;
             if (needPay <= 0) {
                 needPayTv.setText(new BigDecimal(String.valueOf("0.0")).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                 needPay = 0;
@@ -467,7 +468,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 needPayTv.setText(result);
             }
         } else {
-            needPay = mRealPay;
+            needPay = mRealPay- mRedpackAmount;
             if (needPay <= 0) {
                 needPayTv.setText(new BigDecimal(String.valueOf("0.0")).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                 needPay = 0;
@@ -495,7 +496,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
      * 获取可用红包/卡券
      */
     private void fetchAvailableRedpackInfo(int page) {
-        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, gameAccountId, inputBalance + ""));
+        Flowable<HttpResultModel<AvailableRedpackResultModel>> flowable = DataService.getRedPackInfo(new AvailableRedpackRequestBody(page, gameAccountId, totalBalance + ""));
         RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<AvailableRedpackResultModel>>() {
             @Override
             public void accept(HttpResultModel<AvailableRedpackResultModel> generalizeResultsHttpResultModel) throws Exception {
@@ -581,7 +582,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     bundle.putSerializable(RED_PACK_BEAN, bean);
                     intent.putExtra(OPTION_GAME_ID, gameId);
                     intent.putExtra(OPTION_GAME_ACCOUNT_ID,gameAccountId);
-                    intent.putExtra(RED_PACK_LIMIT, inputBalance + "");
+                    intent.putExtra(RED_PACK_LIMIT, totalBalance + "");
                     intent.putExtra(RED_PACK_BEAN, bundle);
                     startActivityForResult(intent, 0);
                 }
@@ -932,7 +933,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     setResult(RESULT_OK);
                     finish();
                 } else {
-                    Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OrderConfirmActivity.this, checkTradePasswdResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
