@@ -60,6 +60,11 @@ public class StateCode {
     public static final String STATE_0221 = "0221";
     public static final String STATE_0222 = "0222";
     public static final String STATE_0223 = "0223";
+    public static final String STATE_0226 = "0226";
+    public static final String STATE_0227 = "0227";
+    public static final String STATE_0228 = "0228";
+    public static final String STATE_0229 = "0229";
+    public static final String STATE_0230 = "0230";
     public static final String STATE_0231 = "0231";
     public static final String STATE_0232 = "0232";
     public static final String STATE_0233 = "0233";
@@ -193,6 +198,16 @@ public class StateCode {
                 return "用户账户或者推广账户存在问题";
             case STATE_0222:
                 return "修改充值用户账户异常";
+            case STATE_0226:
+                return "请核对游戏账号是否正确";
+            case STATE_0227:
+                return "游戏错误请联系客服";
+            case STATE_0228:
+                return "请提醒客服,渠道余额不足,谢谢";
+            case STATE_0229:
+                return "...,请联系客服";
+            case STATE_0230:
+                return "请提醒客服，游戏ID错误，谢谢！";
             case STATE_0223:
                 return "游戏自动充值失败";
             case STATE_0231:

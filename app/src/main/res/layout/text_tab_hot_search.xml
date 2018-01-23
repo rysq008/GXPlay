@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:text="内容"
+    android:textSize="@dimen/size_15sp"
+    android:textColor="@color/color_333"
+    android:background="@drawable/bg_shape_hot_search_tab"
+    android:gravity="center"
+    android:paddingRight="@dimen/dp_11"
+    android:paddingLeft="@dimen/dp_11"
+    android:paddingTop="@dimen/dp_8"
+    android:paddingBottom="@dimen/dp_8">
+
+</TextView>

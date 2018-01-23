@@ -78,7 +78,8 @@ public class SearchFragment extends XBaseFragment {
         hotFlowlayout.setAdapter(new TagAdapter<HotWordResults.HotWordItem>(hotWordList) {
             @Override
             public View getView(FlowLayout parent, int position, HotWordResults.HotWordItem hotWordItem) {
-                TextView tv = new TextView(context);
+                TextView tv = (TextView) layoutInflater.inflate(R.layout.text_tab_hot_search,null);
+                //TextView tv = new TextView(context);
                 tv.setText(hotWordItem.name);
                 return tv;
             }
@@ -97,7 +98,7 @@ public class SearchFragment extends XBaseFragment {
         historyFlowlayout.setAdapter(new TagAdapter<String>(historyWordList) {
             @Override
             public View getView(FlowLayout parent, int position, String s) {
-                TextView tv = new TextView(context);
+                TextView tv = (TextView) layoutInflater.inflate(R.layout.text_tab_hot_search,null);
                 tv.setText(s);
                 return tv;
             }

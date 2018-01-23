@@ -103,6 +103,7 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private TextView rule;
         private TextView num;
         private LinearLayout game;
+        private View item;
         private LinearLayout container;
 
         public CanUseCouponHolder(View itemView) {
@@ -114,8 +115,10 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             num = itemView.findViewById(R.id.redpackNum);
             rule = itemView.findViewById(R.id.userule);
             game = itemView.findViewById(R.id.ll_has_game);
+            item = itemView.findViewById(R.id.item_can_use_coupon_to_recharge);
             container = itemView.findViewById(R.id.game_container);
             rootView.setOnClickListener(this);
+            item.setOnClickListener(this);
         }
 
         void onBind(int position) {
@@ -162,9 +165,15 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Override
         public void onClick(View v) {
-            if (v == rootView) {
-                //Toast.makeText(context, "未使用！", Toast.LENGTH_SHORT).show();
-                container.setVisibility(container.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            switch (v.getId()) {
+                case R.id.item_can_use_coupon_to_recharge:
+                    DetailFragmentsActivity.launch(context,null,RechargeFragment.newInstance());
+                    break;
+                case R.id.rootRl:
+                    //Toast.makeText(context, "未使用！", Toast.LENGTH_SHORT).show();
+                    container.setVisibility(container.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    break;
+
             }
         }
     }
@@ -205,9 +214,10 @@ public class CouponCommonAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Override
         public void onClick(View v) {
-            if (v == rootView) {
+            /*if (v == rootView) {
                 //Toast.makeText(context, "已使用！", Toast.LENGTH_SHORT).show();
-            }
+            }*/
+
         }
     }
 
