@@ -1,10 +1,13 @@
 package com.game.helper.activitys.BaseActivity;
 
+import android.Manifest;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.game.helper.R;
+import com.game.helper.utils.ToastUtil;
 import com.jaeger.library.StatusBarUtil;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.jude.swipbackhelper.SwipeListener;
@@ -12,6 +15,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import cn.droidlover.xdroidmvp.mvp.IPresent;
 import cn.droidlover.xdroidmvp.mvp.XActivity;
+import io.reactivex.functions.Consumer;
 
 public abstract class XBaseActivity<P extends IPresent> extends XActivity {
 
@@ -26,6 +30,8 @@ public abstract class XBaseActivity<P extends IPresent> extends XActivity {
                 .setSwipeRelateOffset(300);
 
         super.onCreate(savedInstanceState);
+        MobclickAgent.setDebugMode(true);
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
     @Override
@@ -65,4 +71,7 @@ public abstract class XBaseActivity<P extends IPresent> extends XActivity {
         MobclickAgent.onPause(this);//友盟统计
 
     }
+
+
+
 }

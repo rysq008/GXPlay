@@ -431,13 +431,13 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     }
 
     private void G9RequestPermissions() {
-        getRxPermissions().request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+        getRxPermissions().request(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
                     updateVersion();
                 } else {
-                    Toast.makeText(context, "请打开权限SD卡写入权限", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "请打开权限", Toast.LENGTH_SHORT).show();
                 }
             }
         });

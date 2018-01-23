@@ -127,4 +127,5 @@ dependencies {
     compile 'com.teprinciple:updateapputils:1.4'
     //友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.umeng.sdk:common:latest.integration'
 }

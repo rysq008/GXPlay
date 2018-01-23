@@ -1,5 +1,6 @@
 package com.game.helper.activitys.BaseActivity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.game.helper.R;
+import com.game.helper.utils.ToastUtil;
 import com.jaeger.library.StatusBarUtil;
 import com.jude.swipbackhelper.SwipeBackHelper;
 import com.umeng.analytics.MobclickAgent;
@@ -17,6 +19,7 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.List;
 
 import cn.droidlover.xdroidmvp.mvp.XActivity;
+import io.reactivex.functions.Consumer;
 
 public abstract class XDetailBaseActivity extends XActivity {
     private String TAG = XDetailBaseActivity.class.getName();
@@ -40,6 +43,8 @@ public abstract class XDetailBaseActivity extends XActivity {
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(android.R.id.content, fragment).commitAllowingStateLoss();
+        MobclickAgent.setDebugMode(true);
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
     @Override
@@ -133,4 +138,5 @@ public abstract class XDetailBaseActivity extends XActivity {
         MobclickAgent.onPause(this);//友盟统计
 
     }
+
 }

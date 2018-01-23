@@ -15,6 +15,7 @@ import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.GamePackageInfoResult;
 import com.game.helper.share.UMengShare;
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -31,6 +32,9 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         SwipeBackHelper.getCurrentPage(this)
                 .setSwipeBackEnable(false)
                 .setSwipeBackEnable(true);
+        // SDK在统计Fragment时，需要关闭Activity自带的页面统计，
+        // 然后在每个页面中重新集成页面统计的代码(包括调用了 onResume 和 onPause 的Activity)。
+        MobclickAgent.openActivityDurationTrack(false);
     }
 
     private static Fragment currentFragment;

@@ -1,5 +1,6 @@
 package com.game.helper.activitys;
 
+import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -15,6 +16,7 @@ import android.widget.ImageView.ScaleType;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.utils.ToastUtil;
 import com.jude.swipbackhelper.SwipeBackHelper;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.router.Router;
+import io.reactivex.functions.Consumer;
 
 public class GuideActivity extends XBaseActivity implements OnPageChangeListener {
 

@@ -16,6 +16,7 @@ import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.easeui.UIProvider;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -54,7 +55,8 @@ public class GameMarketApplication extends MultiDexApplication {
         initUmengShare();
         //初始化环信
         initHuanXin();
-
+        //友盟统计初始化
+        UMConfigure.init(this, 0, null);
         Stetho.initializeWithDefaults(this);
         SharedPreUtil.init(this);
 
