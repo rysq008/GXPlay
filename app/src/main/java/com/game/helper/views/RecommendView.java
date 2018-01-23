@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
+import cn.droidlover.xdroidmvp.kit.Kits;
 
 /**
  * Created by zr on 2017-10-13.
@@ -76,23 +77,27 @@ public class RecommendView extends LinearLayout {
 
         ILFactory.getLoader().loadNet(roundedIv, Api.API_PAY_OR_IMAGE_URL.concat(data.logo), ILoader.Options.defaultOptions());
         nameTv.setText(data.name.replace(" ", ""));
-        Float zhekou_shouchong = data.game_package.get("zhekou_shouchong");
-        Float discount_activity = data.game_package.get("discount_activity");
-        if (discount_activity >0) {
+        Float zhekou_shouchong = 0f;
+        Float discount_activity = 0f;
+        if (!Kits.Empty.check(data.game_package)) {
+            zhekou_shouchong = data.game_package.get("zhekou_shouchong");
+            discount_activity = data.game_package.get("discount_activity");
+            sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", "") + "M");
+        }
+        if (discount_activity > 0) {
             discountTv.setVisibility(GONE);
             activityDiscount.setVisibility(VISIBLE);
             matchingActivityDiscount.setVisibility(VISIBLE);
-            matchingActivityDiscount.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
-            activityDiscount.setText(discount_activity.toString()+"折");
-            matchingActivityDiscount.setText(zhekou_shouchong.toString()+"折");
+            matchingActivityDiscount.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            activityDiscount.setText(discount_activity.toString() + "折");
+            matchingActivityDiscount.setText(zhekou_shouchong.toString() + "折");
         } else {
             activityDiscount.setVisibility(GONE);
             matchingActivityDiscount.setVisibility(GONE);
             discountTv.setVisibility(VISIBLE);
-            discountTv.setText(zhekou_shouchong.toString()+"折");
+            discountTv.setText(zhekou_shouchong.toString() + "折");
         }
         typeTv.setText(data.type.get("name").replace(" ", ""));
-        sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", "")+"M");
         descTv.setText(data.intro.replace(" ", ""));
         handType.setText(data.class_type.get("name"));
         launchIv.setOnClickListener(new OnClickListener() {

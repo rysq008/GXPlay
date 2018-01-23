@@ -1,33 +1,19 @@
 package com.game.helper.fragments;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.allenliu.versionchecklib.core.AllenChecker;
-import com.allenliu.versionchecklib.core.VersionParams;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.activitys.MainActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LogoutResults;
@@ -41,7 +27,6 @@ import com.game.helper.utils.ToastUtil;
 import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
-import java.io.File;
 import java.util.concurrent.Executors;
 
 import butterknife.BindView;
@@ -51,8 +36,6 @@ import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import util.UpdateAppUtils;
 
-import static android.os.Environment.DIRECTORY_DOWNLOADS;
-import static android.os.Environment.getExternalStoragePublicDirectory;
 import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 /**
@@ -78,7 +61,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
 
     private Handler handler = new Handler();
     private DownloadApkHelper downloadHelper;
-    private static final int REQUEST_CODE =1001;
+    private static final int REQUEST_CODE = 1001;
 
     public static SettingSystemFragment newInstance() {
         return new SettingSystemFragment();
@@ -203,7 +186,6 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
     }
 
 
-
     private void updateVersion() {
         PackageInfo packageInfo = null;
         PackageManager packageManager = context.getPackageManager();
@@ -258,36 +240,17 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
     }
 
 
-
-
-    //权限请求结果
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case REQUEST_CODE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    private void G9RequestPermissions() {
+        getRxPermissions().request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
                     updateVersion();
                 } else {
-                    SettingSystemFragment.this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                            REQUEST_CODE);
+                    Toast.makeText(context, "请打开权限SD卡写入权限", Toast.LENGTH_SHORT).show();
                 }
-                break;
-        }
-
-    }
-
-    private void G9RequestPermissions() {
-        // 检查是否获得了权限（Android6.0运行时权限）
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            SettingSystemFragment.this.requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_CODE);
-        } else {
-            updateVersion();
-        }
+            }
+        });
     }
 
 
