@@ -136,3 +136,17 @@
 -keep class com.ta.utdid2.** { *;}
 -keep class com.ut.device.** { *;}
 #########  Alipay   end
+
+###########友盟##########
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keep public class [com.game.helper].R$*{
+public static final int *;
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+###########友盟end##########

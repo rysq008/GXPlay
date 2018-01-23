@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -429,43 +430,16 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         });
     }
 
-
-
-
-    //权限请求结果
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case 1000:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+    private void G9RequestPermissions() {
+        getRxPermissions().request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
                     updateVersion();
                 } else {
-                    ToastUtil.showToast("没有打开权限,不能更新版本");
+                    Toast.makeText(context, "请打开权限SD卡写入权限", Toast.LENGTH_SHORT).show();
                 }
-                break;
-        }
-
-    }
-
-    private void G9RequestPermissions() {
-        // 检查是否获得了权限（Android6.0运行时权限）
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                ActivityCompat.requestPermissions(context,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        1000);
-            }else{
-                ActivityCompat.requestPermissions(context,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        1000);
             }
-        } else {
-            updateVersion();
-        }
+        });
     }
 }

@@ -125,4 +125,6 @@ dependencies {
     //更新APP
     //compile 'com.github.czy1121:update:1.1.1'
     compile 'com.teprinciple:updateapputils:1.4'
+    //友盟统计
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

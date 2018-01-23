@@ -12,6 +12,7 @@ import android.util.Log;
 import com.game.helper.R;
 import com.jaeger.library.StatusBarUtil;
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -117,4 +118,19 @@ public abstract class XDetailBaseActivity extends XActivity {
 //            }
 //        }
 //    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);//友盟统计
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);//友盟统计
+
+    }
 }
