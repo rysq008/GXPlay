@@ -2,41 +2,33 @@ package com.game.helper.fragments;
 
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.adapters.AccountManagerAdapter;
-import com.game.helper.adapters.ExtensionCommonAdapter;
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.GameAccountResultModel;
-import com.game.helper.model.MarketFlowlistResults;
 import com.game.helper.model.NotConcernResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.GameAccountRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
-import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.XReloadableRecyclerContentLayout;
-import com.game.helper.views.widget.StateView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xrecyclerview.XRecyclerContentLayout;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
-public class AccountManageFragment extends XBaseFragment implements View.OnClickListener,AccountManagerAdapter.OnActionListener{
+public class AccountManageFragment extends XBaseFragment implements View.OnClickListener, AccountManagerAdapter.OnActionListener {
     private static final String TAG = AccountManageFragment.class.getSimpleName();
 
     @BindView(R.id.action_bar_back)
@@ -48,7 +40,7 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
 
     private AccountManagerAdapter mAdapter;
 
-    public static AccountManageFragment newInstance(){
+    public static AccountManageFragment newInstance() {
         return new AccountManageFragment();
     }
 
@@ -68,21 +60,28 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
 
         mContent.showLoading();
         initList();
-        getDataFromNet(1);
+        getDataFromNet(1,true);
+        BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
+            @Override
+            public void accept(MsgEvent msgEvent) throws Exception {
+                if (msgEvent.getData() instanceof GameAccountResultModel.ListBean) {
+                    mAdapter.setData((GameAccountResultModel.ListBean) msgEvent.getData());
+                }
+            }
+        });
     }
 
     /**
      * 获取数据
-     * */
-    private void getDataFromNet(int page){
-        getGameAccountInfo(page);
+     */
+    private void getDataFromNet(int page, boolean isrefresh) {
+        getGameAccountInfo(page, isrefresh);
     }
 
-    private void initList(){
+    private void initList() {
         mAdapter = null;
         mAdapter = new AccountManagerAdapter(getContext(), null);
         mAdapter.addOnActionListener(this);
-        mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
         mContent.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
@@ -90,31 +89,26 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
         mContent.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {
-                getDataFromNet(1);
+                getDataFromNet(1, true);
             }
 
             @Override
             public void onLoadMore(int page) {
-                getDataFromNet(page);
+                getDataFromNet(page, false);
             }
         });
         mContent.getRecyclerView().useDefLoadMoreView();
     }
 
-    private void getGameAccountInfo(final int page) {
+    private void getGameAccountInfo(final int page, boolean isrefresh) {
         Flowable<HttpResultModel<GameAccountResultModel>> fr = DataService.getGameAccountList(new GameAccountRequestBody(page, 1, 0, 0));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
+        RxLoadingUtils.subscribeWithReload(mContent, fr, bindToLifecycle(), new Consumer<HttpResultModel<GameAccountResultModel>>() {
             @Override
             public void accept(HttpResultModel<GameAccountResultModel> gameAccountResultModelHttpResultModel) throws Exception {
-                notifyData(gameAccountResultModelHttpResultModel.data,page);
-                mContent.getRecyclerView().setPage(gameAccountResultModelHttpResultModel.current_page,gameAccountResultModelHttpResultModel.total_page);
+                notifyData(gameAccountResultModelHttpResultModel.data, page);
+                mContent.getRecyclerView().setPage(gameAccountResultModelHttpResultModel.current_page, gameAccountResultModelHttpResultModel.total_page);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-            }
-        });
+        }, null, null, isrefresh);
     }
 
     private void deleteGameAccountInfo(int id) {
@@ -123,7 +117,7 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
             @Override
             public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
                 Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
-                if (notConcernResultsHttpResultModel.isSucceful()) getGameAccountInfo(1);
+                if (notConcernResultsHttpResultModel.isSucceful()) getGameAccountInfo(1, true);
             }
         }, new Consumer<NetError>() {
             @Override
@@ -133,27 +127,19 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
         });
     }
 
-    private void notifyData(XBaseModel data, int page){
-        mAdapter.setData(data,page == 1 ? true : false);
-        mContent.getLoadingView().setVisibility(View.GONE);
-        mContent.refreshState(false);
-        if (mAdapter.getItemCount()<1){
+    private void notifyData(XBaseModel data, int page) {
+        mAdapter.setData(data, page == 1 ? true : false);
+        if (mAdapter.getItemCount() < 1) {
             mContent.showEmpty();
             return;
-        }else {
+        } else {
             mContent.showContent();
         }
     }
 
-    public void showError(NetError error) {
-        mContent.getLoadingView().setVisibility(View.GONE);
-        mContent.refreshState(false);
-        mContent.showError();
-    }
-
     @Override
     public void onClick(View v) {
-        if (v == mHeadBack){
+        if (v == mHeadBack) {
             getActivity().onBackPressed();
         }
     }
@@ -165,7 +151,7 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
 
     @Override
     public void onDelete(final int gameid) {
-        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Full_Confirm,"","确定要删除该游戏账号吗？");
+        final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Full_Confirm, "", "确定要删除该游戏账号吗？");
         dialog.addOnDialogActionListner(new GXPlayDialog.onDialogActionListner() {
             @Override
             public void onCancel() {
@@ -177,6 +163,6 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
                 deleteGameAccountInfo(gameid);
             }
         });
-        dialog.show(getActivity().getSupportFragmentManager(),GXPlayDialog.TAG);
+        dialog.show(getActivity().getSupportFragmentManager(), GXPlayDialog.TAG);
     }
 }

@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.AccountDescFragment;
@@ -37,7 +36,7 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public AccountManagerAdapter(Context context, XBaseModel data) {
         this.context = context;
         if (data == null) return;
-        if (data instanceof GameAccountResultModel){
+        if (data instanceof GameAccountResultModel) {
             this.data = ((GameAccountResultModel) data).getList();
         }
     }
@@ -61,15 +60,22 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return data.size();
     }
 
-    public void setData(XBaseModel data,boolean clear){
+    public void setData(XBaseModel data, boolean clear) {
         if (data == null) return;
         List list = null;
-        if (data instanceof GameAccountResultModel){
+        if (data instanceof GameAccountResultModel) {
             list = ((GameAccountResultModel) data).getList();
         }
         if (clear) this.data = list;
         else this.data.addAll(list);
         notifyDataSetChanged();
+    }
+
+    public void setData(GameAccountResultModel.ListBean bean) {
+        if (data.indexOf(bean) != -1) {
+            data.set(data.indexOf(bean), bean);
+            notifyDataSetChanged();
+        }
     }
 
     class AccountHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -101,18 +107,20 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 return;
 
             GameAccountResultModel.ListBean item = (GameAccountResultModel.ListBean) data.get(position);
-            ILFactory.getLoader().loadNet(avatar, Api.API_PAY_OR_IMAGE_URL+item.getGame_logo(), ILoader.Options.defaultOptions());
+            ILFactory.getLoader().loadNet(avatar, Api.API_PAY_OR_IMAGE_URL + item.getGame_logo(), ILoader.Options.defaultOptions());
             name.setText(item.getGame_name());
             platform.setText(item.getGame_channel_name());
             accountIdenty.setText(item.getGame_account());
             creatTime.setText(item.getCreate_time());
-            if (item.getVip_level() != 0){
+            if (item.isIs_vip()) {
                 vip.setImageResource(Utils.getExtensionVipIcon(item.getVip_level()));
                 vip.setVisibility(View.VISIBLE);
+            } else {
+                vip.setVisibility(View.GONE);
             }
-            if (item.isIs_successed()){
+            if (item.isIs_successed()) {
                 action.setImageResource(R.mipmap.ic_jingzhi);
-            }else {
+            } else {
                 action.setImageResource(R.mipmap.ic_delete);
             }
             action.setTag(item.isIs_successed());
@@ -127,30 +135,30 @@ public class AccountManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 if (mRootView.getTag() == null) return;
                 AccountDescFragment fragment = AccountDescFragment.newInstance();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(AccountDescFragment.TAG,(GameAccountResultModel.ListBean) mRootView.getTag());
+                bundle.putSerializable(AccountDescFragment.TAG, (GameAccountResultModel.ListBean) mRootView.getTag());
                 fragment.setArguments(bundle);
-                DetailFragmentsActivity.launch(context,bundle,fragment);
+                DetailFragmentsActivity.launch(context, bundle, fragment);
             }
-            if (v == action){
-                if (action.getTag() instanceof Boolean){
+            if (v == action) {
+                if (action.getTag() instanceof Boolean) {
                     boolean isSuccess = (boolean) action.getTag();
                     if (isSuccess) {
                         Toast.makeText(context, "该账号不可删除！", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (onActionListener != null){
-                        onActionListener.onDelete(((GameAccountResultModel.ListBean)data.get(position)).getId() );
+                    if (onActionListener != null) {
+                        onActionListener.onDelete(((GameAccountResultModel.ListBean) data.get(position)).getId());
                     }
                 }
             }
         }
     }
 
-    public void addOnActionListener (OnActionListener onActionListener){
+    public void addOnActionListener(OnActionListener onActionListener) {
         this.onActionListener = onActionListener;
     }
 
-    public interface OnActionListener{
+    public interface OnActionListener {
         void onDelete(int gameid);
     }
 }

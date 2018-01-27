@@ -3,7 +3,6 @@ package com.game.helper.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.content.SharedPreferencesCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -41,6 +40,7 @@ public class SharedPreUtil {
     public static final String SHARE_DISCOUNT_URL = "share_discount_url";
     public static final String TEMP_HUANXIN_NAME = "temp_hanxin_name";
     private static final String HUAN_XIN_GREETING_TEXT = "huan_xin_greeting_text";
+    private static final String ALERT_DIALOG_ENTER = "enter_alert_dialog";
 
     private static SharedPreferences sp;
 
@@ -112,6 +112,14 @@ public class SharedPreUtil {
 
 
     /*****************************          login about start                 ******************************/
+
+    public static boolean isAlertDialogEnter() {
+        return sp.getBoolean(ALERT_DIALOG_ENTER, false);
+    }
+
+    public static void enterAlertDialog() {
+        sp.edit().putBoolean(ALERT_DIALOG_ENTER, true).commit();
+    }
 
     /**
      * 是否登录
@@ -262,6 +270,7 @@ public class SharedPreUtil {
 
     /**
      * 移除某个key值已经对应的值
+     *
      * @param key
      */
     public static void remove(String key) {
@@ -280,7 +289,7 @@ public class SharedPreUtil {
         editor.apply();
     }
 
-    public static String getRobot( String defValue) {
+    public static String getRobot(String defValue) {
         return sp.getString(HUAN_XIN_GREETING_TEXT, defValue);
     }
 

@@ -195,7 +195,7 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
 
         }
         Flowable<HttpResultModel<VersionCheckResults>> fv = DataService.updateVersion(new VersionCheckRequestBody(packageInfo.versionName));
-        RxLoadingUtils.subscribeWithDialog(context, fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
+        RxLoadingUtils.subscribe(fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
             @Override
             public void accept(final HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
                 if (versionCheckResultsHttpResultModel.isSucceful()) {

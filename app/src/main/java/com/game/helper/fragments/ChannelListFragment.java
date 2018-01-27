@@ -36,7 +36,9 @@ import static zlc.season.rxdownload2.function.Utils.dispose;
 public class ChannelListFragment extends XBaseFragment {
     public static final String TAG = SpecialDetailFragment.class.getSimpleName();
     public static final String GAME_ID = "gameId";
+    public static final String STANDALONEGAME = "StandAloneGame";
     private int gameId;
+    private boolean isStandAloneGame;
 
     public static ChannelListFragment newInstance() {
         return new ChannelListFragment();
@@ -56,6 +58,8 @@ public class ChannelListFragment extends XBaseFragment {
         Bundle arguments = getArguments();
         if (arguments != null) {
             gameId = arguments.getInt(GAME_ID);
+            isStandAloneGame = arguments.getBoolean(STANDALONEGAME);
+            mAdapter.setStandAloneGame(isStandAloneGame);
             loadAdapterData(1, true);
         } else {
             xrclChannelList.showEmpty();
@@ -79,6 +83,7 @@ public class ChannelListFragment extends XBaseFragment {
                     bundle.putInt("channelId", itemDate.getChannel().getId());
                     bundle.putString("path", itemDate.getPath());
                     bundle.putString("pkg", itemDate.getName_package());
+                    bundle.putBoolean("StandAloneGame", isStandAloneGame);
                     //bundle.putSerializable(GameDetailFragment.GAME_DETAIL_INFO,itemDate);
                     DetailFragmentsActivity.launch(context, bundle, GameDetailFragment.newInstance());
                 }

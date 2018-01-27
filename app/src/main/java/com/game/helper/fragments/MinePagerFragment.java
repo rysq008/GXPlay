@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.HuanxinKefuLoginActivity;
-import com.game.helper.activitys.MainActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
@@ -395,7 +394,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
 //                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
 //            }
 //        });
-        RxLoadingUtils.subscribeWithDialog(context, fa, this.bindToLifecycle(), new Consumer<MineData>() {
+        RxLoadingUtils.subscribe(fa, this.bindToLifecycle(), new Consumer<MineData>() {
             @Override
             public void accept(MineData mineData) throws Exception {
                 userInfo = mineData.memberInfoResults;

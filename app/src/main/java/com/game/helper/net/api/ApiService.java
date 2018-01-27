@@ -72,7 +72,7 @@ import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
-import com.game.helper.net.model.BindVipAccountNumRequestBody;
+import com.game.helper.net.model.BindOrUnBindVipRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
@@ -524,5 +524,13 @@ public interface ApiService {
     //获取推广分享信息接口
     @POST("/marketing/get_marketing_share_info/")
     Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData();
+
+    //获取详情分享信息接口
+    @POST("/game/get_game_share_url/")
+    Flowable<HttpResultModel<Map<String, String>>> getApiPackageInfoShareInfoData(@Body GamePackageInfoRequestBody gamePackageInfoRequestBody);
+
+    //绑定或者解绑会员的接口
+    @POST("/member/update_game_account_vip/")
+    Flowable<HttpResultModel<Map<String,Integer>>> getApiBindOrUnBindVip(@Body BindOrUnBindVipRequestBody bindVipRequestBody);
 
 }

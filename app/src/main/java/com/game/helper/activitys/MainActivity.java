@@ -6,12 +6,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,6 +28,7 @@ import com.game.helper.fragments.MinePagerFragment;
 import com.game.helper.fragments.login.SetPasswordFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
+import com.game.helper.model.H5Results;
 import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.LoginUserInfo;
 import com.game.helper.model.VersionCheckResults;
@@ -40,6 +38,7 @@ import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.utils.ToastUtil;
+import com.game.helper.views.GuideAlertDialog;
 import com.game.helper.views.widget.CustomBadgeItem;
 import com.hyphenate.chat.ChatClient;
 import com.hyphenate.helpdesk.callback.Callback;
@@ -153,7 +152,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
             @Override
             public void accept(MsgEvent msgEvent) throws Exception {
-                if ("CustomBadgeItem" .equals(msgEvent.getMsg())) {
+                if ("CustomBadgeItem".equals(msgEvent.getMsg())) {
                     int position = msgEvent.getType();
                     int n = msgEvent.getRequestCode();
                     numberBadgeItem[position].setBorderColor(Color.TRANSPARENT)// Badge的Border颜色
@@ -193,6 +192,17 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             LoginUserInfo userInfo = SharedPreUtil.getLoginUserInfo();
             if (!userInfo.has_passwd) showSetPassWord();
         }
+        BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
+            @Override
+            public void accept(MsgEvent msgEvent) throws Exception {
+                if (msgEvent.getData() instanceof H5Results) {
+                    if (!SharedPreUtil.isAlertDialogEnter()) {
+                        SharedPreUtil.enterAlertDialog();
+                        showAlertDialog((H5Results) msgEvent.getData());
+                    }
+                }
+            }
+        });
     }
 
     private void showSetPassWord() {
@@ -431,7 +441,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
     }
 
     private void G9RequestPermissions() {
-        getRxPermissions().request(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.READ_PHONE_STATE).subscribe(new Consumer<Boolean>() {
+        getRxPermissions().request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE).subscribe(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean aBoolean) throws Exception {
                 if (aBoolean) {
@@ -441,5 +451,29 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
                 }
             }
         });
+    }
+
+    public void showAlertDialog(H5Results h5Results) {
+//        final AlertDialog dialog = new AlertDialog.Builder(context, R.style.FullScreenDialog).setTitle("all type").create();
+//        WebView recyclerView = new iWebView(context);
+//        recyclerView.setLayoutParams(new RecyclerView.LayoutParams(getWindowManager().getDefaultDisplay().getWidth() / 3 * 2, getWindowManager().getDefaultDisplay().getHeight() / 3 * 2));
+//        recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+//        recyclerView.setBackgroundResource(R.color.white);
+//        recyclerView.loadUrl(h5Results.account_guide_url);
+//        dialog.show();
+//        Window dialog_window = dialog.getWindow();
+//        dialog_window.setContentView(recyclerView);
+////        dialog_window.getDecorView().setPadding(0, 0, 0, 0);
+//        //设置对话框的位置
+//        dialog_window.setGravity(Gravity.CENTER);
+//        WindowManager.LayoutParams dialog_window_attributes = dialog_window.getAttributes();
+//        dialog_window_attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        dialog_window_attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;
+////        final int[] location = new int[2];110,0,0,0,117,0,210    20,0,0,0,135,0,210
+////        dialog_window_attributes.y = searchComponentView.getBottom();
+//        dialog_window.setAttributes(dialog_window_attributes);
+
+        GuideAlertDialog dialog = new GuideAlertDialog(0,"",h5Results.account_guide_url);
+        dialog.show(getSupportFragmentManager(),GuideAlertDialog.TAG);
     }
 }

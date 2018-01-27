@@ -45,6 +45,10 @@ public class ClassicalResults extends XBaseModel {
         public String name;
         public boolean isCheck;
 
+        public boolean isStandAloneGame() {
+            return id == 22;
+        }
+
         @Override
         public int itemType() {
             return RxConstant.GameModeType.Game_Classical_type;

@@ -24,6 +24,7 @@ import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import zlc.season.practicalrecyclerview.ItemType;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  *
@@ -31,9 +32,11 @@ import static android.view.View.GONE;
 public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdapter.ViewHolder> {
 
     public static final int TAG_VIEW = 0;
+    private boolean isStandAloneGame = false;
 
-    public SearchListAdapter(Context context) {
+    public SearchListAdapter(Context context, boolean StandAloneGame) {
         super(context);
+        isStandAloneGame = StandAloneGame;
     }
 
     @Override
@@ -63,13 +66,14 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("gameId", ((HotResults.HotItem) item).id);
+                bundle.putBoolean("StandAloneGame", isStandAloneGame);
                 DetailFragmentsActivity.launch(context, bundle, ChannelListFragment.newInstance());
             }
         });
 
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.game_item_layout)
         RecommendView recommondLayout;
@@ -103,21 +107,21 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
 
             Float zhekou_shouchong = data.game_package.get("zhekou_shouchong");
             Float discount_activity = data.game_package.get("discount_activity");
-            if (discount_activity >0) {
+            if (discount_activity > 0) {
                 discountTv.setVisibility(GONE);
-                activityDiscount.setVisibility(View.VISIBLE);
-                matchingActivityDiscount.setVisibility(View.VISIBLE);
-                matchingActivityDiscount.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
-                activityDiscount.setText(discount_activity.toString()+"折");
-                matchingActivityDiscount.setText(zhekou_shouchong.toString()+"折");
+                activityDiscount.setVisibility(VISIBLE);
+                matchingActivityDiscount.setVisibility(VISIBLE);
+                matchingActivityDiscount.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                activityDiscount.setText(discount_activity.toString() + "折");
+                matchingActivityDiscount.setText(zhekou_shouchong.toString() + "折");
             } else {
                 activityDiscount.setVisibility(GONE);
                 matchingActivityDiscount.setVisibility(GONE);
-                discountTv.setVisibility(View.VISIBLE);
-                discountTv.setText(zhekou_shouchong.toString()+"折");
+                discountTv.setVisibility(isStandAloneGame ? GONE : VISIBLE);
+                discountTv.setText(zhekou_shouchong.toString() + "折");
             }
             typeTv.setText(data.type.get("name").replace(" ", ""));
-            sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", "")+"M");
+            sizeTv.setText(data.game_package.get("filesize").toString().replace(" ", "") + "M");
             descTv.setText(data.intro.replace(" ", ""));
             handType.setText(data.class_type.get("name"));
 

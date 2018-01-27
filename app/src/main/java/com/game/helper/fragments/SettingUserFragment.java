@@ -34,6 +34,7 @@ import com.game.helper.utils.Utils;
 import com.game.helper.views.AvatarEditDialog;
 import com.game.helper.views.HeadImageView;
 import com.game.helper.views.OptionsPickerView;
+import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.TimePickerView;
 
 import java.io.File;
@@ -56,14 +57,16 @@ import static android.app.Activity.RESULT_OK;
  */
 public class SettingUserFragment extends XBaseFragment implements View.OnClickListener, AvatarEditDialog.onDialogActionListner {
     public static final String TAG = SettingUserFragment.class.getSimpleName();
+    @BindView(R.id.setting_root_layout)
+    XReloadableStateContorller contorller;
     @BindView(R.id.action_bar_back)
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
     @BindView(R.id.sv_content)
     View mRootContent;
-    @BindView(R.id.aiv_loading)
-    View mloadingView;
+    //    @BindView(R.id.aiv_loading)
+//    View mloadingView;
     @BindView(R.id.ll_avatar)
     View mItemAvatar;
     @BindView(R.id.hv_avatar)
@@ -104,6 +107,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     private TimePickerView mTimerPicker;
     private OptionsPickerView mGenderPicker;
     private Calendar mCalendar;
+    private boolean isFirstEnter = true;
 
     //avatar
     private AvatarEditDialog dialog;
@@ -127,7 +131,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     }
 
     private void initView() {
-        showWaittingDialog();
+//        showWaittingDialog();
         mHeadTittle.setText(getResources().getString(R.string.common_setting_user_info));
         pickerInit();
 
@@ -146,7 +150,14 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
-        getMemberInfo();
+        if (isFirstEnter) {
+            getMemberInfo();
+            isFirstEnter = false;
+        } else if (SharedPreUtil.isLogin()) {
+            getMemberInfo();
+        } else {
+            getActivity().finish();
+        }
     }
 
     /**
@@ -245,7 +256,7 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
             mAlipayStatus.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
-        dismissWaittingDialog();
+//        dismissWaittingDialog();
     }
 
     @Override
@@ -312,15 +323,15 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
 
     }
 
-    private void showWaittingDialog() {
-        mRootContent.setVisibility(View.GONE);
-        mloadingView.setVisibility(View.VISIBLE);
-    }
+//    private void showWaittingDialog() {
+//        mRootContent.setVisibility(View.GONE);
+//        mloadingView.setVisibility(View.VISIBLE);
+//    }
 
-    private void dismissWaittingDialog() {
-        mRootContent.setVisibility(View.VISIBLE);
-        mloadingView.setVisibility(View.GONE);
-    }
+//    private void dismissWaittingDialog() {
+//        mRootContent.setVisibility(View.VISIBLE);
+//        mloadingView.setVisibility(View.GONE);
+//    }
 
     /**************************         safe mannage         ***************************/
 
@@ -421,22 +432,18 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
     /**************************         setting internet       ***************************/
     private void getMemberInfo() {
         Flowable<HttpResultModel<MemberInfoResults>> fr = DataService.getMemberInfo();
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MemberInfoResults>>() {
+        RxLoadingUtils.subscribeWithReload(contorller, fr, bindToLifecycle(), new Consumer<HttpResultModel<MemberInfoResults>>() {
             @Override
             public void accept(HttpResultModel<MemberInfoResults> memberInfoResultsHttpResultModel) throws Exception {
                 if (memberInfoResultsHttpResultModel.isSucceful()) {
+                    contorller.showContent();
                     userInfo = memberInfoResultsHttpResultModel.data;
                     setUserData(memberInfoResultsHttpResultModel.data);
                 } else {
                     Toast.makeText(getContext(), memberInfoResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
-            }
-        });
+        }, null, null, true);
     }
 
     /**

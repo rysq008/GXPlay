@@ -5,15 +5,12 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.ChannelListFragment;
 import com.game.helper.model.RecommendResults;
-import com.game.helper.model.SpecialDetailResults;
-import com.game.helper.model.SpecialResults;
 import com.game.helper.net.api.Api;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -22,6 +19,7 @@ import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 import zlc.season.practicalrecyclerview.ItemType;
 
@@ -51,25 +49,31 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ItemType item = data.get(position);
         RecommendResults.RecommendItem itemDate = (RecommendResults.RecommendItem) data.get(position);
-        Float zhekou_shouchong = itemDate.game_package.get("zhekou_shouchong");
-        Float discount_activity = itemDate.game_package.get("discount_activity");
+        Float zhekou_shouchong = 0f;
+        Float discount_activity = 0f;
+        if (!Kits.Empty.check(itemDate.game_package)) {
+            zhekou_shouchong = itemDate.game_package.get("zhekou_shouchong");
+            discount_activity = itemDate.game_package.get("discount_activity");
+            holder.ivPackageFilesize.setText(String.valueOf(itemDate.game_package.get("filesize").toString().replace(" ", "") + "M"));
+        }
         ILFactory.getLoader().loadNet(holder.ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(itemDate.logo), ILoader.Options.defaultOptions());
         holder.ivName.setText(itemDate.name);
         holder.ivTypeName.setText(itemDate.type.get("name").replace(" ", ""));
-        holder.ivPackageFilesize.setText(String.valueOf(itemDate.game_package.get("filesize").toString().replace(" ", "")+"M"));
         holder.ivntro.setText(itemDate.intro);
-        holder.tvTypeClass.setText(itemDate.class_type.get("name"));
-        if (discount_activity >0) {
+        if(!Kits.Empty.check(itemDate.class_type)) {
+            holder.tvTypeClass.setText(itemDate.class_type.get("name"));
+        }
+        if (discount_activity > 0) {
             holder.ivDiscountVip.setVisibility(View.GONE);
             holder.tvActivityDiscoun.setVisibility(View.VISIBLE);
             holder.tvMatchingActivityDiscoun.setVisibility(View.VISIBLE);
-            holder.tvMatchingActivityDiscoun.getPaint().setFlags(Paint. STRIKE_THRU_TEXT_FLAG|Paint.ANTI_ALIAS_FLAG);
-            holder.tvActivityDiscoun.setText(discount_activity.toString()+"折");
-            holder.tvMatchingActivityDiscoun.setText(zhekou_shouchong.toString()+"折");
+            holder.tvMatchingActivityDiscoun.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            holder.tvActivityDiscoun.setText(discount_activity.toString() + "折");
+            holder.tvMatchingActivityDiscoun.setText(zhekou_shouchong.toString() + "折");
         } else {
             holder.tvActivityDiscoun.setVisibility(View.GONE);
             holder.tvMatchingActivityDiscoun.setVisibility(View.GONE);
-            holder.ivDiscountVip.setText(zhekou_shouchong.toString()+"折");
+            holder.ivDiscountVip.setText(zhekou_shouchong.toString() + "折");
         }
         holder.gameId = itemDate.id;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +107,7 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
         @BindView(R.id.tv_detail_special_type_class)
         TextView tvTypeClass;
         public int gameId;
+
         public ViewHolder(View itemView) {
             super(itemView);
             KnifeKit.bind(this, itemView);
@@ -112,8 +117,8 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
         public void onViewClicked() {
             //跳到详情列表
             Bundle bundle = new Bundle();
-            bundle.putInt("gameId",gameId);
-            DetailFragmentsActivity.launch(context,bundle, ChannelListFragment.newInstance());
+            bundle.putInt("gameId", gameId);
+            DetailFragmentsActivity.launch(context, bundle, ChannelListFragment.newInstance());
         }
     }
 }

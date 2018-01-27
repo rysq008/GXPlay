@@ -147,7 +147,6 @@ public class GameMarketApplication extends MultiDexApplication {
             @Override
             public boolean handleError(NetError error) {
                 if (error.getType() == NetError.AuthError) {
-//                    TotoroToast.makeText(getApplicationContext(), error.getMessage(), 1).show();
                     SharedPreUtil.clearSessionId();
                     SharedPreUtil.cleanLoginUserInfo();
                     ILFactory.getLoader().clearMemoryCache(context);

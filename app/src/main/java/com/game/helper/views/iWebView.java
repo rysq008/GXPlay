@@ -1,6 +1,5 @@
 package com.game.helper.views;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.http.SslError;
@@ -24,51 +23,47 @@ import com.game.helper.utils.SharedPreUtil;
 public class iWebView extends WebView {
     public iWebView(Context context) {
         super(context);
+        init(context);
     }
 
     public iWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
 
     public iWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
     }
 
-    @SuppressLint("JavascriptInterface")
     public void init(final Context context) {
         //        synCookies(context, getUrl());
         try {
-            getSettings().setJavaScriptEnabled(true);
             getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-            getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);  //设置 缓存模式
-            // 开启 DOM storage API 功能
-            getSettings().setDomStorageEnabled(true);
-            //开启 database storage API 功能
-            getSettings().setDatabaseEnabled(true);
-            //开启 Application Caches 功能
-            getSettings().setAppCacheEnabled(true);
+//            // 开启 DOM storage API 功能
+//            getSettings().setDomStorageEnabled(true);
+//            //开启 database storage API 功能
+//            getSettings().setDatabaseEnabled(true);
+//            //开启 Application Caches 功能
+//            getSettings().setAppCacheEnabled(true);
 
             // 设置可以支持缩放
-            getSettings().setSupportZoom(false);
+            getSettings().setSupportZoom(true);
             // 扩大比例的缩放
-            getSettings().setUseWideViewPort(false);
             WebSettings webSettings = getSettings();
             webSettings.setBuiltInZoomControls(true);
             webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-            webSettings.setUseWideViewPort(true);
             webSettings.setLoadWithOverviewMode(true);
             webSettings.setSaveFormData(true);
             webSettings.setGeolocationEnabled(true);
             webSettings.setTextZoom(100);
-            webSettings.setDomStorageEnabled(true);
             webSettings.setDisplayZoomControls(false);
             requestFocus();
             setScrollBarStyle(SCROLLBARS_INSIDE_OVERLAY);
             webSettings.setUseWideViewPort(true);// 设置此属性，可任意比例缩放
-            webSettings.setLoadWithOverviewMode(true);
             webSettings.setJavaScriptEnabled(true);
             webSettings.setDefaultTextEncodingName("utf-8");
-            addJavascriptInterface(getHtmlObject(), "jsObj");
+//            addJavascriptInterface(getHtmlObject(), "jsObj");
 
             setWebViewClient(new WebViewClient() {
                 @Override
@@ -77,7 +72,7 @@ public class iWebView extends WebView {
                     //获取cookies
                     CookieManager cm = CookieManager.getInstance();
                     String cookies = cm.getCookie(url);
-                    SharedPreUtil.saveCookies(cookies);
+//                    SharedPreUtil.saveCookies(cookies);
                     return true;
                 }
 

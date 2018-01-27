@@ -77,7 +77,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
     ImageView mIvCode;
 
     //args
-    private int Login_Type = 1;
+    private int Login_Type = -1;
     private onLoginListener mOnLoginListener;
     private GXPlayDialog loginDialog;
 
@@ -103,7 +103,7 @@ public class LoginFragment extends XBaseFragment implements View.OnClickListener
         mTabPasswd.setOnClickListener(this);
 
         mCountDownText.setVisibility(View.GONE);
-        switchLoginType(LOGIN_TYPE_PASSWORD);
+        switchLoginType(LOGIN_TYPE_MESSAGE);
         if (BuildConfig.DEBUG) {
             debugHint.setVisibility(View.VISIBLE);
             debugHint.setText("测试环境默认验证码：9870");

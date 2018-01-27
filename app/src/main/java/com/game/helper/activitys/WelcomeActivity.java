@@ -3,6 +3,7 @@ package com.game.helper.activitys;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;

@@ -3,7 +3,6 @@ package com.game.helper.views;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,24 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
-import com.game.helper.data.RxConstant;
-import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.MineGiftInfoResults;
-import com.game.helper.model.MineGiftlistResults;
-import com.game.helper.net.DataService;
-import com.game.helper.net.model.MineGameRequestBody;
-import com.game.helper.net.model.MineGiftInfoRequestBody;
-import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.ScreenUtils;
 import com.game.helper.utils.StringUtils;
-import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
-
-import butterknife.BindView;
-import cn.droidlover.xdroidmvp.net.NetError;
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.BehaviorSubject;
 
 /**
  * Created by sung on 2017/12/21.
@@ -85,8 +69,8 @@ public class GiftDescDialog extends android.support.v4.app.DialogFragment implem
             return;
         }
         content.setText(giftInfo.gift_content);
-        time.setText( (StringUtils.isEmpty(giftInfo.start_time) ? "" : giftInfo.start_time )
-                + (StringUtils.isEmpty(giftInfo.end_time) ? "" : ("至" + giftInfo.end_time) ) );
+        time.setText((StringUtils.isEmpty(giftInfo.start_time) ? "" : giftInfo.start_time)
+                + (StringUtils.isEmpty(giftInfo.end_time) ? "" : ("至" + giftInfo.end_time)));
     }
 
     @Override
@@ -104,7 +88,7 @@ public class GiftDescDialog extends android.support.v4.app.DialogFragment implem
     @Override
     public void onClick(View v) {
         if (v == close) {
-            this.getDialog().dismiss();
+            this.dismiss();
         }
     }
 }

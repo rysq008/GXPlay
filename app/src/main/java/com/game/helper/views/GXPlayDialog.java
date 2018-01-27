@@ -90,7 +90,7 @@ public class GXPlayDialog extends android.support.v4.app.DialogFragment implemen
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getDialog().setCancelable(true);
+        this.setCancelable(true);
 
         //两个xml内的id别改！！
         mTittle = view.findViewById(R.id.dialog_tittle);
@@ -137,7 +137,7 @@ public class GXPlayDialog extends android.support.v4.app.DialogFragment implemen
 
     @Override
     public void onClick(View v) {
-        getDialog().dismiss();
+        this.dismiss();
         if (onDialogActionListner == null) return;
         if (v == cancel) {
             onDialogActionListner.onCancel();

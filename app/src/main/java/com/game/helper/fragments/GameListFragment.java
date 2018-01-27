@@ -47,6 +47,7 @@ public class GameListFragment extends XBaseFragment {
 
     SearchListAdapter mAdapter;
     int classical_type = 0, common_type = 0;
+    int class_type = 22;//单机游戏类型
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +75,7 @@ public class GameListFragment extends XBaseFragment {
     private void initAdapter() {
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == mAdapter) {
-            mAdapter = new SearchListAdapter(context);
+            mAdapter = new SearchListAdapter(context, class_type == classical_type);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
         xRecyclerContentLayout.getRecyclerView().setVerticalScrollBarEnabled(false);

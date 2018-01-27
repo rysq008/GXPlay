@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
-import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.game.helper.data.RxConstant;
@@ -30,7 +29,7 @@ import zlc.season.practicalrecyclerview.ItemType;
 public class GamePagerFragment extends GameBasePagerFragment {
 
     PagerAdapter mAdapter;
-//    SparseArray sparseArray = new SparseArray<Fragment>();
+    //    SparseArray sparseArray = new SparseArray<Fragment>();
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -51,7 +50,8 @@ public class GamePagerFragment extends GameBasePagerFragment {
 //                    if (null == sparseArray.get(position))
                     {
                         if (itemType instanceof ClassicalResults.ClassicalItem) {
-                            Fragment fragment = GameListFragment.newInstance(((ClassicalResults.ClassicalItem) itemType).id, 0);
+                            ClassicalResults.ClassicalItem classicalItem = ((ClassicalResults.ClassicalItem) itemType);
+                            Fragment fragment = GameListFragment.newInstance(classicalItem.id, 0);
 //                            sparseArray.put(position, fragment);
                             return fragment;
                         } else if (itemType instanceof CommonResults.CommonItem) {

@@ -2,6 +2,7 @@ package com.game.helper.activitys;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -75,7 +76,7 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
 
     public static void launch(Context context, Bundle bundle, int flag, final Fragment fra) {
         long NowTime = System.currentTimeMillis();
-        if (NowTime - PressTime > 1000) {
+        if (NowTime - PressTime > 1000 || context instanceof Application) {
             PressTime = NowTime;
             Intent intent = new Intent(context, DetailFragmentsActivity.class);
             if (flag != 0)
@@ -145,7 +146,7 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         CommonShareResults model = new CommonShareResults();
         model.setContent(packageInfo.getGame().getIntro());
         model.setLogo(packageInfo.getGame().getLogo());
-        model.setTitle(packageInfo.getGame().getName() + " 最低" + packageInfo.getDiscount_vip() + "折");
+        model.setTitle(packageInfo.getGame().getName() + " 最低" + (packageInfo.getDiscount_activity() == 0 ? packageInfo.getDiscount_vip() : packageInfo.getDiscount_activity()) + "折");
         model.setUrl(packageInfo.getGame().getUrl());
         return model;
     }

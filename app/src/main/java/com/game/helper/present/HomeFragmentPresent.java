@@ -1,12 +1,13 @@
 package com.game.helper.present;
 
+import com.game.helper.event.BusProvider;
+import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.BaseFragment.HomeBasePagerFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.H5Results;
 import com.game.helper.model.HotResults;
-import com.game.helper.model.NoticeResults;
 import com.game.helper.model.PlatformMessageResults;
 import com.game.helper.model.RecommendResults;
 import com.game.helper.model.SpecialResults;
@@ -81,6 +82,7 @@ public class HomeFragmentPresent extends XPresent<HomeBasePagerFragment> {
                 } else {
                     getV().showData(mXBaseModel.current_page, mXBaseModel.total_page, list);
                 }
+                BusProvider.getBus().post(new MsgEvent<H5Results>(homeAllResultsData.h5Results));
 //                getV().showSearchView(true);
             }
         }, null, null, showLoading);

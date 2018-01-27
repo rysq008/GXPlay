@@ -12,14 +12,18 @@ import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.LogoutResults;
+import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SimpleTextWatcher;
+import com.game.helper.views.GXPlayDialog;
 import com.game.helper.views.widget.ChannelPopupWindow;
 import com.game.helper.views.widget.GamePopupWindow;
+import com.game.helper.views.widget.ToggleButton;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -47,15 +51,23 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     EditText channelEdit;
     @BindView(R.id.selectChannel)
     TextView selectChannel;
+    @BindView(R.id.tb_add_account_toggle)
+    ToggleButton toggleButt;
+    @BindView(R.id.add_account_tips_tv)
+    TextView tipsTv;
     @BindView(R.id.submitTv)
     TextView submitTv;
 
-    private String mGameId = "16";
+
+    private int gid = 1;//当乐端ID号
+    private String mGameId = "";
     private String mChannelId;
     private boolean canEdit = true;
 
     private GamePopupWindow mGameWindow;
     private ChannelPopupWindow mChannelWindow;
+    private GXPlayDialog dialog;
+    private int mAccountNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,14 +135,79 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
             }
         });
 
+        Flowable<HttpResultModel<VipGameAccountResults>> fr = DataService.getVipGameAccount();
+        RxLoadingUtils.subscribeWithDialog(context, fr, bindToLifecycle(), new Consumer<HttpResultModel<VipGameAccountResults>>() {
+            @Override
+            public void accept(HttpResultModel<VipGameAccountResults> vipGameAccountResultsHttpResultModel) throws Exception {
+                if (vipGameAccountResultsHttpResultModel.isSucceful()) {
+                    mAccountNum = vipGameAccountResultsHttpResultModel.data.count;
+                    tipsTv.setText(getString(R.string.add_account_tips, mAccountNum));
+                }
+            }
+        });
+
+        toggleButt.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                if (mAccountNum > 0) {
+                    if (on)
+                        showVipBindDialog(1, new GXPlayDialog.onDialogActionListner() {
+                            @Override
+                            public void onCancel() {
+                                toggleButt.setToggleOff();
+                            }
+
+                            @Override
+                            public void onConfirm() {
+                            }
+                        });
+                } else {
+                    toggleButt.setToggleOff();
+                    showVipBindDialog(2, new GXPlayDialog.onDialogActionListner() {
+                        @Override
+                        public void onCancel() {
+                            dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onConfirm() {
+                            dialog.dismiss();
+                            Bundle bundle = new Bundle();
+                            bundle.putInt(RechargeFragment.VIP, 3);
+                            DetailFragmentsActivity.launch(context, bundle, RechargeFragment.newInstance());
+                        }
+                    });
+                }
+
+            }
+        });
     }
 
     /**
      * 提交，添加账户
      */
-    private void addGameAccount(int game_id, int channel_id, String game_account) {
-        Flowable<HttpResultModel<LogoutResults>> fr = DataService.addGameAccount(new AddGameAccountRequestBody(game_id, 1, channel_id, game_account));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<LogoutResults>>() {
+    private void addGameAccount(final int game_id, final int channel_id, final String game_account) {
+        if (gid == channel_id) {
+            showVipBindDialog(0, new GXPlayDialog.onDialogActionListner() {
+                @Override
+                public void onCancel() {
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onConfirm() {
+                    dialog.dismiss();
+                    doAddGameAccount(game_id, channel_id, game_account);
+                }
+            });
+        } else {
+            doAddGameAccount(game_id, channel_id, game_account);
+        }
+    }
+
+    private void doAddGameAccount(int game_id, int channel_id, String game_account) {
+        Flowable<HttpResultModel<LogoutResults>> fr = DataService.addGameAccount(new AddGameAccountRequestBody(game_id, 1, channel_id, game_account, toggleButt.isToggleOn()));
+        RxLoadingUtils.subscribeWithDialog(context, fr, bindToLifecycle(), new Consumer<HttpResultModel<LogoutResults>>() {
             @Override
             public void accept(HttpResultModel<LogoutResults> recommendResultsHttpResultModel) throws Exception {
                 if (recommendResultsHttpResultModel.isSucceful()) {
@@ -146,7 +223,6 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 //                showError(netError);
             }
         });
-
     }
 
     public String getAccountname() {
@@ -251,5 +327,29 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 
         super.onBackPressed();
 
+    }
+
+    /**
+     * type
+     * 0：綁定VIP帳號
+     * 1：綁定当乐帳號
+     * 2:VIP数量为0
+     */
+    private void showVipBindDialog(int type, GXPlayDialog.onDialogActionListner listner) {
+        String content = "", title = "";
+        if (type == 0) {
+            title = "帐户绑定提示窗";
+            content = "当乐平台帐号必须绑定的是乐号，请谨慎操作！您确定绑定该账号吗？";
+        } else if (type == 1) {
+            title = "绑定VIP的提示框";
+            content = "您将占用一个VIP账号名额，确定此操作吗？";
+        } else if (type == 2) {
+            title = "绑定VIP的提示框";
+            content = "VIP会员剩余名额为0，请升级会员。";
+        }
+        dialog = null;
+        dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, title, content);
+        dialog.addOnDialogActionListner(listner);
+        dialog.show(getSupportFragmentManager(), GXPlayDialog.TAG);
     }
 }

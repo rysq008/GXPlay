@@ -22,7 +22,7 @@ import com.game.helper.views.widget.PasswordEditText;
  * 输入交易密码弹窗
  */
 
-public class PasswordEditDialog extends android.support.v4.app.DialogFragment implements PasswordEditText.OnEditCompleteListener,View.OnClickListener{
+public class PasswordEditDialog extends android.support.v4.app.DialogFragment implements PasswordEditText.OnEditCompleteListener, View.OnClickListener {
     public static final String TAG = PasswordEditDialog.class.getSimpleName();
     private OnPassWordEditListener onPassWordEditListener;
     private TextView tittle;
@@ -34,13 +34,13 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(android.support.v4.app.DialogFragment.STYLE_NORMAL , R.style.Dialog_FullScreen);
+        setStyle(android.support.v4.app.DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreen);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_edit_trade_password,container,false);
+        View view = inflater.inflate(R.layout.dialog_edit_trade_password, container, false);
         tittle = view.findViewById(R.id.dialog_tittle);
         content = view.findViewById(R.id.dialog_content);
         cancel = view.findViewById(R.id.dialog_cancel);
@@ -52,7 +52,7 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getDialog().setCancelable(false);
+        this.setCancelable(false);
         passwordEditText.addOnEditCompleteListener(this);
         cancel.setOnClickListener(this);
         confirm.setOnClickListener(this);
@@ -73,49 +73,49 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
     @Override
     public void onClick(View v) {
         if (v == cancel) {
-            getDialog().dismiss();
+            this.dismiss();
         }
         if (v == confirm) {
-            if (passwordEditText.getContnetText().toString().length() < 6){
+            if (passwordEditText.getContnetText().toString().length() < 6) {
                 Toast.makeText(getContext(), "输入密码不足6位！", Toast.LENGTH_SHORT).show();
                 return;
             }
             passWordComplete(passwordEditText.getContnetText().toString());
-            if (onPassWordEditListener != null){
+            if (onPassWordEditListener != null) {
                 onPassWordEditListener.onConfirmComplete(passwordEditText.getContnetText().toString());
             }
         }
     }
 
-    public void addOnPassWordEditListener(OnPassWordEditListener onPassWordEditListener){
+    public void addOnPassWordEditListener(OnPassWordEditListener onPassWordEditListener) {
         this.onPassWordEditListener = onPassWordEditListener;
     }
 
-    public interface OnPassWordEditListener{
+    public interface OnPassWordEditListener {
         void onConfirmComplete(String password);
     }
 
     /**
      * 需要自动完成时使用
-     * */
+     */
     @Override
     public void onEditComplete(String password) {
-        Log.e(TAG, "onEditComplete: "+password );
+        Log.e(TAG, "onEditComplete: " + password);
     }
 
     /**
      * 手动完成时补充(如果添加了监听器此处逻辑请注释)
-     * */
-    private void passWordComplete(String password){
-        Log.e(TAG, "onEditComplete: "+password );
+     */
+    private void passWordComplete(String password) {
+        Log.e(TAG, "onEditComplete: " + password);
     }
 
-    public void setTittleText(String tittle){
+    public void setTittleText(String tittle) {
         if (StringUtils.isEmpty(tittle)) return;
         this.tittle.setText(tittle);
     }
 
-    public void setContentText(String content){
+    public void setContentText(String content) {
         if (StringUtils.isEmpty(content)) return;
         this.content.setText(content);
     }

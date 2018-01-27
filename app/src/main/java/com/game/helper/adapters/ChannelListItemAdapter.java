@@ -14,15 +14,12 @@ import android.widget.TextView;
 
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
-import com.game.helper.fragments.ChannelListFragment;
 import com.game.helper.fragments.WebviewFragment;
 import com.game.helper.model.DownLoad.DownloadController;
 import com.game.helper.model.GamePackageListResult;
 import com.game.helper.net.api.Api;
 import com.game.helper.net.model.ReportedRequestBody;
 import com.game.helper.utils.DownLoadReceiveUtils;
-import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.utils.Utils;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
@@ -50,6 +47,12 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
     private RxDownload mRxDownload;
     private DataBaseHelper dataBaseHelper;
     private PackageManager pm;
+
+    public void setStandAloneGame(boolean standAloneGame) {
+        isStandAloneGame = standAloneGame;
+    }
+
+    private boolean isStandAloneGame;
 
     public ChannelListItemAdapter(Context context, RxPermissions rxPermissions) {
         super(context);
@@ -135,7 +138,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 tvActivityDiscount.setText(discount_activity.toString() + "折");
                 tvMatchingActivityDiscount.setText(discount_vip.toString() + "折");
             } else {
-                tvDiscountVip.setVisibility(View.VISIBLE);
+                tvDiscountVip.setVisibility(isStandAloneGame ? View.GONE : View.VISIBLE);
                 tvActivityDiscount.setVisibility(View.GONE);
                 tvMatchingActivityDiscount.setVisibility(View.GONE);
                 tvDiscountVip.setText(discount_vip.toString() + "折");
@@ -246,7 +249,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                     }
                 }
             });
-            mDownloadController.setReportedRequestBody(new ReportedRequestBody(mData.getGame().getId(),mData.getChannel().getId(),1),((XActivity)context).bindToLifecycle());
+            mDownloadController.setReportedRequestBody(new ReportedRequestBody(mData.getGame().getId(), mData.getChannel().getId(), 1), ((XActivity) context).bindToLifecycle());
         }
 
         private void updateProgressStatus(DownloadEvent event) {
@@ -260,7 +263,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 mPercent.setVisibility(View.GONE);
                 mSize.setVisibility(View.GONE);
                 mStatusText.setVisibility(View.GONE);
-            }else if(event.getFlag() == DownloadFlag.COMPLETED){
+            } else if (event.getFlag() == DownloadFlag.COMPLETED) {
                 pbChannel.setVisibility(View.GONE);
                 mPercent.setVisibility(View.GONE);
                 mSize.setVisibility(View.GONE);

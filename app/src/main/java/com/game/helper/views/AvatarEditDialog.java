@@ -13,13 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.R;
 import com.game.helper.data.RxConstant;
 import com.game.helper.utils.ScreenUtils;
-import com.game.helper.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +57,7 @@ public class AvatarEditDialog extends android.support.v4.app.DialogFragment impl
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getDialog().setCancelable(true);
+        this.setCancelable(true);
         mChoosePic = view.findViewById(R.id.tv_choose_pic);
         mTakePhoto = view.findViewById(R.id.tv_take_photo);
         mCancel = view.findViewById(R.id.tv_cancel);
@@ -84,11 +82,11 @@ public class AvatarEditDialog extends android.support.v4.app.DialogFragment impl
     public void onClick(View v) {
         if (v == mCancel) {
             onDialogActionListner.onCancel();
-            if (getDialog() != null) getDialog().dismiss();
+            if (getDialog() != null) this.dismiss();
             return;
         }
         if (!mPermission) mPermission = checkCropPermission();
-        if (getDialog() != null) getDialog().dismiss();
+        if (getDialog() != null) this.dismiss();
         if (!mPermission) {
             Toast.makeText(getContext(), "权限不足哦", Toast.LENGTH_SHORT).show();
             return;

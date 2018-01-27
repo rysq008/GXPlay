@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -56,6 +57,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -145,6 +147,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private DownloadController mDownloadController;
     private DownloadBean downloadBean;
     private Boolean mIsWebGame;
+    private boolean isStandAloneGame;
 
     long lastClickTime = 0;
 
@@ -163,6 +166,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             gamepackeId = arguments.getInt("gamepackeId");
             path = arguments.getString("path", "");
             pkg = arguments.getString("pkg", "");
+            isStandAloneGame = arguments.getBoolean("StandAloneGame");
             initGamePackage(true);
             mDownloadController = new DownloadController(mStatusText, btnLoad, tvBottomDownload);
         } else {
@@ -196,7 +200,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             bundle.putInt("gameId", packageInfo.getGame().getId());
             gameDetailCommunityFragment.setArguments(bundle);
         }
-        list.add(rechargeGameFragment);
+        if (!isStandAloneGame)
+            list.add(rechargeGameFragment);
         list.add(gameDetailInfoFragment);
         list.add(gameDetailGiftFragment);
         list.add(gameDetailCommunityFragment);
@@ -331,6 +336,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         } else {
             mTvActivityDiscount.setVisibility(View.GONE);
             mTvMatchingActivityDiscount.setVisibility(View.GONE);
+            tvDiscount.setVisibility(isStandAloneGame ? View.GONE : View.VISIBLE);
             tvDiscount.setText(discount_vip.toString() + "折");
         }
         ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(packageInfo.getGame().getLogo()), ILoader.Options.defaultOptions());
@@ -423,11 +429,36 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 break;
             case R.id.iv_action:
                 //分享
-                if (getActivity() instanceof DetailFragmentsActivity) {
-                    ((DetailFragmentsActivity) getActivity()).umShare(packageInfo);
-                }
+//                if (getActivity() instanceof DetailFragmentsActivity) {
+//                    ((DetailFragmentsActivity) getActivity()).umShare(packageInfo);
+//                }
+                fetchShareInfo();
                 break;
         }
+    }
+
+    /**
+     * 获取分享信息
+     */
+    private void fetchShareInfo() {
+        Flowable<HttpResultModel<Map<String, String>>> fr = DataService.getApiPackageInfoShareInfoData(new GamePackageInfoRequestBody(gamepackeId));
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<Map<String, String>>>() {
+            @Override
+            public void accept(HttpResultModel<Map<String, String>> mapHttpResultModel) throws Exception {
+                if (mapHttpResultModel.isSucceful()) {
+                    if (getActivity() instanceof DetailFragmentsActivity) {
+                        String url = (String) mapHttpResultModel.data.get("url");
+                        packageInfo.getGame().setUrl(url);
+                        ((DetailFragmentsActivity) getActivity()).umShare(packageInfo);
+                    }
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Log.e(TAG, "Link Net Error! Error Msg: " + netError.getMessage().trim());
+            }
+        });
     }
 
     public void loadData() {

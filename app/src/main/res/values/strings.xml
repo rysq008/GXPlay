@@ -174,4 +174,5 @@
     <string name="recharge_can_use_discount">可用vip账号剩余</string>
     <string name="recharge_succ_hint">亲，充值成功之后10分钟之内到账哦，请耐心等待。</string>
     <string name="recharge_cash_hint">亲，提现申请成功后，在3个工作日内到账，请耐心等待。</string>
+    <string name="add_account_tips">温馨提示：您当前剩余VIP帐号名额为 %d 个</string>
 </resources>

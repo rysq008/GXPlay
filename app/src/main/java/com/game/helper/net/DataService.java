@@ -72,7 +72,7 @@ import com.game.helper.net.model.AddGameAccountRequestBody;
 import com.game.helper.net.model.AvailableRedpackRequestBody;
 import com.game.helper.net.model.BannerRequestBody;
 import com.game.helper.net.model.BaseRequestBody;
-import com.game.helper.net.model.BindVipAccountNumRequestBody;
+import com.game.helper.net.model.BindOrUnBindVipRequestBody;
 import com.game.helper.net.model.CashToRequestBody;
 import com.game.helper.net.model.ChannelListRequestBody;
 import com.game.helper.net.model.CheckTradePasswdRequestBody;
@@ -541,11 +541,17 @@ public class DataService {
 
     public static Flowable<HttpResultModel> reportedData(ReportedRequestBody reportedRequestBody) {
         return Api.CreateApiService().reportedData(reportedRequestBody);
-
     }
 
     public static Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData() {
         return Api.CreateApiService().getApiShareInfoData();
+    }
 
+    public static Flowable<HttpResultModel<Map<String, String>>> getApiPackageInfoShareInfoData(GamePackageInfoRequestBody gamePackageRequestBody) {
+        return Api.CreateApiService().getApiPackageInfoShareInfoData(gamePackageRequestBody);
+    }
+
+    public static Flowable<HttpResultModel<Map<String, Integer>>> getApiBindOrUnBindVip(BindOrUnBindVipRequestBody bindVipRequestBody) {
+        return Api.CreateApiService().getApiBindOrUnBindVip(bindVipRequestBody);
     }
 }

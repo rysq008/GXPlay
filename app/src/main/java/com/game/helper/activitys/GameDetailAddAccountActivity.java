@@ -76,14 +76,14 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
 
     private void initIntentData(Intent intent) {
         Bundle extras = intent.getExtras();
-        if(extras != null){
+        if (extras != null) {
             xreload.showContent();
             GamePackageInfoResult gameDetailInfo = (GamePackageInfoResult) extras.getSerializable(GAME_MY_ACCOUNT_INFO);
             mGameId = gameDetailInfo.getGame().getId();
             mChannelId = gameDetailInfo.getChannel().getId();
             gameEdit.setText(gameDetailInfo.getGame().getName());
             channelEdit.setText(gameDetailInfo.getChannel().getName());
-        }else{
+        } else {
             xreload.showEmpty();
         }
 
@@ -133,9 +133,9 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
     /**
      * 提交，添加账户
      */
-    private void addGameAccount(int game_id, int channel_id, String game_account,Boolean showLoading) {
-        Flowable<HttpResultModel<LogoutResults>> fr = DataService.addGameAccount(new AddGameAccountRequestBody(game_id, 1, channel_id, game_account));
-        RxLoadingUtils.subscribeWithReload(xreload,fr, bindToLifecycle(), new Consumer<HttpResultModel<LogoutResults>>() {
+    private void addGameAccount(int game_id, int channel_id, String game_account, Boolean showLoading) {
+        Flowable<HttpResultModel<LogoutResults>> fr = DataService.addGameAccount(new AddGameAccountRequestBody(game_id, 1, channel_id, game_account, false));
+        RxLoadingUtils.subscribeWithReload(xreload, fr, bindToLifecycle(), new Consumer<HttpResultModel<LogoutResults>>() {
             @Override
             public void accept(HttpResultModel<LogoutResults> recommendResultsHttpResultModel) throws Exception {
                 if (recommendResultsHttpResultModel.isSucceful()) {
@@ -145,7 +145,7 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
                     Toast.makeText(GameDetailAddAccountActivity.this, "添加账户失败", Toast.LENGTH_SHORT).show();
                 }
             }
-        }, null,null,showLoading);
+        }, null, null, showLoading);
 
     }
 
@@ -232,7 +232,7 @@ public class GameDetailAddAccountActivity extends XBaseActivity implements View.
                     return;
                 }
 
-                addGameAccount(mGameId, mChannelId, getAccountname(),true);
+                addGameAccount(mGameId, mChannelId, getAccountname(), true);
 
                 break;
             default:
