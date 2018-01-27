@@ -1,6 +1,7 @@
 package com.game.helper.views;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;

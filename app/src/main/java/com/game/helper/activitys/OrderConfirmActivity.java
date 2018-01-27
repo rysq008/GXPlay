@@ -223,7 +223,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     String marketingAmount = "";//使用推广账户金额
 
     private boolean hasRedPack;
-    private boolean isWxPay = false;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -266,9 +265,8 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isWxPay) {
-//            fetchAccountInfo();
-        }
+        fetchAccountInfo();
+
     }
 
     /**
@@ -357,7 +355,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     if (redPackEvent.getType() == RxConstant.WX_PAY) {
                         switch (redPackEvent.getData()) {
                             case 0:
-                                isWxPay = true;
                                 doConsume(accountAmount, marketingAmount, String.valueOf(payWay));
                                 break;
                             case -1:
@@ -419,7 +416,16 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         toggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
+                usePushAccount = true;
+                // 打开了推广账户余额   可用金币=充值账户余额+ 推广账户余额
+                mAvailableCoin = mAccountAvailableBalance + mPushAccountAvailableBalance;
+                BigDecimal bigDecimal = new BigDecimal(mAvailableCoin + "");
+                String result = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+                availableCoinTv.setText(result);
+
+                //计算还需支付
+                mNeedPay = calcNeedPay();
+                /*if (b) {
                     usePushAccount = true;
                     // 打开了推广账户余额   可用金币=充值账户余额+ 推广账户余额
                     mAvailableCoin = mAccountAvailableBalance + mPushAccountAvailableBalance;
@@ -439,7 +445,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
                     //计算还需支付
                     mNeedPay = calcNeedPay();
-                }
+                }*/
             }
         });
     }
@@ -948,6 +954,11 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         });
     }
 
+//    @Override
+//    protected void onDestroy() {
+////        BusProvider.getBus().unregister(this);
+//        super.onDestroy();
+//    }
     @Override
     public boolean useEventBus() {
         return true;

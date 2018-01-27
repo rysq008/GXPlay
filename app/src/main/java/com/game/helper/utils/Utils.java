@@ -293,8 +293,8 @@ public class Utils {
     /**
      * DecimalFormat转换最简便
      */
-    public static float m2(float arg) {
-        DecimalFormat df = new DecimalFormat("#.00");
+    public static Float m2(float arg) {
+        DecimalFormat df = new DecimalFormat(".00");
         Log.e(TAG, "m2: " + arg + "/" + df.format(arg));
         return Float.parseFloat(df.format(arg));
     }
@@ -465,7 +465,6 @@ public class Utils {
      * 删除指定目录下文件及目录
      *
      * @param deleteThisPath
-     * @param filepath
      * @return
      */
     public static void deleteFolderFile(String filePath, boolean deleteThisPath) {

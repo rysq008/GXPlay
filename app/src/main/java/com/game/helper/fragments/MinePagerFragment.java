@@ -174,7 +174,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         }
         if (v == mRecharge) {
             Bundle bundle = new Bundle();
-            bundle.putString(RechargeFragment.TAG, userInfo.vip_level.level);
+            bundle.putInt(RechargeFragment.TAG, userInfo.vip_level.level);
             RechargeFragment rechargeFragment = RechargeFragment.newInstance();
             rechargeFragment.setArguments(bundle);
             DetailFragmentsActivity.launch(getContext(), bundle, rechargeFragment);

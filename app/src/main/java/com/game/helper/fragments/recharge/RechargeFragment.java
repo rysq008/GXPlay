@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebViewFragment;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,7 +94,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     private ProgressDialog dialog;
     public static final int Reset_Ui_Code = 11;
     public static final String VIP = "vip";
-    private String level = "0";
+    private int level = 0;
 
     public static RechargeFragment newInstance() {
         return new RechargeFragment();
@@ -107,9 +108,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     public void initData(Bundle savedInstanceState) {
         Bundle arguments = getArguments();
         initView();
-        if(arguments != null){
+        if (arguments != null) {
             int vip = arguments.getInt(VIP);
-            if(vip == 3){
+            if (vip == 3) {
                 viewPager.setCurrentItem(2);
             }
         }
@@ -131,8 +132,8 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         mConnectKefu.setOnClickListener(this);
         mIvAction.setOnClickListener(this);
 
-        if (getArguments() != null){
-            level = getArguments().getString(TAG);
+        if (getArguments() != null) {
+            level = getArguments().getInt(TAG);
         }
 
         rechargeGameFragment = RechargeGameFragment.newInstance();
@@ -156,8 +157,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             public int getCount() {
                 return list.size();
             }
+
         });
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(1);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -187,7 +189,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
                 ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
-                colorTransitionPagerTitleView.setPadding(Utils.dip2px(getContext(),30),0,Utils.dip2px(getContext(),30),0);
+                colorTransitionPagerTitleView.setPadding(Utils.dip2px(getContext(), 30), 0, Utils.dip2px(getContext(), 30), 0);
                 colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
                 colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
                 String title = null;
@@ -231,8 +233,17 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             double totalBalanceValue = rechargeGameFragment.getTotalBalanceValue();
             int inputValue = rechargeGameFragment.getInputValue();
             boolean is_vip = rechargeGameFragment.getIs_VIP();
-            if (gameBean == null || totalBalanceValue <= 0 || inputValue <= 0) {
-                Toast.makeText(getContext(), "请输入正确的金额！", Toast.LENGTH_SHORT).show();
+
+            if (totalBalanceValue <= 0 || inputValue <= 0) {
+                if (gameBean == null) {
+                    Toast.makeText(getContext(), "请选择游戏账号！", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "请输入正确的金额！", Toast.LENGTH_SHORT).show();
+                }
+            }else if(rechargeGameFragment.getIsGoToVip()){
+                ToastUtil.showToast("请升级会员");
+            } else if(rechargeGameFragment.getGameVipAccountNotEnough()){
+                ToastUtil.showToast("VIP账号名额已用完,请升级会员");
             } else {
 //                Bundle bundle = new Bundle();
 //                bundle.putSerializable(ConfirmOrderFragment.BUNDLE_GAME_BEAN, gameBean);
@@ -240,7 +251,6 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
 //                ConfirmOrderFragment confirmOrderFragment = ConfirmOrderFragment.newInstance();
 //                confirmOrderFragment.setArguments(bundle);
 //                DetailFragmentsActivity.launch(getContext(), bundle, confirmOrderFragment);
-
                 //订单确认页面用OrderConfirmActivity
                 Intent intent = new Intent(getActivity(), OrderConfirmActivity.class);
                 Bundle bundle = new Bundle();
@@ -263,11 +273,11 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             }
             if (select_pay_mode == RechargeGoldFragment.Pay_Type_Wechat) {
                 //微信支付
-                weixinPay(totalChargeGold,false,level);
+                weixinPay(totalChargeGold, false, String.valueOf(level));
             }
             if (select_pay_mode == RechargeGoldFragment.Pay_Type_Alipay) {
                 //支付宝支付
-                aliPay(totalChargeGold,false,level);
+                aliPay(totalChargeGold, false, String.valueOf(level));
             }
         }
 
@@ -275,15 +285,15 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             Boolean payType = rechargeVIPLevelFragment.getPayType();
             int totalCharge = rechargeVIPLevelFragment.getTotal();
             String selectVIPLevel = rechargeVIPLevelFragment.getSelectedVIPLevel();
-            if (totalCharge <= 0 ) {
+            if (totalCharge <= 0) {
                 ToastUtil.showToast("请选择一个会员等级金额");
-            }else{
-                if (payType ) {
+            } else {
+                if (payType) {
                     //微信支付
-                    weixinPay(totalCharge,true,selectVIPLevel);
-                }else{
+                    weixinPay(totalCharge, true, selectVIPLevel);
+                } else {
                     //支付宝支付
-                    aliPay(totalCharge,true,selectVIPLevel);
+                    aliPay(totalCharge, true, selectVIPLevel);
                 }
             }
 
@@ -316,7 +326,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     /**
      * ali支付
      */
-    private void aliPay(float amount, boolean vip,String vipLevel) {
+    private void aliPay(float amount, boolean vip, String vipLevel) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
                 SharedPreUtil.getLoginUserInfo().member_id + "",
@@ -359,10 +369,11 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         });
 
     }
+
     /**
      * 微信支付
      */
-    private void weixinPay(float mNeedPay,boolean vip,String vipLevel) {
+    private void weixinPay(float mNeedPay, boolean vip, String vipLevel) {
         showWaittingDialog();
         Flowable<HttpResultModel<PayResultModel>> fr = DataService.ApiPay(new PayRequestBody(
                 SharedPreUtil.getLoginUserInfo().member_id + "",
@@ -384,7 +395,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                     bean.setTimestamp(payRequestBody.data.getWxorderInfo().getTimestamp());
                     GameMarketApplication.api.sendReq(WXPayUtils.weChatPay(bean));
                     dismissWaittingDialog();
-                }else{
+                } else {
                     Toast.makeText(getContext(), payRequestBody.getResponseMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -429,7 +440,7 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
             Intent intentKefu = new Intent(context, HuanxinKefuLoginActivity.class);
             startActivity(intentKefu);
         }
-        if (v == mHeadAction){
+        if (v == mHeadAction) {
             // TODO: 2017/12/29 补全跳转
             //Toast.makeText(getContext(), "跳转说明", Toast.LENGTH_SHORT).show();
         }
@@ -444,9 +455,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
                     String recharge_dsc_url = h5UrlListResultsHttpResultModel.data.recharge_dsc_url;
 
                     Bundle bundle = new Bundle();
-                    bundle.putString(WebviewFragment.PARAM_URL,recharge_dsc_url);
-                    bundle.putString(WebviewFragment.PARAM_TITLE,"充值说明");
-                    DetailFragmentsActivity.launch(context,bundle, WebviewFragment.newInstance());
+                    bundle.putString(WebviewFragment.PARAM_URL, recharge_dsc_url);
+                    bundle.putString(WebviewFragment.PARAM_TITLE, "充值说明");
+                    DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
                 }
             }
         });
@@ -460,6 +471,9 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (rechargeGameFragment != null) rechargeGameFragment.resetFragment();
+        if (rechargeGameFragment != null) {
+            viewPager.getAdapter().notifyDataSetChanged();
+
+        }
     }
 }

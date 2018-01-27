@@ -627,25 +627,25 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             String url = vip_level.image;
             String name = vip_level.name;
             //String descs = vip_level.descs + "折";
-            String level = vip_level.level;
+            int level = vip_level.level;
             //ILFactory.getLoader().loadNet(ivVipLevel, Api.API_BASE_URL.concat(url), ILoader.Options.defaultOptions());
             tvNameLevel.setText(name);
             //tvDiscount.setText(descs);
             //根据等级显示升级会员是否可以点击到下一页
-            if ("0".equals(level)) {
+            if (0 == level) {
                 ivVipLevel.setImageResource(R.mipmap.vip0);
-            } else if ("1".equals(level)) {
+            } else if (1 == level) {
                 ivVipLevel.setImageResource(R.mipmap.vip1);
                 tvVip1.setClickable(false);
                 tvVip1.setTextColor(getResources().getColor(R.color.color_666));
-            } else if ("2".equals(level)) {
+            } else if (2 == level) {
                 ivVipLevel.setImageResource(R.mipmap.vip2);
                 tvVip1.setClickable(false);
                 tvVip1.setTextColor(getResources().getColor(R.color.color_666));
                 tvVip2.setClickable(false);
                 tvVip2.setTextColor(getResources().getColor(R.color.color_666));
 
-            } else if ("3".equals(level)) {
+            } else if (3 == level) {
                 ivVipLevel.setImageResource(R.mipmap.vip3);
                 tvVip1.setClickable(false);
                 tvVip1.setTextColor(getResources().getColor(R.color.color_666));

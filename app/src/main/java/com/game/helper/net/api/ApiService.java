@@ -323,7 +323,7 @@ public interface ApiService {
     @POST("/member/set_or_update_apliy_info/")
     Flowable<HttpResultModel<ResetAlipayResults>> resetAlipayAccount(@Body ResetAlipayRequestBody resetAlipayRequestBody);
 
-    //获取vip充值游戏账号数量
+    //获取剩余可用vip充值游戏账号数量接口
     @POST("/member/get_left_vip_game_count/")
     Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount();
     //Flowable<HttpResultModel<VipGameAccountResults>> getVipGameAccount(@Body BindVipAccountNumRequestBody bindVipAccountNumRequestBody);

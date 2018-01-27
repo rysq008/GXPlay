@@ -237,8 +237,8 @@ public class RechargeVIPLevelFragment extends XBaseFragment {
                 if (userInfoAndVipLevelResults != null) {
                     xController.showContent();
                     MemberInfoResults memberInfoResults = userInfoAndVipLevelResults.memberInfoResults;
-                    String level = memberInfoResults.vip_level.getLevel();
-                    currentVIPLevel = Integer.valueOf(level);
+                    int level = memberInfoResults.vip_level.getLevel();
+                    currentVIPLevel = level;
                     currentVipLevel(currentVIPLevel);
                     VipLevelResults levelResults = userInfoAndVipLevelResults.vipLevelResults;
                     vipBeans = levelResults.list;

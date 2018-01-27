@@ -140,7 +140,7 @@ public class MemberInfoResults extends XBaseModel {
 
     public class VipLevel extends XBaseModel {
         public String image;
-        public String level;
+        public int level;
         public String name;
         public String descs;
 
@@ -168,11 +168,11 @@ public class MemberInfoResults extends XBaseModel {
             this.descs = descs;
         }
 
-        public String getLevel() {
+        public int getLevel() {
             return level;
         }
 
-        public void setLevel(String level) {
+        public void setLevel(int level) {
             this.level = level;
         }
 

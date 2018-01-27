@@ -41,12 +41,12 @@ public class WXPayEntryActivity extends Activity implements
 
     @Override
     public void onReq(BaseReq req) {
-        Log.e("","BaseReq"+req.checkArgs());
+        Log.e("", "BaseReq" + req.checkArgs());
     }
 
     @Override
     public void onResp(BaseResp resp) {
-        Log.e("","onResp");
+        Log.e("", "onResp");
         String tipStr = "";
         switch (resp.errCode) {
             case 0:
@@ -59,8 +59,8 @@ public class WXPayEntryActivity extends Activity implements
                 tipStr = "用户取消";
                 break;
         }
+        Toast.makeText(this, tipStr, Toast.LENGTH_SHORT).show();
         BusProvider.getBus().post(new RedPackEvent(0, RxConstant.WX_PAY, resp.errCode));
-        Toast.makeText(this,tipStr,Toast.LENGTH_SHORT).show();
         finish();
     }
 }
