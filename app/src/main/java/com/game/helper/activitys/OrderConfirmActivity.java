@@ -954,7 +954,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         });
     }
 
-//    @Override
+    //    @Override
 //    protected void onDestroy() {
 ////        BusProvider.getBus().unregister(this);
 //        super.onDestroy();

@@ -477,7 +477,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
                 colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
                 String title = null;
-                switch (index) {
+                int pos = index;
+                if (isStandAloneGame) pos++;
+                switch (pos) {
                     case 0:
                         title = "充值";
                         break;
