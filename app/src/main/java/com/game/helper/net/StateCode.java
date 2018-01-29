@@ -204,8 +204,6 @@ public class StateCode {
                 return "游戏错误请联系客服";
             case STATE_0228:
                 return "请提醒客服,渠道余额不足,谢谢";
-            case STATE_0229:
-                return "...,请联系客服";
             case STATE_0230:
                 return "请提醒客服，游戏ID错误，谢谢！";
             case STATE_0223:

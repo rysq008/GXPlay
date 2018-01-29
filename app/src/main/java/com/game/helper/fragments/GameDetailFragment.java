@@ -200,8 +200,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             bundle.putInt("gameId", packageInfo.getGame().getId());
             gameDetailCommunityFragment.setArguments(bundle);
         }
-        if (!isStandAloneGame)
+        if (!isStandAloneGame) {
             list.add(rechargeGameFragment);
+        }
         list.add(gameDetailInfoFragment);
         list.add(gameDetailGiftFragment);
         list.add(gameDetailCommunityFragment);

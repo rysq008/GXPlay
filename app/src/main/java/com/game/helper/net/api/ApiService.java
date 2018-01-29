@@ -405,7 +405,7 @@ public interface ApiService {
 
     //消费下单接口
     @POST("/G9game/paymentController.do?consume")
-    Flowable<HttpResultModel<FeedbackListResults>> consume(@Body ConsumeRequestBody consumeRequestBody);
+    Flowable<HttpResultModel> consume(@Body ConsumeRequestBody consumeRequestBody);
 
 
     @POST("/marketing/get_marketing_info/")

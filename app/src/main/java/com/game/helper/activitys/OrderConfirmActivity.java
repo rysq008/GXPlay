@@ -30,7 +30,6 @@ import com.game.helper.model.AllAccountsResultsModel;
 import com.game.helper.model.AvailableRedpackResultModel;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CheckTradePasswdResults;
-import com.game.helper.model.FeedbackListResults;
 import com.game.helper.model.GameAccountResultModel;
 import com.game.helper.model.WxPayInfoBean;
 import com.game.helper.model.model.PayResultModel;
@@ -223,6 +222,9 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
     String marketingAmount = "";//使用推广账户金额
 
     private boolean hasRedPack;
+    public static ConsumeRequestBody consumeRequestBody;
+    public static Boolean isWxPay = false;
+
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -261,9 +263,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         initListeners();
         fetchAvailableRedpackInfo(1);
     }
-
-    public static boolean isWxPay = false;
-
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -272,11 +272,6 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        isWxPay = false;
-    }
 
     /**
      * 获取账户信息
@@ -782,6 +777,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
                     OrderConfirmActivity.this.password = password;
                     consumeOrCharge();
+                    consumeRequestBody = new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, String.valueOf(mNeedPay), is_vip ? "1" : "0", password, mRedpackType, mRedpackId, payWay + "");
                 } else {
                     Toast.makeText(OrderConfirmActivity.this, "交易密码验证失败！", Toast.LENGTH_SHORT).show();
                 }
@@ -943,16 +939,18 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 + "redpacketId:::" + mRedpackId + "\r\n"
                 + "payWay:::" + payWay + "\r\n");
 
-        Flowable<HttpResultModel<FeedbackListResults>> fr = DataService.consume(new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, String.valueOf(mNeedPay), is_vip ? "1" : "0", password, mRedpackType, mRedpackId, payWay));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<FeedbackListResults>>() {
+        Flowable<HttpResultModel> fr = DataService.consume(consumeRequestBody);
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel>() {
             @Override
-            public void accept(HttpResultModel<FeedbackListResults> checkTradePasswdResultsHttpResultModel) {
+            public void accept(HttpResultModel checkTradePasswdResultsHttpResultModel) {
                 if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
-                    Toast.makeText(OrderConfirmActivity.this, "消费成功！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, checkTradePasswdResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
                 } else {
-                    Toast.makeText(OrderConfirmActivity.this, checkTradePasswdResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                    if (checkTradePasswdResultsHttpResultModel.isPayStatus()) {
+                        Toast.makeText(context, checkTradePasswdResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }, new Consumer<NetError>() {
@@ -973,4 +971,9 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isWxPay = false;
+    }
 }
