@@ -94,7 +94,7 @@ public class ForgetPasswdFragment extends XBaseFragment implements View.OnClickL
         mGotoLogin.setOnClickListener(this);
         if (BuildConfig.DEBUG){
             debugHint.setVisibility(View.VISIBLE);
-            debugHint.setText("测试环境默认验证码：9870");
+            debugHint.setText("");
         }
     }
 
