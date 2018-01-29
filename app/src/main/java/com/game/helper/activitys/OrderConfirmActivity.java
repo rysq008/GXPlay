@@ -964,6 +964,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 Toast.makeText(OrderConfirmActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
             }
         });
+        consumeRequestBody = null;
     }
 
     //    @Override

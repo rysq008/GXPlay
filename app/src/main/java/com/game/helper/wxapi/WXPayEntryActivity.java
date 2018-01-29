@@ -35,6 +35,7 @@ public class WXPayEntryActivity extends XBaseActivity implements
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: WXPayEntryActivity");
         api = WXAPIFactory.createWXAPI(this, RxConstant.ThirdPartKey.WeixinId);
+        Intent intent = getIntent();
         api.handleIntent(getIntent(), this);
     }
 
@@ -58,9 +59,15 @@ public class WXPayEntryActivity extends XBaseActivity implements
         String tipStr = "";
         switch (resp.errCode) {
             case 0:
-                //tipStr = "支付成功";
                 OrderConfirmActivity.isWxPay = true;
-                doConsume(OrderConfirmActivity.consumeRequestBody);
+                if(OrderConfirmActivity.consumeRequestBody != null){
+                    doConsume(OrderConfirmActivity.consumeRequestBody);
+                }else{
+                    tipStr = "支付成功";
+                    Toast.makeText(this, tipStr, Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                }
                 break;
             case -1:
                 tipStr = "支付遇到错误";
