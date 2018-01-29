@@ -23,7 +23,7 @@ public class XBaseModel implements IModel, ItemType, Serializable {
     }
 
     public boolean isPayStatus() {
-        return code.equals("0026") || code.equals("0027") || code.equals("0028") || code.equals("0029")
+        return code.equals("0226") || code.equals("0227") || code.equals("0228") || code.equals("0229")
                 || code.equals("0217")|| code.equals("0219");
     }
 

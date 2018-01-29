@@ -146,6 +146,7 @@ public class RechargeGameFragment extends XBaseFragment {
         is_vip = false;
         isGotoVip = false;
         gameVipAccountNotEnough = false;
+        mLlUpgradeVip.setVisibility(View.GONE);
         //获取vip充值游戏账号数量
         getVipGameAccount();
         initVipLevel();
