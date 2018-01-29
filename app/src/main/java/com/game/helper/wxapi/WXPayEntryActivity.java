@@ -1,5 +1,6 @@
 package com.game.helper.wxapi;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,13 +30,14 @@ public class WXPayEntryActivity extends XBaseActivity implements
 
     private static final String TAG = "WXPayEntryActivity";
     private IWXAPI api;
+    private Context mContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: WXPayEntryActivity");
+        mContext = this;
         api = WXAPIFactory.createWXAPI(this, RxConstant.ThirdPartKey.WeixinId);
-        Intent intent = getIntent();
         api.handleIntent(getIntent(), this);
     }
 
@@ -103,18 +105,19 @@ public class WXPayEntryActivity extends XBaseActivity implements
                     Toast.makeText(WXPayEntryActivity.this, resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 } else {
                     if (resultModel.isPayStatus()) {
-                        Toast.makeText(GameMarketApplication.getContext(), resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WXPayEntryActivity.this, resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(GameMarketApplication.getContext(), "消费失败！", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WXPayEntryActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
                     }
                 }
+                OrderConfirmActivity.consumeRequestBody = null;
                 setResult(RESULT_OK);
                 finish();
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Toast.makeText(GameMarketApplication.getContext(), "消费失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WXPayEntryActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
             }
         });
     }
