@@ -233,6 +233,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         //h5
         getH5UrlFromNet();
         G9RequestPermissions();
+//        Toast.makeText(context,Kits.Package.getAppMetaData(context,"UMENG_CHANNEL"),Toast.LENGTH_LONG).show();
     }
 
     @Override
