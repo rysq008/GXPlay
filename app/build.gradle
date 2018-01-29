@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
 
+
+// 默认apk输出路径
+ext.appReleaseDir = "F:\\workplace\\GXPlay\\app\\release"
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
@@ -9,14 +17,19 @@ android {
         targetSdkVersion 26
         versionCode 18
         versionName "2.1.3"
-        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //选择要添加的对应cpu类型的.so库
             abiFilters 'armeabi-v7a', 'arm64-v8a', "armeabi ", "mips64", "mips", "x86", "x86_64"
             //还可以添加 'armeabi', 'x86'
         }
+
+        // dex突破65535的限制
+        multiDexEnabled true
+        // 默认是umeng的渠道
+        manifestPlaceholders = [UMENG_CHANNEL_VALUE: "umeng"]
     }
+
     signingConfigs {
         debug {
             storeFile file('g9gameplayer.jks')
@@ -31,6 +44,7 @@ android {
             keyPassword "123456"
         }
     }
+
     buildTypes {
         release {
             buildConfigField 'Boolean', 'Debug', 'false'
@@ -38,6 +52,20 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //自定义输出配置
+            applicationVariants.all {
+                variant ->
+                    variant.outputs.all {
+                        output ->
+                            def outputFile = output.outputFile
+                            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                                //输出apk名称
+                                def fileName = "app_v${defaultConfig.versionName}_${variant.productFlavors[0].name}_${releaseTime()}.apk"
+//                                output.outputFile = new File(outputFile.parent, fileName)
+                                outputFileName = fileName
+                            }
+                    }
+            }
         }
         debug {
             minifyEnabled false
@@ -45,6 +73,41 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "default"
+    productFlavors {
+
+//        应用宝CH1001
+//        360 CH1002
+//        小米CH1003
+//        豌豆英CH1004
+//        百度应用中心CH1005
+//        91 手机助手CH1006
+//        安卓市场CH1007
+//        华为        CH1008
+//        OPPO        H1009
+//        安智        CH1010
+//        乐视        CH1011
+//        联想乐        CH1012
+
+        YYB_CH1001 { dimension "default" }
+        $360_CH1002 { dimension "default" }
+        XM_CH1003 { dimension "default" }
+        WDJ_CH1004 { dimension "default" }
+        BD_CH1005 { dimension "default" }
+        $91_CH1006 { dimension "default" }
+        AZSC_CH1007 { dimension "default" }
+        HW_CH1008 { dimension "default" }
+        OPPO_CH1009 { dimension "default" }
+        AZ_CH1010 { dimension "default" }
+        LS_CH1011 { dimension "default" }
+        LXL_CH1012 { dimension "default" }
+    }
+
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: (name.split("_")[1])];
+    }
+
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->

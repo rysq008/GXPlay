@@ -42,6 +42,7 @@ import com.game.helper.views.HeadImageView;
 import java.util.Map;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.BiFunction;
@@ -373,7 +374,8 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
                 MineData data = new MineData();
                 data.memberInfoResults = memberInfoResultsHttpResultModel.data;
                 data.coupon = mapHttpResultModel.data;
-                couponCount = mapHttpResultModel.data.get("red_count");
+                if (!Kits.Empty.check(mapHttpResultModel.data))
+                    couponCount = mapHttpResultModel.data.get("red_count");
                 return data;
             }
         });

@@ -231,8 +231,10 @@ public class WebviewFragment extends XBaseFragment {
                                             return;
                                         }
                                         UMengShare share = new UMengShare(getActivity());
-                                        CommonShareResults shareResults = new CommonShareResults(shareUrl, shareInfoResultsHttpResultModel.data.title, shareInfoResultsHttpResultModel.data.content, shareInfoResultsHttpResultModel.data.logo);
-                                        share.shareLinkWithBoard(shareResults, null);
+                                        if (!Kits.Empty.check(shareInfoResultsHttpResultModel.data)) {
+                                            CommonShareResults shareResults = new CommonShareResults(shareUrl, shareInfoResultsHttpResultModel.data.title, shareInfoResultsHttpResultModel.data.content, shareInfoResultsHttpResultModel.data.logo);
+                                            share.shareLinkWithBoard(shareResults, null);
+                                        }
                                     }
                                 }, new Consumer<NetError>() {
                                     @Override
@@ -374,7 +376,7 @@ public class WebviewFragment extends XBaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case 0://from vip
+            case 0://from vip 从主页模块跳转过来的
                 if (resultCode == RESULT_OK) {
                     getActivity().onBackPressed();
                     Bundle bundle = new Bundle();
@@ -382,7 +384,7 @@ public class WebviewFragment extends XBaseFragment {
                     DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 }
                 break;
-            case 1://from generalize
+            case 1://from generalize 从社区模块跳转过来的
                 if (resultCode == RESULT_OK) {
                     getActivity().onBackPressed();
                     Bundle bundle = new Bundle();

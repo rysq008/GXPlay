@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.RedPackEvent;
@@ -60,6 +61,7 @@ public class WXPayEntryActivity extends Activity implements
                 break;
         }
         Toast.makeText(this, tipStr, Toast.LENGTH_SHORT).show();
+        OrderConfirmActivity.isWxPay = true;
         BusProvider.getBus().post(new RedPackEvent(0, RxConstant.WX_PAY, resp.errCode));
         finish();
     }

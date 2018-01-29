@@ -173,6 +173,7 @@ public class ExtensionHistoryFragment extends XBaseFragment implements View.OnCl
             public void accept(HttpResultModel<H5UrlListResults> notConcernResultsHttpResultModel) throws Exception {
                 if (!TextUtils.isEmpty(notConcernResultsHttpResultModel.data.getMarket_url())) {
                     Bundle bundle = new Bundle();
+                    WebviewFragment.requestCode = 1;
                     bundle.putString(WebviewFragment.PARAM_URL, notConcernResultsHttpResultModel.data.getMarket_url());
                     bundle.putString(WebviewFragment.PARAM_TITLE, "分享收益");
                     DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());

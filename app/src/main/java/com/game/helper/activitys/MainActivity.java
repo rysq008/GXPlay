@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -190,7 +191,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         }
         if (SharedPreUtil.isLogin()) {
             LoginUserInfo userInfo = SharedPreUtil.getLoginUserInfo();
-            if (!userInfo.has_passwd) showSetPassWord();
+            if (!Kits.Empty.check(userInfo) && !userInfo.has_passwd) showSetPassWord();
         }
         BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
             @Override
@@ -232,6 +233,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         //h5
         getH5UrlFromNet();
         G9RequestPermissions();
+        Toast.makeText(context,Kits.Package.getAppMetaData(context,"UMENG_CHANNEL"),Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -473,7 +475,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 ////        dialog_window_attributes.y = searchComponentView.getBottom();
 //        dialog_window.setAttributes(dialog_window_attributes);
 
-        GuideAlertDialog dialog = new GuideAlertDialog(0,"",h5Results.account_guide_url);
-        dialog.show(getSupportFragmentManager(),GuideAlertDialog.TAG);
+        GuideAlertDialog dialog = new GuideAlertDialog(0, "", h5Results.account_guide_url);
+        dialog.show(getSupportFragmentManager(), GuideAlertDialog.TAG);
     }
 }

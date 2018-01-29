@@ -26,6 +26,7 @@ import com.game.helper.views.widget.GamePopupWindow;
 import com.game.helper.views.widget.ToggleButton;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -286,7 +287,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
                 break;
             case R.id.selectChannel:
 //                if(canEdit){
-                if (!TextUtils.isEmpty(getGameName())) {
+                if (!TextUtils.isEmpty(getGameName()) && !Kits.Empty.check(mGameId)) {
                     mChannelWindow.init(Integer.parseInt(mGameId));
                     mChannelWindow.showAsDropDown(selectChannel);
                 }

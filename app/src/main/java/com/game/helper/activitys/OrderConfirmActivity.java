@@ -262,11 +262,20 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
         fetchAvailableRedpackInfo(1);
     }
 
+    public static boolean isWxPay = false;
+
     @Override
     protected void onResume() {
         super.onResume();
-        fetchAccountInfo();
+        if (!isWxPay)
+            fetchAccountInfo();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isWxPay = false;
     }
 
     /**

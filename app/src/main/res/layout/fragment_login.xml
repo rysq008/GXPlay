@@ -70,6 +70,23 @@
             android:gravity="center">
 
             <TextView
+                android:id="@+id/tv_tab_message"
+                android:layout_width="@dimen/login_tab_width"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_10"
+                android:text="验证码登录"
+                android:textColor="@color/colorTransWhite"
+                android:textSize="@dimen/text_size_medium" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="@dimen/dp_10"
+                android:background="@color/colorWhite" />
+
+            <TextView
                 android:id="@+id/tv_tab_passwd"
                 android:layout_width="@dimen/login_tab_width"
                 android:layout_height="wrap_content"
@@ -81,22 +98,6 @@
                 android:textColor="@color/colorTransWhite"
                 android:textSize="@dimen/text_size_medium" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="@dimen/dp_10"
-                android:background="@color/colorWhite" />
-
-            <TextView
-                android:id="@+id/tv_tab_message"
-                android:layout_width="@dimen/login_tab_width"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:maxLines="1"
-                android:paddingBottom="@dimen/dp_10"
-                android:paddingTop="@dimen/dp_10"
-                android:text="验证码登录"
-                android:textColor="@color/colorTransWhite"
-                android:textSize="@dimen/text_size_medium" />
         </LinearLayout>
 
         <LinearLayout
