@@ -778,6 +778,12 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     OrderConfirmActivity.this.password = password;
                     consumeOrCharge();
                     consumeRequestBody = new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, String.valueOf(mNeedPay), is_vip ? "1" : "0", password, mRedpackType, mRedpackId, payWay + "");
+                    //如果还需支付>0,先去微信或支付宝充值，否则直接消费
+                    if (mNeedPay > 0) {
+                        doCharge();
+                    } else {
+                        doConsume(accountAmount, marketingAmount, "");
+                    }
                 } else {
                     Toast.makeText(OrderConfirmActivity.this, "交易密码验证失败！", Toast.LENGTH_SHORT).show();
                 }
@@ -829,12 +835,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
             marketingAmount = "0.00";
         }
 
-        //如果还需支付>0,先去微信或支付宝充值，否则直接消费
-        if (mNeedPay > 0) {
-            doCharge();
-        } else {
-            doConsume(accountAmount, marketingAmount, "");
-        }
+
     }
 
     /**
@@ -950,7 +951,11 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 } else {
                     if (checkTradePasswdResultsHttpResultModel.isPayStatus()) {
                         Toast.makeText(context, checkTradePasswdResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                    }
+                    }else{
+                    Toast.makeText(GameMarketApplication.getContext(), "消费失败！", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                }
                 }
             }
         }, new Consumer<NetError>() {

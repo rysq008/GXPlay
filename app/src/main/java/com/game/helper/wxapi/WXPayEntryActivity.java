@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.game.helper.GameMarketApplication;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
@@ -93,18 +94,20 @@ public class WXPayEntryActivity extends XBaseActivity implements
             public void accept(HttpResultModel resultModel) {
                 if (resultModel.isSucceful()) {
                     Toast.makeText(WXPayEntryActivity.this, resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_OK);
-                    finish();
                 } else {
                     if (resultModel.isPayStatus()) {
-                        Toast.makeText(WXPayEntryActivity.this, resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GameMarketApplication.getContext(), resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(GameMarketApplication.getContext(), "消费失败！", Toast.LENGTH_SHORT).show();
                     }
                 }
+                setResult(RESULT_OK);
+                finish();
             }
         }, new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
-                Toast.makeText(WXPayEntryActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GameMarketApplication.getContext(), "消费失败！", Toast.LENGTH_SHORT).show();
             }
         });
     }
