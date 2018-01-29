@@ -430,7 +430,6 @@ public class RechargeFragment extends XBaseFragment implements View.OnClickListe
         if (v == mIvAction) {
             //充值说明
             rechargeAlert();
-
         }
         if (v == mConfirmOrder) {
             confirmOrder();

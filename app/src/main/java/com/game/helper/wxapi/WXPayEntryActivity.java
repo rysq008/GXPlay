@@ -6,17 +6,28 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.RedPackEvent;
+import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.FeedbackListResults;
+import com.game.helper.net.DataService;
+import com.game.helper.net.model.ConsumeRequestBody;
+import com.game.helper.utils.RxLoadingUtils;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import cn.droidlover.xdroidmvp.net.NetError;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
-public class WXPayEntryActivity extends Activity implements
+
+public class WXPayEntryActivity extends XBaseActivity implements
         IWXAPIEventHandler {
 
     private static final String TAG = "WXPayEntryActivity";
@@ -50,17 +61,70 @@ public class WXPayEntryActivity extends Activity implements
         String tipStr = "";
         switch (resp.errCode) {
             case 0:
-                tipStr = "支付成功";
+                //tipStr = "支付成功";
+                OrderConfirmActivity.isWxPay = true;
+                doConsume(OrderConfirmActivity.consumeRequestBody);
                 break;
             case -1:
                 tipStr = "支付遇到错误";
+                Toast.makeText(this, tipStr, Toast.LENGTH_SHORT).show();
                 break;
             case -2:
                 tipStr = "用户取消";
+                Toast.makeText(this, tipStr, Toast.LENGTH_SHORT).show();
                 break;
         }
-        Toast.makeText(this, tipStr, Toast.LENGTH_SHORT).show();
-        BusProvider.getBus().post(new RedPackEvent(0, RxConstant.WX_PAY, resp.errCode));
-        finish();
+//        BusProvider.getBus().post(new RedPackEvent(0, RxConstant.WX_PAY, resp.errCode));
+        //finish();
+    }
+
+    private void doConsume(ConsumeRequestBody consumeRequestBody) {
+//        Log.e("nuoyan", "gameAccountId：：：" + gameAccountId + "\r\n"
+//                + "gameId：：：" + gameId + "\r\n"
+//                + "consumeAmount:::" + inputBalance + "\r\n"
+//                + "accountAmount:::" + accountAmount + "\r\n"
+//                + "marketingAmount:::" + marketingAmount + "\r\n"
+//                + "rechargeAmount:::" + mNeedPay + "\r\n"
+//                + "is_vip:::" + is_vip + "\r\n"
+//                + "tradePassword:::" + password + "\r\n"
+//                + "redpacketType:::" + mRedpackType + "\r\n"
+//                + "redpacketId:::" + mRedpackId + "\r\n"
+//                + "payWay:::" + payWay + "\r\n");
+
+        Flowable<HttpResultModel> fr = DataService.consume(consumeRequestBody);
+        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel>() {
+            @Override
+            public void accept(HttpResultModel resultModel) {
+                if (resultModel.isSucceful()) {
+                    Toast.makeText(WXPayEntryActivity.this, resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    if (resultModel.isPayStatus()) {
+                        Toast.makeText(WXPayEntryActivity.this, resultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }, new Consumer<NetError>() {
+            @Override
+            public void accept(NetError netError) throws Exception {
+                Toast.makeText(WXPayEntryActivity.this, "消费失败！", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void initData(Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public int getLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public Object newP() {
+        return null;
     }
 }

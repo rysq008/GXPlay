@@ -14,12 +14,17 @@ public class XBaseModel implements IModel, ItemType, Serializable {
     public int total_page;
     public int current_page;
 
-    public boolean isNoneTradePassword(){
+    public boolean isNoneTradePassword() {
         return code.equals(StateCode.STATE_0027) ? true : false;
     }
 
     public boolean isSucceful() {
         return code.equals(StateCode.STATE_0000) ? true : false;
+    }
+
+    public boolean isPayStatus() {
+        return code.equals("0026") || code.equals("0027") || code.equals("0028") || code.equals("0029")
+                || code.equals("0217")|| code.equals("0219");
     }
 
     public boolean hasNextPage() {
@@ -30,7 +35,7 @@ public class XBaseModel implements IModel, ItemType, Serializable {
         return StateCode.getMessage(code);
     }
 
-    public int nextPageNum(){
+    public int nextPageNum() {
         return current_page++;
     }
 

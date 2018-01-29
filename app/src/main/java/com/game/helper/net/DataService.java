@@ -424,7 +424,7 @@ public class DataService {
         return Api.CreateApiService().getAllAccounts();
     }
 
-    public static Flowable<HttpResultModel<FeedbackListResults>> consume(ConsumeRequestBody consumeRequestBody) {
+    public static Flowable<HttpResultModel> consume(ConsumeRequestBody consumeRequestBody) {
         return Api.CreatePayOrImageApiService().consume(consumeRequestBody);
     }
 

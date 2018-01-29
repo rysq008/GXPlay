@@ -2,16 +2,12 @@ package com.game.helper.fragments.recharge;
 
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -53,7 +49,7 @@ import io.reactivex.functions.Consumer;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RechargeGameFragment extends XBaseFragment implements CompoundButton.OnCheckedChangeListener {
+public class RechargeGameFragment extends XBaseFragment {
     public static final String TAG = RechargeGameFragment.class.getSimpleName();
 
     private static final int check_able_color = R.color.colorBlack;
@@ -124,6 +120,7 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
     private int[] normalIcons = new int[]{R.mipmap.vip0_normal, R.mipmap.vip1_normal, R.mipmap.vip2_normal, R.mipmap.vip3_normal};
     private boolean isGotoVip = false;
     private boolean gameVipAccountNotEnough = false;
+    private PopupWindow popupWindow;
 
 
     public static RechargeGameFragment newInstance() {
@@ -146,9 +143,12 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
     }
 
     private void initView() {
-        initVipLevel();
+        is_vip = false;
+        isGotoVip = false;
+        gameVipAccountNotEnough = false;
         //获取vip充值游戏账号数量
         getVipGameAccount();
+        initVipLevel();
         rgVip.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -168,10 +168,72 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
                 }
             }
         });
-        rbVip0.setOnCheckedChangeListener(this);
-        rbVip1.setOnCheckedChangeListener(this);
-        rbVip2.setOnCheckedChangeListener(this);
-        rbVip3.setOnCheckedChangeListener(this);
+        rbVip0.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Drawable image = null;
+                int vipLevel = 0;
+                if (isChecked) {
+                    image = getResources().getDrawable(checkedIcons[vipLevel]);
+                    pbVip.setProgress(vipLevel);
+                } else {
+                    image = getResources().getDrawable(normalIcons[vipLevel]);
+                }
+                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
+                rbVip0.setCompoundDrawables(null, image, null, null);
+            }
+        });
+        rbVip1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Drawable image = null;
+                int vipLevel = 1;
+                if (isChecked) {
+                    image = getResources().getDrawable(checkedIcons[vipLevel]);
+                    pbVip.setProgress(vipLevel);
+                } else {
+                    image = getResources().getDrawable(normalIcons[vipLevel]);
+                }
+                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
+                rbVip1.setCompoundDrawables(null, image, null, null);
+            }
+        });
+        rbVip2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Drawable image = null;
+                int vipLevel = 2;
+                if (isChecked) {
+                    image = getResources().getDrawable(checkedIcons[vipLevel]);
+                    pbVip.setProgress(vipLevel);
+                } else {
+                    image = getResources().getDrawable(normalIcons[vipLevel]);
+                }
+                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
+                rbVip2.setCompoundDrawables(null, image, null, null);
+            }
+        });
+        rbVip3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Drawable image = null;
+                int vipLevel = 3;
+                if (isChecked) {
+                    image = getResources().getDrawable(checkedIcons[vipLevel]);
+                    pbVip.setProgress(3);
+                    /*if (gameBean.isIs_xc()) {
+                        if (Float.compare(discountList.discount_activity, 0.0f) == 0) {
+                            //体验皇冠价一次
+                            initFirstRecharge(3);
+                        }
+                    }*/
+                } else {
+                    image = getResources().getDrawable(normalIcons[vipLevel]);
+                }
+                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
+                rbVip3.setCompoundDrawables(null, image, null, null);
+            }
+        });
 
         mEtBalance.addTextChangedListener(new TextWatcher() {
             @Override
@@ -182,19 +244,25 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String inputValue = s.toString().trim();
-                /*if (StringUtils.isEmpty(inputValue) || (Integer.parseInt(inputValue)) <= 0) {
-                    mTotalBalanceValue = 0;
-                    mTotalBalance.setText(mTotalBalanceValue + "元");
-                    ToastUtil.showToast("输入金额有误!");
-                } else {
-
-                }*/
                 if (gameBean != null && discountList != null) {
-                    if (gameBean.isIs_vip()) {
-                        showTotalDiscountAndBalance(currentUserVipLevel);
+                    if (gameBean.isIs_xc()) {
+                        //首充
+                        if (Float.compare(discountList.discount_activity, 0.0f) == 0) {
+                            //体验皇冠价一次
+                            showFirstRechargeTotalDiscountAndBalance(3);
+                        } else {
+                            //体验活动价一次
+                            showFirstRechargeTotalDiscountAndBalance(4);
+                        }
                     } else {
-                        //普通账号
-                        showTotalDiscountAndBalance(gameBean.getVip_level());
+                        if (gameBean.isIs_vip()) {
+                            //是VIP
+                            showTotalDiscountAndBalance(currentUserVipLevel);
+                        } else {
+                            //普通账号
+                            showTotalDiscountAndBalance(gameBean.getVip_level());
+                        }
+
                     }
                     rbVip0.setText(calculateDiscountAfterBalanceValue(inputValue, discountList.member_discount).toString() + "元");
                     rbVip1.setText(calculateDiscountAfterBalanceValue(inputValue, discountList.vip1_discount).toString() + "元");
@@ -210,55 +278,6 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
         });
     }
 
-    //切换vip的图标
-    private void switchVipLevelIcon(View view, int vipLevel, boolean isChecked) {
-        Drawable image = null;
-        switch (vipLevel) {
-            case 0:
-                if (isChecked) {
-                    image = getResources().getDrawable(checkedIcons[vipLevel]);
-                    pbVip.setProgress(0);
-                } else {
-                    image = getResources().getDrawable(normalIcons[vipLevel]);
-                }
-                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
-                rbVip0.setCompoundDrawables(null, image, null, null);
-                break;
-            case 1:
-                if (isChecked) {
-                    image = getResources().getDrawable(checkedIcons[vipLevel]);
-                    pbVip.setProgress(1);
-                } else {
-                    image = getResources().getDrawable(normalIcons[vipLevel]);
-                }
-                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
-                rbVip1.setCompoundDrawables(null, image, null, null);
-                break;
-            case 2:
-                if (isChecked) {
-                    image = getResources().getDrawable(checkedIcons[vipLevel]);
-                    pbVip.setProgress(2);
-                } else {
-                    image = getResources().getDrawable(normalIcons[vipLevel]);
-                }
-                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
-                rbVip2.setCompoundDrawables(null, image, null, null);
-                break;
-            case 3:
-                if (isChecked) {
-                    image = getResources().getDrawable(checkedIcons[vipLevel]);
-                    pbVip.setProgress(3);
-                } else {
-                    image = getResources().getDrawable(normalIcons[vipLevel]);
-                }
-                image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
-                rbVip3.setCompoundDrawables(null, image, null, null);
-                break;
-        }
-
-    }
-
-
     private void showPopWindow(View shoView) {
         View contentView = layoutInflater.inflate(R.layout.popwindow_go_to_vip, null);
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -267,8 +286,10 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
         // 创建PopupWindow对象，其中：
         // 第一个参数是用于PopupWindow中的View，第二个参数是PopupWindow的宽度，
         // 第三个参数是PopupWindow的高度，第四个参数指定PopupWindow能否获得焦点
-        final PopupWindow popupWindow = new PopupWindow(contentView, LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        if(popupWindow == null){
+            popupWindow = new PopupWindow(contentView, LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
         // 设置PopupWindow是否能响应外部点击事件
         popupWindow.setOutsideTouchable(true);
         //popupWindow.setFocusable(true);
@@ -300,14 +321,7 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
      * 根据拿到的游戏bean设置ui
      */
     private void initVipProgressUi(GameAccountResultModel.ListBean gameAccountBean) {
-        mAccount.setText(gameAccountBean.getGame_account());
-        mGameName.setText(gameAccountBean.getGame_name());
-        mPlatfrom.setText(gameAccountBean.getGame_channel_name());
-        if (gameAccountBean.isIs_xc()) {
-            //mTotalDiscount.setText();
-        } else {
 
-        }
 
     }
 
@@ -357,22 +371,29 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
             public void accept(HttpResultModel<GameAccountDiscountResults> gameAccountDiscountResultsHttpResultModel) throws Exception {
                 discountList = gameAccountDiscountResultsHttpResultModel.data;
                 String inputValue = mEtBalance.getText().toString().trim();
-                if (gameBean.isIs_vip()) {
-                    tvGameAccountType.setText("VIP账号");
-                    initVIPGameAccount(currentUserVipLevel);
-                    initUpgradeVipDiscount(currentUserVipLevel);
+                if (gameBean.isIs_xc()) {
+                    if (Float.compare(discountList.discount_activity, 0.0f) == 0) {
+                        //体验皇冠价一次
+                        initFirstRecharge(3);
+                    } else {
+                        //体验活动价一次
+                        initFirstRecharge(4);
+                    }
                 } else {
-                    tvGameAccountType.setText("普通账号");
-                    initGeneralGameAccount(gameBean.getVip_level());
-                    initUpgradeVipDiscount(gameBean.getVip_level());
+                    if (gameBean.isIs_vip()) {
+                        initVIPGameAccount(currentUserVipLevel);
+                        initUpgradeVipDiscount(currentUserVipLevel);
+                    } else {
+                        initGeneralGameAccount(gameBean.getVip_level());
+                        initUpgradeVipDiscount(gameBean.getVip_level());
+                    }
                 }
                 rbVip0.setText(calculateDiscountAfterBalanceValue(inputValue, discountList.member_discount).toString() + "元");
                 rbVip1.setText(calculateDiscountAfterBalanceValue(inputValue, discountList.vip1_discount).toString() + "元");
                 rbVip2.setText(calculateDiscountAfterBalanceValue(inputValue, discountList.high_vip_discount).toString() + "元");
                 rbVip3.setText(calculateDiscountAfterBalanceValue(inputValue, discountList.high_vip_discount).toString() + "元");
-                if (discountList.discount_activity != 0) {
-                    //mDiscount1.setText(discount_activity + discountList.discount_activity + "折");
-                }
+
+
                 //mDiscount2.setText(discount_member + discountList.member_discount + "折");
                 //mDiscount3.setText(discount_vip + discountList.vip_discount + "折");
             }
@@ -510,6 +531,10 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
             if (!data.hasExtra(TAG)) return;
             if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean) {
                 gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
+                showInitGameType(gameBean.getVip_level());
+                is_vip = false;
+                isGotoVip = false;
+                gameVipAccountNotEnough = false;
                 initView();
 
             }
@@ -536,47 +561,6 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
         //calculateDiscountAfterBalanceValue();
     }
 
-    @OnClick({R.id.ll_account_game_recharge, R.id.et_balance_game_recharge, R.id.rb_vip0_game_recharge
-            , R.id.rb_vip1_game_recharge, R.id.rb_vip2_game_recharge, R.id.rb_vip3_game_recharge})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.ll_account_game_recharge:
-                startActivityForResult(new Intent(getActivity(), MyAccountActivity.class), REQUEST_CODE);
-                break;
-            case R.id.et_balance_game_recharge:
-                if (TextUtils.isEmpty(mAccount.getText().toString().trim())) {
-                    mEtBalance.setCursorVisible(false);
-                    mEtBalance.setFocusable(false);
-                    mEtBalance.setFocusableInTouchMode(false);
-                    ToastUtil.showToast("请选择游戏账号");
-                } else {
-                    mEtBalance.setFocusable(true);
-                    mEtBalance.setCursorVisible(true);
-                    mEtBalance.setFocusableInTouchMode(true);
-                    mEtBalance.requestFocus();
-                }
-                break;
-            case R.id.rb_vip0_game_recharge:
-
-                break;
-            case R.id.rb_vip1_game_recharge:
-                /*if (rbVip1.isChecked()) {
-                    showPopWindow(view);
-                }*/
-                break;
-            case R.id.rb_vip2_game_recharge:
-                /*if (rbVip2.isChecked()) {
-                    showPopWindow(view);
-                }*/
-                break;
-            case R.id.rb_vip3_game_recharge:
-                /*if (rbVip3.isChecked()) {
-                    showPopWindow(view);
-                }*/
-                break;
-
-        }
-    }
 
     public void initVipLevel() {
         Flowable<HttpResultModel<MemberInfoResults>> fm = DataService.getMemberInfo();
@@ -592,8 +576,10 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
                 if (gameBean != null) {
                     //已经选择了游戏账号
 
-                    //初始化VIP等级进度条界面
-                    initVipProgressUi(gameBean);
+                    //初始化用户账号信息
+                    mAccount.setText(gameBean.getGame_account());
+                    mGameName.setText(gameBean.getGame_name());
+                    mPlatfrom.setText(gameBean.getGame_channel_name());
                     //获取会员折扣
                     getGameAccountDiscount(gameBean.getId());
                 } else {
@@ -642,7 +628,6 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
                 break;
         }
     }
-
     public void initVIPGameAccount(int selectedVIP) {
         //初始化最终的折扣和最终的实付金额
         showTotalDiscountAndBalance(selectedVIP);
@@ -674,6 +659,32 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
                 rbVip1.setClickable(false);
                 rbVip2.setClickable(false);
                 rbVip3.setClickable(true);
+                break;
+        }
+    }
+
+    public void initFirstRecharge(int selectedVIP) {
+        //初始化最终的折扣和最终的实付金额
+        initUpgradeVipDiscount(0);
+        showFirstRechargeTotalDiscountAndBalance(selectedVIP);
+        switch (selectedVIP) {
+            case 3:
+                rbVip3.setChecked(true);
+                rbVip0.setClickable(false);
+                rbVip1.setClickable(false);
+                rbVip2.setClickable(false);
+                rbVip3.setClickable(false);
+                break;
+            case 4:
+                pbVip.setProgress(0);
+                rbVip0.setChecked(false);
+                rbVip1.setChecked(false);
+                rbVip2.setChecked(false);
+                rbVip3.setChecked(false);
+                rbVip0.setClickable(false);
+                rbVip1.setClickable(false);
+                rbVip2.setClickable(false);
+                rbVip3.setClickable(false);
                 break;
         }
     }
@@ -713,44 +724,61 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
         switch (selectedLevel) {
             case 0:
                 mTotalDiscountValue = discountList.member_discount;
+                tvGameAccountType.setText("普通账号");
                 break;
             case 1:
                 mTotalDiscountValue = discountList.vip1_discount;
+                tvGameAccountType.setText("VIP账号");
                 break;
             case 2:
                 mTotalDiscountValue = discountList.high_vip_discount;
+                tvGameAccountType.setText("VIP账号");
                 break;
             case 3:
                 mTotalDiscountValue = discountList.high_vip_discount;
+                tvGameAccountType.setText("VIP账号");
                 break;
         }
         mTotalDiscount.setText(mTotalDiscountValue + "折");
         mTotalBalance.setText(calculateDiscountAfterBalanceValue(inputValue, mTotalDiscountValue).toString() + "元");
+    }
+    public void showInitGameType(int selectedLevel) {
+        String inputValue = mEtBalance.getText().toString().trim();
+        switch (selectedLevel) {
+            case 0:
+                tvGameAccountType.setText("普通账号");
+                break;
+            case 1:
+                tvGameAccountType.setText("VIP账号");
+                break;
+            case 2:
+                tvGameAccountType.setText("VIP账号");
+                break;
+            case 3:
+                tvGameAccountType.setText("VIP账号");
+                break;
+        }
+    }
 
-
+    public void showFirstRechargeTotalDiscountAndBalance(int selectedLevel) {
+        String inputValue = mEtBalance.getText().toString().trim();
+        switch (selectedLevel) {
+            case 3:
+                mTotalDiscountValue = discountList.high_vip_discount;
+                mTotalDiscount.setText(mTotalDiscountValue + "折(皇冠价体验一次)");
+                break;
+            case 4:
+                mTotalDiscountValue = discountList.discount_activity;
+                mTotalDiscount.setText(mTotalDiscountValue + "折(活动价体验一次)");
+                break;
+        }
+        mTotalBalance.setText(calculateDiscountAfterBalanceValue(inputValue, mTotalDiscountValue).toString() + "元");
     }
 
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        int level = 0;
-        //String inputValue = mEtBalance.getText().toString().trim();
-        switch (buttonView.getId()) {
-            case R.id.rb_vip0_game_recharge:
-                level = 0;
-                break;
-            case R.id.rb_vip1_game_recharge:
-                level = 1;
-                break;
-            case R.id.rb_vip2_game_recharge:
-                level = 2;
-                break;
-            case R.id.rb_vip3_game_recharge:
-                level = 3;
-                break;
-        }
-        switchVipLevelIcon(buttonView, level, isChecked);
-        if (isChecked) {
+    public void onClickChanged(int vipLevel, View buttonView, boolean isChecked) {
+        int level = vipLevel;
+            Log.d(TAG,"onClickChanged==="+"vipLevel::"+vipLevel+"-----isChecked ::"+isChecked);
             if (gameBean != null) {
                 //选择了游戏账号
                 showTotalDiscountAndBalance(level);
@@ -763,25 +791,77 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
                 userAccount(level, buttonView);
             }
 
-        }
+    }
 
+    @OnClick({R.id.ll_account_game_recharge, R.id.et_balance_game_recharge, R.id.rb_vip0_game_recharge
+            , R.id.rb_vip1_game_recharge, R.id.rb_vip2_game_recharge, R.id.rb_vip3_game_recharge})
+    public void onViewClicked(View view) {
+        int level = 0;
+        switch (view.getId()) {
+            case R.id.ll_account_game_recharge:
+                startActivityForResult(new Intent(getActivity(), MyAccountActivity.class), REQUEST_CODE);
+                break;
+            case R.id.et_balance_game_recharge:
+                if (TextUtils.isEmpty(mAccount.getText().toString().trim())) {
+                    mEtBalance.setCursorVisible(false);
+                    mEtBalance.setFocusable(false);
+                    mEtBalance.setFocusableInTouchMode(false);
+                    ToastUtil.showToast("请选择游戏账号");
+                } else {
+                    mEtBalance.setFocusable(true);
+                    mEtBalance.setCursorVisible(true);
+                    mEtBalance.setFocusableInTouchMode(true);
+                    mEtBalance.requestFocus();
+                }
+                break;
+            case R.id.rb_vip0_game_recharge:
+                level = 0;
+                onClickChanged(level, view, rbVip0.isChecked());
+                break;
+            case R.id.rb_vip1_game_recharge:
+                /*if (rbVip1.isChecked()) {
+                    showPopWindow(view);
+                }*/
+                level = 1;
+                onClickChanged(level, view, rbVip1.isChecked());
+                break;
+            case R.id.rb_vip2_game_recharge:
+                /*if (rbVip2.isChecked()) {
+                    showPopWindow(view);
+                }*/
+                level = 2;
+                onClickChanged(level, view, rbVip2.isChecked());
+                break;
+            case R.id.rb_vip3_game_recharge:
+                /*if (rbVip3.isChecked()) {
+                    showPopWindow(view);
+                }*/
+                level = 3;
+                onClickChanged(level, view, rbVip3.isChecked());
+                break;
+        }
     }
 
     //会员等级:会员,游戏账号: 普通账号
     private void generalGameAccount(int vipLevel, View view) {
         if (BindVipAccountNumberBean.count <= 0) {
             //可以绑定的vip游戏账号个数为0
-             if (vipLevel == 0) {
+            if (vipLevel == 0) {
                 is_vip = false;
                 isGotoVip = false;
+                gameVipAccountNotEnough = false;
                 showUpgradeVipDiscount(0);
-            }else if (vipLevel == currentUserVipLevel) {
+            } else if (vipLevel == currentUserVipLevel) {
+                is_vip = false;
+                isGotoVip = false;
                 gameVipAccountNotEnough = true;
                 mTvUpgradeVipAlert.setVisibility(View.VISIBLE);
                 mLlUpgradeVip.setVisibility(View.GONE);
                 mTvUpgradeVipAlert.setText("VIP账号名额已用完,请升级会员");
             } else {
+                is_vip = true;
                 isGotoVip = true;
+                gameVipAccountNotEnough = false;
                 //弹出popwindow升级会员
                 showPopWindow(view);
                 showUpgradeVipDiscount(vipLevel);
@@ -790,15 +870,19 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
             if (vipLevel == 0) {
                 is_vip = false;
                 isGotoVip = false;
+                gameVipAccountNotEnough = false;
                 showUpgradeVipDiscount(0);
             } else if (vipLevel == currentUserVipLevel) {
                 is_vip = true;
                 isGotoVip = false;
+                gameVipAccountNotEnough = false;
                 mTvUpgradeVipAlert.setVisibility(View.VISIBLE);
                 mLlUpgradeVip.setVisibility(View.GONE);
                 mTvUpgradeVipAlert.setText("您当前选择VIP折扣，将会占用1个VIP名额");
             } else {
+                is_vip = true;
                 isGotoVip = true;
+                gameVipAccountNotEnough = false;
                 //弹出popwindow升级会员
                 showPopWindow(view);
                 showUpgradeVipDiscount(vipLevel);
@@ -810,7 +894,9 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
     //会员等级:会员 ,游戏账号: Vip
     private void vipGameAccount(int vipLevel, View view) {
         if (vipLevel > currentUserVipLevel) {
+            is_vip = true;
             isGotoVip = true;
+            gameVipAccountNotEnough = false;
             //弹出popwindow升级会员
             showPopWindow(view);
             showUpgradeVipDiscount(vipLevel);
@@ -818,6 +904,7 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
         } else if (vipLevel == currentUserVipLevel) {
             is_vip = true;
             isGotoVip = false;
+            gameVipAccountNotEnough = false;
             showUpgradeVipDiscount(0);
         }
     }
@@ -856,43 +943,15 @@ public class RechargeGameFragment extends XBaseFragment implements CompoundButto
                 mTvUpgradeVipDiscount.setText(String.valueOf(discountList.high_vip_discount));
                 break;
         }
-
-
     }
+
+
     //初始化显示等级进度条上面布局的折扣
     private void initUpgradeVipDiscount(int selectedVip) {
 
-        if(selectedVip == 0 || selectedVip == currentUserVipLevel || currentUserVipLevel == -1){
+        if (selectedVip == 0 || selectedVip == currentUserVipLevel || currentUserVipLevel == -1) {
             mLlUpgradeVip.setVisibility(View.GONE);
             mTvUpgradeVipAlert.setVisibility(View.INVISIBLE);
-        }
-
-    }
-
-    //当游戏是普通账号,VIP账号名额大于0的时显示等级进度条上面布局的折扣
-    private void showDiscountSpecial(int selectedVip) {
-
-        StringBuffer sb = new StringBuffer("升级为");
-        switch (selectedVip) {
-            case 1:
-                sb.append("黑钻").append("可享受").append(discountList.vip1_discount);
-                break;
-            case 2:
-                sb.append("红钻").append("可享受").append(discountList.high_vip_discount);
-                break;
-            case 3:
-                sb.append("皇冠").append("可享受").append(discountList.high_vip_discount);
-                break;
-        }
-        if (selectedVip == currentUserVipLevel) {
-            //mTotalDiscount.setText(discountList.member_discount + "折");
-            //mTvUpgradeVipAlert.setVisibility(View.INVISIBLE);
-        } else {
-            sb.append("折");
-            SpannableString spannableString = new SpannableString(sb);
-            spannableString.setSpan(new ForegroundColorSpan(Color.RED), spannableString.length() - 4, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mTvUpgradeVipAlert.setVisibility(View.VISIBLE);
-            mTvUpgradeVipAlert.setText(spannableString);
         }
 
     }
