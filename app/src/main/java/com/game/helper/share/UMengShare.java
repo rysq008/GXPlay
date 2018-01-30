@@ -333,7 +333,7 @@ public class UMengShare {
         UMWeb web = new UMWeb(commonShareResults.getUrl());
         web.setTitle(commonShareResults.getTitle());//标题
         UMImage thumb = new UMImage(mActivity, Api.API_PAY_OR_IMAGE_URL.concat(commonShareResults.getLogo()));
-        thumb.compressStyle = UMImage.CompressStyle.SCALE;
+        //thumb.compressStyle = UMImage.CompressStyle.SCALE;
         web.setThumb(thumb);  //缩略图
         //web.setThumb(new UMImage(mActivity,R.mipmap.icon_logo_about_us));  //缩略图分享本地图片看不到
         web.setDescription(commonShareResults.getContent());//描述

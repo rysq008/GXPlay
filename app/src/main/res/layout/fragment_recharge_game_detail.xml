@@ -13,62 +13,35 @@
         <!--账号-->
         <LinearLayout
             android:id="@+id/ll_account_game_detail_recharge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_21"
-            android:paddingLeft="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_21">
+            style="@style/game_recharge_layout">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/dp_10"
-                android:text="账号："
-                android:textColor="@color/color_333"
-                android:textSize="@dimen/size_16sp" />
+                style="@style/game_recharge_text_left"
+                android:text="账号：" />
 
             <TextView
                 android:id="@+id/tv_account_game_detail_recharge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/game_recharge_text_right"
                 android:hint="请选择游戏账号"
-                android:text=""
-                android:textColor="@color/color_666"
-                android:textSize="@dimen/size_14sp" />
+                android:text="" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_5"
                 android:src="@mipmap/ic_arrow_right" />
         </LinearLayout>
         <!--金额-->
         <LinearLayout
             android:id="@+id/ll_balance_game_detail_recharge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/game_recharge_layout"
             android:layout_marginTop="@dimen/tabbar_divider_height"
-            android:background="@color/colorWhite"
             android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_21"
-            android:paddingLeft="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_21">
+            android:focusableInTouchMode="true">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/dp_10"
-                android:text="金额："
-                android:textColor="@color/color_333"
-                android:textSize="@dimen/size_16sp"
-                tools:text="@tools:sample/full_names"/>
+                style="@style/game_recharge_text_left"
+                android:text="金额：" />
 
             <EditText
                 android:id="@+id/et_balance_game_detail_recharge"
@@ -82,7 +55,7 @@
                 android:inputType="number"
                 android:maxLength="6"
                 android:textColor="@color/red"
-                android:textSize="@dimen/size_16sp" />
+                android:textSize="@dimen/size_14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -90,50 +63,34 @@
                 android:paddingRight="@dimen/dp_10"
                 android:text="元"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/size_16sp" />
+                android:textSize="@dimen/size_14sp" />
         </LinearLayout>
         <!--会员和账号-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_20"
-            android:paddingLeft="@dimen/dp_25"
-            android:paddingTop="@dimen/dp_20">
+        <LinearLayout style="@style/game_recharge_layout">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/dp_10"
-                android:text="会员等级:"
-                android:textColor="@color/color_333"
-                android:textSize="@dimen/size_16sp" />
+                style="@style/game_recharge_text_left"
+                android:paddingLeft="@dimen/dp_25"
+                android:text="会员等级:" />
 
             <TextView
                 android:id="@+id/tv_memmber_vip_level_game_detail_recharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="黄钻"
                 android:textColor="@color/color_00aeff"
-                android:textSize="@dimen/size_16sp" />
+                android:textSize="@dimen/size_14sp" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_64"
-                android:paddingRight="@dimen/dp_10"
-                android:text="账号:"
-                android:textColor="@color/color_333"
-                android:textSize="@dimen/size_16sp" />
+                style="@style/game_recharge_text_left"
+                android:paddingLeft="@dimen/dp_25"
+                android:text="账号:" />
 
             <TextView
                 android:id="@+id/tv_game_account_type_game_detail_recharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/color_00aeff"
-                android:textSize="@dimen/size_16sp" />
+                android:textSize="@dimen/size_14sp" />
         </LinearLayout>
 
         <View
@@ -147,26 +104,26 @@
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/dp_20"
-            android:paddingLeft="@dimen/dp_55"
-            android:paddingRight="@dimen/dp_55"
+            android:paddingBottom="@dimen/dp_15"
+            android:paddingLeft="@dimen/dp_45"
+            android:paddingRight="@dimen/dp_45"
             android:paddingTop="@dimen/dp_10">
 
             <TextView
                 android:id="@+id/tv_upgrade_vip_alert_game_detail_recharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_40"
+                android:layout_marginBottom="@dimen/dp_30"
                 android:text=""
                 android:textColor="@color/color_333"
-                android:textSize="@dimen/size_12sp"
+                android:textSize="@dimen/size_10sp"
                 android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/ll_upgrade_vip_game_detail_recharge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_40"
+                android:layout_marginBottom="@dimen/dp_30"
                 android:orientation="horizontal">
 
                 <TextView
@@ -174,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:text="升级为"
                     android:textColor="@color/color_333"
-                    android:textSize="@dimen/size_12sp" />
+                    android:textSize="@dimen/size_10sp" />
 
                 <TextView
                     android:id="@+id/tv_upgrade_vip_name_game_detail_recharge"
@@ -182,14 +139,14 @@
                     android:layout_height="wrap_content"
                     android:text="黑钻"
                     android:textColor="@color/color_00aeff"
-                    android:textSize="@dimen/size_12sp" />
+                    android:textSize="@dimen/size_10sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="可享受"
                     android:textColor="@color/color_333"
-                    android:textSize="@dimen/size_12sp" />
+                    android:textSize="@dimen/size_10sp" />
 
                 <TextView
                     android:id="@+id/tv_upgrade_vip_discount_game_detail_recharge"
@@ -197,14 +154,14 @@
                     android:layout_height="wrap_content"
                     android:text="0.0"
                     android:textColor="@color/red"
-                    android:textSize="@dimen/size_12sp" />
+                    android:textSize="@dimen/size_10sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="折"
                     android:textColor="@color/color_333"
-                    android:textSize="@dimen/size_12sp" />
+                    android:textSize="@dimen/size_10sp" />
             </LinearLayout>
 
             <FrameLayout
@@ -271,61 +228,35 @@
 
         <!--付款折扣信息-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_5"
-            android:background="@color/colorWhite"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_20"
-            android:paddingLeft="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_20">
+            style="@style/game_recharge_layout"
+            android:layout_marginTop="@dimen/dp_3">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/dp_10"
-                android:text="折扣："
-                android:textColor="@color/color_333"
-                android:textSize="@dimen/size_16sp" />
+                style="@style/game_recharge_text_left"
+                android:text="折扣：" />
 
             <TextView
                 android:id="@+id/tv_total_discount_game_detail_recharge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/game_recharge_text_right"
                 android:text="0.0折"
                 android:textColor="@color/red"
-                android:textSize="@dimen/size_16sp" />
+                android:textSize="@dimen/size_14sp" />
         </LinearLayout>
         <!--付款实付信息-->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/tabbar_divider_height"
-            android:background="@color/colorWhite"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_20"
-            android:paddingLeft="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_20">
+            style="@style/game_recharge_layout"
+            android:layout_marginTop="@dimen/dp_1">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/dp_10"
-                android:text="实付："
-                android:textColor="@color/color_333"
-                android:textSize="@dimen/size_16sp" />
+                style="@style/game_recharge_text_left"
+                android:text="实付：" />
 
             <TextView
                 android:id="@+id/tv_total_balance_game_detail_recharge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/game_recharge_text_right"
                 android:text="0.00元"
                 android:textColor="@color/red"
-                android:textSize="@dimen/size_16sp" />
+                android:textSize="@dimen/size_14sp" />
         </LinearLayout>
 
         <LinearLayout
