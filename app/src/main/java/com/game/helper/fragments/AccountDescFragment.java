@@ -32,10 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
-import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -210,7 +208,7 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
     }
 
     private void getMineGameDescList(int gameid, final int page) {
-        Flowable<HttpResultModel<MineGameDesclistResults>> fr = DataService.getMineGameDescList(new SingleGameIdRequestBody(gameid));
+        Flowable<HttpResultModel<MineGameDesclistResults>> fr = DataService.getMineGameDescList(new SingleGameIdRequestBody(page, gameid));
         RxLoadingUtils.subscribeWithReload(mContent, fr, bindToLifecycle(), new Consumer<HttpResultModel<MineGameDesclistResults>>() {
             @Override
             public void accept(HttpResultModel<MineGameDesclistResults> mineGameDesclistResultsHttpResultModel) throws Exception {

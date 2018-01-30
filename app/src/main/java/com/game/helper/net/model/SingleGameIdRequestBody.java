@@ -9,4 +9,8 @@ public class SingleGameIdRequestBody extends BaseRequestBody {
         this.game_account_id = game_account_id;
     }
 
+    public SingleGameIdRequestBody(int page, int game_account_id) {
+        super(page);
+        this.game_account_id = game_account_id;
+    }
 }

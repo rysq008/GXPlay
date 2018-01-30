@@ -3,7 +3,6 @@ package com.game.helper.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -20,6 +19,7 @@ import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.model.BannerResults;
 import com.game.helper.model.BaseModel.HttpResultModel;
+import com.game.helper.model.BaseModel.XBaseModel;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.GeneralizeResults;
 import com.game.helper.model.LoginUserInfo;
@@ -30,13 +30,15 @@ import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.BannerView;
 import com.game.helper.views.HeadImageView;
+import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.StateView;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
-import cn.droidlover.xstatecontroller.XStateController;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -47,7 +49,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
 
     public static final String TAG = "GeneralizePagerFragment";
     @BindView(R.id.generalize_root_layout)
-    XStateController xStateController;
+    XReloadableStateContorller xStateController;
     @BindView(R.id.swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.generalize_banner_view)
@@ -104,50 +106,37 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 refreshData();
             }
         });
-        if (null == stateView) {
-            stateView = new StateView(context);
-            stateView.setCustomClickListener(new StateView.StateViewClickListener() {
-                @Override
-                public void doAction() {
-                    refreshData();
-                }
-            });
-        }
-        xStateController.errorView(stateView);
-        xStateController.loadingView(View.inflate(context, R.layout.view_loading, null));
-//        xStateController.showLoading();
         refreshData();
-        getBannerInfo();
-    }
-
-    private void getBannerInfo() {
-        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(2));
-
-        RxLoadingUtils.subscribe(fb, this.bindToLifecycle(), new Consumer<HttpResultModel<BannerResults>>() {
-            @Override
-            public void accept(HttpResultModel<BannerResults> data) throws Exception {
-                bannerView.setData(data.data);
-                xStateController.showContent();
-                xStateController.getLoadingView().setVisibility(View.GONE);
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                xStateController.getLoadingView().setVisibility(View.GONE);
-                xStateController.showError();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
     }
 
     private void refreshData() {
         Flowable<HttpResultModel<GeneralizeResults>> flowable = DataService.getGeneralizeData();
-        RxLoadingUtils.subscribe(flowable, this.bindToLifecycle(), new Consumer<HttpResultModel<GeneralizeResults>>() {
+        Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(2));
+        Flowable<GeneralizeData> fa = Flowable.zip(flowable, fb, new BiFunction<HttpResultModel<GeneralizeResults>, HttpResultModel<BannerResults>, GeneralizeData>() {
             @Override
-            public void accept(HttpResultModel<GeneralizeResults> generalizeResultsHttpResultModel) throws Exception {
-
-                GeneralizeResults generalizeResults = generalizeResultsHttpResultModel.data;
+            public GeneralizeData apply(HttpResultModel<GeneralizeResults> generalizeResultsHttpResultModel, HttpResultModel<BannerResults> bannerResultsHttpResultModel) throws Exception {
+                GeneralizeData generalizeData = new GeneralizeData();
+                generalizeData.generalizeResults = generalizeResultsHttpResultModel.data;
+                generalizeData.bannerResults = bannerResultsHttpResultModel.data;
+                return generalizeData;
+            }
+        }).doFinally(new Action() {
+            @Override
+            public void run() throws Exception {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        xStateController.showContent();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        });
+        RxLoadingUtils.subscribeWithReload(xStateController, fa, this.bindToLifecycle(), new Consumer<GeneralizeData>() {
+            @Override
+            public void accept(GeneralizeData generalizeData) throws Exception {
+                bannerView.setData(generalizeData.bannerResults);
+                GeneralizeResults generalizeResults = generalizeData.generalizeResults;
                 if (!Kits.Empty.check(generalizeResults)) {
                     MemberBean memberBean = generalizeResults.getMember();
                     BusProvider.getBus().post(new MsgEvent<String>(0, RxConstant.Head_Image_Change_Type, memberBean.getIcon()));
@@ -155,18 +144,8 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                     generalize_tv.setText(generalizeResults.yue);
                     expect_tv.setText(generalizeResults.yujizongshouyi);
                 }
-                xStateController.showContent();
-                xStateController.getLoadingView().setVisibility(View.GONE);
-                swipeRefreshLayout.setRefreshing(false);
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                xStateController.getLoadingView().setVisibility(View.GONE);
-                xStateController.showError();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        }, null, null, true);
     }
 
     @Override
@@ -215,7 +194,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.shareIncome://分享收益
                 //取Market_url
-                String market_url = Kits.Empty.check(SharedPreUtil.getH5url())?"":SharedPreUtil.getH5url().market_url;
+                String market_url = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().market_url;
                 Bundle bundle = new Bundle();
                 WebviewFragment.requestCode = 1;
                 bundle.putString(WebviewFragment.PARAM_URL, market_url.concat("?" + SharedPreUtil.getSessionId()));
@@ -264,7 +243,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         }
         if (loginRl == null || loginLayout == null)
             return;
-        if (!TextUtils.isEmpty(SharedPreUtil.getSessionId())) {
+        if (SharedPreUtil.isLogin()) {
             loginRl.setVisibility(View.GONE);
             loginLayout.setVisibility(View.VISIBLE);
             refreshData();
@@ -272,5 +251,10 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
             loginRl.setVisibility(View.VISIBLE);
             loginLayout.setVisibility(View.GONE);
         }
+    }
+
+    class GeneralizeData extends XBaseModel {
+        GeneralizeResults generalizeResults;
+        BannerResults bannerResults;
     }
 }

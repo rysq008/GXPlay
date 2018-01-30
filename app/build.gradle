@@ -100,6 +100,7 @@ android {
         LXL_CH1012 { dimension "default" }
         PC_CH1013 { dimension "default" }
         AL_CH1014 { dimension "default" }
+        VIVO_CH1015{ dimension "default" }
     }
 
     productFlavors.all {
