@@ -138,6 +138,15 @@ public class RechargeGameFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        is_vip = false;
+        isGotoVip = false;
+        gameVipAccountNotEnough = false;
+        mLlUpgradeVip.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initView();
     }
 
@@ -147,10 +156,6 @@ public class RechargeGameFragment extends XBaseFragment {
     }
 
     private void initView() {
-        is_vip = false;
-        isGotoVip = false;
-        gameVipAccountNotEnough = false;
-        mLlUpgradeVip.setVisibility(View.GONE);
         //获取vip充值游戏账号数量
         getVipGameAccount();
         initVipLevel();
@@ -291,7 +296,7 @@ public class RechargeGameFragment extends XBaseFragment {
         // 创建PopupWindow对象，其中：
         // 第一个参数是用于PopupWindow中的View，第二个参数是PopupWindow的宽度，
         // 第三个参数是PopupWindow的高度，第四个参数指定PopupWindow能否获得焦点
-        if(popupWindow == null){
+        if (popupWindow == null) {
             popupWindow = new PopupWindow(contentView, LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
         }
@@ -483,7 +488,7 @@ public class RechargeGameFragment extends XBaseFragment {
     private void goToVipLevel() {
         Bundle bundle = new Bundle();
         bundle.putString(WebviewFragment.PARAM_TITLE, "VIP");
-        bundle.putString(WebviewFragment.PARAM_URL, Kits.Empty.check(SharedPreUtil.getH5url())?"":SharedPreUtil.getH5url().vip_url);
+        bundle.putString(WebviewFragment.PARAM_URL, Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().vip_url);
         DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
     }
 
@@ -536,11 +541,6 @@ public class RechargeGameFragment extends XBaseFragment {
             if (!data.hasExtra(TAG)) return;
             if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean) {
                 gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
-                showInitGameType(gameBean.getVip_level());
-                is_vip = false;
-                isGotoVip = false;
-                gameVipAccountNotEnough = false;
-                initView();
 
             }
         }
@@ -585,6 +585,7 @@ public class RechargeGameFragment extends XBaseFragment {
                     mAccount.setText(gameBean.getGame_account());
                     mGameName.setText(gameBean.getGame_name());
                     mPlatfrom.setText(gameBean.getGame_channel_name());
+                    showInitGameType(gameBean.getVip_level());
                     //获取会员折扣
                     getGameAccountDiscount(gameBean.getId());
                 } else {
@@ -633,6 +634,7 @@ public class RechargeGameFragment extends XBaseFragment {
                 break;
         }
     }
+
     public void initVIPGameAccount(int selectedVIP) {
         //初始化最终的折扣和最终的实付金额
         showTotalDiscountAndBalance(selectedVIP);
@@ -729,26 +731,23 @@ public class RechargeGameFragment extends XBaseFragment {
         switch (selectedLevel) {
             case 0:
                 mTotalDiscountValue = discountList.member_discount;
-                tvGameAccountType.setText("普通账号");
+
                 break;
             case 1:
                 mTotalDiscountValue = discountList.vip1_discount;
-                tvGameAccountType.setText("VIP账号");
                 break;
             case 2:
                 mTotalDiscountValue = discountList.high_vip_discount;
-                tvGameAccountType.setText("VIP账号");
                 break;
             case 3:
                 mTotalDiscountValue = discountList.high_vip_discount;
-                tvGameAccountType.setText("VIP账号");
                 break;
         }
         mTotalDiscount.setText(mTotalDiscountValue + "折");
         mTotalBalance.setText(calculateDiscountAfterBalanceValue(inputValue, mTotalDiscountValue).toString() + "元");
     }
+
     public void showInitGameType(int selectedLevel) {
-        String inputValue = mEtBalance.getText().toString().trim();
         switch (selectedLevel) {
             case 0:
                 tvGameAccountType.setText("普通账号");
@@ -770,11 +769,11 @@ public class RechargeGameFragment extends XBaseFragment {
         switch (selectedLevel) {
             case 3:
                 mTotalDiscountValue = discountList.high_vip_discount;
-                mTotalDiscount.setText(mTotalDiscountValue + "折(皇冠价体验一次)");
+                mTotalDiscount.setText(mTotalDiscountValue + "折(首充皇冠价体验一次)");
                 break;
             case 4:
                 mTotalDiscountValue = discountList.discount_activity;
-                mTotalDiscount.setText(mTotalDiscountValue + "折(活动价体验一次)");
+                mTotalDiscount.setText(mTotalDiscountValue + "折(首充活动价体验一次)");
                 break;
         }
         mTotalBalance.setText(calculateDiscountAfterBalanceValue(inputValue, mTotalDiscountValue).toString() + "元");
@@ -783,18 +782,18 @@ public class RechargeGameFragment extends XBaseFragment {
 
     public void onClickChanged(int vipLevel, View buttonView, boolean isChecked) {
         int level = vipLevel;
-            Log.d(TAG,"onClickChanged==="+"vipLevel::"+vipLevel+"-----isChecked ::"+isChecked);
-            if (gameBean != null) {
-                //选择了游戏账号
-                showTotalDiscountAndBalance(level);
-                if (gameBean.isIs_vip()) {
-                    vipGameAccount(level, buttonView);
-                } else {
-                    generalGameAccount(level, buttonView);
-                }
+        Log.d(TAG, "onClickChanged===" + "vipLevel::" + vipLevel + "-----isChecked ::" + isChecked);
+        if (gameBean != null) {
+            //选择了游戏账号
+            showTotalDiscountAndBalance(level);
+            if (gameBean.isIs_vip()) {
+                vipGameAccount(level, buttonView);
             } else {
-                userAccount(level, buttonView);
+                generalGameAccount(level, buttonView);
             }
+        } else {
+            userAccount(level, buttonView);
+        }
 
     }
 

@@ -137,7 +137,17 @@ public class GameDetailRechargeFragment extends XBaseFragment {
     @Override
     public void initData(Bundle savedInstanceState) {
         initIntent();
-        if(SharedPreUtil.isLogin()){
+        is_vip = false;
+        isGotoVip = false;
+        gameVipAccountNotEnough = false;
+        mLlUpgradeVip.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (SharedPreUtil.isLogin()) {
             initView();
         }
     }
@@ -538,19 +548,12 @@ public class GameDetailRechargeFragment extends XBaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE  ) {
-            if(data != null&& resultCode == RESULT_CODE) {
+        if (requestCode == REQUEST_CODE) {
+            if (data != null && resultCode == RESULT_CODE) {
                 if (!data.hasExtra(TAG)) return;
                 if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean) {
                     gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
-                    showInitGameType(gameBean.getVip_level());
                 }
-            }
-            is_vip = false;
-            isGotoVip = false;
-            gameVipAccountNotEnough = false;
-            if(SharedPreUtil.isLogin()){
-                initView();
             }
         }
     }
@@ -592,6 +595,7 @@ public class GameDetailRechargeFragment extends XBaseFragment {
 
                     //初始化用户账号信息
                     mAccount.setText(gameBean.getGame_account());
+                    showInitGameType(gameBean.getVip_level());
                     //获取会员折扣
                     getGameAccountDiscount(gameBean.getId());
                 } else {
@@ -737,19 +741,15 @@ public class GameDetailRechargeFragment extends XBaseFragment {
         switch (selectedLevel) {
             case 0:
                 mTotalDiscountValue = discountList.member_discount;
-                tvGameAccountType.setText("普通账号");
                 break;
             case 1:
                 mTotalDiscountValue = discountList.vip1_discount;
-                tvGameAccountType.setText("VIP账号");
                 break;
             case 2:
                 mTotalDiscountValue = discountList.high_vip_discount;
-                tvGameAccountType.setText("VIP账号");
                 break;
             case 3:
                 mTotalDiscountValue = discountList.high_vip_discount;
-                tvGameAccountType.setText("VIP账号");
                 break;
         }
         mTotalDiscount.setText(mTotalDiscountValue + "折");
@@ -779,11 +779,11 @@ public class GameDetailRechargeFragment extends XBaseFragment {
         switch (selectedLevel) {
             case 3:
                 mTotalDiscountValue = discountList.high_vip_discount;
-                mTotalDiscount.setText(mTotalDiscountValue + "折(皇冠价体验一次)");
+                mTotalDiscount.setText(mTotalDiscountValue + "折(首充皇冠价体验一次)");
                 break;
             case 4:
                 mTotalDiscountValue = discountList.discount_activity;
-                mTotalDiscount.setText(mTotalDiscountValue + "折(活动价体验一次)");
+                mTotalDiscount.setText(mTotalDiscountValue + "折(首充活动价体验一次)");
                 break;
         }
         mTotalBalance.setText(calculateDiscountAfterBalanceValue(inputValue, mTotalDiscountValue).toString() + "元");
