@@ -68,29 +68,49 @@
         <!--会员和账号-->
         <LinearLayout style="@style/game_recharge_layout">
 
-            <TextView
-                style="@style/game_recharge_text_left"
-                android:paddingLeft="@dimen/dp_25"
-                android:text="会员等级:" />
-
-            <TextView
-                android:id="@+id/tv_memmber_vip_level_game_detail_recharge"
+            <LinearLayout
+                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/color_00aeff"
-                android:textSize="@dimen/size_14sp" />
+                android:orientation="horizontal"
+                android:layout_gravity="center">
 
-            <TextView
-                style="@style/game_recharge_text_left"
-                android:paddingLeft="@dimen/dp_25"
-                android:text="账号:" />
+                <TextView
+                    style="@style/game_recharge_text_left"
+                    android:paddingLeft="@dimen/dp_25"
+                    android:text="会员等级:" />
 
-            <TextView
-                android:id="@+id/tv_game_account_type_game_detail_recharge"
+                <TextView
+                    android:id="@+id/tv_memmber_vip_level_game_detail_recharge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_00aeff"
+                    android:textSize="@dimen/size_14sp" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/color_00aeff"
-                android:textSize="@dimen/size_14sp" />
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/game_recharge_text_left"
+                    android:paddingLeft="@dimen/dp_25"
+                    android:text="账号:" />
+
+                <TextView
+                    android:id="@+id/tv_game_account_type_game_detail_recharge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_00aeff"
+                    android:textSize="@dimen/size_14sp" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
         <View
