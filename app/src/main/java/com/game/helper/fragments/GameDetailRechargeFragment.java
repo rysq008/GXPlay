@@ -1,6 +1,7 @@
 package com.game.helper.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,6 +21,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.rebound.SpringUtil;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.GameDetailMyAccountActivity;
@@ -140,7 +142,9 @@ public class GameDetailRechargeFragment extends XBaseFragment {
     @Override
     public void initData(Bundle savedInstanceState) {
         initIntent();
-        initView();
+        if(SharedPreUtil.isLogin()){
+            initView();
+        }
     }
 
     private void initIntent() {
@@ -159,8 +163,6 @@ public class GameDetailRechargeFragment extends XBaseFragment {
         isGotoVip = false;
         gameVipAccountNotEnough = false;
         mLlUpgradeVip.setVisibility(View.GONE);
-        //获取vip充值游戏账号数量
-        getVipGameAccount();
         initVipLevel();
         rgVip.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -541,16 +543,19 @@ public class GameDetailRechargeFragment extends XBaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_CODE && data != null) {
-            if (!data.hasExtra(TAG)) return;
-            if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean) {
-                gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
-                showInitGameType(gameBean.getVip_level());
-                is_vip = false;
-                isGotoVip = false;
-                gameVipAccountNotEnough = false;
+        if (requestCode == REQUEST_CODE  ) {
+            if(data != null&& resultCode == RESULT_CODE) {
+                if (!data.hasExtra(TAG)) return;
+                if (data.getSerializableExtra(TAG) instanceof GameAccountResultModel.ListBean) {
+                    gameBean = (GameAccountResultModel.ListBean) data.getSerializableExtra(TAG);
+                    showInitGameType(gameBean.getVip_level());
+                }
+            }
+            is_vip = false;
+            isGotoVip = false;
+            gameVipAccountNotEnough = false;
+            if(SharedPreUtil.isLogin()){
                 initView();
-
             }
         }
     }
@@ -575,6 +580,8 @@ public class GameDetailRechargeFragment extends XBaseFragment {
 
 
     public void initVipLevel() {
+        //获取vip充值游戏账号数量
+        getVipGameAccount();
         Flowable<HttpResultModel<MemberInfoResults>> fm = DataService.getMemberInfo();
         RxLoadingUtils.subscribeWithDialog(context, fm, bindToLifecycle(), new Consumer<HttpResultModel<MemberInfoResults>>() {
             @Override
