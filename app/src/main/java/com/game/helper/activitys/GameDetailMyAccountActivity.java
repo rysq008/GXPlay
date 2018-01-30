@@ -39,6 +39,7 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
     XReloadableRecyclerContentLayout xRecyclerContentLayout;
     @BindView(R.id.addAccount_game_detail)
     ImageView addAccount;
+    private  GameAccountResultModel.ListBean mData = null;
 
 
     MyAccountAdapter mAdapter;
@@ -136,7 +137,7 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.action_bar_back:
-                onBackPressed();
+                finish();
                 break;
             case R.id.addAccount_game_detail://添加账户
                 Intent intent = new Intent(GameDetailMyAccountActivity.this, GameDetailAddAccountActivity.class);
@@ -153,9 +154,13 @@ public class GameDetailMyAccountActivity extends XBaseActivity implements View.O
 
     @Override
     public void onItemCheked(GameAccountResultModel.ListBean gameBean) {
+        mData = gameBean;
         Intent bundle = new Intent();
-        bundle.putExtra(GameDetailRechargeFragment.TAG, gameBean);
+        bundle.putExtra(GameDetailRechargeFragment.TAG, mData);
         setResult(GameDetailRechargeFragment.RESULT_CODE, bundle);
-        onBackPressed();
+        finish();
     }
+
+
+
 }

@@ -772,4 +772,5 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         super.onDestroy();
         dispose(disposable);
     }
+
 }
