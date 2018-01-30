@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -184,7 +185,6 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
     private void initList() {
         adapter = null;
         adapter = new GameDescAdapter();
-        mContent.getLoadingView().setVisibility(View.GONE);
         mContent.getRecyclerView().setHasFixedSize(true);
         mContent.getRecyclerView().verticalLayoutManager(context);
         mContent.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
@@ -211,7 +211,7 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
 
     private void getMineGameDescList(int gameid, final int page) {
         Flowable<HttpResultModel<MineGameDesclistResults>> fr = DataService.getMineGameDescList(new SingleGameIdRequestBody(gameid));
-        RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<MineGameDesclistResults>>() {
+        RxLoadingUtils.subscribeWithReload(mContent, fr, bindToLifecycle(), new Consumer<HttpResultModel<MineGameDesclistResults>>() {
             @Override
             public void accept(HttpResultModel<MineGameDesclistResults> mineGameDesclistResultsHttpResultModel) throws Exception {
                 if (mineGameDesclistResultsHttpResultModel.isSucceful()) {
@@ -219,35 +219,16 @@ public class AccountDescFragment extends XBaseFragment implements View.OnClickLi
                         data.clear();
                     }
                     data.addAll(mineGameDesclistResultsHttpResultModel.data.list);
-                    notifyData();
+                    adapter.notifyDataSetChanged();
+                    if (data.size() < 1) {
+                        mContent.showEmpty();
+                    } else {
+                        mContent.showContent();
+                    }
                     mContent.getRecyclerView().setPage(mineGameDesclistResultsHttpResultModel.current_page, mineGameDesclistResultsHttpResultModel.total_page);
                 }
             }
-        }, new Consumer<NetError>() {
-            @Override
-            public void accept(NetError netError) throws Exception {
-                showError(netError);
-                Toast.makeText(getContext(), netError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void notifyData() {
-        adapter.notifyDataSetChanged();
-        mContent.getLoadingView().setVisibility(View.GONE);
-        mContent.refreshState(false);
-        if (adapter.getItemCount() < 1) {
-            mContent.showEmpty();
-            return;
-        } else {
-            mContent.showContent();
-        }
-    }
-
-    public void showError(NetError error) {
-        mContent.getLoadingView().setVisibility(View.GONE);
-        mContent.refreshState(false);
-        mContent.showError();
+        }, null, null, page == 1);
     }
 
     @Override

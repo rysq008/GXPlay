@@ -116,7 +116,7 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<NotConcernResults>>() {
             @Override
             public void accept(HttpResultModel<NotConcernResults> notConcernResultsHttpResultModel) throws Exception {
-                Toast.makeText(getContext(), notConcernResultsHttpResultModel.getResponseMsg(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
                 if (notConcernResultsHttpResultModel.isSucceful()) getGameAccountInfo(1, true);
             }
         }, new Consumer<NetError>() {

@@ -99,6 +99,7 @@ android {
         LS_CH1011 { dimension "default" }
         LXL_CH1012 { dimension "default" }
         PC_CH1013 { dimension "default" }
+        AL_CH1014 { dimension "default" }
     }
 
     productFlavors.all {
