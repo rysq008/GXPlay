@@ -186,7 +186,7 @@ public class MinePagerFragment extends XBaseFragment implements View.OnClickList
         if (v == mVip) {
             Bundle bundle = new Bundle();
             bundle.putString(WebviewFragment.PARAM_TITLE, "VIP");
-            bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
+            bundle.putString(WebviewFragment.PARAM_URL, Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().vip_url);
             DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
         }
     }

@@ -42,6 +42,7 @@ import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -479,7 +480,7 @@ public class RechargeGameFragment extends XBaseFragment {
     private void goToVipLevel() {
         Bundle bundle = new Bundle();
         bundle.putString(WebviewFragment.PARAM_TITLE, "VIP");
-        bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
+        bundle.putString(WebviewFragment.PARAM_URL, Kits.Empty.check(SharedPreUtil.getH5url())?"":SharedPreUtil.getH5url().vip_url);
         DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
     }
 

@@ -552,7 +552,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 if (timeOffset > 300) {
                     lastClickTime = clickTime;
                     Bundle bundle = new Bundle();
-                    bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.getAccount_guide_url());
+                    bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.account_guide_url);
                     bundle.putString(WebviewFragment.PARAM_TITLE, mTvTittle.getText().toString());
                     DetailFragmentsActivity.launch(context, bundle, WebviewFragment.newInstance());
                 }
@@ -693,7 +693,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         Bundle bundle = new Bundle();
         bundle.putString(WebviewFragment.PARAM_TITLE, mTvTittle.getText().toString());
         if (mH5UrlList != null) {
-            bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.getVip_url());
+            bundle.putString(WebviewFragment.PARAM_URL, mH5UrlList.vip_url);
         }
         DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
     }

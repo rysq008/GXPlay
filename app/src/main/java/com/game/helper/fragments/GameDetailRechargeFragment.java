@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,11 +23,9 @@ import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.activitys.GameDetailMyAccountActivity;
 import com.game.helper.activitys.HuanxinKefuLoginActivity;
-import com.game.helper.activitys.MyAccountActivity;
 import com.game.helper.activitys.OrderConfirmActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
 import com.game.helper.fragments.recharge.RechargeFragment;
-import com.game.helper.fragments.recharge.RechargeGameFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.GameAccountDiscountResults;
 import com.game.helper.model.GameAccountResultModel;
@@ -37,19 +34,17 @@ import com.game.helper.model.MemberInfoResults;
 import com.game.helper.model.VipGameAccountResults;
 import com.game.helper.model.VipLevelResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.model.BindVipAccountNumRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
-import com.game.helper.utils.StringUtils;
 import com.game.helper.utils.ToastUtil;
-import com.game.helper.utils.Utils;
 import com.game.helper.views.GXPlayDialog;
 
 import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
@@ -492,7 +487,7 @@ public class GameDetailRechargeFragment extends XBaseFragment {
     private void goToVipLevel() {
         Bundle bundle = new Bundle();
         bundle.putString(WebviewFragment.PARAM_TITLE, "VIP");
-        bundle.putString(WebviewFragment.PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_VIP));
+        bundle.putString(WebviewFragment.PARAM_URL, Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().vip_url);
         DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
     }
 
@@ -812,10 +807,10 @@ public class GameDetailRechargeFragment extends XBaseFragment {
         int level = 0;
         switch (view.getId()) {
             case R.id.ll_account_game_detail_recharge:
-                if(gameDetailInfo != null){
+                if (gameDetailInfo != null) {
                     Intent intent = new Intent(getActivity(), GameDetailMyAccountActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable(GameDetailMyAccountActivity.GAME_RECHARGE_INFO,gameDetailInfo);
+                    bundle.putSerializable(GameDetailMyAccountActivity.GAME_RECHARGE_INFO, gameDetailInfo);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_CODE);
                 }

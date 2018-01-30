@@ -9,6 +9,7 @@ import android.util.Base64;
 import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
+import com.game.helper.model.H5UrlListResults;
 import com.game.helper.model.LoginUserInfo;
 import com.google.gson.Gson;
 
@@ -41,6 +42,7 @@ public class SharedPreUtil {
     public static final String TEMP_HUANXIN_NAME = "temp_hanxin_name";
     private static final String HUAN_XIN_GREETING_TEXT = "huan_xin_greeting_text";
     private static final String ALERT_DIALOG_ENTER = "enter_alert_dialog";
+    private static final String H5_URL_RESULTS_LIST_GATHER = "h5_url_results_gather";
 
     private static SharedPreferences sp;
 
@@ -86,27 +88,27 @@ public class SharedPreUtil {
     /**
      * 存
      */
-    public static boolean saveH5Url(String key, String url) {
-        if (sp.contains(key)) {
-            return updateH5Url(key, url);
-        }
-        return sp.edit().putString(key, url).commit();
+    public static void saveH5Url(H5UrlListResults results) {
+//        if (sp.contains(key)) {
+//            return updateH5Url(key, url);
+//        }
+        saveObject(H5_URL_RESULTS_LIST_GATHER, results);
     }
 
     /**
      * 取
      */
-    public static String getH5url(String key) {
-        return sp.getString(key, "");
+    public static H5UrlListResults getH5url() {
+        return getObject(H5_URL_RESULTS_LIST_GATHER);
     }
 
     /**
      * 更新
      */
-    public static boolean updateH5Url(String key, String url) {
-        sp.edit().remove(key).commit();
-        return saveH5Url(key, url);
-    }
+//    public static boolean updateH5Url(String key, String url) {
+//        sp.edit().remove(key).commit();
+//        return saveH5Url(key, url);
+//    }
 
     /*****************************          h5 url list end                 ******************************/
 

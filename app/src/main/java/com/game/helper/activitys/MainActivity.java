@@ -284,16 +284,17 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
             @Override
             public void accept(HttpResultModel<H5UrlListResults> h5UrlListResultsHttpResultModel) throws Exception {
                 if (h5UrlListResultsHttpResultModel.isSucceful()) {
-                    String market_url = h5UrlListResultsHttpResultModel.data.getMarket_url();
-                    String vip_url = h5UrlListResultsHttpResultModel.data.getVip_url();
-                    String account_guide_url = h5UrlListResultsHttpResultModel.data.getAccount_guide_url();
-                    String expected_url = h5UrlListResultsHttpResultModel.data.getExpected_url();
-                    String share_discount_url = h5UrlListResultsHttpResultModel.data.getShare_discount_url();
-                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_MARKET, market_url);
-                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_VIP, vip_url);
-                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_ACCOUNT_GUIDE, account_guide_url);
-                    SharedPreUtil.saveH5Url(SharedPreUtil.EXPECTED_URL, expected_url);
-                    SharedPreUtil.saveH5Url(SharedPreUtil.SHARE_DISCOUNT_URL, share_discount_url);
+//                    String market_url = h5UrlListResultsHttpResultModel.data.market_url;
+//                    String vip_url = h5UrlListResultsHttpResultModel.data.vip_url;
+//                    String account_guide_url = h5UrlListResultsHttpResultModel.data.account_guide_url;
+//                    String expected_url = h5UrlListResultsHttpResultModel.data.expected_url;
+//                    String share_discount_url = h5UrlListResultsHttpResultModel.data.share_discount_url;
+//                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_MARKET, market_url);
+//                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_VIP, vip_url);
+//                    SharedPreUtil.saveH5Url(SharedPreUtil.H5_URL_ACCOUNT_GUIDE, account_guide_url);
+//                    SharedPreUtil.saveH5Url(SharedPreUtil.EXPECTED_URL, expected_url);
+//                    SharedPreUtil.saveH5Url(SharedPreUtil.SHARE_DISCOUNT_URL, share_discount_url);
+                    SharedPreUtil.saveH5Url(h5UrlListResultsHttpResultModel.data);
                 }
             }
         }, new Consumer<NetError>() {

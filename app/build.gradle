@@ -1,9 +1,5 @@
 apply plugin: 'com.android.application'
 
-
-// 默认apk输出路径
-ext.appReleaseDir = "F:\\workplace\\GXPlay\\app\\release"
-
 def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }

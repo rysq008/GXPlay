@@ -388,7 +388,7 @@ public class WebviewFragment extends XBaseFragment {
                 if (resultCode == RESULT_OK) {
                     getActivity().onBackPressed();
                     Bundle bundle = new Bundle();
-                    bundle.putString(PARAM_URL, SharedPreUtil.getH5url(SharedPreUtil.H5_URL_MARKET).concat("?" + SharedPreUtil.getSessionId()));
+                    bundle.putString(PARAM_URL, SharedPreUtil.getH5url().market_url.concat("?" + SharedPreUtil.getSessionId()));
                     bundle.putString(WebviewFragment.PARAM_TITLE, "分享收益");
                     DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 }

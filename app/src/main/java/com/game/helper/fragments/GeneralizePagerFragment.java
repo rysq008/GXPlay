@@ -194,7 +194,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.mallTv://商城
                 //取Market_url
-                String expected_url = SharedPreUtil.getH5url(SharedPreUtil.EXPECTED_URL);
+                String expected_url = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().shop_url;
                 Bundle shopBundle = new Bundle();
                 shopBundle.putString(WebviewFragment.PARAM_URL, expected_url.concat("?" + SharedPreUtil.getSessionId()));
                 shopBundle.putString(WebviewFragment.PARAM_TITLE, "敬请期待");
@@ -202,7 +202,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.activityTv://活动
                 //取Market_url
-                String s1 = SharedPreUtil.getH5url(SharedPreUtil.EXPECTED_URL);
+                String s1 = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().activity_url;
                 Bundle activityBundle = new Bundle();
                 activityBundle.putString(WebviewFragment.PARAM_URL, s1.concat("?" + SharedPreUtil.getSessionId()));
                 activityBundle.putString(WebviewFragment.PARAM_TITLE, "敬请期待");
@@ -215,7 +215,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.shareIncome://分享收益
                 //取Market_url
-                String market_url = SharedPreUtil.getH5url(SharedPreUtil.H5_URL_MARKET);
+                String market_url = Kits.Empty.check(SharedPreUtil.getH5url())?"":SharedPreUtil.getH5url().market_url;
                 Bundle bundle = new Bundle();
                 WebviewFragment.requestCode = 1;
                 bundle.putString(WebviewFragment.PARAM_URL, market_url.concat("?" + SharedPreUtil.getSessionId()));
