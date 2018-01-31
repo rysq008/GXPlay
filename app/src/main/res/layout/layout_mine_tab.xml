@@ -58,7 +58,8 @@
                 android:layout_centerVertical="true"
                 android:drawablePadding="@dimen/dp_5"
                 android:drawableRight="@mipmap/ic_arrow_right"
-                android:gravity="right|center_vertical"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_5"
                 android:text="@string/common_wallet_recharge"
                 android:textColor="@color/colorShadow"
                 android:textSize="@dimen/text_size_tiny" />

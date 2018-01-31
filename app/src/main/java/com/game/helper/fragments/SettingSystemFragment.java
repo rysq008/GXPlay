@@ -12,6 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allenliu.versionchecklib.v2.AllenVersionChecker;
+import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
+import com.allenliu.versionchecklib.v2.builder.UIData;
+import com.allenliu.versionchecklib.v2.callback.ForceUpdateListener;
 import com.game.helper.R;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
@@ -34,7 +38,6 @@ import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
-import util.UpdateAppUtils;
 
 import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
@@ -217,17 +220,22 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
                                     }
                                 })
                                 .create().show();*/
-                        UpdateAppUtils.from(getActivity())
-                                //.checkBy(UpdateAppUtils.CHECK_BY_VERSION_NAME) //更新检测方式，默认为VersionCode
-                                .serverVersionCode(versionCheckResultsHttpResultModel.data.getVersion_code())
-                                .serverVersionName(versionCheckResultsHttpResultModel.data.getVersion())
-                                .apkPath(versionCheckResultsHttpResultModel.data.getUrl())
-                                .showNotification(true) //是否显示下载进度到通知栏，默认为true
-                                .updateInfo(versionCheckResultsHttpResultModel.data.getDesc())  //更新日志信息 String
-                                //.downloadBy(UpdateAppUtils.DOWNLOAD_BY_BROWSER) //下载方式：app下载、手机浏览器下载。默认app下载
-                                .isForce(versionCheckResultsHttpResultModel.data.isIs_force_update()) //是否强制更新，默认false 强制更新情况下用户不同意更新则不能使用app
-                                .update();
+                        DownloadBuilder builder = AllenVersionChecker
+                                .getInstance()
+                                .downloadOnly(
+                                        UIData.create().setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
+                                                .setTitle("发现新版本:" + versionCheckResultsHttpResultModel.data.getVersion())
+                                                .setContent(versionCheckResultsHttpResultModel.data.getDesc())
+                                );
+                        if (versionCheckResultsHttpResultModel.data.isIs_force_update()) {
+                            builder.setForceUpdateListener(new ForceUpdateListener() {
+                                @Override
+                                public void onShouldForceUpdate() {
 
+                                }
+                            });
+                        }
+                        builder.excuteMission(context);
 
                     } else {
                         ToastUtil.showToast("已经是最新的版本");
