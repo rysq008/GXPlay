@@ -123,7 +123,7 @@
     <dimen name="dp_105">105dp</dimen>
 
     <!--text-->
-    <dimen name="text_size_tiny">10.0sp</dimen>
+    <dimen name="text_size_tiny">11.0sp</dimen>
     <dimen name="text_size_small">12.0sp</dimen>
     <dimen name="text_size_medium">14.0sp</dimen>
     <dimen name="text_size_large">15.0sp</dimen>
