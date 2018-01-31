@@ -56,6 +56,7 @@ public class GamePackageListResult extends XBaseModel {
         public void setDiscount_activity(float discount_activity) {
             this.discount_activity = discount_activity;
         }
+
         public float getDiscount_vip() {
             return discount_vip;
         }
@@ -196,6 +197,10 @@ public class GamePackageListResult extends XBaseModel {
 
             public void setName(String name) {
                 this.name = name;
+            }
+
+            public boolean isStandAloneGame() {
+                return class_type.getId() == 22;
             }
 
             public static class ClassTypeBean {

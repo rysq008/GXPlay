@@ -49,7 +49,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     @BindView(R.id.selectGame)
     TextView selectGame;
     @BindView(R.id.channelEdit)
-    EditText channelEdit;
+    TextView channelEdit;
     @BindView(R.id.selectChannel)
     TextView selectChannel;
     @BindView(R.id.tb_add_account_toggle)
@@ -254,7 +254,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
             mChannelWindow.dismiss();
         }
         channelEdit.setText(name);
-        channelEdit.setSelection(getChannelName().length());
+//        channelEdit.setSelection(getChannelName().length());
         this.mChannelId = String.valueOf(channel_id);
     }
 

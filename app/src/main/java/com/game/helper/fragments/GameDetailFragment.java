@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -217,6 +218,12 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 return list.size();
             }
 
+            @Nullable
+            @Override
+            public CharSequence getPageTitle(int position) {
+                return super.getPageTitle(position);
+            }
+
             @Override
             public int getItemPosition(Object object) {
                 return POSITION_NONE;
@@ -230,6 +237,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
             @Override
             public void onPageSelected(int position) {
+                if (isStandAloneGame) position++;
                 switch (position) {
                     case 0:
                         tvBottomDownload.setVisibility(View.GONE);
@@ -291,6 +299,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                         mH5UrlList = gameDetailAllResults.h5UrlListResults;
                     }
                     if (gameDetailAllResults.gamePackageInfoResult != null) {
+                        isStandAloneGame = (gameDetailAllResults.gamePackageInfoResult.getGame().isStandAloneGame());
                         packageInfo = gameDetailAllResults.gamePackageInfoResult;
                         setGameView();
                         initViewPager(packageInfo);
@@ -474,7 +483,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
-                ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
+                final ColorTransitionPagerTitleView colorTransitionPagerTitleView = new ColorTransitionPagerTitleView(context);
                 colorTransitionPagerTitleView.setNormalColor(Color.GRAY);
                 colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
                 String title = null;
@@ -515,6 +524,10 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         tabStrip.setNavigator(commonNavigator);
         ViewPagerHelper.bind(tabStrip, viewPager);
         viewPager.getAdapter().notifyDataSetChanged();
+        if (isStandAloneGame) {
+            tvBottomDownload.setVisibility(View.VISIBLE);
+            etitLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override

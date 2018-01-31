@@ -74,6 +74,7 @@ public class GamePackageInfoResult extends XBaseModel {
     public void setZhekou_shouchong(double zhekou_shouchong) {
         this.zhekou_shouchong = zhekou_shouchong;
     }
+
     public double getDiscount_activity() {
         return discount_activity;
     }
@@ -199,7 +200,11 @@ public class GamePackageInfoResult extends XBaseModel {
             this.name = name;
         }
 
-        public static class ClassTypeBean  extends XBaseModel{
+        public boolean isStandAloneGame() {
+            return class_type.getId() == 22;
+        }
+
+        public static class ClassTypeBean extends XBaseModel {
             /**
              * id : 1
              * name : 网游
@@ -225,7 +230,7 @@ public class GamePackageInfoResult extends XBaseModel {
             }
         }
 
-        public static class TypeBean  extends XBaseModel{
+        public static class TypeBean extends XBaseModel {
             /**
              * id : 9
              * name : 角色
@@ -252,7 +257,7 @@ public class GamePackageInfoResult extends XBaseModel {
         }
     }
 
-    public static class ChannelBean  extends XBaseModel {
+    public static class ChannelBean extends XBaseModel {
         /**
          * id : 15
          * name : 当乐

@@ -138,7 +138,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
                 tvActivityDiscount.setText(discount_activity.toString() + "折");
                 tvMatchingActivityDiscount.setText(discount_vip.toString() + "折");
             } else {
-                tvDiscountVip.setVisibility(isStandAloneGame ? View.GONE : View.VISIBLE);
+                tvDiscountVip.setVisibility(itemDate.getGame().isStandAloneGame() ? View.GONE : View.VISIBLE);
                 tvActivityDiscount.setVisibility(View.GONE);
                 tvMatchingActivityDiscount.setVisibility(View.GONE);
                 tvDiscountVip.setText(discount_vip.toString() + "折");

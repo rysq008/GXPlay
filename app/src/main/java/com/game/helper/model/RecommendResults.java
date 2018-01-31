@@ -19,26 +19,26 @@ public class RecommendResults extends XBaseModel {
 
 
     public static class RecommendItem extends XBaseModel {
-       /* {
-            "game_package": {
-            "zhekou_shouchong": 4.2,
-                    "discount_activity": 3.5,
-                    "filesize": 123
-        },
-            "name": "少年西游记",
-                "logothumb": "/media/game_logo/f0cf3e7ec227f67918d94237aecd7959.jpg",
-                "intro": "很好玩的啊",
-                "logo": "/upload/images/gameinfo/2017111617074546201.png",
-                "type": {
-            "id": 1,
-                    "name": "策略回合"
-        },
-            "class_type": {
-            "id": 1,
-                    "name": "网游"
-        },
-            "id": 4
-        }*/
+        /* {
+             "game_package": {
+             "zhekou_shouchong": 4.2,
+                     "discount_activity": 3.5,
+                     "filesize": 123
+         },
+             "name": "少年西游记",
+                 "logothumb": "/media/game_logo/f0cf3e7ec227f67918d94237aecd7959.jpg",
+                 "intro": "很好玩的啊",
+                 "logo": "/upload/images/gameinfo/2017111617074546201.png",
+                 "type": {
+             "id": 1,
+                     "name": "策略回合"
+         },
+             "class_type": {
+             "id": 1,
+                     "name": "网游"
+         },
+             "id": 4
+         }*/
         public int id;
         //            "zhekou_shouchong": 4.3,
         //                    "filesize": 211
@@ -50,11 +50,18 @@ public class RecommendResults extends XBaseModel {
         //            "id": 1,
 //                    "name": "策略回合"
         public Map<String, String> type;
-         /*"class_type": {
-            "id": 1,
-                    "name": "网游"
-        }*/
-         public Map<String, String> class_type;
+        /*"class_type": {
+           "id": 1,
+                   "name": "网游"
+       }*/
+        public Map<String, String> class_type;
+
+        public boolean isStandAloneGame() {
+            return class_type.get("id").equals("22"
+
+            );
+        }
+
         @Override
         public int itemType() {
             return RxConstant.HomeModeType.Recommend_Model_Type;

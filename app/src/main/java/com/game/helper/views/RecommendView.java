@@ -94,7 +94,7 @@ public class RecommendView extends LinearLayout {
         } else {
             activityDiscount.setVisibility(GONE);
             matchingActivityDiscount.setVisibility(GONE);
-            discountTv.setVisibility(VISIBLE);
+            discountTv.setVisibility(data.isStandAloneGame() ? GONE : VISIBLE);
             discountTv.setText(zhekou_shouchong.toString() + "折");
         }
         if (!Kits.Empty.check(data.type)) {
