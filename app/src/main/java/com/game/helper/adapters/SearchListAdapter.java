@@ -34,9 +34,8 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
     public static final int TAG_VIEW = 0;
     private boolean isStandAloneGame = false;
 
-    public SearchListAdapter(Context context, boolean StandAloneGame) {
+    public SearchListAdapter(Context context) {
         super(context);
-        isStandAloneGame = StandAloneGame;
     }
 
     @Override
@@ -104,6 +103,7 @@ public class SearchListAdapter extends SimpleRecAdapter<ItemType, SearchListAdap
             HotResults.HotItem data = (HotResults.HotItem) itemType;
             ILFactory.getLoader().loadNet(roundedIv, Api.API_PAY_OR_IMAGE_URL.concat(data.logo), ILoader.Options.defaultOptions());
             nameTv.setText(data.name.replace(" ", ""));
+            isStandAloneGame = data.isStandAloneGame();
 
             Float zhekou_shouchong = data.game_package.get("zhekou_shouchong");
             Float discount_activity = data.game_package.get("discount_activity");

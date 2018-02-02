@@ -1,11 +1,15 @@
 package com.game.helper.fragments;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,16 +41,21 @@ import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableStateContorller;
 import com.jude.swipbackhelper.SwipeBackHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.LoadCallback;
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
 import static android.app.Activity.RESULT_OK;
+import static android.os.Environment.DIRECTORY_DCIM;
 
 public class WebviewFragment extends XBaseFragment {
     public static final String TAG = WebviewFragment.class.getSimpleName();
@@ -185,6 +194,7 @@ public class WebviewFragment extends XBaseFragment {
              jsObj.JavaCallBack(4,"分享");
              jsObj.JavaCallBack(5,"返回");
              jsObj.JavaCallBack(6,"会员升级");
+             jsObj.JavaCallBack(7,"保存图片");
              * @param code
              * @param message
              */
@@ -268,10 +278,51 @@ public class WebviewFragment extends XBaseFragment {
                             }
                         });
                         break;
+                    case 7:
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                saveBitmap(message);
+                            }
+                        });
+                        break;
                 }
             }
         };
         return insertObj;
+    }
+
+    private void saveBitmap(final String qr_url) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getRxPermissions().request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+                    @Override
+                    public void accept(Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            ILFactory.getLoader().loadNet(getContext(), qr_url, null, new LoadCallback() {
+                                @Override
+                                public void onLoadReady(Bitmap bitmap) {
+                                    File imageSavePath = Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM);
+                                    FileOutputStream outputStream = null;
+                                    File imgFile = new File(imageSavePath, "G9_QR_CODE.jpg");
+                                    try {
+                                        outputStream = new FileOutputStream(imgFile);
+                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
+                                        getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imgFile)));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(context, "save fail ", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(context, "请打开权限!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     /**

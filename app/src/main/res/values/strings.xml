@@ -108,7 +108,7 @@
     <!--收益第二栏-->
     <string name="extension_item_tittle_shareact">分享活动，赚钱到手软</string>
     <string name="extension_item_share_profit">分享收益</string>
-    <string name="extension_item_share_discount">分享超低折扣</string>
+    <string name="extension_item_share_discount">分享二维码</string>
     <!--收益第三栏-->
     <string name="extension_item_tittle_task">做任务，赚取积分，兑换金币</string>
     <string name="extension_item_share_weico">分享微博</string>

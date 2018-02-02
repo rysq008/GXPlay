@@ -52,6 +52,10 @@ public class HotResults extends XBaseModel {
        }*/
         public Map<String, String> class_type;
 
+        public boolean isStandAloneGame() {
+            return class_type.get("id").equals("22");
+        }
+
         @Override
         public int itemType() {
             return RxConstant.HomeModeType.Hot_Model_Type;

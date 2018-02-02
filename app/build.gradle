@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'com.antfortune.freeline'
+freeline {
+    hack true
+    productFlavor ""
+    autoDependency false
+}
+
 def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }

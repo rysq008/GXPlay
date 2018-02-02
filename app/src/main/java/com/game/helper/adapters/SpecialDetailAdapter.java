@@ -60,7 +60,7 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
         holder.ivName.setText(itemDate.name);
         holder.ivTypeName.setText(itemDate.type.get("name").replace(" ", ""));
         holder.ivntro.setText(itemDate.intro);
-        if(!Kits.Empty.check(itemDate.class_type)) {
+        if (!Kits.Empty.check(itemDate.class_type)) {
             holder.tvTypeClass.setText(itemDate.class_type.get("name"));
         }
         if (discount_activity > 0) {
@@ -73,6 +73,7 @@ public class SpecialDetailAdapter extends SimpleRecAdapter<ItemType, SpecialDeta
         } else {
             holder.tvActivityDiscoun.setVisibility(View.GONE);
             holder.tvMatchingActivityDiscoun.setVisibility(View.GONE);
+            holder.ivDiscountVip.setVisibility(itemDate.isStandAloneGame() ? View.GONE : View.VISIBLE);
             holder.ivDiscountVip.setText(zhekou_shouchong.toString() + "折");
         }
         holder.gameId = itemDate.id;

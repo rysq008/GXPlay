@@ -203,7 +203,14 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.shareDiscount://分享折扣
                 WebviewFragment.requestCode = 1;
-                fetchShareInfo();
+//                fetchShareInfo();
+                //取Market_url
+                String discount_url = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().share_qr_url;
+                Bundle bund = new Bundle();
+                WebviewFragment.requestCode = 1;
+                bund.putString(WebviewFragment.PARAM_URL, discount_url.concat("?" + SharedPreUtil.getSessionId()));
+                bund.putString(WebviewFragment.PARAM_TITLE, "分享二维码");
+                DetailFragmentsActivity.launch(getContext(), bund, WebviewFragment.newInstance());
                 break;
             case R.id.loginTv://登录
                 DetailFragmentsActivity.launch(getContext(), null, LoginFragment.newInstance());

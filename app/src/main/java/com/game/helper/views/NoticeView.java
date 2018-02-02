@@ -1,10 +1,14 @@
 package com.game.helper.views;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -17,8 +21,13 @@ import com.game.helper.fragments.recharge.RechargeFragment;
 import com.game.helper.model.H5Results;
 import com.game.helper.model.PlatformMessageResults;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.droidlover.xdroidmvp.imageloader.ILFactory;
+import cn.droidlover.xdroidmvp.imageloader.LoadCallback;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 
 import static com.game.helper.fragments.WebviewFragment.PARAM_URL;
@@ -31,6 +40,8 @@ public class NoticeView extends LinearLayout {
 
     @BindView(R.id.activity_notice_item_vflipper)
     ViewFlipper viewFlipper;
+    @BindView(R.id.notice_vip_iv)
+    ImageView notice_vip_iv;
 
     private Context mContext;
     private H5Results h5Results;

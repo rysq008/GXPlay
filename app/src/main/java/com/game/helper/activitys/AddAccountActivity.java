@@ -3,7 +3,9 @@ package com.game.helper.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -254,8 +256,16 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
             mChannelWindow.dismiss();
         }
         channelEdit.setText(name);
+        accountEdit.setText("");
 //        channelEdit.setSelection(getChannelName().length());
         this.mChannelId = String.valueOf(channel_id);
+        if (channel_id == gid) {
+            accountEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+        } else {
+//            accountEdit.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+            String dig = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+            accountEdit.setKeyListener(DigitsKeyListener.getInstance(dig));
+        }
     }
 
 
@@ -307,7 +317,10 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
                     return;
                 }
 
-                addGameAccount(Integer.parseInt(mGameId), Integer.parseInt(mChannelId), getAccountname());
+                if (!Kits.Empty.check(mGameId) && !Kits.Empty.check(mChannelId))
+                    addGameAccount(Integer.parseInt(mGameId), Integer.parseInt(mChannelId), getAccountname());
+                else
+                    Toast.makeText(context, "请检查游戏或渠道信息", Toast.LENGTH_SHORT).show();
 
                 break;
             default:
@@ -340,7 +353,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
         String content = "", title = "";
         if (type == 0) {
             title = "帐户绑定提示窗";
-            content = "当乐平台帐号必须绑定的是乐号，请谨慎操作！您确定绑定该账号吗？";
+            content = "当乐平台帐号必须绑定的是乐号，且帐号只能为全数字。您确定绑定该账号吗？";
         } else if (type == 1) {
             title = "绑定VIP的提示框";
             content = "您将占用一个VIP账号名额，确定此操作吗？";

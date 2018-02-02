@@ -61,3 +61,7 @@ app/.gradle/
 .idea/.name
 /.idea/misc.xml
 /app/release/
+/freeline/
+/freeline_core/
+/freeline_project_description.json
+/freeline.py

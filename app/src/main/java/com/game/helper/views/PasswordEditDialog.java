@@ -2,6 +2,9 @@ package com.game.helper.views;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +19,8 @@ import com.game.helper.R;
 import com.game.helper.utils.ScreenUtils;
 import com.game.helper.utils.StringUtils;
 import com.game.helper.views.widget.PasswordEditText;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by sung on 2017/12/15.
@@ -68,6 +73,38 @@ public class PasswordEditDialog extends android.support.v4.app.DialogFragment im
         dialogWindow.setGravity(Gravity.CENTER);
         lp.width = ScreenUtils.getScreenWidth(getContext()) / 5 * 4;
         dialogWindow.setAttributes(lp);
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+//        super.show(manager, tag);
+//        mDismissed = false;
+//        mShownByMe = true;
+//        FragmentTransaction ft = manager.beginTransaction();
+//        ft.add(this, tag);
+//        // 这里吧原来的commit()方法换成了commitAllowingStateLoss()
+//        ft.commitAllowingStateLoss();
+        try {
+            Field dismissed = DialogFragment.class.getDeclaredField("mDismissed");
+            dismissed.setAccessible(true);
+            dismissed.set(this, false);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        try {
+            Field shown = DialogFragment.class.getDeclaredField("mShownByMe");
+            shown.setAccessible(true);
+            shown.set(this, true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.add(this, tag);
+        ft.commitAllowingStateLoss();
     }
 
     @Override

@@ -75,7 +75,7 @@ public class GameListFragment extends XBaseFragment {
     private void initAdapter() {
         xRecyclerContentLayout.getRecyclerView().verticalLayoutManager(context);
         if (null == mAdapter) {
-            mAdapter = new SearchListAdapter(context, class_type == classical_type);
+            mAdapter = new SearchListAdapter(context);
         }
         xRecyclerContentLayout.getRecyclerView().setAdapter(mAdapter);
         xRecyclerContentLayout.getRecyclerView().setVerticalScrollBarEnabled(false);

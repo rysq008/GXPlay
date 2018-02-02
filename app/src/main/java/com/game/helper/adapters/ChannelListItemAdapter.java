@@ -47,13 +47,7 @@ public class ChannelListItemAdapter extends SimpleRecAdapter<ItemType, ChannelLi
     private RxDownload mRxDownload;
     private DataBaseHelper dataBaseHelper;
     private PackageManager pm;
-
-    public void setStandAloneGame(boolean standAloneGame) {
-        isStandAloneGame = standAloneGame;
-    }
-
-    private boolean isStandAloneGame;
-
+    
     public ChannelListItemAdapter(Context context, RxPermissions rxPermissions) {
         super(context);
         this.rxPermissions = rxPermissions;

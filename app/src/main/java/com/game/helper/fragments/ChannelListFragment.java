@@ -59,7 +59,6 @@ public class ChannelListFragment extends XBaseFragment {
         if (arguments != null) {
             gameId = arguments.getInt(GAME_ID);
             isStandAloneGame = arguments.getBoolean(STANDALONEGAME);
-            mAdapter.setStandAloneGame(isStandAloneGame);
             loadAdapterData(1, true);
         } else {
             xrclChannelList.showEmpty();

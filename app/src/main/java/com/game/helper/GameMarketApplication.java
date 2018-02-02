@@ -6,6 +6,7 @@ import android.support.multidex.MultiDexApplication;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import com.antfortune.freeline.FreelineCore;
 import com.facebook.stetho.Stetho;
 import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
@@ -48,6 +49,7 @@ public class GameMarketApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        FreelineCore.init(this);
         context = this;
         gminstance = this;
 

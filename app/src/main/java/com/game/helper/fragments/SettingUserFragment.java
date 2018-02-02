@@ -1,5 +1,6 @@
 package com.game.helper.fragments;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -393,7 +394,17 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
      */
     @Override
     public void onTakePhoto() {
-        RxPhotoTool.openCameraImage(this);
+        getRxPermissions().request(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    RxPhotoTool.openCameraImage(SettingUserFragment.this);
+                } else {
+                    Toast.makeText(context, "请打开权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -425,7 +436,16 @@ public class SettingUserFragment extends XBaseFragment implements View.OnClickLi
      */
     @Override
     public void onChoosePic() {
-        RxPhotoTool.openLocalImage(this);
+        getRxPermissions().request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean aBoolean) throws Exception {
+                if (aBoolean) {
+                    RxPhotoTool.openLocalImage(SettingUserFragment.this);
+                } else {
+                    Toast.makeText(context, "请打开权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 
