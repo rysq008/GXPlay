@@ -105,6 +105,7 @@ import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SetPasswordRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.ShareInfoRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
@@ -543,8 +544,8 @@ public class DataService {
         return Api.CreateApiService().reportedData(reportedRequestBody);
     }
 
-    public static Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData() {
-        return Api.CreateApiService().getApiShareInfoData();
+    public static Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData(ShareInfoRequestBody shareInfoRequestBody) {
+        return Api.CreateApiService().getApiShareInfoData(shareInfoRequestBody);
     }
 
     public static Flowable<HttpResultModel<Map<String, String>>> getApiPackageInfoShareInfoData(GamePackageInfoRequestBody gamePackageRequestBody) {

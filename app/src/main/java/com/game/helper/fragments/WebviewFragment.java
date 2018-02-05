@@ -35,6 +35,7 @@ import com.game.helper.model.BaseModel.HttpResultModel;
 import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ShareInfoResults;
 import com.game.helper.net.DataService;
+import com.game.helper.net.model.ShareInfoRequestBody;
 import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
@@ -187,11 +188,12 @@ public class WebviewFragment extends XBaseFragment {
 
     private Object getHtmlObject() {
         Object insertObj = new Object() {
+
             /***
              *  jsObj.JavaCallBack(1,"注册");
              jsObj.JavaCallBack(2,"登录");
              jsObj.JavaCallBack(3,"充值");
-             jsObj.JavaCallBack(4,"分享");
+             jsObj.JavaCallBack(4X,"分享");X表示类型
              jsObj.JavaCallBack(5,"返回");
              jsObj.JavaCallBack(6,"会员升级");
              jsObj.JavaCallBack(7,"保存图片");
@@ -199,7 +201,7 @@ public class WebviewFragment extends XBaseFragment {
              * @param message
              */
             @JavascriptInterface
-            public void JavaCallBack(int code, final String message) {
+            public void JavaCallBack(final int code, final String message) {
                 switch (code) {
                     case 1:
                         getActivity().runOnUiThread(new Runnable() {
@@ -226,13 +228,22 @@ public class WebviewFragment extends XBaseFragment {
                         });
                         break;
                     case 4:
+                    case 41:
+                    case 42:
+                    case 43:
+                    case 44:
+                    case 45:
+                    case 46:
+                    case 47:
+                    case 48:
+                    case 49:
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 if (requestCode == 1) {
                                     shareUrl = message;
                                 }
-                                Flowable<HttpResultModel<ShareInfoResults>> flowable = DataService.getApiShareInfoData();
+                                Flowable<HttpResultModel<ShareInfoResults>> flowable = DataService.getApiShareInfoData(new ShareInfoRequestBody(code / 10 > 0 ? code % 10 : 1));
                                 RxLoadingUtils.subscribeWithDialog(context, flowable, WebviewFragment.this.bindToLifecycle(), new Consumer<HttpResultModel<ShareInfoResults>>() {
                                     @Override
                                     public void accept(HttpResultModel<ShareInfoResults> shareInfoResultsHttpResultModel) throws Exception {
@@ -310,6 +321,7 @@ public class WebviewFragment extends XBaseFragment {
                                         outputStream = new FileOutputStream(imgFile);
                                         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
                                         getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imgFile)));
+                                        Toast.makeText(context, "保存成功", Toast.LENGTH_SHORT).show();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         Toast.makeText(context, "save fail ", Toast.LENGTH_SHORT).show();

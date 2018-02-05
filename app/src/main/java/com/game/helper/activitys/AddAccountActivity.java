@@ -3,6 +3,7 @@ package com.game.helper.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
@@ -101,6 +102,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 
     private void initView() {
         mHeadTittle.setText("账户绑定");
+        gameEdit.setHint(Html.fromHtml("<font color='#999999'><small>输入搜索关键字</small></font>"));
         if (!canEdit) {
             gameEdit.setEnabled(false);
             channelEdit.setEnabled(false);
@@ -190,22 +192,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
      * 提交，添加账户
      */
     private void addGameAccount(final int game_id, final int channel_id, final String game_account) {
-        if (gid == channel_id) {
-            showVipBindDialog(0, new GXPlayDialog.onDialogActionListner() {
-                @Override
-                public void onCancel() {
-                    dialog.dismiss();
-                }
-
-                @Override
-                public void onConfirm() {
-                    dialog.dismiss();
-                    doAddGameAccount(game_id, channel_id, game_account);
-                }
-            });
-        } else {
-            doAddGameAccount(game_id, channel_id, game_account);
-        }
+        doAddGameAccount(game_id, channel_id, game_account);
     }
 
     private void doAddGameAccount(int game_id, int channel_id, String game_account) {
@@ -260,7 +247,20 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
 //        channelEdit.setSelection(getChannelName().length());
         this.mChannelId = String.valueOf(channel_id);
         if (channel_id == gid) {
+            showVipBindDialog(0, new GXPlayDialog.onDialogActionListner() {
+                @Override
+                public void onCancel() {
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onConfirm() {
+                    dialog.dismiss();
+                }
+            });
             accountEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+//            String dig = "0123456789";
+//            accountEdit.setKeyListener(DigitsKeyListener.getInstance(dig));
         } else {
 //            accountEdit.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
             String dig = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
@@ -353,7 +353,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
         String content = "", title = "";
         if (type == 0) {
             title = "帐户绑定提示窗";
-            content = "当乐平台帐号必须绑定的是乐号，且帐号只能为全数字。您确定绑定该账号吗？";
+            content = "当乐平台帐号必须绑定的是乐号。";
         } else if (type == 1) {
             title = "绑定VIP的提示框";
             content = "您将占用一个VIP账号名额，确定此操作吗？";
@@ -362,7 +362,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
             content = "VIP会员剩余名额为0，请升级会员。";
         }
         dialog = null;
-        dialog = new GXPlayDialog(GXPlayDialog.Ddialog_With_All_Full_Confirm, title, content);
+        dialog = new GXPlayDialog(type == 0 ? GXPlayDialog.Ddialog_With_All_Single_Confirm : GXPlayDialog.Ddialog_With_All_Full_Confirm, title, content);
         dialog.addOnDialogActionListner(listner);
         dialog.show(getSupportFragmentManager(), GXPlayDialog.TAG);
     }

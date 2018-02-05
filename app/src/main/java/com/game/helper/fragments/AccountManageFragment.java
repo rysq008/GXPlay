@@ -86,6 +86,7 @@ public class AccountManageFragment extends XBaseFragment implements View.OnClick
         mContent.getRecyclerView().verticalLayoutManager(context);
         mContent.getRecyclerView().setItemAnimator(new DefaultItemAnimator());
         mContent.getRecyclerView().setAdapter(mAdapter);
+        mContent.getRecyclerView().setVerticalScrollBarEnabled(false);
         mContent.getRecyclerView().setOnRefreshAndLoadMoreListener(new XRecyclerView.OnRefreshAndLoadMoreListener() {
             @Override
             public void onRefresh() {

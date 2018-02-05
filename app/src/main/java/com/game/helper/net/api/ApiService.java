@@ -105,6 +105,7 @@ import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.SearchRequestBody;
 import com.game.helper.net.model.SetPasswordRequestBody;
 import com.game.helper.net.model.SetTradeRequestBody;
+import com.game.helper.net.model.ShareInfoRequestBody;
 import com.game.helper.net.model.SingleGameIdRequestBody;
 import com.game.helper.net.model.SinglePageRequestBody;
 import com.game.helper.net.model.SpecialDetailRequestBody;
@@ -523,7 +524,7 @@ public interface ApiService {
 
     //获取推广分享信息接口
     @POST("/marketing/get_marketing_share_info/")
-    Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData();
+    Flowable<HttpResultModel<ShareInfoResults>> getApiShareInfoData(@Body ShareInfoRequestBody requestBody);
 
     //获取详情分享信息接口
     @POST("/game/get_game_share_url/")

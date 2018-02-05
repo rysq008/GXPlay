@@ -198,28 +198,41 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
 
         }
         Flowable<HttpResultModel<VersionCheckResults>> fv = DataService.updateVersion(new VersionCheckRequestBody(packageInfo.versionName));
-        RxLoadingUtils.subscribe(fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
+        RxLoadingUtils.subscribeWithDialog(context, fv, this.bindToLifecycle(), new Consumer<HttpResultModel<VersionCheckResults>>() {
             @Override
             public void accept(final HttpResultModel<VersionCheckResults> versionCheckResultsHttpResultModel) throws Exception {
                 if (versionCheckResultsHttpResultModel.isSucceful()) {
                     if (versionCheckResultsHttpResultModel.data.isHas_new()) {
-                        /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle("亲,确定更新版本吗?")
-                                .setMessage("要更新的版本是" + versionCheckResultsHttpResultModel.data.getVersion())
-                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                       /* AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("发现新版本:" + versionCheckResultsHttpResultModel.data.getVersion())
+                                .setMessage(versionCheckResultsHttpResultModel.data.getDesc());
+                        if (!versionCheckResultsHttpResultModel.data.isIs_force_update()) {
+                            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
 
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .create().show();*/
+                        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                DownloadBuilder builder= AllenVersionChecker
+                                        .getInstance()
+                                        .downloadOnly(
+                                                UIData.create().setDownloadUrl(versionCheckResultsHttpResultModel.data.getUrl())
+                                        );
+
+                                builder.excuteMission(context);
+                            }
+                        });
+
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.setCancelable(false);
+                        alertDialog.setCanceledOnTouchOutside(false);
+                        alertDialog.show();*/
+
                         DownloadBuilder builder = AllenVersionChecker
                                 .getInstance()
                                 .downloadOnly(
@@ -231,11 +244,12 @@ public class SettingSystemFragment extends XBaseFragment implements View.OnClick
                             builder.setForceUpdateListener(new ForceUpdateListener() {
                                 @Override
                                 public void onShouldForceUpdate() {
-
+                                    getActivity().finish();
                                 }
                             });
                         }
-                        builder.excuteMission(context);
+                        //builder.setDownloadAPKPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+"/G9游戏");
+                        builder.excuteMission(getActivity());
 
                     } else {
                         ToastUtil.showToast("已经是最新的版本");

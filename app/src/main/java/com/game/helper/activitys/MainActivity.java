@@ -393,7 +393,6 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
 
     }
 
-
     private void updateVersion() {
         PackageInfo packageInfo = null;
         PackageManager packageManager = context.getPackageManager();
