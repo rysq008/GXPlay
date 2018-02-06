@@ -18,8 +18,8 @@ android {
         applicationId "com.game.helper"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 21
-        versionName "2.1.6"
+        versionCode 22
+        versionName "2.1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //选择要添加的对应cpu类型的.so库
@@ -63,7 +63,7 @@ android {
                             def outputFile = output.outputFile
                             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                                 //输出apk名称
-                                def fileName = "app_v${defaultConfig.versionName}_${variant.productFlavors[0].name}_${releaseTime()}.apk"
+                                def fileName = "app_v${defaultConfig.versionCode}_${defaultConfig.versionName}_${variant.productFlavors[0].name}_${releaseTime()}.apk"
 //                                output.outputFile = new File(outputFile.parent, fileName)
                                 outputFileName = fileName
                             }
@@ -107,7 +107,7 @@ android {
         LXL_CH1012 { dimension "default" }
         PC_CH1013 { dimension "default" }
         AL_CH1014 { dimension "default" }
-        VIVO_CH1015{ dimension "default" }
+        VIVO_CH1015 { dimension "default" }
     }
 
     productFlavors.all {

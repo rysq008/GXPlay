@@ -24,6 +24,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.game.helper.R;
 import com.game.helper.activitys.BaseActivity.XBaseActivity;
+import com.game.helper.data.RxConstant;
 import com.game.helper.event.BusProvider;
 import com.game.helper.event.MsgEvent;
 import com.game.helper.fragments.GamePagerFragment;
@@ -157,7 +158,7 @@ public class MainActivity extends XBaseActivity implements ViewPager.OnPageChang
         BusProvider.getBus().receive(MsgEvent.class).subscribe(new Consumer<MsgEvent>() {
             @Override
             public void accept(MsgEvent msgEvent) throws Exception {
-                if ("CustomBadgeItem".equals(msgEvent.getMsg())) {
+                if (RxConstant.HOME_BOTTOM_TAB_TAG.equals(msgEvent.getMsg())) {
                     int position = msgEvent.getType();
                     int n = msgEvent.getRequestCode();
                     numberBadgeItem[position].setBorderColor(Color.TRANSPARENT)// Badge的Border颜色

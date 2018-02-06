@@ -1,6 +1,7 @@
 package com.game.helper.share;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 
 import com.game.helper.R;
 import com.game.helper.model.CommonShareResults;
@@ -278,10 +279,15 @@ public class UMengShare {
      * 分享图片  使用UMeng自带默认面板
      * 回调集中处理
      */
-    public void shareImgWithBoard(String shareText, UMShareListener umShareListener) {
+    public void shareImgWithBoard(String shareText, String imgurl, UMShareListener umShareListener) {
+        UMImage image = new UMImage(mActivity, imgurl);//网络图片
+        image.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        image.compressStyle = UMImage.CompressStyle.QUALITY;//质量压缩，适合长图的分享压缩格式设置
+        image.compressFormat = Bitmap.CompressFormat.PNG;//用户分享透明背景的图片可以设置这种方式，但是qq好友，微信朋友圈，不支持透明背景图片，会变成黑色
+
         new ShareAction(mActivity)
                 .withText(shareText)
-                .withMedia(new UMImage(mActivity, R.mipmap.ic_mine_game))
+                .withMedia(image)
                 .setDisplayList(mMedia)
                 .setCallback(umShareListener)
                 .open();
@@ -291,10 +297,10 @@ public class UMengShare {
      * 分享图片  使用UMeng自带默认面板
      * 回调集中处理
      */
-    public void shareImgWithBoard(String shareText) {
+    public void shareImgWithBoard(String shareText, String imgurl) {
         new ShareAction(mActivity)
                 .withText(shareText)
-                .withMedia(new UMImage(mActivity, R.mipmap.ic_mine_game))
+                .withMedia(new UMImage(mActivity, imgurl))
                 .setDisplayList(mMedia)
                 .setCallback(new UMShareListener() {
                     @Override

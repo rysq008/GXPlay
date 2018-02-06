@@ -36,11 +36,14 @@ import com.game.helper.model.CommonShareResults;
 import com.game.helper.model.ShareInfoResults;
 import com.game.helper.net.DataService;
 import com.game.helper.net.model.ShareInfoRequestBody;
+import com.game.helper.net.model.UploadShareInfoRequestBody;
 import com.game.helper.share.UMengShare;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.game.helper.views.XReloadableStateContorller;
 import com.jude.swipbackhelper.SwipeBackHelper;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -240,29 +243,36 @@ public class WebviewFragment extends XBaseFragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (requestCode == 1) {
+//                                requestCode 1为分享收益 2为分享二维码3为商城4为活动
+                                if (requestCode > 0) {
                                     shareUrl = message;
                                 }
-                                Flowable<HttpResultModel<ShareInfoResults>> flowable = DataService.getApiShareInfoData(new ShareInfoRequestBody(code / 10 > 0 ? code % 10 : 1));
-                                RxLoadingUtils.subscribeWithDialog(context, flowable, WebviewFragment.this.bindToLifecycle(), new Consumer<HttpResultModel<ShareInfoResults>>() {
-                                    @Override
-                                    public void accept(HttpResultModel<ShareInfoResults> shareInfoResultsHttpResultModel) throws Exception {
-                                        if (!shareInfoResultsHttpResultModel.isSucceful()) {
+                                final UMengShare share = new UMengShare(getActivity());
+                                if (requestCode == 1) {
+                                    Flowable<HttpResultModel<ShareInfoResults>> flowable = DataService.getApiShareInfoData(new ShareInfoRequestBody(code / 10 > 0 ? code % 10 : 1));
+                                    RxLoadingUtils.subscribeWithDialog(context, flowable, WebviewFragment.this.bindToLifecycle(), new Consumer<HttpResultModel<ShareInfoResults>>() {
+                                        @Override
+                                        public void accept(HttpResultModel<ShareInfoResults> shareInfoResultsHttpResultModel) throws Exception {
+                                            if (!shareInfoResultsHttpResultModel.isSucceful()) {
+                                                Toast.makeText(context, "分享失败", Toast.LENGTH_SHORT).show();
+                                                return;
+                                            }
+
+                                            if (!Kits.Empty.check(shareInfoResultsHttpResultModel.data)) {
+                                                CommonShareResults shareResults = new CommonShareResults(shareUrl, shareInfoResultsHttpResultModel.data.title, shareInfoResultsHttpResultModel.data.content, shareInfoResultsHttpResultModel.data.logo);
+                                                share.shareLinkWithBoard(shareResults, umShareListener);
+                                            }
+                                        }
+                                    }, new Consumer<NetError>() {
+                                        @Override
+                                        public void accept(NetError netError) throws Exception {
                                             Toast.makeText(context, "分享失败", Toast.LENGTH_SHORT).show();
-                                            return;
                                         }
-                                        UMengShare share = new UMengShare(getActivity());
-                                        if (!Kits.Empty.check(shareInfoResultsHttpResultModel.data)) {
-                                            CommonShareResults shareResults = new CommonShareResults(shareUrl, shareInfoResultsHttpResultModel.data.title, shareInfoResultsHttpResultModel.data.content, shareInfoResultsHttpResultModel.data.logo);
-                                            share.shareLinkWithBoard(shareResults, null);
-                                        }
-                                    }
-                                }, new Consumer<NetError>() {
-                                    @Override
-                                    public void accept(NetError netError) throws Exception {
-                                        Toast.makeText(context, "分享失败", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                    });
+                                } else if (requestCode == 2 || requestCode == 3 || requestCode == 4) {
+                                    share.shareImgWithBoard("G9游戏", shareUrl, umShareListener);
+                                }
+
                             }
                         });
                         break;
@@ -447,7 +457,7 @@ public class WebviewFragment extends XBaseFragment {
                     DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 }
                 break;
-            case 1://from generalize 从社区模块跳转过来的
+            case 1://from generalize 从社区模块跳转过来的（分享收益）
                 if (resultCode == RESULT_OK) {
                     getActivity().onBackPressed();
                     Bundle bundle = new Bundle();
@@ -456,6 +466,69 @@ public class WebviewFragment extends XBaseFragment {
                     DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 }
                 break;
+            case 2://from generalize 从社区模块跳转过来的（分享二维码）
+                if (resultCode == RESULT_OK) {
+                    getActivity().onBackPressed();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(PARAM_URL, SharedPreUtil.getH5url().share_qr_url.concat("?" + SharedPreUtil.getSessionId()));
+                    bundle.putString(WebviewFragment.PARAM_TITLE, "分享二维码");
+                    DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
+                }
+                break;
+            case 3://from generalize 从社区模块跳转(商城)
+                if (resultCode == RESULT_OK) {
+                    getActivity().onBackPressed();
+                    String expected_url = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().shop_url;
+                    Bundle shopBundle = new Bundle();
+                    shopBundle.putString(WebviewFragment.PARAM_URL, expected_url.concat("?" + SharedPreUtil.getSessionId()));
+                    shopBundle.putString(WebviewFragment.PARAM_TITLE, "敬请期待");
+                    DetailFragmentsActivity.launch(getContext(), shopBundle, WebviewFragment.newInstance());
+                }
+                break;
+            case 4://from generalize 从社区模块跳转过来的（活动）
+                if (resultCode == RESULT_OK) {
+                    getActivity().onBackPressed();
+                    String s1 = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().activity_url;
+                    Bundle activityBundle = new Bundle();
+                    activityBundle.putString(WebviewFragment.PARAM_URL, s1.concat("?" + SharedPreUtil.getSessionId()));
+                    activityBundle.putString(WebviewFragment.PARAM_TITLE, "敬请期待");
+                    DetailFragmentsActivity.launch(getContext(), activityBundle, WebviewFragment.newInstance());
+                }
+                break;
         }
     }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+            Toast.makeText(getActivity(), "分享启动中", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            if (platform.name().equals("WEIXIN_FAVORITE")) {
+                Toast.makeText(getActivity(), "收藏成功啦", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "分享成功啦", Toast.LENGTH_SHORT).show();
+            }
+            Flowable<HttpResultModel> flowable = DataService.getApiUpLoadShareInfo(new UploadShareInfoRequestBody(requestCode, platform.ordinal()));
+            RxLoadingUtils.subscribeWithDialog(context, flowable, WebviewFragment.this.bindToLifecycle(), new Consumer<HttpResultModel>() {
+                @Override
+                public void accept(HttpResultModel httpResultModel) throws Exception {
+
+                }
+            });
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(getActivity(), "分享失败啦", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(getActivity(), "分享取消了", Toast.LENGTH_SHORT).show();
+        }
+    };
+
 }

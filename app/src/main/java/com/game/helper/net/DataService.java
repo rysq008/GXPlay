@@ -116,6 +116,7 @@ import com.game.helper.net.model.UpdateMsgStatusRequestBody;
 import com.game.helper.net.model.UpdateNicknameRequestBody;
 import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
+import com.game.helper.net.model.UploadShareInfoRequestBody;
 import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.net.model.VersionCheckRequestBody;
@@ -169,6 +170,10 @@ public class DataService {
 
     public static Flowable<HttpResultModel<GeneralizeResults>> getGeneralizeData() {
         return Api.CreateApiService().getApiGeneralizeAccountData();
+    }
+
+    public static Flowable<HttpResultModel<Map<String, Integer>>> getApiGeneralizeActivityCount() {
+        return Api.CreateApiService().getApiGeneralizeActivityCount();
     }
 
     public static Flowable<HttpResultModel<RegistResults>> regist(RegistRequestBody requestBody) {
@@ -554,5 +559,9 @@ public class DataService {
 
     public static Flowable<HttpResultModel<Map<String, Integer>>> getApiBindOrUnBindVip(BindOrUnBindVipRequestBody bindVipRequestBody) {
         return Api.CreateApiService().getApiBindOrUnBindVip(bindVipRequestBody);
+    }
+
+    public static Flowable<HttpResultModel> getApiUpLoadShareInfo(UploadShareInfoRequestBody shareInfoRequestBody) {
+        return Api.CreateApiService().getApiUpLoadShareInfo(shareInfoRequestBody);
     }
 }

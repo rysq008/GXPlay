@@ -32,8 +32,6 @@ import com.game.helper.net.DataService;
 import com.game.helper.utils.RxLoadingUtils;
 import com.game.helper.utils.SharedPreUtil;
 import com.hyphenate.chat.ChatClient;
-import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.chat.Message;
 import com.hyphenate.helpdesk.Error;
 import com.hyphenate.helpdesk.callback.Callback;
 import com.hyphenate.helpdesk.easeui.UIProvider;
@@ -49,7 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-import java.util.UUID;
 
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
@@ -63,6 +60,7 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
     public String huanxinName = "tian";
     public String huanxinPassword = "huanxin";
     private static final String TAG = HuanxinKefuLoginActivity.class.getSimpleName();
+    private static final String IM_SERVER_ACCOUNT = "kefuchannelimid_465984";
 
     private boolean progressShow;
     private ProgressDialog progressDialog;
@@ -116,9 +114,9 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
                 int type = robotMenuBeanHanXinResponse.getGreetingTextType();
                 //type为0代表是文字消息的机器人欢迎语
                 //type为1代表是菜单消息的机器人欢迎语
-                if(type == 0){
+                if (type == 0) {
                     SharedPreUtil.saveRobot(robotMenuBeanHanXinResponse.getGreetingText());
-                }else if(type == 1){
+                } else if (type == 1) {
 
                 }
             }
@@ -132,7 +130,7 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
 
     private void easemobIM() {
         Flowable<HttpResultModel<EasemobAccountResults>> fe = DataService.getEasemobIM();
-        RxLoadingUtils.subscribe(fe,bindToLifecycle(), new Consumer<HttpResultModel<EasemobAccountResults>>() {
+        RxLoadingUtils.subscribe(fe, bindToLifecycle(), new Consumer<HttpResultModel<EasemobAccountResults>>() {
             @Override
             public void accept(HttpResultModel<EasemobAccountResults> easemobAccountResults) throws Exception {
                 if (progressDialog != null && progressDialog.isShowing()) {
@@ -241,7 +239,7 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
     private void login(final String uname, final String upwd) {
         progressShow = true;
         progressDialog = getProgressDialog();
-       // progressDialog.setMessage("Being contact customer service, please wait...");
+        // progressDialog.setMessage("Being contact customer service, please wait...");
         if (!progressDialog.isShowing()) {
             progressDialog.show();
         }
@@ -304,7 +302,7 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
                 Toast.makeText(this,"exception="+e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         }*//*
-        message.setFrom("imkefu");//这里传IM服务号
+        message.setFrom(IM_SERVER_ACCOUNT);//这里传IM服务号
         message.setBody(body);
         message.setMessageTime(System.currentTimeMillis());
         message.setStatus(Message.Status.SUCCESS);
@@ -345,7 +343,7 @@ public class HuanxinKefuLoginActivity extends BaseActivity implements LifecycleP
                         .build();
                 startActivity(intent);*/
         Intent intent = new IntentBuilder(HuanxinKefuLoginActivity.this)
-                .setServiceIMNumber("imkefu")
+                .setServiceIMNumber(IM_SERVER_ACCOUNT)
                 .setTitleName("G9游戏客服")
                 .build();
         startActivity(intent);

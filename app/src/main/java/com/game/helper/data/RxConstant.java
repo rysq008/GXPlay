@@ -9,6 +9,7 @@ public final class RxConstant {
 
     public static final int WRITE_PERMISSION_REQ_CODE = 2;
     public static final String ROOT_DIR = "gxplayer";
+    public static final String HOME_BOTTOM_TAB_TAG = "CustomBadgeItem";
 
     public static final String VERIFY_USER_FOR_LOGIN = "0";
     public static final String VERIFY_USER_FOR_REGIST = "1";
@@ -17,7 +18,7 @@ public final class RxConstant {
 
     /**
      * 登录share preference
-     * */
+     */
     public static final String LOGIN_PREFERENCE_NAME = "login_share_preference";
     public static final String LOGIN_PREFERENCE_KEY_STATUS = "login_preference_islogin";
     public static final String LOGIN_PREFERENCE_KEY_USER = "login_preference_user";
@@ -62,7 +63,7 @@ public final class RxConstant {
         public static final int Account_ResetPasswd_type = 55;//重置密码
     }
 
-    public static final class WalletModelType{
+    public static final class WalletModelType {
         public static final int Wallet_Consume_type = 60;
         public static final int Wallet_Recharge_type = 61;
         public static final int Wallet_Cash_type = 62;

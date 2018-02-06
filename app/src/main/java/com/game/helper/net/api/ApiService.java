@@ -117,6 +117,7 @@ import com.game.helper.net.model.UpdateMsgStatusRequestBody;
 import com.game.helper.net.model.UpdateNicknameRequestBody;
 import com.game.helper.net.model.UpdatePhoneRequestBody;
 import com.game.helper.net.model.UpdateSignatrueRequestBody;
+import com.game.helper.net.model.UploadShareInfoRequestBody;
 import com.game.helper.net.model.VIPUpGradfeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.net.model.VersionCheckRequestBody;
@@ -183,6 +184,10 @@ public interface ApiService {
     //推广帐号信息
     @POST("/marketing/get_marketing_info/")
     Flowable<HttpResultModel<GeneralizeResults>> getApiGeneralizeAccountData();
+
+    //获取活动数量
+    @POST("/activity/get_activity_count/")
+    Flowable<HttpResultModel<Map<String,Integer>>> getApiGeneralizeActivityCount();
 
     //注册
     @POST("/member/register/")
@@ -498,7 +503,7 @@ public interface ApiService {
     Flowable<HttpResultModel<VIPUpGradeCostResults>> getVIPUpGradeCost(@Body VIPUpGradfeRequestBody vipUpGradfeRequestBody);
 
     //获取环信账号接口
-    @POST("/member/get_easemob_account/")
+    @POST("/member/get_easemob_account2/")
     Flowable<HttpResultModel<EasemobAccountResults>> getEasemobIM();
 
     @POST("/sys/get_version_list/")
@@ -532,6 +537,10 @@ public interface ApiService {
 
     //绑定或者解绑会员的接口
     @POST("/member/update_game_account_vip/")
-    Flowable<HttpResultModel<Map<String,Integer>>> getApiBindOrUnBindVip(@Body BindOrUnBindVipRequestBody bindVipRequestBody);
+    Flowable<HttpResultModel<Map<String, Integer>>> getApiBindOrUnBindVip(@Body BindOrUnBindVipRequestBody bindVipRequestBody);
+
+    //上报微信或者QQ空间分享事件
+    @POST("/member/share/")
+    Flowable<HttpResultModel> getApiUpLoadShareInfo(@Body UploadShareInfoRequestBody uploadShareInfoRequestBody);
 
 }

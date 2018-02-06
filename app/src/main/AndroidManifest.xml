@@ -112,6 +112,7 @@
         <!-- ################# WeixinPay begin ################# -->
         <activity
             android:name=".wxapi.WXEntryActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity

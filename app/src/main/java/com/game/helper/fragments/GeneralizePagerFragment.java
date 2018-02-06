@@ -33,13 +33,15 @@ import com.game.helper.views.HeadImageView;
 import com.game.helper.views.XReloadableStateContorller;
 import com.game.helper.views.widget.StateView;
 
+import java.util.Map;
+
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function3;
 
 /**
  * Created by zr on 2017-10-13.
@@ -79,6 +81,9 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     RelativeLayout loginLayout;
     @BindView(R.id.loginRl)
     RelativeLayout loginRl;
+    @BindView(R.id.generalize_coupon_count_tv)
+    TextView generalizeActivityTv;
+    static boolean isFirstEnter = true;
 
 
     @Override
@@ -106,18 +111,33 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 refreshData();
             }
         });
+        Flowable<HttpResultModel<Map<String, Integer>>> fc = DataService.getApiGeneralizeActivityCount();
+        RxLoadingUtils.subscribe(fc, this.bindToLifecycle(), new Consumer<HttpResultModel<Map<String, Integer>>>() {
+            @Override
+            public void accept(HttpResultModel<Map<String, Integer>> mapHttpResultModel) throws Exception {
+                if (mapHttpResultModel.isSucceful()) {
+                    Integer count = mapHttpResultModel.data.get("count");
+                    generalizeActivityTv.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+                    generalizeActivityTv.setText(count.toString());
+                    BusProvider.getBus().post(new MsgEvent<String>(count, 2, RxConstant.HOME_BOTTOM_TAB_TAG));
+                }
+            }
+        });
         refreshData();
     }
 
     private void refreshData() {
         Flowable<HttpResultModel<GeneralizeResults>> flowable = DataService.getGeneralizeData();
         Flowable<HttpResultModel<BannerResults>> fb = DataService.getHomeBanner(new BannerRequestBody(2));
-        Flowable<GeneralizeData> fa = Flowable.zip(flowable, fb, new BiFunction<HttpResultModel<GeneralizeResults>, HttpResultModel<BannerResults>, GeneralizeData>() {
+        Flowable<HttpResultModel<Map<String, Integer>>> fc = DataService.getApiGeneralizeActivityCount();
+        Flowable<GeneralizeData> fa = Flowable.zip(flowable, fb, fc, new Function3<HttpResultModel<GeneralizeResults>, HttpResultModel<BannerResults>, HttpResultModel<Map<String, Integer>>, GeneralizeData>() {
             @Override
-            public GeneralizeData apply(HttpResultModel<GeneralizeResults> generalizeResultsHttpResultModel, HttpResultModel<BannerResults> bannerResultsHttpResultModel) throws Exception {
+            public GeneralizeData apply(HttpResultModel<GeneralizeResults> generalizeResultsHttpResultModel, HttpResultModel<BannerResults> bannerResultsHttpResultModel, HttpResultModel<Map<String, Integer>> mapHttpResultModel) throws Exception {
                 GeneralizeData generalizeData = new GeneralizeData();
                 generalizeData.generalizeResults = generalizeResultsHttpResultModel.data;
                 generalizeData.bannerResults = bannerResultsHttpResultModel.data;
+                generalizeData.map = mapHttpResultModel.data;
+                isFirstEnter = !generalizeResultsHttpResultModel.isSucceful();
                 return generalizeData;
             }
         }).doFinally(new Action() {
@@ -143,6 +163,13 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                     total_tv.setText(generalizeResults.zongshouyi);
                     generalize_tv.setText(generalizeResults.yue);
                     expect_tv.setText(generalizeResults.yujizongshouyi);
+                }
+                Map<String, Integer> map = generalizeData.map;
+                if (!Kits.Empty.check(map)) {
+                    Integer count = map.get("count");
+                    generalizeActivityTv.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+                    generalizeActivityTv.setText(count.toString());
+                    BusProvider.getBus().post(new MsgEvent<String>(count, 2, RxConstant.HOME_BOTTOM_TAB_TAG));
                 }
             }
         }, null, null, true);
@@ -173,6 +200,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.mallTv://商城
                 //取Market_url
+                WebviewFragment.requestCode = 3;
                 String expected_url = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().shop_url;
                 Bundle shopBundle = new Bundle();
                 shopBundle.putString(WebviewFragment.PARAM_URL, expected_url.concat("?" + SharedPreUtil.getSessionId()));
@@ -181,6 +209,7 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 break;
             case R.id.activityTv://活动
                 //取Market_url
+                WebviewFragment.requestCode = 4;
                 String s1 = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().activity_url;
                 Bundle activityBundle = new Bundle();
                 activityBundle.putString(WebviewFragment.PARAM_URL, s1.concat("?" + SharedPreUtil.getSessionId()));
@@ -202,12 +231,11 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
                 DetailFragmentsActivity.launch(getContext(), bundle, WebviewFragment.newInstance());
                 break;
             case R.id.shareDiscount://分享折扣
-                WebviewFragment.requestCode = 1;
 //                fetchShareInfo();
                 //取Market_url
                 String discount_url = Kits.Empty.check(SharedPreUtil.getH5url()) ? "" : SharedPreUtil.getH5url().share_qr_url;
                 Bundle bund = new Bundle();
-                WebviewFragment.requestCode = 1;
+                WebviewFragment.requestCode = 2;
                 bund.putString(WebviewFragment.PARAM_URL, discount_url.concat("?" + SharedPreUtil.getSessionId()));
                 bund.putString(WebviewFragment.PARAM_TITLE, "分享二维码");
                 DetailFragmentsActivity.launch(getContext(), bund, WebviewFragment.newInstance());
@@ -253,7 +281,10 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
         if (SharedPreUtil.isLogin()) {
             loginRl.setVisibility(View.GONE);
             loginLayout.setVisibility(View.VISIBLE);
-            refreshData();
+            if (isFirstEnter) {
+                refreshData();
+                isFirstEnter = false;
+            }
         } else {
             loginRl.setVisibility(View.VISIBLE);
             loginLayout.setVisibility(View.GONE);
@@ -263,5 +294,6 @@ public class GeneralizePagerFragment extends XBaseFragment implements View.OnCli
     class GeneralizeData extends XBaseModel {
         GeneralizeResults generalizeResults;
         BannerResults bannerResults;
+        Map<String, Integer> map;
     }
 }
