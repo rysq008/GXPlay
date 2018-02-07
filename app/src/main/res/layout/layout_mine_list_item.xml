@@ -21,7 +21,7 @@
         <ImageView
             android:id="@+id/iv_icon"
             android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher_round"
+            android:src="@mipmap/ic_default_avatar_circle"
             android:layout_width="@dimen/mine_list_item_icon"
             android:layout_height="@dimen/mine_list_item_icon" />
         <TextView

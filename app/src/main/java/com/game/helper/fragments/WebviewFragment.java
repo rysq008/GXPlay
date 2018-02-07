@@ -331,7 +331,8 @@ public class WebviewFragment extends XBaseFragment {
                                         outputStream = new FileOutputStream(imgFile);
                                         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
                                         getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imgFile)));
-                                        Toast.makeText(context, "保存成功", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "保存路径：" + imgFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(context, "保存成功", Toast.LENGTH_SHORT).show();
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         Toast.makeText(context, "save fail ", Toast.LENGTH_SHORT).show();

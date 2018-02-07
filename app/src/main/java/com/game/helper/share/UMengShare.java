@@ -23,6 +23,7 @@ public class UMengShare {
     private SHARE_MEDIA[] mMedia = new SHARE_MEDIA[]{
             SHARE_MEDIA.QZONE,
             SHARE_MEDIA.QQ,
+            SHARE_MEDIA.SINA,
             SHARE_MEDIA.WEIXIN,
             SHARE_MEDIA.WEIXIN_CIRCLE};
 
