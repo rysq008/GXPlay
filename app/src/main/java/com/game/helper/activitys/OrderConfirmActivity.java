@@ -607,21 +607,29 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                     Log.e("", "页面信息不完整");
                     return;
                 }
-
-                //是否设置了交易密码
-                if (SharedPreUtil.getLoginUserInfo().has_trade_passwd) {
-                    final PasswordEditDialog dialog = new PasswordEditDialog();
-                    dialog.addOnPassWordEditListener(new PasswordEditDialog.OnPassWordEditListener() {
-                        @Override
-                        public void onConfirmComplete(String password) {
-                            dialog.dismiss();
-                            ProvingTradePssword(password);
-                        }
-                    });
-                    dialog.show(getSupportFragmentManager(), TAG);
+                consumeOrCharge();
+                consumeRequestBody = new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, String.valueOf(mNeedPay), is_vip ? "1" : "0", password, mRedpackType, mRedpackId, payWay + "");
+                //如果还需支付>0,先去微信或支付宝充值，否则直接消费
+                if (mNeedPay > 0) {
+                    doCharge();
                 } else {
-                    goToSetTradePassword();
+                    doConsume(accountAmount, marketingAmount, "");
+                   /* //是否设置了交易密码
+                    if (SharedPreUtil.getLoginUserInfo().has_trade_passwd) {
+                        final PasswordEditDialog dialog = new PasswordEditDialog();
+                        dialog.addOnPassWordEditListener(new PasswordEditDialog.OnPassWordEditListener() {
+                            @Override
+                            public void onConfirmComplete(String password) {
+                                dialog.dismiss();
+                                ProvingTradePssword(password);
+                            }
+                        });
+                        dialog.show(getSupportFragmentManager(), TAG);
+                    } else {
+                        goToSetTradePassword();
+                    }*/
                 }
+
                 break;
             default:
                 break;
@@ -776,14 +784,7 @@ public class OrderConfirmActivity extends XBaseActivity implements View.OnClickL
                 //校验支付密码成功
                 if (checkTradePasswdResultsHttpResultModel.isSucceful()) {
                     OrderConfirmActivity.this.password = password;
-                    consumeOrCharge();
-                    consumeRequestBody = new ConsumeRequestBody(gameAccountId + "", inputBalance + "", accountAmount, marketingAmount, String.valueOf(mNeedPay), is_vip ? "1" : "0", password, mRedpackType, mRedpackId, payWay + "");
-                    //如果还需支付>0,先去微信或支付宝充值，否则直接消费
-                    if (mNeedPay > 0) {
-                        doCharge();
-                    } else {
-                        doConsume(accountAmount, marketingAmount, "");
-                    }
+                    doConsume(accountAmount, marketingAmount, "");
                 } else {
                     Toast.makeText(OrderConfirmActivity.this, "交易密码验证失败！", Toast.LENGTH_SHORT).show();
                 }

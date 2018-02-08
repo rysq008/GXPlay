@@ -6,22 +6,18 @@ import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.game.helper.BuildConfig;
 import com.game.helper.R;
-import com.game.helper.activitys.DetailFragmentsActivity;
 import com.game.helper.data.RxConstant;
 import com.game.helper.fragments.BaseFragment.XBaseFragment;
-import com.game.helper.fragments.login.LoginFragment;
 import com.game.helper.model.BaseModel.HttpResultModel;
-import com.game.helper.model.LogoutResults;
-import com.game.helper.model.ResetPasswdResults;
 import com.game.helper.model.ResetTradeResults;
 import com.game.helper.model.VerifyResults;
 import com.game.helper.net.DataService;
-import com.game.helper.net.model.ResetPasswdRequestBody;
 import com.game.helper.net.model.ResetTradeRequestBody;
 import com.game.helper.net.model.VerifyRequestBody;
 import com.game.helper.utils.RxLoadingUtils;
@@ -47,7 +43,8 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     View mHeadBack;
     @BindView(R.id.action_bar_tittle)
     TextView mHeadTittle;
-
+    @BindView(R.id.ll_code_trade_password)
+    LinearLayout mLlCode;
     @BindView(R.id.tv_debug)
     TextView debugHint;
     @BindView(R.id.tv_account)
@@ -67,7 +64,7 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
     @BindView(R.id.tv_reset_passwd)
     View mResetPasswd;
 
-    private boolean is_new = true;
+    private Boolean updatePasswd = false;
 
     public static UpdateTradePasswordFragment newInstance(){
         return new UpdateTradePasswordFragment();
@@ -89,8 +86,10 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
 
     private void initView(){
         Bundle arguments = getArguments();
-        is_new = (arguments == null) ? true : !(arguments.getBoolean(UpdateTradePasswordFragment.TAG));
-        mHeadTittle.setText(getResources().getString(is_new ? R.string.common_update_trade_password : R.string.common_update_trade_password1));
+        //updatePasswd = (arguments == null) ? true : !(arguments.getBoolean(UpdateTradePasswordFragment.TAG));
+        updatePasswd = SharedPreUtil.getLoginUserInfo().has_trade_passwd;
+        mHeadTittle.setText(getResources().getString(updatePasswd ? R.string.common_update_trade_password1 :R.string.common_set_trade_password ));
+        mLlCode.setVisibility(updatePasswd ? View.VISIBLE :View.GONE);
         mHeadBack.setOnClickListener(this);
         mIdenty.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789xX"));
 
@@ -120,9 +119,13 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
         else if (StringUtils.isEmpty(passWord)) errorMsg = getResources().getString(R.string.login_hint_without_passwd);
         else if (StringUtils.isEmpty(passWord1)) errorMsg = getResources().getString(R.string.login_hint_without_confirm_passwd);
         else if (passWord != null && passWord1 != null && !passWord.equals(passWord1)) errorMsg = getResources().getString(R.string.login_hint_wrong_notequal_passwd);
-        else if (StringUtils.isEmpty(code)) errorMsg = getResources().getString(R.string.login_hint_without_code);
-        else if (StringUtils.isEmpty(identy) || identy.length() != 6) errorMsg = getResources().getString(R.string.login_hint_without_identy);
-        else if (StringUtils.isEmpty(name)) errorMsg = getResources().getString(R.string.login_hint_without_name);
+        else if (updatePasswd ){
+            if(StringUtils.isEmpty(code)) {
+                errorMsg = getResources().getString(R.string.login_hint_without_code);
+            }
+        }
+        //else if (StringUtils.isEmpty(identy) || identy.length() != 6) errorMsg = getResources().getString(R.string.login_hint_without_identy);
+        //else if (StringUtils.isEmpty(name)) errorMsg = getResources().getString(R.string.login_hint_without_name);
         else if (passWord.length() != 6) errorMsg = getResources().getString(R.string.login_hint_wrong_password);
         else if (passWord1.length() != 6) errorMsg = getResources().getString(R.string.login_hint_wrong_password);
 
@@ -130,14 +133,13 @@ public class UpdateTradePasswordFragment extends XBaseFragment implements View.O
             Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Flowable<HttpResultModel<ResetTradeResults>> fr = DataService.resetTradePasswrd(new ResetTradeRequestBody(passWord,code,name,identy));
+        Flowable<HttpResultModel<ResetTradeResults>> fr = DataService.resetTradePasswrd(new ResetTradeRequestBody(passWord, updatePasswd ? code :"" ));
         RxLoadingUtils.subscribe(fr, bindToLifecycle(), new Consumer<HttpResultModel<ResetTradeResults>>() {
             @Override
             public void accept(HttpResultModel<ResetTradeResults> resetTradeResultsHttpResultModel) throws Exception {
-                String hint = "修改交易密码失败！请重试";
+                String hint = updatePasswd ?"修改交易密码失败！请重试":"设置交易密码失败！请重试";
                 if (resetTradeResultsHttpResultModel.isSucceful()) {
-                    hint = "修改交易密码成功！";
+                    hint = updatePasswd ? "修改交易密码成功！" : "修改交易密码成功！";
                     SharedPreUtil.updateUserTradePasswdStatus(getContext(),true);
                 }
                 final GXPlayDialog dialog = new GXPlayDialog(GXPlayDialog.Ddialog_Without_tittle_Single_Confirm,"",hint);
