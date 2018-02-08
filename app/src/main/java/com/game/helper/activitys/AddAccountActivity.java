@@ -204,7 +204,7 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
                     Toast.makeText(AddAccountActivity.this, "添加账户成功", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(AddAccountActivity.this, "添加账户失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddAccountActivity.this, recommendResultsHttpResultModel.getErrorMsg(), Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Consumer<NetError>() {
@@ -238,9 +238,23 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
     }
 
     //选择平台
-    public void onChannelSelected(String name, int channel_id) {
+    public void onChannelSelected(String name, int channel_id, boolean rechange) {
         if (null != mChannelWindow && mChannelWindow.isShowing()) {
             mChannelWindow.dismiss();
+        }
+        if (!rechange) {
+            showVipBindDialog(3, new GXPlayDialog.onDialogActionListner() {
+                @Override
+                public void onCancel() {
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void onConfirm() {
+                    dialog.dismiss();
+                }
+            });
+            return;
         }
         channelEdit.setText(name);
         accountEdit.setText("");
@@ -348,11 +362,11 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
      * 0：綁定VIP帳號
      * 1：綁定当乐帳號
      * 2:VIP数量为0
+     * 3:是否支持代充
      */
     private void showVipBindDialog(int type, GXPlayDialog.onDialogActionListner listner) {
         String content = "", title = "";
         if (type == 0) {
-            title = "帐户绑定提示窗";
             content = "当乐平台帐号必须绑定的是乐号。";
         } else if (type == 1) {
             title = "绑定VIP的提示框";
@@ -360,9 +374,11 @@ public class AddAccountActivity extends XBaseActivity implements View.OnClickLis
         } else if (type == 2) {
             title = "绑定VIP的提示框";
             content = "VIP会员剩余名额为0，请升级会员。";
+        } else if (type == 3) {
+            content = "该游戏此平台不支持代充。";
         }
         dialog = null;
-        dialog = new GXPlayDialog(type == 0 ? GXPlayDialog.Ddialog_With_All_Single_Confirm : GXPlayDialog.Ddialog_With_All_Full_Confirm, title, content);
+        dialog = new GXPlayDialog((type == 0 || type == 3) ? GXPlayDialog.Ddialog_With_All_Single_Confirm : GXPlayDialog.Ddialog_With_All_Full_Confirm, title, content);
         dialog.addOnDialogActionListner(listner);
         dialog.show(getSupportFragmentManager(), GXPlayDialog.TAG);
     }

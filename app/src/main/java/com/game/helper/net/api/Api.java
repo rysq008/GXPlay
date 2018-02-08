@@ -20,7 +20,7 @@ public class Api {
         if (gankService == null) {
             synchronized (Api.class) {
                 if (gankService == null) {
-                    gankService = XApi.getInstance().getRetrofit(API_BASE_URL, true).create(ApiService.class);
+                    gankService = XApi.getInstance().getRetrofit(API_BASE_URL_TEST, true).create(ApiService.class);
                 }
             }
         }

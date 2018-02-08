@@ -28,6 +28,7 @@ public class ChannelListResultModel extends XBaseModel {
 
         private String channel_name;
         private int channel_id;
+        public boolean can_recharge;
 
         public String getChannel_name() {
             return channel_name;

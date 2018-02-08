@@ -2,10 +2,9 @@ package com.game.helper.fragments;
 
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,11 +23,8 @@ import com.game.helper.views.XReloadableStateContorller;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cn.droidlover.xdroidmvp.imageloader.ILFactory;
 import cn.droidlover.xdroidmvp.imageloader.ILoader;
-import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
@@ -38,6 +34,10 @@ public class GameDetailInfoFragment extends XBaseFragment {
     LinearLayout mImgContainer;
     @BindView(R.id.tv_content_game_detail_detail)
     TextView tvContent;
+    @BindView(R.id.layout_content_game_detail_welfare)
+    LinearLayout layout_welfare;
+    @BindView(R.id.tv_content_game_detail_welfare)
+    TextView tv_welfare;
     @BindView(R.id.xrcontorller_content_game_detail_detail)
     XReloadableStateContorller xrcontorller;
 
@@ -57,7 +57,11 @@ public class GameDetailInfoFragment extends XBaseFragment {
             if (gameId > 0) {
                 loadTata(true);
             }
-        }else{
+            String content = bundle.getString("data", "");
+            tv_welfare.setText(content);
+            layout_welfare.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
+            tv_welfare.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
+        } else {
             xrcontorller.showEmpty();
         }
     }
@@ -78,7 +82,7 @@ public class GameDetailInfoFragment extends XBaseFragment {
                         layoutParams.setMargins(Utils.dip2px(getContext(), 10), Utils.dip2px(getContext(), 10), 0, 0);
                         mImgContainer.addView(img, layoutParams);
                     }
-                }else{
+                } else {
                     xrcontorller.showEmpty();
                 }
 

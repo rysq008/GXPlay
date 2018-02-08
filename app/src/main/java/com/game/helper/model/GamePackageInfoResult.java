@@ -26,6 +26,7 @@ public class GamePackageInfoResult extends XBaseModel {
     private GameBean game;
     private double zhekou_xuchong;
     private double filesize;
+    public boolean can_recharge;//: false,
     private double discount_vip;
     private double zhekou_shouchong;
     private double discount_activity;
@@ -34,6 +35,16 @@ public class GamePackageInfoResult extends XBaseModel {
     private String path;
     private ChannelBean channel;
     public Disposable disposable;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    private String content;
 
     public GameBean getGame() {
         return game;

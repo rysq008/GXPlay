@@ -88,7 +88,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     if(mActivity instanceof AddAccountActivity){
-                        ((AddAccountActivity)mActivity).onChannelSelected(data.getChannel_name(),data.getChannel_id());
+                        ((AddAccountActivity)mActivity).onChannelSelected(data.getChannel_name(),data.getChannel_id(),data.can_recharge);
                     }
                 }
             });

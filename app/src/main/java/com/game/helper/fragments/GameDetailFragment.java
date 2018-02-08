@@ -149,6 +149,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
     private DownloadBean downloadBean;
     private Boolean mIsWebGame;
     private boolean isStandAloneGame;
+    private boolean canRecharge;
 
     long lastClickTime = 0;
 
@@ -181,6 +182,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             gameDetailInfoFragment = GameDetailInfoFragment.newInstance();
             Bundle bundle = new Bundle();
             bundle.putInt("gameId", packageInfo.getGame().getId());
+            bundle.putString("data", packageInfo.getContent());
             gameDetailInfoFragment.setArguments(bundle);
         }
         if (rechargeGameFragment == null) {
@@ -201,7 +203,12 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
             bundle.putInt("gameId", packageInfo.getGame().getId());
             gameDetailCommunityFragment.setArguments(bundle);
         }
-        if (!isStandAloneGame) {
+//        if (!isStandAloneGame) {
+//            list.add(rechargeGameFragment);
+//        } else if (canRecharge) {
+//            list.add(rechargeGameFragment);
+//        }
+        if (isCanRecharge()) {
             list.add(rechargeGameFragment);
         }
         list.add(gameDetailInfoFragment);
@@ -237,7 +244,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
 
             @Override
             public void onPageSelected(int position) {
-                if (isStandAloneGame) position++;
+//                if (isStandAloneGame) position++;
+//                else if (!canRecharge) position++;
+                if (!isCanRecharge()) position++;
                 switch (position) {
                     case 0:
                         tvBottomDownload.setVisibility(View.GONE);
@@ -301,6 +310,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                     if (gameDetailAllResults.gamePackageInfoResult != null) {
                         isStandAloneGame = (gameDetailAllResults.gamePackageInfoResult.getGame().isStandAloneGame());
                         packageInfo = gameDetailAllResults.gamePackageInfoResult;
+                        canRecharge = packageInfo.can_recharge;
                         setGameView();
                         initViewPager(packageInfo);
                         downloadBean = new DownloadBean
@@ -346,7 +356,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         } else {
             mTvActivityDiscount.setVisibility(View.GONE);
             mTvMatchingActivityDiscount.setVisibility(View.GONE);
-            tvDiscount.setVisibility(isStandAloneGame ? View.GONE : View.VISIBLE);
+            tvDiscount.setVisibility(!isCanRecharge() ? View.GONE : View.VISIBLE);
             tvDiscount.setText(discount_vip.toString() + "折");
         }
         ILFactory.getLoader().loadNet(ivLogothumb, Api.API_PAY_OR_IMAGE_URL.concat(packageInfo.getGame().getLogo()), ILoader.Options.defaultOptions());
@@ -488,7 +498,8 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
                 colorTransitionPagerTitleView.setSelectedColor(Color.BLACK);
                 String title = null;
                 int pos = index;
-                if (isStandAloneGame) pos++;
+//                if (isStandAloneGame || !canRecharge) pos++;
+                if (!isCanRecharge()) pos++;
                 switch (pos) {
                     case 0:
                         title = "充值";
@@ -524,7 +535,7 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         tabStrip.setNavigator(commonNavigator);
         ViewPagerHelper.bind(tabStrip, viewPager);
         viewPager.getAdapter().notifyDataSetChanged();
-        if (isStandAloneGame) {
+        if (!isCanRecharge()) {
             tvBottomDownload.setVisibility(View.VISIBLE);
             etitLayout.setVisibility(View.GONE);
         }
@@ -786,4 +797,9 @@ public class GameDetailFragment extends XBaseFragment implements View.OnClickLis
         dispose(disposable);
     }
 
+    public boolean isCanRecharge() {
+        if (isStandAloneGame) return false;
+        else if (!canRecharge) return false;
+        return true;
+    }
 }
