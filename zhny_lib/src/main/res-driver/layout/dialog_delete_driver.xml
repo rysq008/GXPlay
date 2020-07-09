@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_47"
+        android:layout_marginTop="@dimen/dp_28"
+        android:text="@string/delete_place_holder"
+        android:textColor="@color/color_009688"
+        android:textSize="@dimen/sp_36"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.zhny.library.presenter.driver.custom.CircleImageView
+        android:id="@+id/img_close"
+        android:layout_width="@dimen/dp_35"
+        android:layout_height="@dimen/dp_35"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginEnd="@dimen/dp_30"
+        android:src="@drawable/icon_close"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/border"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_2"
+        android:layout_marginTop="@dimen/dp_103"
+        android:src="@color/border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_delete_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_28"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/border"
+        app:layout_constraintBottom_toTopOf="@+id/tv_delete"
+        tools:text="@string/fence_disable_has_content"/>
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="@dimen/dp_570"
+        android:layout_height="@dimen/dp_80"
+        android:layout_marginBottom="@dimen/dp_40"
+        android:background="@drawable/shape_dialog_delete_driver_delete_bg"
+        android:gravity="center"
+        android:text="@string/delete_ok"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_32"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

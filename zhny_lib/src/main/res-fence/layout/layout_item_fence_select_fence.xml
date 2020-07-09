@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="fence"
+            type="com.zhny.library.presenter.fence.model.dto.Fence" />
+
+        <variable
+            name="fenceItemClick"
+            type="com.zhny.library.presenter.fence.adapter.FenceAdapter.OnFenceItemClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_180"
+        android:onClick="@{()->fenceItemClick.onFenceItemClick(fence)}"
+        >
+
+        <com.zhny.library.presenter.monitor.custom.PolygonShapeView
+            android:id="@+id/ps_item_pence_select_pence_view"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_120"
+            android:layout_marginStart="@dimen/dp_30"
+            android:background="#FFF4F4F4"
+            app:plotDrawPath="@{fence.mapPath}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/lib_color_primary"
+            />
+
+        <TextView
+            android:id="@+id/tv_item_fence_select_fence_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_38"
+            android:maxWidth="@dimen/dp_225"
+            android:singleLine="true"
+            android:textColor="#FF000000"
+            android:textSize="@dimen/sp_32"
+            app:textStrNotNull="@{fence.name}"
+            app:layout_constraintLeft_toRightOf="@+id/ps_item_pence_select_pence_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="沙雅打药一号机沙雅打药一号机" />
+
+        <ImageView
+            android:id="@+id/iv_item_fence_select_fence_name"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_30"
+            android:src="@drawable/icon_agricultural_machinery"
+            app:layout_constraintLeft_toRightOf="@+id/ps_item_pence_select_pence_view"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_fence_select_fence_name"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_24"
+            android:maxWidth="@dimen/dp_225"
+            android:singleLine="true"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            android:text="@{String.valueOf(fence.deviceNum)}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_item_fence_select_fence_name"
+            app:layout_constraintLeft_toRightOf="@+id/iv_item_fence_select_fence_name"
+            app:layout_constraintTop_toTopOf="@+id/iv_item_fence_select_fence_name"
+            tools:text="2" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="#FFF4F4F4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:background="@color/lib_color_primary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

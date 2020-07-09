@@ -1,0 +1,24 @@
+<resources>
+    <string name="machine_list">机具列表</string>
+    <string name="machine_details">机具详情</string>
+    <string name="brand_model">品牌型号：</string>
+    <string name="work_type">作业类型：</string>
+    <string name="horsepower">马力</string>
+    <string name="horsepower_company">ps</string>
+    <string name="produceDate">出厂日期</string>
+    <string name="produceNumber">出厂编号</string>
+    <string name="carNumber">车牌号</string>
+    <string name="width">幅宽</string>
+    <string name="monitorTerminalID">监控终端ID</string>
+    <string name="creationDate">添加时间</string>
+    <string name="medicine_spraying_machine">打药机</string>
+    <string name="tractor">拖拉机</string>
+    <string name="cotton_picker">采棉机</string>
+    <string name="fat_cart">撒肥机</string>
+    <string name="farm_implements">农具</string>
+    <string name="unknown">未知</string>
+    <string name="unknown_machine">未知农机</string>
+
+    <string name="get_web_socket_msg_err">WebSocket连接失败！</string>
+    <string name="get_web_socket_msg_close">WebSocket连接断开！</string>
+</resources>

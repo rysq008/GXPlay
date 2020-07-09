@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_160"
+    android:layout_height="@dimen/dp_86"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/dp_1">
+
+    <TextView
+        android:id="@+id/left_row"
+        android:layout_width="@dimen/dp_100"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_22"
+        android:lineSpacingMultiplier="0.8"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:gravity="center"
+        tools:text="测试数据哈哈哈哈哈啊哈哈haha"/>
+
+
+</LinearLayout>

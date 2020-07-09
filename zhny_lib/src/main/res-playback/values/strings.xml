@@ -1,0 +1,34 @@
+<resources>
+
+    <string name="playback_title">轨迹回放</string>
+    <string name="playback_setline">请先设置路线</string>
+
+    <string name="playback_workingstatus">作业状态</string>
+    <string name="playback_runningstatus">转运状态</string>
+    <string name="playback_unlinestop">离线停留</string>
+
+    <string name="workArea">作业面积：</string>
+    <string name="workTime">作业时间：</string>
+    <string name="unlineTime">离线时间：</string>
+    <string name="mileage">行驶里程：</string>
+    <string name="runningTime">转运时间：</string>
+    <string name="workType">作业类型：</string>
+
+    <string name="speedDefault">1.0X</string>
+    <string name="unit">km/h</string>
+
+    <string name="unitOfArea">亩</string>
+    <string name="hour">h </string>
+    <string name="minute">min</string>
+    <string name="km">km</string>
+    <string name="cus_not_data">暂无数据</string>
+
+
+    <string name="head_view_pullDownToRefreshRes">释放立即刷新</string>
+    <string name="head_view_pullDownRes">释放立即刷新</string>
+    <string name="head_view_refreshingRes">正在刷新...</string>
+    <string name="head_view_refreshSuccessfulRes">数据刷新成功</string>
+    <string name="head_view_refreshFailRes">数据刷新失败</string>
+    <string name="head_view_releaseToRefreshRes">释放立即刷新</string>
+
+</resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="data_bar_line_sort">
+        <item>作业时长</item>
+        <item>作业面积</item>
+        <item>转运时长</item>
+        <item>离线时长</item>
+    </string-array>
+
+    <string-array name="data_table_sort">
+        <item>作业时长正排</item>
+        <item>作业面积正排</item>
+    </string-array>
+
+    <string-array name="table_data_row">
+        <item>作业面积</item>
+        <item>作业面积比</item>
+        <item>行驶里程</item>
+        <item>作业时长</item>
+        <item>转运时长</item>
+        <item>离线时长</item>
+        <item>作业时间比</item>
+        <item>转运时间比</item>
+        <item>离线时间比</item>
+    </string-array>
+
+</resources>

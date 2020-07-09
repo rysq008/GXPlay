@@ -1,0 +1,2 @@
+include ':app', ':zhny_lib', ':library'
+rootProject.name='zhny'

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/groupLayout"
+    android:layout_width="@dimen/dp_100"
+    android:layout_height="@dimen/dp_50"
+    android:background="@color/color_009688"
+    android:gravity="center"
+
+    android:orientation="horizontal">
+    <TextView
+        android:background="@color/color_009688"
+        android:layout_width="@dimen/dp_100"
+        android:layout_height="@dimen/dp_50"
+        android:gravity="center"
+        android:text="sd"
+        android:id="@+id/spinner_item_label"
+        android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_22"/>
+</LinearLayout>
+

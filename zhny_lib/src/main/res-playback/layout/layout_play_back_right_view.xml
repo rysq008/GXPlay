@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.zhny.library.presenter.playback.viewmodel.PlayBackMoveViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/rightLayout"
+        android:background="@drawable/shape_monitor_num_bg"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/workingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:orientation="horizontal"
+            android:visibility="@{viewModel.showWorkLayout?View.VISIBLE:View.GONE,default=gone}"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_4"
+                android:background="@color/color_009688" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@string/playback_workingstatus"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_22" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/runningLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:visibility="@{viewModel.showRunLayout?View.VISIBLE:View.GONE,default=gone}"
+            tools:visibility="visible">
+
+            <View
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_4"
+                android:background="@color/color_3F51B5"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playback_runningstatus"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_22"
+                android:layout_marginStart="@dimen/dp_10"
+                tools:visibility="visible"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/unlineLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:visibility="@{viewModel.showOffLineLayout?View.VISIBLE:View.GONE,default=gone}"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:background="@drawable/icon_offline"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playback_unlinestop"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_22"
+                android:layout_marginStart="@dimen/dp_10"/>
+            
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

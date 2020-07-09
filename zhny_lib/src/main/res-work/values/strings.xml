@@ -1,0 +1,44 @@
+<resources>
+
+    <string name="select_land">选择地块</string>
+    <string name="select_work">选择作业季</string>
+    <string name="track_setting">参数设置</string>
+
+
+    <string name="tv_work_track_setting_plowing_operation">耕地作业</string>
+    <string name="tv_work_track_setting_standard_value">标准值</string>
+    <string name="tv_work_track_setting_float_value">浮动值</string>
+    <string name="tv_work_invalid_float_value">无效值</string>
+    <string name="tv_tag_work_track_setting_left">≥ 标准值</string>
+    <string name="tv_tag_work_track_setting_middle">浮动值 ～ 标准值 - 浮动值</string>
+    <string name="tv_tag_work_track_setting_right">≤ 标准值 - 浮动值</string>
+    <string name="bottom_pop_track_setting_ok">确定</string>
+    <string name="bottom_pop_track_setting_select">请选择参数值</string>
+    <string name="bottom_pop_select_speed">请选择倍速</string>
+    <string name="bottom_pop_select_sort">请选择排序方式</string>
+    <string name="bottom_pop_track_setting_cancel">取消</string>
+
+    <string name="work">作业季</string>
+    <string name="year">年</string>
+    <string name="subsoiling_operation">深松作业</string>
+    <string name="medication_operation">打药作业</string>
+
+    <string name="spoil_operation">撒肥作业</string>
+    <string name="harvesting_operation">采收作业</string>
+    <string name="sowing_operation">播种作业</string>
+    <string name="ploughing_operation">犁地作业</string>
+    <string name="rake_operation">耙地作业</string>
+
+    <string name="accuracy_rate">合格率：</string>
+    <string name="set_value">设定值：</string>
+    <string name="float_value">浮动值：</string>
+    <string name="machine_width">幅宽：</string>
+    <string name="company_cm">cm</string>
+    <string name="company_m">米</string>
+    <string name="picture">照片</string>
+
+
+
+    <string name="hint_select_land_select_plot">搜索地块</string>
+
+</resources>

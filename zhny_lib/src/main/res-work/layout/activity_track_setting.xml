@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#CCCCCC">
+
+        <include layout="@layout/toolbar_app_compat"/>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_97">
+
+            <TextView
+                android:id="@+id/tv_work_track_setting_plowing_operation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="@dimen/dp_44"
+                android:text="@string/tv_work_track_setting_plowing_operation"
+                android:textColor="#FF009688"
+                android:textSize="@dimen/sp_28"
+                />
+
+            <View
+                android:layout_width="@dimen/dp_4"
+                android:layout_height="@dimen/dp_31"
+                app:layout_constraintTop_toTopOf="@+id/tv_work_track_setting_plowing_operation"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_work_track_setting_plowing_operation"
+                app:layout_constraintRight_toLeftOf="@+id/tv_work_track_setting_plowing_operation"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:background="#FF009688"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            android:background="@color/white"
+            android:onClick="setPlowingStandardValue"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="@dimen/dp_30"
+                android:text="@string/tv_work_track_setting_standard_value"
+                android:textColor="#FF000000"
+                android:textSize="@dimen/sp_32"
+                />
+
+            <TextView
+                android:id="@+id/tv_work_track_setting_plowing_operation_standard_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginEnd="@dimen/dp_60"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/sp_32"
+                tools:text="35CM"
+                />
+
+            <ImageView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                app:layout_constraintTop_toTopOf="@+id/tv_work_track_setting_plowing_operation_standard_value"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_work_track_setting_plowing_operation_standard_value"
+                app:layout_constraintLeft_toRightOf="@+id/tv_work_track_setting_plowing_operation_standard_value"
+                android:layout_marginStart="@dimen/dp_10"
+                android:src="@drawable/icon_right01"
+                tools:ignore="ContentDescription" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="#FFF4F4F4"
+            />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            android:background="@color/white"
+            android:onClick="setPlowingFloatValue"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="@dimen/dp_30"
+                android:text="@string/tv_work_track_setting_float_value"
+                android:textColor="#FF000000"
+                android:textSize="@dimen/sp_32"
+                />
+
+            <TextView
+                android:id="@+id/tv_work_track_setting_plowing_operation_float_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginEnd="@dimen/dp_60"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/sp_32"
+                tools:text="5CM"
+                />
+
+            <ImageView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                app:layout_constraintTop_toTopOf="@+id/tv_work_track_setting_plowing_operation_float_value"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_work_track_setting_plowing_operation_float_value"
+                app:layout_constraintLeft_toRightOf="@+id/tv_work_track_setting_plowing_operation_float_value"
+                android:layout_marginStart="@dimen/dp_10"
+                android:src="@drawable/icon_right01"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_30"
+            android:orientation="horizontal"
+            android:layout_margin="@dimen/dp_30"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                android:background="@drawable/shape_work_track_setting_left_bg"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@string/tv_tag_work_track_setting_left"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/sp_22"
+                />
+
+            <TextView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                android:layout_marginStart="@dimen/dp_30"
+                android:background="@drawable/shape_work_track_setting_middle_bg"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@string/tv_tag_work_track_setting_middle"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/sp_22"
+                />
+
+            <TextView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                android:layout_marginStart="@dimen/dp_30"
+                android:background="@drawable/shape_work_track_setting_right_bg"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_10"
+                android:text="@string/tv_tag_work_track_setting_right"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/sp_22"
+                />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            android:background="@color/white"
+            android:onClick="setInvalidFloatValue"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="@dimen/dp_30"
+                android:text="@string/tv_work_invalid_float_value"
+                android:textColor="#FF000000"
+                android:textSize="@dimen/sp_32"
+                />
+
+            <TextView
+                android:id="@+id/tv_work_invalid_float_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginEnd="@dimen/dp_60"
+                android:textColor="#FF666666"
+                android:textSize="@dimen/sp_32"
+                tools:text="20CM"
+                />
+
+            <ImageView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                app:layout_constraintTop_toTopOf="@+id/tv_work_invalid_float_value"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_work_invalid_float_value"
+                app:layout_constraintLeft_toRightOf="@+id/tv_work_invalid_float_value"
+                android:layout_marginStart="@dimen/dp_10"
+                android:src="@drawable/icon_right01"
+                tools:ignore="ContentDescription" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+</layout>

@@ -1,0 +1,55 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/lib_color_primary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="transparentBgDialog" parent="android:Theme.Dialog">
+        <!-- 背景颜色及透明程度 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <!-- 是否半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 是否没有标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowActionBar">false</item>
+        <!-- 是否背景模糊 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 设置背景模糊的透明度-->
+        <item name="android:backgroundDimAmount">0.5</item>
+    </style>
+
+    <style name="Base_AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog">
+
+        <!--不设置在6.0以上会出现，宽度不充满屏幕的情况-->
+        <item name="windowMinWidthMinor">90%</item>
+
+        <!-- 取消标题栏，如果在代码中settitle的话会无效 -->
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- 标题的和Message的文字颜色 -->
+        <item name="android:textColorPrimary">@color/black</item>
+
+        <!-- 修改顶部标题背景颜色，具体颜色自己定，可以是图片 -->
+        <item name="android:topDark">@color/white</item>
+
+        <!--<item name="android:background">@color/white</item>-->
+
+        <!-- 在某些系统上面设置背景颜色之后出现奇怪的背景，处这里设置背景为透明，为了隐藏边框 -->
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <!--<item name="android:windowFrame">@null</item>-->
+
+        <!-- 进入和退出动画，左进右出（系统自带） -->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+
+        <!-- 按钮字体颜色,全部一起改，单个改需要在Java代码中修改 -->
+        <!--<item name="colorAccent">@color/app_main_color</item>-->
+    </style>
+
+</resources>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="machineDto"
+            type="com.zhny.library.presenter.monitor.model.dto.SelectMachineDto" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_180"
+       >
+
+        <ImageView
+            android:id="@+id/iv_item_monitor_select_machine_bg"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_120"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_30"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundImg="@{machineDto.imgUrl}"
+            tools:ignore="ContentDescription"
+            tools:background="@color/lib_color_primary"
+            />
+
+       <!-- <View
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_18"
+            android:background="@{machineDto.status?@drawable/shape_monitor_online:@drawable/shape_monitor_unline,default=@drawable/shape_monitor_unline}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_6"
+            />-->
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintLeft_toRightOf="@+id/iv_item_monitor_select_machine_bg"
+           android:layout_marginStart="@dimen/dp_30"
+           android:orientation="vertical"
+           android:gravity="center_vertical"
+           >
+
+           <TextView
+               android:id="@+id/iv_item_monitor_select_machine_name"
+               android:layout_width="@dimen/dp_210"
+               android:layout_height="wrap_content"
+               app:textStrTwoLine="@{machineDto.name}"
+               android:lineSpacingMultiplier="0.8"
+               android:textColor="#FF000000"
+               android:gravity="center_vertical"
+               android:textSize="@dimen/sp_32"
+               tools:text="沙雅打药一号机沙雅打药一号机沙雅打药一号机"
+               />
+
+           <TextView
+               android:id="@+id/iv_item_monitor_select_machine_brand"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:maxWidth="@dimen/dp_225"
+               android:singleLine="true"
+               android:layout_marginTop="@dimen/dp_20"
+               app:textStrNotNull="@{machineDto.brandAndModel}"
+               android:textColor="#FF666666"
+               android:textSize="@dimen/sp_24"
+               tools:text="品牌-型号品牌-型号品牌-型号品牌-型号品牌-型号品牌-型号品牌-型号"
+               />
+       </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="#FFF4F4F4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:background="@color/lib_color_primary"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

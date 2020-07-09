@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lib_color_primary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="color_009688">#009688</color>
+    <color name="color_FFD700">#FFD700</color>
+    <color name="color_29009688">#29009688</color>
+    <color name="color_28009688">#28009688</color>
+    <color name="color_F4F4F4">#F4F4F4</color>
+    <color name="color_3F51B5">#3F51B5</color>
+    <color name="color_EE5E53">#EE5E53</color>
+
+    <color name="color_FFB100">#FFB100</color>
+    <color name="grey">#666666</color>
+    <color name="color_77666666">#77666666</color>
+    <color name="color_D3D3D3">#D3D3D3</color>
+    <color name="border">#F4F4F4</color>
+    <color name="color_52999999">#52999999</color>
+    <color name="color_999999">#999999</color>
+    <color name="color_00FFFFFF">#00FFFFFF</color>
+
+    <color name="color_666666">#666666</color>
+    <color name="color_89C6C0">#89C6C0</color>
+
+    <color name="color_data_line">#FFB100</color>
+    <color name="color_data_bar">#89C6C0</color>
+
+    <color name="colorDeselected">#0288D1</color>
+    <color name="colorSelected">#5cd25a</color>
+    <color name="color_888888">#888888</color>
+
+
+    <color name="text_gray_666666">#666666</color>
+
+
+</resources>

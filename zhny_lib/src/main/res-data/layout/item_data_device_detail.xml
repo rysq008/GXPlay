@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="device"
+            type="com.zhny.library.presenter.data.model.vo.DataDetailVo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_330"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="@dimen/dp_30"
+        android:background="@drawable/shape_data_detail_item"
+        >
+
+        <TextView
+            android:id="@+id/tv_data_device_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{device.name}"
+            android:textColor="#FF000000"
+            android:textSize="@dimen/sp_32"
+            tools:text="测试机器001"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_45"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:gravity="center"
+            android:textColor="#009688"
+            android:textSize="@dimen/sp_22"
+            app:textStrNotNull="@{device.productType}"
+            android:background="@drawable/shape_monitor_base_data_type_bg"
+            tools:text="测试"
+            />
+
+        <ImageView
+            android:id="@+id/iv_data_device_detail"
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_110"
+            android:layout_marginTop="@dimen/dp_40"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_data_device_detail"
+            app:roundImg="@{device.imgUrl}"
+            tools:ignore="ContentDescription"
+            tools:background="@color/lib_color_primary"/>
+
+        <TextView
+            android:id="@+id/tv_data_device_detail_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_30"
+            app:layout_constraintLeft_toRightOf="@+id/iv_data_device_detail"
+            app:layout_constraintTop_toTopOf="@+id/iv_data_device_detail"
+            android:text="@string/tv_data_device_detail_area"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintLeft_toRightOf="@+id/tv_data_device_detail_area"
+            app:layout_constraintTop_toTopOf="@+id/tv_data_device_detail_area"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_data_device_detail_area"
+            android:text="@{device.areaStr}"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            tools:text="21亩"
+            />
+
+        <TextView
+            android:id="@+id/tv_data_device_detail_work_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_data_device_detail_area"
+            app:layout_constraintTop_toBottomOf="@+id/tv_data_device_detail_area"
+            android:text="@string/tv_data_device_detail_work_time"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintLeft_toRightOf="@+id/tv_data_device_detail_work_time"
+            app:layout_constraintTop_toTopOf="@+id/tv_data_device_detail_work_time"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_data_device_detail_work_time"
+            app:textStrNotNull="@{device.workTime}"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            tools:text="2h 58min"
+            />
+
+        <TextView
+            android:id="@+id/tv_data_device_detail_run_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_data_device_detail_work_time"
+            app:layout_constraintTop_toBottomOf="@+id/tv_data_device_detail_work_time"
+            android:text="@string/tv_data_device_detail_run_time"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintLeft_toRightOf="@+id/tv_data_device_detail_run_time"
+            app:layout_constraintTop_toTopOf="@+id/tv_data_device_detail_run_time"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_data_device_detail_run_time"
+            app:textStrNotNull="@{device.runningTime}"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            tools:text="3h 8min"
+            />
+
+        <TextView
+            android:id="@+id/tv_data_device_detail_mileage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_data_device_detail_run_time"
+            app:layout_constraintTop_toBottomOf="@+id/tv_data_device_detail_run_time"
+            android:text="@string/tv_data_device_detail_mileage"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintLeft_toRightOf="@+id/tv_data_device_detail_mileage"
+            app:layout_constraintTop_toTopOf="@+id/tv_data_device_detail_mileage"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_data_device_detail_mileage"
+            app:textStrNotNull="@{device.mileageStr}"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            tools:text="21KM"
+            />
+
+        <TextView
+            android:id="@+id/tv_data_device_detail_off_line_time_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_data_device_detail_area"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_data_device_detail_area"
+            app:textStrNotNull="@{device.offLineTime}"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            tools:text="5h 58min"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/tv_data_device_detail_off_line_time_value"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_data_device_detail_off_line_time_value"
+            app:layout_constraintRight_toLeftOf="@+id/tv_data_device_detail_off_line_time_value"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:text="@string/tv_data_device_detail_off_line_time"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_24"
+            />
+
+
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

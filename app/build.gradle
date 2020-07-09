@@ -1,0 +1,99 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        applicationId "com.zhny.library"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        ndk {
+            abiFilters "x86", "armeabi-v7a"
+        }
+
+        renderscriptTargetApi 18
+        renderscriptSupportModeEnabled true
+
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("../debug.keystore")
+            keyAlias 'AndroidDebugKey'
+        }
+    }
+
+
+    buildTypes {
+
+        debug {
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            release {
+                minifyEnabled true   //开启混淆
+                zipAlignEnabled true  //压缩优化
+                shrinkResources true  //移出无用资源
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+    }
+
+    flavorDimensions("iot")
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation project(':zhny_lib')
+    implementation project(':library')
+
+    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+
+    implementation('com.sinochem.argc:land:1.2.4')
+    implementation 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+
+
+}

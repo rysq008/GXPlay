@@ -1,0 +1,30 @@
+<resources>
+    <string name="my_driver">我的机手</string>
+    <string name="add_driver">添加机手</string>
+    <string name="driver_details">机手详情</string>
+    <string name="edit_driver">编辑机手</string>
+    <string name="pre_add_driver">暂无机手 快去</string>
+    <string name="add">添加</string>
+    <string name="end_add_driver">吧</string>
+    <string name="remarks">备注：</string>
+    <string name="remarks_title">备注</string>
+    <string name="delete_place_holder">删除提示</string>
+    <string name="confirm_delete_driver">确定删除该机手？</string>
+    <string name="delete_ok">确定</string>
+    <string name="driver_name">机手姓名</string>
+    <string name="driver_phone">机手电话</string>
+    <string name="please_enter">请输入</string>
+    <string name="remarks_enter_limit_default">0/50</string>
+    <string name="remarks_enter_limit">/50</string>
+    <string name="confirm">确定</string>
+    <string name="star">*</string>
+    <string name="add_driver_tip">您有必填项未填！</string>
+    <string name="add_driver_phone">机手电话必须为11位！</string>
+    <string name="save">保存</string>
+    <string name="toast_delete_success">删除成功</string>
+    <string name="toast_delete_fail">删除失败</string>
+    <string name="toast_add_success">添加成功</string>
+    <string name="toast_add_fail">添加失败</string>
+    <string name="toast_edit_success">编辑成功</string>
+    <string name="toast_edit_fail">编辑失败</string>
+</resources>

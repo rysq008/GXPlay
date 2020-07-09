@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="operator_title">操作</string>
+
+    <string name="operator_statistics" >数据统计</string>
+    <string name="operator_track_playback" >轨迹回放</string>
+    <string name="operator_operation_quality" >作业质量</string>
+    <string name="operator_electric_fence" >电子围栏</string>
+    <string name="operator_machine_list" >机具列表</string>
+    <string name="operator_my_pilot" >我的机手</string>
+    <string name="operator_cluster" >点聚合测试</string>
+
+</resources>

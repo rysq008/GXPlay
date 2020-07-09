@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zhny.library.presenter.driver.viewmodel.DriverListViewModel" />
+
+        <variable
+            name="addDriverListener"
+            type="com.zhny.library.presenter.driver.listener.AddDriverListener" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar_app_compat" />
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/smooth_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.yanzhenjie.recyclerview.SwipeRecyclerView
+                    android:id="@+id/driver_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{viewModel.emptyDriver?View.GONE:View.VISIBLE,default=gone}"
+                    tools:listitem="@layout/item_driver_list" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="@dimen/dp_630"
+                    android:layout_height="@dimen/dp_480"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dp_120"
+                    android:visibility="@{viewModel.emptyDriver?View.VISIBLE:View.GONE,default=visible}">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/default_machine_icon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/pre_add_driver"
+                        android:layout_width="@dimen/dp_187"
+                        android:layout_height="@dimen/dp_37"
+                        android:layout_marginStart="@dimen/dp_177"
+                        android:layout_marginBottom="@dimen/dp_77"
+                        android:text="@string/pre_add_driver"
+                        android:textColor="@color/color_999999"
+                        android:textSize="@dimen/sp_28"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/add_driver"
+                        android:layout_width="@dimen/dp_65"
+                        android:layout_height="@dimen/dp_37"
+                        android:layout_marginBottom="@dimen/dp_77"
+                        android:onClick="@{()->addDriverListener.onAdd()}"
+                        android:text="@string/add"
+                        android:textColor="@color/color_009688"
+                        android:textSize="@dimen/sp_28"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/pre_add_driver" />
+
+                    <TextView
+                        android:id="@+id/end_add_driver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/dp_37"
+                        android:layout_marginBottom="@dimen/dp_77"
+                        android:text="@string/end_add_driver"
+                        android:textColor="@color/color_999999"
+                        android:textSize="@dimen/sp_28"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/add_driver" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    </LinearLayout>
+
+</layout>

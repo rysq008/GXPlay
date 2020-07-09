@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="device"
+            type="com.zhny.library.presenter.data.model.dto.DataDeviceDto" />
+        <variable
+            name="onDataMachineListener"
+            type="com.zhny.library.presenter.data.adapter.DataDeviceAdapter.OnDataMachineListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_180"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="@{()->onDataMachineListener.onCheckMachineListener(device)}"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginStart="@dimen/dp_33"
+            app:checkTypeBg="@{device.checkType}"
+            tools:background="@drawable/icon_checkbox"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/dp_160"
+            android:layout_height="@dimen/dp_120"
+            android:layout_marginStart="@dimen/dp_105"
+            android:layout_marginTop="@dimen/dp_30"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundImg="@{device.imgUrl}"
+            tools:ignore="ContentDescription"
+            tools:background="@color/lib_color_primary"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@id/icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/dp_40">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="@dimen/dp_225"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_32"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:ellipsize="end"
+                app:textStrNotNull="@{device.name}"
+                tools:text="哈哈哈测试设试设备超多十备超多十二个字" />
+
+            <TextView
+                android:id="@+id/model"
+                android:layout_width="@dimen/dp_225"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:singleLine="true"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_24"
+                app:textStrNotNull="@{device.brandAndModel}"
+                tools:text="品牌-型号品牌-型号品牌-型号"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_linked"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_45"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginEnd="@dimen/dp_30"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:gravity="center"
+            android:textColor="#009688"
+            android:textSize="@dimen/sp_22"
+            app:textStrNotNull="@{device.productType}"
+            android:background="@drawable/shape_monitor_base_data_type_bg"
+            tools:text="拖拉机-农具"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="#F4F4F4"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.zhny.library.presenter.playback.viewmodel.PlayBackMoveViewModel" />
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/leftLayout"
+        android:visibility="@{viewModel.showLeftLayout?View.VISIBLE:View.GONE,default=gone}"
+        android:background="@drawable/shape_monitor_num_bg"
+        >
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_24"
+                android:text="@{viewModel.workName}"
+                android:visibility="@{viewModel.showLeftName?View.VISIBLE:View.GONE,default=visible}"
+                tools:text="耕地作业"
+                />
+
+
+
+            <TextView
+                android:id="@+id/speed"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_24"
+                android:text="@{viewModel.workSpeed}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:text="12km/h"
+                />
+
+
+    </LinearLayout>
+</layout>

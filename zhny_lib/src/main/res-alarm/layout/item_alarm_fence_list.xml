@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="alarmDto"
+            type="com.zhny.library.presenter.alarm.dto.AlarmDto" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_450"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_29"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_38"
+            android:gravity="center"
+            android:text="@{alarmDto.convertDate}"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/sp_22"
+            tools:text="上午8：48" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/dp_690"
+            android:layout_height="@dimen/dp_333"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dp_30"
+            android:background="@drawable/shape_alarm_item_bg">
+
+            <ImageView
+                android:layout_width="@dimen/dp_31"
+                android:layout_height="@dimen/dp_31"
+                android:layout_marginStart="@dimen/dp_30"
+                android:scaleType="fitXY"
+                android:src="@drawable/icon_fence"
+                app:layout_constraintTop_toTopOf="@+id/tv_alarm_title"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_alarm_title"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_alarm_title"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_37"
+                android:layout_marginStart="@dimen/dp_75"
+                android:layout_marginTop="@dimen/dp_30"
+                android:maxWidth="@dimen/dp_585"
+                android:text="@{alarmDto.typeMeaning}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_28"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="围栏报警" />
+
+            <View
+                android:id="@+id/border_one"
+                android:layout_width="@dimen/dp_630"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginTop="@dimen/dp_97"
+                android:background="@color/border"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_alarm_content"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_42"
+                android:layout_marginStart="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_30"
+                android:maxWidth="@dimen/dp_630"
+                android:text="@{alarmDto.description}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_32"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/border_one"
+                tools:text="您的农机驶出围栏区域" />
+
+            <TextView
+                android:id="@+id/tv_pre_machine_name"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_31"
+                android:layout_marginStart="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_40"
+                android:gravity="center_vertical"
+                android:text="@string/machine_name"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_alarm_content" />
+
+            <TextView
+                android:id="@+id/tv_machine_name"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_31"
+                android:layout_marginStart="@dimen/dp_30"
+                android:gravity="center"
+                android:maxWidth="@dimen/dp_504"
+                android:text="@{alarmDto.deviceName}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_24"
+                app:layout_constraintBottom_toBottomOf="@id/tv_pre_machine_name"
+                app:layout_constraintStart_toEndOf="@id/tv_pre_machine_name"
+                app:layout_constraintTop_toTopOf="@id/tv_pre_machine_name"
+                tools:text="沙滩打药一号机" />
+
+
+            <TextView
+                android:id="@+id/tv_pre_driver_name"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_31"
+                android:layout_marginStart="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_30"
+                android:gravity="center_vertical"
+                android:text="@string/alarm_fence_name"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_pre_machine_name" />
+
+            <TextView
+                android:id="@+id/tv_driver_name"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_31"
+                android:layout_marginStart="@dimen/dp_30"
+                android:text="@{alarmDto.geofenceName}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_24"
+                app:layout_constraintBottom_toBottomOf="@id/tv_pre_driver_name"
+                app:layout_constraintStart_toEndOf="@id/tv_pre_driver_name"
+                app:layout_constraintTop_toTopOf="@id/tv_pre_driver_name"
+                tools:text="围栏名称" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+</layout>

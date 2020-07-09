@@ -1,0 +1,127 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode 6
+        versionName "1.5"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    sourceSets {
+        main.res.srcDirs += [
+                'src/main/res',
+                'src/main/res-monitor',
+                'src/main/res-fence',
+                'src/main/res-playback',
+                'src/main/res-work',
+                'src/main/res-operate',
+                'src/main/res-machine',
+                'src/main/res-data',
+                'src/main/res-driver',
+                'src/main/res-alarm'
+        ]
+
+        main {
+            jniLibs.srcDirs = ['libs']
+
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    buildTypes {
+        release {
+            consumerProguardFile 'consumer-rules.pro'
+        }
+    }
+
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    implementation 'com.alibaba:fastjson:1.1.70.android'
+    implementation 'com.google.code.gson:gson:2.8.4'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    //Rxlifecycle
+    implementation 'com.trello:rxlifecycle:0.3.1'
+    implementation 'com.trello:rxlifecycle-components:0.3.1'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.+'
+
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.+'
+    implementation 'com.squareup.retrofit2:retrofit:2.+'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.+'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.0.0'
+    implementation 'com.facebook.stetho:stetho:1.4.2'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+
+
+    implementation 'com.amap.api:3dmap:6.5.0'
+    implementation 'com.amap.api:search:6.5.0.1'
+    implementation 'com.amap.api:location:4.3.0'
+
+    implementation 'com.cocoahero.android:geojson:1.0.1@jar'
+    //multidex
+    implementation 'com.android.support:multidex:1.0.1'
+
+    implementation 'com.githang:group-recycler-adapter:0.2.2'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
+
+    implementation 'com.gyf.immersionbar:immersionbar:2.3.2'
+    implementation 'me.yokeyword:fragmentation:1.3.6'
+
+    implementation 'com.yanzhenjie.recyclerview:x:1.3.2'
+
+    //柱状图
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+
+    implementation 'com.blankj:utilcode:1.28.4'
+
+    //table
+    implementation 'com.kelin.scrollablepanel:library:1.2.0'
+
+    //calendar NEW
+    implementation 'com.haibin:calendarview:3.6.7'
+
+    //permission
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
+
+}

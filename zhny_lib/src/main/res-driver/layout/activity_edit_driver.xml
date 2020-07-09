@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zhny.library.presenter.driver.viewmodel.EditDriverViewmodel" />
+
+        <variable
+            name="SaveDriverListener"
+            type="com.zhny.library.presenter.driver.listener.SaveDriverListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#F6F6F6">
+
+        <include
+            android:id="@+id/toolbar_app"
+            layout="@layout/toolbar_app_compat" />
+
+        <include
+            android:id="@+id/layout_edit_driver_top_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/layout_edit_driver_top_view"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_app"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_160"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/white">
+            <TextView
+                android:layout_width="@dimen/dp_690"
+                android:layout_height="@dimen/dp_80"
+                android:layout_gravity="center_horizontal"
+                android:layout_centerInParent="true"
+                android:background="@drawable/shape_add_driver_confirm_bg"
+                android:gravity="center"
+                android:onClick="@{()->SaveDriverListener.onSave()}"
+                android:text="@string/save"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_32" />
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

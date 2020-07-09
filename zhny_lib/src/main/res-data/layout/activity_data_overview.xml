@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.zhny.library.presenter.data.viewmodel.DataOverviewViewModel" />
+
+        <variable
+            name="dataStatisticsDto"
+            type="com.zhny.library.presenter.data.model.dto.DataStatisticsDto" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_F4F4F4">
+
+        <include
+            android:id="@+id/toolbar_app"
+            layout="@layout/toolbar_app_compat" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/n_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_app">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_30"
+                    android:layout_marginTop="@dimen/dp_35"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="@dimen/dp_4"
+                        android:layout_height="@dimen/dp_31"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/color_009688" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_10"
+                        android:text="@string/statistics"
+                        android:textColor="@color/color_009688"
+                        android:textSize="@dimen/sp_28" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_30"
+                    android:layout_marginTop="@dimen/dp_28"
+                    android:layout_marginRight="@dimen/dp_30"
+                    android:orientation="horizontal"
+                    android:onClick="showDataDetail"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_174"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/allarea"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_28" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_30"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxWidth="@dimen/dp_266"
+                                android:singleLine="true"
+                                android:text="@{dataStatisticsDto.convertTotalArea,default=0}"
+                                android:textColor="@color/color_009688"
+                                android:textSize="@dimen/sp_36" />
+
+                            <TextView
+                                android:layout_width="@dimen/dp_32"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dp_15"
+                                android:text="@string/company_Mu"
+                                android:textColor="@color/color_009688"
+                                android:textSize="@dimen/sp_32" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_174"
+                        android:layout_marginStart="@dimen/dp_30"
+                        android:layout_weight="1"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/allTime"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sp_28" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_30">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxWidth="@dimen/dp_143"
+                                android:singleLine="true"
+                                android:text="@{dataStatisticsDto.totalTimeHour,default=0}"
+                                android:textColor="@color/color_009688"
+                                android:textSize="@dimen/sp_36" />
+
+                            <TextView
+                                android:layout_width="@dimen/dp_30"
+                                android:layout_height="wrap_content"
+                                android:text="@string/company_hour"
+                                android:textColor="@color/color_009688"
+                                android:textSize="@dimen/sp_32" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:maxWidth="@dimen/dp_80"
+                                android:singleLine="true"
+                                android:text="@{dataStatisticsDto.totalTimeMin,default=0}"
+                                android:textColor="@color/color_009688"
+                                android:textSize="@dimen/sp_36" />
+
+                            <TextView
+                                android:layout_width="@dimen/dp_60"
+                                android:layout_height="wrap_content"
+                                android:text="@string/company_minute"
+                                android:textColor="@color/color_009688"
+                                android:textSize="@dimen/sp_32" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_30"
+                    android:layout_marginTop="@dimen/dp_35"
+                    android:layout_marginBottom="@dimen/dp_31"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="@dimen/dp_4"
+                        android:layout_height="@dimen/dp_31"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/color_009688" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_10"
+                        android:text="@string/statisticschart"
+                        android:textColor="@color/color_009688"
+                        android:textSize="@dimen/sp_28" />
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_810"
+                    android:layout_marginStart="@dimen/dp_30"
+                    android:layout_marginEnd="@dimen/dp_30"
+                    android:background="@color/white">
+
+
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/combinedChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_674"
+                        android:layout_marginStart="@dimen/dp_20"
+                        android:layout_marginEnd="@dimen/dp_20"
+                        android:layout_marginBottom="@dimen/dp_30"
+                        app:layout_constraintBottom_toTopOf="@id/bottom_layout"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+
+                    <include
+                        android:id="@+id/bottom_layout"
+                        layout="@layout/layout_data_overview_bottom_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_108"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_30"
+                    android:layout_marginTop="@dimen/dp_25"
+                    android:layout_marginEnd="@dimen/dp_30">
+
+                    <View
+                        android:layout_width="@dimen/dp_4"
+                        android:layout_height="@dimen/dp_31"
+                        android:layout_centerVertical="true"
+                        android:background="@color/color_009688" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dp_10"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/tv_today_work_detail"
+                        android:textColor="@color/color_009688"
+                        android:layout_centerVertical="true"
+                        android:textSize="@dimen/sp_28" />
+
+                    <RelativeLayout
+                        android:layout_width="@dimen/dp_56"
+                        android:layout_height="@dimen/dp_56"
+                        android:layout_alignParentEnd="true"
+                        android:onClick="showDataDetail"
+                        >
+
+                        <ImageView
+                            android:layout_width="@dimen/dp_35"
+                            android:layout_height="@dimen/dp_35"
+                            android:src="@drawable/icon_right_green"
+                            android:layout_centerInParent="true"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <com.zhny.library.presenter.data.custom.group.GroupRecyclerView
+                    android:id="@+id/rl_yes_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_data_device_detail"
+                    android:background="@color/color_F4F4F4"
+                    app:group_background="#FFFFFF"
+                    app:group_center="false"
+                    app:group_has_header="false"
+                    app:group_height="42dp"
+                    android:padding="@dimen/dp_30"
+                    />
+
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </RelativeLayout>
+
+
+</layout>

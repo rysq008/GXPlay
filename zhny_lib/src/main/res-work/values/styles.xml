@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- bottom PopWin Anim -->
+    <style name="bottomPopWinAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/bottom_out</item>
+    </style>
+
+</resources>

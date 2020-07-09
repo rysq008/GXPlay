@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_87">
+
+        <ImageView
+            android:id="@+id/rectangle"
+            android:layout_width="@dimen/dp_4"
+            android:layout_height="@dimen/dp_31"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_35"
+            android:background="@drawable/shape_green_rectangle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/dp_10"
+            android:textColor="@color/color_009688"
+            android:textSize="@dimen/sp_28"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_30"
+            app:layout_constraintStart_toEndOf="@id/rectangle"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

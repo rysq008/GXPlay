@@ -1,0 +1,31 @@
+<resources>
+
+    <string name="monitor_title">智慧农机</string>
+    <string name="monitor_operator">操作</string>
+    <string name="monitor_history_path">历史轨迹</string>
+    <string name="monitor_monitoring">实时监控</string>
+    <string name="monitor_select_machine">农机</string>
+    <string name="monitor_num_all">全部</string>
+    <string name="monitor_num_online">在线</string>
+    <string name="monitor_num_offline">离线</string>
+
+    <string name="monitor_base_data_brand">农机品牌：</string>
+    <string name="monitor_base_data_terminal">终端：</string>
+    <string name="monitor_base_data_address">地址：</string>
+    <string name="monitor_base_data_update_time">数据更新时间：</string>
+    <string name="monitor_base_data_yesterday">昨日作业数据</string>
+    <string name="monitor_base_data_area">作业面积：</string>
+    <string name="monitor_base_data_work_time">作业时间：</string>
+    <string name="monitor_base_data_offline_time">离线时间：</string>
+    <string name="monitor_base_data_driver_distance">行驶里程：</string>
+    <string name="monitor_base_data_running_time">转运时间：</string>
+
+    <string name="monitor_str_not_null">-</string>
+    <string name="monitor_str_time_month">月前</string>
+    <string name="monitor_str_time_week">周前</string>
+    <string name="monitor_str_time_day">天前</string>
+    <string name="monitor_str_time_hour">小时前</string>
+    <string name="monitor_str_time_minute">分钟前</string>
+    <string name="monitor_str_time_just">刚刚</string>
+
+</resources>

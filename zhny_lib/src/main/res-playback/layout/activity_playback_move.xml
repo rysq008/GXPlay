@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="clickListener"
+            type="com.zhny.library.presenter.playback.listener.OnClickListener" />
+
+        <variable
+            name="dto"
+            type="com.zhny.library.presenter.playback.model.TrackInfo" />
+        <variable
+            name="viewModel"
+            type="com.zhny.library.presenter.playback.viewmodel.PlayBackMoveViewModel" />
+
+    </data>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:background="@color/lib_color_primary">
+
+        <include layout="@layout/toolbar_app_compat"/>
+
+        <com.amap.api.maps.MapView
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dp_128"
+            android:layout_marginBottom="@dimen/dp_225"
+            />
+
+        <include
+            android:id="@+id/layout_play_back_left_view"
+            layout="@layout/layout_play_back_left_view"
+            android:layout_width="@dimen/dp_160"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_158"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_app"
+            bind:viewModel="@{viewModel}"
+            tools:visibility="visible"
+            />
+
+        <include
+            android:id="@+id/layout_play_back_right_view"
+            layout="@layout/layout_play_back_right_view"
+            android:layout_width="@dimen/dp_188"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_158"
+            android:layout_marginEnd="@dimen/dp_30"
+            android:layout_gravity="end"
+            bind:viewModel="@{viewModel}"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_app"
+
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_zoom"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_162"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginBottom="@dimen/dp_250">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_80"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/shape_add_or_remove"
+                android:onClick="@{()->clickListener.onZoom(true)}">
+                <ImageView
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:src="@drawable/ic_add_blue"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_80"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/shape_add_or_remove"
+                android:onClick="@{()->clickListener.onZoom(false)}">
+                <ImageView
+                    android:layout_width="@dimen/dp_44"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:src="@drawable/ic_remove_blue"
+                    tools:ignore="ContentDescription" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/progressLayout"
+            android:layout_gravity="bottom"
+            android:background="@color/white"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_225">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:background="#CCCCCC">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/play_btn"
+                        android:layout_width="@dimen/dp_60"
+                        android:layout_height="@dimen/dp_60"
+                        android:layout_marginTop="@dimen/dp_55"
+                        android:layout_marginStart="@dimen/dp_22"
+                        android:layout_marginEnd="@dimen/dp_22"
+                        android:background="@drawable/icon_circleplay"
+                        android:onClick="startOrStopMenu"
+                        tools:ignore="ContentDescription" />
+                    <TextView
+                        android:id="@+id/tv_cur_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/sp_20"
+                        android:layout_marginTop="@dimen/dp_1"
+                        android:layout_below="@+id/play_btn"
+                        android:text="00:00"
+                        />
+                </RelativeLayout>
+
+                <com.zhny.library.presenter.playback.customer.RangeSeekBar
+                    android:id="@+id/range_seek_bar"
+                    android:padding="@dimen/dp_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:maxHeight="@dimen/dp_10"
+                    android:minHeight="@dimen/dp_10"
+                    android:layout_weight="100"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:progressDrawable="@null"/>
+
+                <TextView
+                    android:id="@+id/speedTv"
+                    android:layout_weight="1"
+                    android:layout_width="@dimen/dp_90"
+                    android:layout_height="@dimen/dp_60"
+                    android:layout_marginTop="@dimen/dp_54"
+                    android:textColor="@color/white"
+                    android:background="@drawable/speed_text_bg"
+                    android:text="@string/speedDefault"
+                    android:onClick="handleSelectSpeed"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp_24"/>
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/dp_15"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="速度"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="#333333"
+                    />
+
+                <SeekBar
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_0"
+                    android:id="@+id/speed_bar"
+                    android:progressDrawable="@drawable/bg_adjust_seek_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="@dimen/dp_3"
+                    android:minHeight="@dimen/dp_3"
+                    android:thumb="@drawable/icon_add"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+</layout>

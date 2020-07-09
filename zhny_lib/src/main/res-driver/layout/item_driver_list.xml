@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="driverDto"
+            type="com.zhny.library.presenter.driver.model.dto.DriverDto" />
+
+        <variable
+            name="itemClick"
+            type="com.zhny.library.presenter.driver.adapter.DriverListAdapter.DriverItemClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_190"
+        android:layout_marginTop="@dimen/dp_10">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_item"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_180"
+            android:background="@color/white"
+            android:onClick="@{()->itemClick.onDriverItemClick(driverDto)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/driver_icon"
+                android:layout_width="@dimen/dp_120"
+                android:layout_height="@dimen/dp_120"
+                android:layout_marginStart="@dimen/dp_30"
+                android:layout_marginTop="@dimen/dp_30"
+                android:background="@drawable/shape_my_driver_icon_bg"
+                android:gravity="center"
+                android:text="@{driverDto.firstName}"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_42"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_42"
+                android:layout_marginStart="@dimen/dp_190"
+                android:layout_marginTop="@dimen/dp_36"
+                android:maxWidth="@dimen/dp_365"
+                android:singleLine="true"
+                android:text="@{driverDto.workerName}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sp_32"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="张三" />
+
+            <TextView
+                android:layout_width="@dimen/dp_155"
+                android:layout_height="@dimen/dp_31"
+                android:layout_marginTop="@dimen/dp_42"
+                android:layout_marginEnd="@dimen/dp_30"
+                android:singleLine="true"
+                android:text="@{driverDto.phoneNumber}"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="13768655468" />
+
+            <TextView
+                android:id="@+id/pre_remarks"
+                android:layout_width="@dimen/dp_85"
+                android:layout_height="@dimen/dp_37"
+                android:layout_marginStart="@dimen/dp_190"
+                android:layout_marginBottom="@dimen/dp_35"
+                android:singleLine="true"
+                android:text="@string/remarks"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_28"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="备注：" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_37"
+                android:layout_marginBottom="@dimen/dp_35"
+                android:maxWidth="@dimen/dp_445"
+                android:singleLine="true"
+                android:text="@{driverDto.remark}"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/sp_28"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/pre_remarks"
+                tools:text="该机手只能驾驶拖拉机34该机手只能驾驶拖拉机34该机手只能驾驶拖拉机34" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

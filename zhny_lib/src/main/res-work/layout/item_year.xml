@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="yearInfo"
+            type="com.zhny.library.presenter.work.helper.YearInfo" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/dp_136"
+        android:layout_height="@dimen/dp_45">
+
+        <TextView
+            android:id="@+id/year_name"
+            android:layout_width="@dimen/dp_106"
+            android:layout_height="match_parent"
+            android:background="@{yearInfo.isSelect?@drawable/shape_year_select :@drawable/shape_year_unselect}"
+            android:text="2019"
+            android:gravity="center"
+            android:textColor="@{yearInfo.isSelect?@color/white:@color/color_009688}"
+            android:textSize="@dimen/sp_22"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="@{yearInfo.isSelect?false:true}"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
