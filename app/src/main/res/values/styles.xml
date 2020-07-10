@@ -20,7 +20,7 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowActionBar">false</item>
         <!-- 是否背景模糊 -->
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
         <!-- 设置背景模糊的透明度-->
         <item name="android:backgroundDimAmount">0.5</item>
     </style>

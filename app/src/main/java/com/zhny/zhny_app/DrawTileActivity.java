@@ -3,17 +3,28 @@ package com.zhny.zhny_app;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
+import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CameraUpdate;
+import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
@@ -22,99 +33,127 @@ import com.amap.api.maps.model.Polygon;
 import com.amap.api.maps.model.PolygonOptions;
 import com.amap.api.maps.model.Polyline;
 import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.maps.model.TileOverlay;
 import com.rance.library.ButtonData;
 import com.rance.library.ButtonEventListener;
 import com.rance.library.SectorMenuButton;
 import com.sinochem.map.impl.AmapView;
 import com.sinochem.map.observer.IMapMarkerClickObserver;
 import com.sinochem.map.observer.IMapPOIClickObserver;
+import com.sinochem.map.observer.IMapTouchObserver;
+import com.zhny.library.presenter.fence.FenceConstant;
+import com.zhny.library.presenter.fence.model.vo.DrawFence;
+import com.zhny.library.presenter.fence.util.FenceMapUtil;
+import com.zhny.library.presenter.fence.util.PositionUtil;
 import com.zhny.library.presenter.fence.view.FenceActivity;
+import com.zhny.library.presenter.fence.view.FenceInfoActivity;
+import com.zhny.library.utils.DataUtil;
+import com.zhny.library.utils.DisplayUtils;
+import com.zhny.library.utils.MapUtils;
+import com.zhny.zhny_app.databinding.ActivityDrawtileBinding;
+import com.zhny.zhny_app.dialog.DialogFragmentHelper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class DrawTileActivity extends AppCompatActivity implements View.OnClickListener {
+public class DrawTileActivity extends AppCompatActivity implements View.OnClickListener, AMap.OnMapClickListener, AMap.OnMapTouchListener {
     AmapView amapView;
-//    private TextureMapView mapView;
-
-//    private AMap aMap;
-
     //存放所有marker点标记
-
     private List<MyLatLng> allLatLngs = new ArrayList<>();
-
     //所有线段的点
-
     private List<LatLng> allLatLngsWithLine = new ArrayList<>();
-
     //所有marker点
-
     private List<Marker> markers = new ArrayList<>();
-
     //线的对象
-
     private Polyline polyline;
-
     //多边形的对象
-
     private Polygon polygon;
-
     //是否为封闭图形
-
     private boolean isEnd = false;
-
     //矩形对象的配置
-
     private PolygonOptions polygonOptions = new PolygonOptions();
-
     //当前触摸的marker
-
     private Marker touchMark;
-
     //当前选中的点下标,相对于allLatLngs的
-
     private int checkPos;
-
     //地图设置
-
     UiSettings uiSettings;
-
     ///周长
-
     private TextView mPerimeterTv;
-
     //面积
-
     private TextView mAreaTv;
+    private MapView mapView;
+
+    private AMap aMap;
+    private TileOverlay tileOverlay;
+    private BitmapDescriptor bitmapDescriptor;
+    private MarkerOptions markerOptions;
+    private BitmapDescriptor handleBitmapDescriptor;
+    private MarkerOptions handleOptions;
+    private PolylineOptions apolylineOptions;
+    private PolygonOptions apolygonOptions;
+    private UiSettings auiSettings;
+    private List<DrawFence> markerData = new ArrayList<>();
+    private Polygon apolygon;
+    private Polyline apolyline;
+    private boolean isDrawPoint;
+    private FenceMapUtil fenceMapUtil = new FenceMapUtil();
+    private boolean isCross;
+    ActivityDrawtileBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawtile);
-        findViewById(R.id.drawtile_menu_iv).setOnClickListener(this);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_drawtile);
+        binding.drawtileMenuIv.setOnClickListener(this);
         initRightBottomSectorMenuButton();
         initRightTopSectorMenuButton();
         initBottomCenterSectorMenuButton();
-        mPerimeterTv = findViewById(R.id.drawtile_circle_tv);
-        mAreaTv=findViewById(R.id.drawtile_area_tv);
+        mPerimeterTv = binding.drawtileCircleTv;
+        mAreaTv=binding.drawtileAreaTv;
+        mapView = binding.mapView;
+        mapView.onCreate(savedInstanceState);
+        aMap = mapView.getMap();
+        auiSettings = aMap.getUiSettings();
+        auiSettings.setZoomControlsEnabled(false);
+        aMap.setMapType(AMap.MAP_TYPE_SATELLITE);
+        aMap.setOnMapClickListener(this);
+        aMap.setOnMapTouchListener(this);
+        aMap.setOnMarkerClickListener(marker -> true);
+        if(tileOverlay != null) tileOverlay.remove();
+        tileOverlay = MapUtils.addRemoteOverlay(aMap);
+        View view = LayoutInflater.from(this).inflate(com.zhny.library.R.layout.fence_maker_view_image, null);
+        ((ImageView) view.findViewById(com.zhny.library.R.id.iv_draw_fence_marker)).setImageResource(com.zhny.library.R.drawable.icon_fence_add_maker);
+        bitmapDescriptor = BitmapDescriptorFactory.fromView(view);
+        markerOptions = new MarkerOptions()
+                .setFlat(true)
+                .icon(bitmapDescriptor).anchor(0.5f, 0.5f);
+
+        View handleView = LayoutInflater.from(this).inflate(com.zhny.library.R.layout.fence_handle_maker_view_image, null);
+        ((ImageView) handleView.findViewById(com.zhny.library.R.id.iv_draw_fence_handle_marker)).setImageResource(com.zhny.library.R.drawable.handle);
+        handleBitmapDescriptor = BitmapDescriptorFactory.fromView(handleView);
+        handleOptions = new MarkerOptions()
+                .icon(handleBitmapDescriptor)
+                .setFlat(true).zIndex(999);
+
+
+        apolylineOptions = new PolylineOptions()
+                .width(DisplayUtils.dp2px(1.5f))
+                .color(Color.parseColor("#009688"));
+
+        apolygonOptions = new PolygonOptions()
+                .strokeWidth(DisplayUtils.dp2px(1.5f));
+
 
         amapView = findViewById(R.id.drawtile_amapView);
         amapView.onCreate(savedInstanceState);
-//        amapView.getMapManager().setMapTouchEventDispatcher(new IMapTouchEventDispatcher() {
-//            @Override
-//            public void dispatchTouchEvent(MotionEvent event) {
-//                amapView.getMapManager().getMapTouchEventDispatcher().dispatchTouchEvent(event);
-//            }
-//        });
-
+        uiSettings = amapView.getMapManager().getMapFunctions().getUiSettings();
+        uiSettings.setZoomControlsEnabled(false);
         amapView.getMapManager().setClampMapOnMarkerClick(true);
         amapView.getMapManager().setBringMarkerToFrontOnItClick(true);
-
-        PolygonOptions polygonOptions = new PolygonOptions();
-        polygonOptions.addAll(createRectangle(new LatLng(31.238068, 121.501654), 0.25, 0.25));
-
+        amapView.getMapManager().getMapFunctions().setMapType(AMap.MAP_TYPE_SATELLITE);
         amapView.getMapManager().getMapFunctions().addPolygon(polygonOptions);
 
         ImageView fabContent = new ImageView(getActivity());
@@ -184,7 +223,7 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initRightTopSectorMenuButton() {
-        SectorMenuButton sectorMenuButton = (SectorMenuButton) findViewById(R.id.drawtile_menu_iv);
+        SectorMenuButton sectorMenuButton = binding.drawtileMenuIv;
         final List<ButtonData> buttonDatas = new ArrayList<>();
         int[] drawable = {R.mipmap.like, R.mipmap.mark, R.mipmap.search, R.mipmap.copy};
         for (int i = 0; i < 4; i++) {
@@ -197,7 +236,7 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initRightBottomSectorMenuButton() {
-        SectorMenuButton sectorMenuButton = (SectorMenuButton) findViewById(R.id.drawtile_local_iv);
+        SectorMenuButton sectorMenuButton = binding.drawtileLocalIv;
         final List<ButtonData> buttonDatas = new ArrayList<>();
         int[] drawable = {R.mipmap.like, R.mipmap.mark, R.mipmap.search, R.mipmap.copy};
         for (int i = 0; i < 4; i++) {
@@ -210,18 +249,49 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initBottomCenterSectorMenuButton() {
-        SectorMenuButton sectorMenuButton = (SectorMenuButton) findViewById(R.id.drawtile_bottom_center);
+        SectorMenuButton sectorMenuButton = binding.drawtileBottomCenter;
         final List<ButtonData> buttonDatas = new ArrayList<>();
-        int[] drawable = {R.drawable.icon_zoom,R.drawable.amap_bus, R.drawable.amap_car, R.drawable.amap_man};
-        String[] strings = {"","清空","打点","撤回"};
-        for (int i = 0; i < 4; i++) {
+        int[] drawable = {R.mipmap.like, R.mipmap.copy,R.mipmap.mark, R.mipmap.search, R.mipmap.settings};
+        String[] strings = {"清空","打点","撤回","提交",""};
+        for (int i = 4; i >=0; i--) {
             ButtonData buttonData = ButtonData.buildIconButton(this, drawable[i], 0);
-            buttonData.setBackgroundColorId(this, R.color.white);
+            buttonData.setBackgroundColorId(this, R.color.coloryellow);
             buttonData.setText(strings[i]);
             buttonDatas.add(buttonData);
         }
         sectorMenuButton.setButtonDatas(buttonDatas);
-        setListener(sectorMenuButton);
+        sectorMenuButton.setButtonEventListener(new ButtonEventListener() {
+
+            @Override
+            public void onButtonClicked(int index) {
+                switch (index){
+                    case 4:
+                        onClearAll();
+                        break;
+                    case 3:
+                        onDrawPoint();
+                        break;
+                    case 2:
+                        onBackPoint();
+                        break;
+                    case 1:
+                        binding.setCanSubmit(!isCross);
+//                        showDialog();
+                        drawFenceNext(null);
+                        break;
+                }
+            }
+
+            @Override
+            public void onExpand() {
+                buttonDatas.get(1).setBackgroundColorId(DrawTileActivity.this, (isCross)?R.color.colorPrimaryDark:R.color.coloryellow);
+            }
+
+            @Override
+            public void onCollapse() {
+                buttonDatas.get(1).setBackgroundColorId(DrawTileActivity.this, (isCross)?R.color.colorPrimaryDark:R.color.coloryellow);
+            }
+        });
     }
 
 
@@ -238,7 +308,10 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
         button.setButtonEventListener(new ButtonEventListener() {
             @Override
             public void onButtonClicked(int index) {
+                if(index%2==0)
                 startActivity(new Intent(DrawTileActivity.this, FenceActivity.class));
+                else
+                    showDialog();
                 showToast("button" + index);
             }
 
@@ -260,46 +333,85 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
 
 
     public void showDialog(){
-//        DialogFragmentHelper.showBuilderDialog(getSupportFragmentManager(),
-//                DialogFragmentHelper.builder(R.layout.dialog_delete_driver, true)
-//                        .setDialogWindow(dialogWindow -> {
-//                            WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
-//                            wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
-//                            dialogWindow.setAttributes(wlp);
-//                            dialogWindow.setGravity(Gravity.BOTTOM);
-//                            dialogWindow.setWindowAnimations(android.R.style.Animation_InputMethod);
-//                            return null;
-//                        }),"");
+        DialogFragmentHelper.showBuilderDialog(getSupportFragmentManager(),
+                DialogFragmentHelper.builder(R.layout.dialog_delete_driver, true)
+                        .setDialogWindow(dialogWindow -> {
+                            WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
+                            wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                            wlp.height = getResources().getDimensionPixelSize(R.dimen.dp_500);
+                            dialogWindow.setAttributes(wlp);
+                            dialogWindow.setGravity(Gravity.BOTTOM);
+                            dialogWindow.setWindowAnimations(android.R.style.Animation_InputMethod);
+                            return null;
+                        }),"");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         amapView.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isDrawPoint = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         amapView.onResume();
+        mapView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         amapView.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isDrawPoint = false;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         amapView.onDestroy();
+        mapView.onDestroy();
+        clear();
+        if (bitmapDescriptor != null) bitmapDescriptor.recycle();
+        if (handleBitmapDescriptor != null) handleBitmapDescriptor.recycle();
+        if (mapView != null) mapView.onDestroy();
+    }
+
+    private void clear() {
+        for (DrawFence fence : markerData) {
+            if (fence.marker != null) {
+                if (!fence.marker.isRemoved()) fence.marker.remove();
+            }
+        }
+        markerData.clear();
+        if (apolygon != null) {
+            apolygon.remove();
+            apolygon = null;
+        }
+        if (apolyline != null) {
+            apolyline.remove();
+            apolyline = null;
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
         amapView.onLowMemory();
+        mapView.onLowMemory();
     }
 
     /**
@@ -339,201 +451,201 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-//        //添加拖拽事件
-//        amapView.getMapManager().addObserver(new IMapTouchObserver() {
-//            @Override
-//            public boolean onMapTouch(MotionEvent motionEvent) {
-//                switch (motionEvent.getAction()) {
-//                    //按下
-//                    case MotionEvent.ACTION_DOWN:
-//                        float down_x= motionEvent.getX();
-//                        float down_y= motionEvent.getY();
-//                        Point downPoint= new Point();
-//                        downPoint.set((int) down_x, (int) down_y);
-//
-//                        //获取触摸到的位置
-//                        LatLng downLatLng= amapView.getMapManager().getMapFunctions().getProjection().fromScreenLocation(downPoint);
-//
-//                        //获取触摸的点下标
-//                        checkPos = getNearestLatLng(downLatLng);
-//
-//                        //触摸的点是矩形的点
-//                        if (checkPos > -1) {
-//
-//                            //如果是小点
-//                            if (allLatLngs.get(checkPos).getState() == MyLatLng.UNABLE) {
-//
-//                                //更改为大点
-//                                chageMarker();
-//
-//                                //如果是封闭图形并且点击的是最后的一个点
-//                                if (isEnd && checkPos == allLatLngs.size() - 1) {
-//
-//                                    //添加两个mark
-//                                    addTwoMarker(getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(checkPos - 1).getLatLng()), getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(0).getLatLng()));
-//                                } else {
-//
-//                                    //不是封闭图形
-//                                    //添加两个marker
-//                                    addTwoMarker(getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(checkPos - 1).getLatLng()), getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(checkPos + 1).getLatLng()));
-//                                }
-//
-//                                //将选中点的下标更改
-//                                checkPos += 1;
-//                            }
-//
-//                            //获取选中的marker点
-//                            touchMark = markers.get(checkPos);
-//
-//                            //禁止地图放大旋转等操作
-//                            uiSettings.setScrollGesturesEnabled(false);
-//                        }
-//                        break;
-//                    //移动中
-//                    case MotionEvent.ACTION_MOVE:
-//                        //有选中的marker点
-//                        if (touchMark != null) {
-//                            float move_x= motionEvent.getX();
-//                            float move_y= motionEvent.getY();
-//                            Point movePoint= new Point();
-//                            movePoint.set((int) move_x, (int) move_y);
-//
-//                            //获取到触摸点经纬度
-//                            LatLng moveLatLng= amapView.getMapManager().getMapFunctions().getProjection().fromScreenLocation(movePoint);
-//
-//                            //更新的坐标点位置
-//                            touchMark.setPosition(moveLatLng);
-//
-//                            //如果已经画出线(两个大点)
-//                            if (polyline != null) {
-//
-//                                //会比markers多一个点
-//                                List<LatLng> points= polyline.getPoints();
-//
-//                                //修改线数据中当前触摸点的坐标信息
-//                                points.set(checkPos, moveLatLng);
-//
-//                                //修改当前选中marker点坐标集合的信息
-//                                allLatLngs.get(checkPos).setLatLng(moveLatLng);
-//
-//                                //修改当前选中线的点的坐标集合的信息
-//                                allLatLngsWithLine.set(checkPos, moveLatLng);
-//
-//                                //不需要添加两个点
-//                                if (checkPos == 0) {
-//
-//                                    //获取选中大点旁边的小点
-//                                    Marker marker= markers.get(checkPos + 1);
-//
-//                                    //获取第一个大点和第二个大点的中间坐标
-//                                    LatLng center= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos + 2).getLatLng());
-//
-//                                    //修改marker的坐标
-//                                    marker.setPosition(center);
-//
-//                                    //修改线的坐标
-//                                    points.set(checkPos + 1, center);
-//
-//                                    //修改总marker坐标集合信息
-//                                    allLatLngs.get(checkPos + 1).setLatLng(center);
-//
-//                                    //修改总线集合信息
-//                                    allLatLngsWithLine.set(checkPos + 1, center);
-//
-//                                    //如果是已经封闭的则需要修改最后一个大点与第一个大点中间点的坐标
-//                                    if (isEnd) {
-//
-//                                        //操作同上
-//                                        Marker marker2= markers.get(markers.size() - 1);
-//
-//                                        LatLng cen= getCenterLatlng(moveLatLng, allLatLngs.get(markers.size() - 2).getLatLng());
-//
-//                                        marker2.setPosition(cen);
-//
-//                                        points.set(points.size() - 1, moveLatLng);
-//
-//                                        points.set(points.size() - 2, cen);
-//
-//                                        allLatLngs.get(markers.size() - 1).setLatLng(cen);
-//
-//                                        allLatLngsWithLine.set(markers.size() - 1, cen);
-//
-//                                    }
-//
-//                                    //当触摸的点是最后一个大点或者最后一个小点的时候
-//                                } else if (checkPos == markers.size() - 2 || checkPos == markers.size() - 1) {
-//
-//                                    //原理同上//最后一个点
-//                                    Marker marker2= markers.get(checkPos - 1);
-//                                    LatLng center= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos - 2).getLatLng());
-//                                    marker2.setPosition(center);
-//                                    points.set(checkPos - 1, center);
-//                                    allLatLngs.get(checkPos - 1).setLatLng(center);
-//                                    allLatLngsWithLine.set(checkPos - 1, center);
-//
-//                                    if (isEnd) {
-//
-//                                        Marker marker= markers.get(checkPos + 1);
-//
-//                                        LatLng cen= getCenterLatlng(moveLatLng, allLatLngs.get(0).getLatLng());
-//
-//                                        marker.setPosition(cen);
-//
-//                                        points.set(checkPos + 1, cen);
-//
-//                                        allLatLngs.get(checkPos + 1).setLatLng(cen);
-//
-//                                        allLatLngsWithLine.set(checkPos + 1, cen);
-//
-//                                    }
-//
-//                                } else {
-//
-//                                    //原理同上//中间的点
-//                                    Marker marker= markers.get(checkPos + 1);
-//                                    LatLng center= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos + 2).getLatLng());
-//                                    marker.setPosition(center);
-//                                    allLatLngs.get(checkPos + 1).setLatLng(center);
-//                                    allLatLngsWithLine.set(checkPos + 1, center);
-//                                    Marker marker2= markers.get(checkPos - 1);
-//                                    LatLng center2= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos - 2).getLatLng());
-//                                    marker2.setPosition(center2);
-//                                    allLatLngs.get(checkPos - 1).setLatLng(center2);
-//                                    allLatLngsWithLine.set(checkPos - 1, center2);
-//
-//                                    //移动线
-//                                    points.set(checkPos + 1, center);
-//                                    points.set(checkPos - 1, center2);
-//                                }
-//
-//                                //更改线数据
-//                                polyline.setPoints(points);
-//
-//                                //计算周长
-//                                setPerimeter();
-//
-//                                //如果封闭的话
-//                                if (isEnd) {
-//                                    //计算面积
-//                                    drawRect();
-//                                }
-//                            }
-//                        }
-//                        break;
-//                    //抬起
-//                    case MotionEvent.ACTION_UP:
-//                        if (touchMark != null) {
-//                            //清除选中点信息
-//                            touchMark = null;
-//                            //恢复地图操作
-//                            uiSettings.setScrollGesturesEnabled(true);
-//                        }
-//                        break;
-//                }
-//                return false;
-//            }
-//
-//        });
+        //添加拖拽事件
+        amapView.getMapManager().addObserver(new IMapTouchObserver() {
+            @Override
+            public boolean onMapTouch(MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    //按下
+                    case MotionEvent.ACTION_DOWN:
+                        float down_x= motionEvent.getX();
+                        float down_y= motionEvent.getY();
+                        Point downPoint= new Point();
+                        downPoint.set((int) down_x, (int) down_y);
+
+                        //获取触摸到的位置
+                        LatLng downLatLng= amapView.getMapManager().getMapFunctions().getProjection().fromScreenLocation(downPoint);
+
+                        //获取触摸的点下标
+                        checkPos = getNearestLatLng(downLatLng);
+
+                        //触摸的点是矩形的点
+                        if (checkPos > -1) {
+
+                            //如果是小点
+                            if (allLatLngs.get(checkPos).getState() == MyLatLng.UNABLE) {
+
+                                //更改为大点
+                                chageMarker();
+
+                                //如果是封闭图形并且点击的是最后的一个点
+                                if (isEnd && checkPos == allLatLngs.size() - 1) {
+
+                                    //添加两个mark
+                                    addTwoMarker(getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(checkPos - 1).getLatLng()), getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(0).getLatLng()));
+                                } else {
+
+                                    //不是封闭图形
+                                    //添加两个marker
+                                    addTwoMarker(getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(checkPos - 1).getLatLng()), getCenterLatlng(allLatLngs.get(checkPos).getLatLng(), allLatLngs.get(checkPos + 1).getLatLng()));
+                                }
+
+                                //将选中点的下标更改
+                                checkPos += 1;
+                            }
+
+                            //获取选中的marker点
+                            touchMark = markers.get(checkPos);
+
+                            //禁止地图放大旋转等操作
+                            uiSettings.setScrollGesturesEnabled(false);
+                        }
+                        break;
+                    //移动中
+                    case MotionEvent.ACTION_MOVE:
+                        //有选中的marker点
+                        if (touchMark != null) {
+                            float move_x= motionEvent.getX();
+                            float move_y= motionEvent.getY();
+                            Point movePoint= new Point();
+                            movePoint.set((int) move_x, (int) move_y);
+
+                            //获取到触摸点经纬度
+                            LatLng moveLatLng= amapView.getMapManager().getMapFunctions().getProjection().fromScreenLocation(movePoint);
+
+                            //更新的坐标点位置
+                            touchMark.setPosition(moveLatLng);
+
+                            //如果已经画出线(两个大点)
+                            if (polyline != null) {
+
+                                //会比markers多一个点
+                                List<LatLng> points= polyline.getPoints();
+
+                                //修改线数据中当前触摸点的坐标信息
+                                points.set(checkPos, moveLatLng);
+
+                                //修改当前选中marker点坐标集合的信息
+                                allLatLngs.get(checkPos).setLatLng(moveLatLng);
+
+                                //修改当前选中线的点的坐标集合的信息
+                                allLatLngsWithLine.set(checkPos, moveLatLng);
+
+                                //不需要添加两个点
+                                if (checkPos == 0) {
+
+                                    //获取选中大点旁边的小点
+                                    Marker marker= markers.get(checkPos + 1);
+
+                                    //获取第一个大点和第二个大点的中间坐标
+                                    LatLng center= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos + 2).getLatLng());
+
+                                    //修改marker的坐标
+                                    marker.setPosition(center);
+
+                                    //修改线的坐标
+                                    points.set(checkPos + 1, center);
+
+                                    //修改总marker坐标集合信息
+                                    allLatLngs.get(checkPos + 1).setLatLng(center);
+
+                                    //修改总线集合信息
+                                    allLatLngsWithLine.set(checkPos + 1, center);
+
+                                    //如果是已经封闭的则需要修改最后一个大点与第一个大点中间点的坐标
+                                    if (isEnd) {
+
+                                        //操作同上
+                                        Marker marker2= markers.get(markers.size() - 1);
+
+                                        LatLng cen= getCenterLatlng(moveLatLng, allLatLngs.get(markers.size() - 2).getLatLng());
+
+                                        marker2.setPosition(cen);
+
+                                        points.set(points.size() - 1, moveLatLng);
+
+                                        points.set(points.size() - 2, cen);
+
+                                        allLatLngs.get(markers.size() - 1).setLatLng(cen);
+
+                                        allLatLngsWithLine.set(markers.size() - 1, cen);
+
+                                    }
+
+                                    //当触摸的点是最后一个大点或者最后一个小点的时候
+                                } else if (checkPos == markers.size() - 2 || checkPos == markers.size() - 1) {
+
+                                    //原理同上//最后一个点
+                                    Marker marker2= markers.get(checkPos - 1);
+                                    LatLng center= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos - 2).getLatLng());
+                                    marker2.setPosition(center);
+                                    points.set(checkPos - 1, center);
+                                    allLatLngs.get(checkPos - 1).setLatLng(center);
+                                    allLatLngsWithLine.set(checkPos - 1, center);
+
+                                    if (isEnd) {
+
+                                        Marker marker= markers.get(checkPos + 1);
+
+                                        LatLng cen= getCenterLatlng(moveLatLng, allLatLngs.get(0).getLatLng());
+
+                                        marker.setPosition(cen);
+
+                                        points.set(checkPos + 1, cen);
+
+                                        allLatLngs.get(checkPos + 1).setLatLng(cen);
+
+                                        allLatLngsWithLine.set(checkPos + 1, cen);
+
+                                    }
+
+                                } else {
+
+                                    //原理同上//中间的点
+                                    Marker marker= markers.get(checkPos + 1);
+                                    LatLng center= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos + 2).getLatLng());
+                                    marker.setPosition(center);
+                                    allLatLngs.get(checkPos + 1).setLatLng(center);
+                                    allLatLngsWithLine.set(checkPos + 1, center);
+                                    Marker marker2= markers.get(checkPos - 1);
+                                    LatLng center2= getCenterLatlng(moveLatLng, allLatLngs.get(checkPos - 2).getLatLng());
+                                    marker2.setPosition(center2);
+                                    allLatLngs.get(checkPos - 1).setLatLng(center2);
+                                    allLatLngsWithLine.set(checkPos - 1, center2);
+
+                                    //移动线
+                                    points.set(checkPos + 1, center);
+                                    points.set(checkPos - 1, center2);
+                                }
+
+                                //更改线数据
+                                polyline.setPoints(points);
+
+                                //计算周长
+                                setPerimeter();
+
+                                //如果封闭的话
+                                if (isEnd) {
+                                    //计算面积
+                                    drawRect();
+                                }
+                            }
+                        }
+                        break;
+                    //抬起
+                    case MotionEvent.ACTION_UP:
+                        if (touchMark != null) {
+                            //清除选中点信息
+                            touchMark = null;
+                            //恢复地图操作
+                            uiSettings.setScrollGesturesEnabled(true);
+                        }
+                        break;
+                }
+                return false;
+            }
+
+        });
 
     }
 
@@ -544,7 +656,6 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
      * @parammyLatLng2
      * @return
      */
-
     private LatLng getCenterLatlng(LatLng myLatLng, LatLng myLatLng2) {
         return new LatLng((myLatLng.latitude + myLatLng2.latitude) / 2, (myLatLng.longitude + myLatLng2.longitude) / 2);
     }
@@ -595,7 +706,6 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
         points.add(checkPos, latLng);
         polyline.setPoints(points);
     }
-
 
     /**
      * 添加marker
@@ -781,4 +891,318 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
         }
         return -1;
     }
+
+
+    /**
+     * =============================================================================================
+     */
+    //绘制marker点
+    private void drawPoint(LatLng latLng) {
+        Marker marker = aMap.addMarker(markerOptions);
+        marker.setPosition(latLng);
+        marker.setZIndex(999);
+        markerData.add(new DrawFence(marker.getId(), marker));
+        drawLine();
+    }
+
+    //将marker点连接线
+    private void drawLine() {
+        binding.drawtileAreaTv.setText(String.format("%s 0.0亩", getText(com.zhny.library.R.string.fence_area)));
+
+        if (markerData.size() < 2) return;
+
+        //绘制线
+        if (markerData.size() < 3) {
+            if (apolyline == null) {
+                apolyline = aMap.addPolyline(apolylineOptions);
+            }
+//            List<LatLng> points = getPointsFromMarkers(markerData);
+//            binding.drawtileDistenceTv.setText(String.format("距离%d米",AMapUtils.calculateLineDistance(points.get(0),points.get(points.size()-1))));
+//        float f = 0;
+//        for (int i = 0,j = points.size()-1; i <j ; i++) {
+//            f+=AMapUtils.calculateLineDistance(points.get(i),points.get(i+1));
+//        }
+//        binding.drawtileCircleTv.setText(String.format("周长%f米",f));
+
+            apolyline.setVisible(true);
+            apolyline.setZIndex(999);
+            apolyline.setPoints(getPointsFromMarkers(markerData));
+            return;
+        }
+        //绘制面
+        if (apolyline != null) {
+            apolyline.setVisible(false);
+            apolyline = null;
+        }
+        List<LatLng> points = getPointsFromMarkers(markerData);
+        if (apolygon == null) apolygon = aMap.addPolygon(apolygonOptions);
+        apolygon.setZIndex(999);
+        apolygon.setPoints(points);
+        isCross = checkCross(points);
+        apolygon.setStrokeColor(Color.parseColor(isCross ? "#ff6666" : "#009688"));
+        apolygon.setFillColor(Color.parseColor(isCross ? "#30ff6666" : "#30009688"));
+
+        float area = AMapUtils.calculateArea(points) * 0.0015f; //平方米转为亩
+
+        binding.drawtileAreaTv.setText(String.format("%s %s亩", getText(com.zhny.library.R.string.fence_area), DataUtil.get1Point(area)));
+        binding.drawtileDistenceTv.setText(String.format("距离%f米",AMapUtils.calculateLineDistance(points.get(0),points.get(points.size()-1))));
+
+    }
+
+    public void onDrawPoint() {
+        isDrawPoint = true;
+    }
+
+    public void onBackPoint() {
+        removeHandleMarker();
+        if (markerData.size() == 0) return;
+        if (markerData.size() - 1 < 3) {
+            Toast.makeText(this, getString(com.zhny.library.R.string.fence_edit_point_least_three), Toast.LENGTH_LONG).show();
+            return;
+        }
+        DrawFence fence = markerData.get(markerData.size() - 1);
+        if (fence.marker != null && !fence.marker.isRemoved()) {
+            fence.marker.remove();
+        }
+        markerData.remove(fence);
+        drawLine();
+    }
+
+    public void onClearAll() {
+        //清空
+//        binding.tvFenceArea.setText(String.format("%s 0.0亩", getText(com.zhny.library.R.string.fence_area)));
+//        binding.setCanNext(false);
+        isDrawPoint = false;
+        clear();
+        removeHandleMarker();
+    }
+
+    //下一步
+    public void drawFenceNext(View view) {
+        if (markerData.size() < 3) {
+            Toast.makeText(this, getString(com.zhny.library.R.string.fence_edit_point_least_three), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (isCross) {
+            Toast.makeText(this, getString(com.zhny.library.R.string.fence_edit_point_line_cross), Toast.LENGTH_LONG).show();
+            return;
+        }
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(FenceConstant.IS_ADD, true);
+        bundle.putString(FenceConstant.FENCE_DRAW_POINTS, getMarkersPoint());
+        Intent intent = new Intent();
+        intent.setClass(this, FenceInfoActivity.class);
+        if (bundle != null) {
+            intent.putExtras(bundle);
+        }
+        startActivity(intent);
+
+        finish();
+    }
+
+
+    private String getMarkersPoint() {
+        StringBuilder buffer = new StringBuilder();
+        for (int i = 0; i < markerData.size(); i++) {
+            LatLng position = markerData.get(i).marker.getPosition();
+            buffer.append(position.longitude).append(",");
+            buffer.append(position.latitude);
+            buffer.append(i == markerData.size() - 1 ? "" : ";");
+        }
+        return buffer.toString();
+    }
+
+
+    //放大地图
+    public void onMapZoomIn(View view) {
+        CameraUpdate update = CameraUpdateFactory.zoomIn();
+        aMap.animateCamera(update);
+    }
+
+    //缩小地图
+    public void onMapZoomOut(View view) {
+        CameraUpdate update = CameraUpdateFactory.zoomOut();
+        aMap.animateCamera(update);
+    }
+
+
+    public boolean checkCross(List<LatLng> points) {
+        for (int i = 0; i < points.size() - 1; i++) {
+            for (int j = i + 1; j < points.size(); j++) {
+                LatLng latLng;
+                if (j == points.size() - 1) {
+                    latLng = points.get(0);
+                } else {
+                    latLng = points.get(j + 1);
+                }
+                PointF point = aMap.getProjection().toMapLocation(points.get(i));
+                PointF point1 = aMap.getProjection().toMapLocation(points.get(i + 1));
+                PointF point2 = aMap.getProjection().toMapLocation(points.get(j));
+                PointF point3 = aMap.getProjection().toMapLocation(latLng);
+
+                if (fenceMapUtil.ab_cross_cd(point, point1, point2, point3) == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static final float DISTANCE_HANDLE_CHECK = 120f; //可适当调整
+    private int acheckPos;
+    private Marker touchMarker, handleMarker;
+    private int oldHandleMarkerX = 0;
+    private int oldHandleMarkerY = 0;
+    private int oldMarkerX = 0;
+    private int oldMarkerY = 0;
+    private boolean isTouchHandleMarker;
+
+    @Override
+    public void onTouch(MotionEvent event) {
+        if (markerData.size() < 3) return;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                Point downPoint = new Point((int)event.getX(), (int)event.getY());
+                acheckPos = getNearestIndex(downPoint);
+                if (acheckPos > -1) {
+                    auiSettings.setScrollGesturesEnabled(false);
+                    touchMarker = markerData.get(acheckPos).marker;
+                    showHandleMarker(touchMarker);
+                    isTouchHandleMarker = checkTouchHandleMarker(downPoint);
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                Point movePoint = new Point((int)event.getX(), (int)event.getY());
+                if (acheckPos > -1 && handleMarker != null && isTouchHandleMarker) {
+                    remoteControl(movePoint);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                auiSettings.setScrollGesturesEnabled(true);
+                updateHandleAngle();
+                acheckPos = -1;
+                break;
+        }
+    }
+
+
+    //改变值
+    public boolean checkTouchHandleMarker(Point point) {
+        if (handleMarker != null) {
+            Point markerPoint = aMap.getProjection().toScreenLocation(handleMarker.getPosition());
+            if (Math.abs(point.x - markerPoint.x) <= DISTANCE_HANDLE_CHECK && Math.abs(point.y - markerPoint.y) <= DISTANCE_HANDLE_CHECK) {
+                auiSettings.setScrollGesturesEnabled(false);
+                oldHandleMarkerX = point.x;
+                oldHandleMarkerY = point.y;
+                oldMarkerX = markerPoint.x;
+                oldMarkerY = markerPoint.y;
+                isTouchHandleMarker = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //控制marker并重绘
+    private void remoteControl(Point point2) {
+        Point point = new Point();
+        int offSetX = point2.x - oldHandleMarkerX;
+        int offSetY = point2.y - oldHandleMarkerY;
+
+        point.set(oldMarkerX + offSetX, oldMarkerY + offSetY);
+        LatLng latLng = aMap.getProjection().fromScreenLocation(point);
+        if (touchMarker != null) {
+            handleMarker.setPosition(latLng);
+            touchMarker.setPosition(latLng);
+            if (markerData.size() < 2) return;
+            drawLine();
+        }
+    }
+
+    //获取所有点中离该点最近的点的索引值
+    private int getNearestIndex(Point downPoint) {
+        for (int i = 0; i < markerData.size(); i++) {
+            Point point = aMap.getProjection().toScreenLocation(markerData.get(i).marker.getPosition());
+            if (Math.abs(downPoint.x - point.x) < DISTANCE_HANDLE_CHECK && Math.abs(downPoint.y - point.y) < DISTANCE_HANDLE_CHECK) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+
+    //显示拖把
+    private void showHandleMarker(Marker touchMarker) {
+        removeHandleMarker();
+        if (touchMarker != null) {
+            handleMarker = aMap.addMarker(handleOptions);
+            handleMarker.setPosition(touchMarker.getPosition());
+        }
+    }
+
+
+    private void updateHandleAngle() {
+        if (touchMarker != null && handleMarker != null) {
+            float angle = getHandleAngle(touchMarker.getPosition());
+            handleMarker.setRotateAngle(angle);
+        }
+    }
+
+
+    //获取拖把角度
+    private float getHandleAngle(LatLng touchLatlng) {
+        int size = markerData.size();
+        if (size < 3) return 0f;
+        double angle = 0f;
+        Point left = null, right = null;
+        Point middle = aMap.getProjection().toScreenLocation(touchLatlng);
+        int middleIndex = getNearestIndex(middle);
+        if (middleIndex > -1) {
+            if (middleIndex == 0) {
+                left = aMap.getProjection().toScreenLocation(markerData.get(size - 1).marker.getPosition());
+                right = aMap.getProjection().toScreenLocation(markerData.get(1).marker.getPosition());
+            } else if (middleIndex == markerData.size() - 1) {
+                left = aMap.getProjection().toScreenLocation(markerData.get(middleIndex - 1).marker.getPosition());
+                right = aMap.getProjection().toScreenLocation(markerData.get(0).marker.getPosition());
+            } else {
+                left = aMap.getProjection().toScreenLocation(markerData.get(middleIndex - 1).marker.getPosition());
+                right = aMap.getProjection().toScreenLocation(markerData.get(middleIndex + 1).marker.getPosition());
+            }
+        }
+        if (left != null && right != null) {
+            angle = PositionUtil.getAngle(middle, left, right);
+        }
+        return (float) angle;
+    }
+
+    //清除拖把
+    private void removeHandleMarker() {
+        if (handleMarker != null) {
+            handleMarker.remove();
+            handleMarker = null;
+        }
+    }
+
+    @Override
+    public void onMapClick(LatLng latLng) {
+        if (isDrawPoint) {
+            drawPoint(latLng);
+        }
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    //坐标转换
+    public List<LatLng> getPointsFromMarkers(List<DrawFence> markerData) {
+        List<LatLng> data = new ArrayList<>(markerData.size());
+        for (DrawFence fence : markerData) {
+            data.add(fence.marker.getPosition());
+        }
+        return data;
+    }
+
 }

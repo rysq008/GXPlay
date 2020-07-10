@@ -695,6 +695,13 @@ public class SectorMenuButton extends View implements ValueAnimator.AnimatorUpda
             int bottom = (int) rectF.bottom - dp2px(getContext(), buttonData.getIconPaddingDp());
             drawable.setBounds(left, top, right, bottom);
             drawable.draw(canvas);
+
+            String[] texts = buttonData.getTexts();
+            int sizePx = buttonData.isMainButton() ? mainButtonTextSize : subButtonTextSize;
+            int textColor = buttonData.isMainButton() ? mainButtonTextColor : subButtonTextColor;
+            textPaint = getTextPaint(sizePx, textColor);
+            if(null != texts)
+            drawTexts(texts, canvas, rectF.centerX(), rectF.centerY());
         } else {
             if (buttonData.getTexts() == null) {
                 throw new IllegalArgumentException("iconData is false, text cannot be null");
