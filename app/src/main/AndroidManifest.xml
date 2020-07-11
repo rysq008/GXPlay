@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DrawTileActivity"/>
-        <activity android:name=".SystemOverlayMenuService"/>
+        <activity android:name=".SystemOverlayMenuActivity"/>
 
         <!--若为独立app需要在此处配置key， 将zhny_lib中的key注释-->
 <!--        <meta-data-->

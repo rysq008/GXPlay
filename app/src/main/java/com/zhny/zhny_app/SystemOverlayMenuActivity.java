@@ -17,7 +17,7 @@ import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 
-public class SystemOverlayMenuService extends FragmentActivity {
+public class SystemOverlayMenuActivity extends FragmentActivity {
 
     private FloatingActionButton rightLowerButton;
     private FloatingActionButton topCenterButton;

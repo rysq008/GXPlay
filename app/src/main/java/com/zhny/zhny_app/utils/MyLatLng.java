@@ -1,4 +1,4 @@
-package com.zhny.zhny_app;
+package com.zhny.zhny_app.utils;
 
 import com.amap.api.maps.model.LatLng;
 

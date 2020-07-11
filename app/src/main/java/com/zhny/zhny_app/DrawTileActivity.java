@@ -52,6 +52,7 @@ import com.zhny.library.utils.DisplayUtils;
 import com.zhny.library.utils.MapUtils;
 import com.zhny.zhny_app.databinding.ActivityDrawtileBinding;
 import com.zhny.zhny_app.dialog.DialogFragmentHelper;
+import com.zhny.zhny_app.utils.MyLatLng;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -127,17 +128,12 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
         View view = LayoutInflater.from(this).inflate(com.zhny.library.R.layout.fence_maker_view_image, null);
         ((ImageView) view.findViewById(com.zhny.library.R.id.iv_draw_fence_marker)).setImageResource(com.zhny.library.R.drawable.icon_fence_add_maker);
         bitmapDescriptor = BitmapDescriptorFactory.fromView(view);
-        markerOptions = new MarkerOptions()
-                .setFlat(true)
-                .icon(bitmapDescriptor).anchor(0.5f, 0.5f);
+        markerOptions = new MarkerOptions().setFlat(true).icon(bitmapDescriptor).anchor(0.5f, 0.5f);
 
         View handleView = LayoutInflater.from(this).inflate(com.zhny.library.R.layout.fence_handle_maker_view_image, null);
         ((ImageView) handleView.findViewById(com.zhny.library.R.id.iv_draw_fence_handle_marker)).setImageResource(com.zhny.library.R.drawable.handle);
         handleBitmapDescriptor = BitmapDescriptorFactory.fromView(handleView);
-        handleOptions = new MarkerOptions()
-                .icon(handleBitmapDescriptor)
-                .setFlat(true).zIndex(999);
-
+        handleOptions = new MarkerOptions().icon(handleBitmapDescriptor).setFlat(true).zIndex(999);
 
         apolylineOptions = new PolylineOptions()
                 .width(DisplayUtils.dp2px(1.5f))
@@ -145,7 +141,6 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
 
         apolygonOptions = new PolygonOptions()
                 .strokeWidth(DisplayUtils.dp2px(1.5f));
-
 
         amapView = findViewById(R.id.drawtile_amapView);
         amapView.onCreate(savedInstanceState);
@@ -299,7 +294,7 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.drawtile_menu_iv:
-                startActivity(new Intent(this, SystemOverlayMenuService.class));
+                startActivity(new Intent(this, SystemOverlayMenuActivity.class));
                 break;
         }
     }
@@ -907,26 +902,25 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
 
     //将marker点连接线
     private void drawLine() {
-        binding.drawtileAreaTv.setText(String.format("%s 0.0亩", getText(com.zhny.library.R.string.fence_area)));
+        binding.drawtileAreaTv.setText(String.format("%s亩","0"));
 
         if (markerData.size() < 2) return;
+        List<LatLng> points = getPointsFromMarkers(markerData);
+        binding.drawtileDistenceTv.setText(String.format("距离%f米",AMapUtils.calculateLineDistance(points.get(0),points.get(points.size()-1))));
+        float f = 0;
+        for (int i = 0,j = points.size()-1; i <j ; i++) {
+            f+=AMapUtils.calculateLineDistance(points.get(i),points.get(i+1));
+        }
+        binding.drawtileCircleTv.setText(String.format("周长%f米",f));
 
         //绘制线
         if (markerData.size() < 3) {
             if (apolyline == null) {
                 apolyline = aMap.addPolyline(apolylineOptions);
             }
-//            List<LatLng> points = getPointsFromMarkers(markerData);
-//            binding.drawtileDistenceTv.setText(String.format("距离%d米",AMapUtils.calculateLineDistance(points.get(0),points.get(points.size()-1))));
-//        float f = 0;
-//        for (int i = 0,j = points.size()-1; i <j ; i++) {
-//            f+=AMapUtils.calculateLineDistance(points.get(i),points.get(i+1));
-//        }
-//        binding.drawtileCircleTv.setText(String.format("周长%f米",f));
-
             apolyline.setVisible(true);
             apolyline.setZIndex(999);
-            apolyline.setPoints(getPointsFromMarkers(markerData));
+            apolyline.setPoints(points);
             return;
         }
         //绘制面
@@ -934,7 +928,6 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
             apolyline.setVisible(false);
             apolyline = null;
         }
-        List<LatLng> points = getPointsFromMarkers(markerData);
         if (apolygon == null) apolygon = aMap.addPolygon(apolygonOptions);
         apolygon.setZIndex(999);
         apolygon.setPoints(points);
@@ -944,9 +937,7 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
 
         float area = AMapUtils.calculateArea(points) * 0.0015f; //平方米转为亩
 
-        binding.drawtileAreaTv.setText(String.format("%s %s亩", getText(com.zhny.library.R.string.fence_area), DataUtil.get1Point(area)));
-        binding.drawtileDistenceTv.setText(String.format("距离%f米",AMapUtils.calculateLineDistance(points.get(0),points.get(points.size()-1))));
-
+        binding.drawtileAreaTv.setText(String.format("%s亩", DataUtil.get1Point(area)));
     }
 
     public void onDrawPoint() {
