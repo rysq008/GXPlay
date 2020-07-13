@@ -170,7 +170,6 @@ public class DialogFragmentHelper {
         dialogFragment.show(fragmentManager, MY_CONFIRM_TAG);
     }
 
-
     public static CommonDialogFragment builder(CommonDialogFragment.OnCallDialog callDialog, boolean canCancel) {
         CommonDialogFragment cdf = CommonDialogFragment.newInstance(callDialog, canCancel);
         cdf.setDailogStyle(DialogFragment.STYLE_NO_TITLE, R.style.transparentBgDialog);

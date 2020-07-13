@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data >
+        <import type="android.view.View"/>
+    </data>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.andorid.greenorange.views.XReloadableStateContorller
+        android:id="@+id/tip_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_titlebar">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout_wv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.tencent.smtt.sdk.WebView
+                android:id="@+id/wv_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </com.andorid.greenorange.views.XReloadableStateContorller>
+
+</LinearLayout>
+</layout>

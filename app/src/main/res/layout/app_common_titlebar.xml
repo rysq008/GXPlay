@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_50"
+    android:background="@drawable/shape_gradient_line_login_bar">
+
+    <LinearLayout
+        android:id="@+id/rl_common_left"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_14">
+
+        <ImageView
+            android:src="@drawable/icon_left"
+            android:id="@+id/iv_common_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_common_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/dp_16" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_common_middle_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/dp_18"
+        tools:text="标题" />
+
+    <RelativeLayout
+        android:id="@+id/rl_common_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/dp_14">
+
+        <RelativeLayout
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_below="@+id/tv_common_right_msg"
+                android:id="@+id/iv_common_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginBottom="@dimen/dp_m_5"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:id="@+id/tv_common_right_msg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="12"
+                android:visibility="gone"
+                android:background="@drawable/shape_message_solid_oval"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/dp_10" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_common_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/dp_16" />
+    </RelativeLayout>
+
+    <View
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/C_DDDDDD" />
+</RelativeLayout>

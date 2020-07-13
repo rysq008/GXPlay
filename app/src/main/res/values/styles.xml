@@ -51,5 +51,13 @@
         <!-- 按钮字体颜色,全部一起改，单个改需要在Java代码中修改 -->
         <!--<item name="colorAccent">@color/app_main_color</item>-->
     </style>
+    <style name="guide_bottom_rb_style">
+        <item name="android:button">@null</item>
+        <item name="android:layout_width">@dimen/dp_13</item>
+        <item name="android:layout_height">@dimen/dp_13</item>
+        <item name="android:layout_marginLeft">@dimen/dp_14</item>
+        <item name="android:layout_marginRight">@dimen/dp_14</item>
+        <item name="android:background">@drawable/shape_guide_bottom_selector</item>
+    </style>
 
 </resources>
