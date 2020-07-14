@@ -59,5 +59,8 @@
         <item name="android:layout_marginRight">@dimen/dp_14</item>
         <item name="android:background">@drawable/shape_guide_bottom_selector</item>
     </style>
-
+    <style name="BottomInAndOutStyle">
+        <item name="android:windowEnterAnimation">@anim/in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/out_bottom</item>
+    </style>
 </resources>

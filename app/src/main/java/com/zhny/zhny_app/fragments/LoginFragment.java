@@ -1,5 +1,9 @@
 package com.zhny.zhny_app.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -19,11 +23,14 @@ import android.widget.TextView;
 
 import com.zhny.zhny_app.R;
 import com.zhny.zhny_app.activitys.DetailFragmentsActivity;
+import com.zhny.zhny_app.dialog.CommonDialogFragment;
 import com.zhny.zhny_app.dialog.DialogFragmentHelper;
 import com.zhny.zhny_app.fragments.BaseFragment.XBaseFragment;
 import com.zhny.zhny_app.model.BaseModel.HttpResultModel;
 import com.zhny.zhny_app.model.LoginBean;
 import com.zhny.zhny_app.present.FLoginPresenter;
+import com.zhny.zhny_app.utils.Utils;
+import com.zhny.zhny_app.views.ToastMgr;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -31,10 +38,6 @@ import cn.droidlover.xdroidmvp.kit.Kits;
 
 public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 
-    @BindView(R.id.iv_common_left)
-    ImageView back_iv;
-    @BindView(R.id.tv_common_middle_title)
-    TextView title_tv;
     @BindView(R.id.login_username_et)
     EditText user_et;
     @BindView(R.id.login_user_clear_iv)
@@ -51,12 +54,8 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
     CheckedTextView pwd_or_code_ctv;
     @BindView(R.id.login_action_btn)
     Button login_action_btn;
-    @BindView(R.id.register_action_btn)
-    Button register_action_btn;
-    @BindView(R.id.login_by_qq_iv)
-    ImageView login_qq_iv;
-    @BindView(R.id.login_by_wx_iv)
-    ImageView login_wx_iv;
+    @BindView(R.id.register_action_tv)
+    TextView register_action_tv;
 
     @Override
     public int getLayoutId() {
@@ -65,7 +64,6 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        title_tv.setText("青橙教育");
         user_et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -96,7 +94,7 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 
     @OnClick({R.id.rl_common_left, R.id.login_user_clear_iv, R.id.login_password_eye_cb, R.id.login_get_code_tv,
             R.id.login_forget_pwd_tv, R.id.login_change_pwd_or_code_ctv, R.id.login_action_btn,
-            R.id.register_action_btn, R.id.login_by_qq_iv, R.id.login_by_wx_iv})
+            R.id.register_action_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_common_left:
@@ -225,13 +223,20 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                                                                                                                         getP().requestResetPwd(context, et_input.getText().toString(), et_input2.getText().toString(), msg1 -> {
                                                                                                                             dialog3.cancel();
                                                                                                                             if (null != msg1)
-                                                                                                                                DialogFragmentHelper.showBuilderDialog(getFragmentManager(), DialogFragmentHelper.builder(R.layout.dialog_common_block_confirm, true).setOnProcessView((dialog4, view5) -> {
-                                                                                                                                    TextView tv_confim = view5.findViewById(R.id.dialog_confirm);
-                                                                                                                                    tv_confim.setText("好");
-                                                                                                                                    tv_confim.setOnClickListener(v4 -> {
-                                                                                                                                        dialog4.cancel();
-                                                                                                                                    });
-                                                                                                                                }), "");
+                                                                                                                                DialogFragmentHelper.showBuilderDialog(getFragmentManager(), DialogFragmentHelper.builder(new CommonDialogFragment.OnCallDialog() {
+                                                                                                                                    @Override
+                                                                                                                                    public Dialog getDialog(Context context) {
+                                                                                                                                        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle("提示")
+                                                                                                                                                .setMessage("重置成功")
+                                                                                                                                                .setPositiveButton("好", new DialogInterface.OnClickListener() {
+                                                                                                                                                    @Override
+                                                                                                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                                                                                                        dialog.dismiss();
+                                                                                                                                                    }
+                                                                                                                                                });
+                                                                                                                                        return builder.show();
+                                                                                                                                    }
+                                                                                                                                }, true), "");
                                                                                                                             return false;
                                                                                                                         });
                                                                                                                     });
@@ -260,40 +265,8 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
             case R.id.login_action_btn:
                 getP().requestLogin(context, "18076569075"/*user_et.getText().toString()*/, "test1234"/*pwd_et.getText().toString()*/,/*pwd_or_code_ctv.isChecked()*/true);
                 break;
-            case R.id.register_action_btn:
+            case R.id.register_action_tv:
                 DetailFragmentsActivity.launch(context, null, RegisterFragment.newInstance());
-                break;
-            case R.id.login_by_qq_iv:
-                DialogFragmentHelper.showBuilderDialog(getFragmentManager(), DialogFragmentHelper.builder(R.layout.dialog_common_block_confirm, true).setOnProcessView((dialog, view12) -> {
-                    TextView tv_title = view12.findViewById(R.id.dialog_tittle);
-                    TextView tv_cancel = view12.findViewById(R.id.dialog_cancel);
-                    TextView tv_confirm = view12.findViewById(R.id.dialog_confirm);
-                    tv_title.setText("“青橙教育”想要打开“QQ”");
-                    tv_cancel.setVisibility(View.VISIBLE);
-                    tv_confirm.setOnClickListener(v -> {
-                        DetailFragmentsActivity.launch(context, null, AuthorizeFragment.newInstance(AuthorizeFragment.AUTH_BY_QQ));
-                        dialog.cancel();
-                    });
-                    tv_cancel.setOnClickListener(v -> {
-                        dialog.cancel();
-                    });
-                }), "");
-                break;
-            case R.id.login_by_wx_iv:
-                DialogFragmentHelper.showBuilderDialog(getFragmentManager(), DialogFragmentHelper.builder(R.layout.dialog_common_block_confirm, true).setOnProcessView((dialog, view12) -> {
-                    TextView tv_title = view12.findViewById(R.id.dialog_tittle);
-                    TextView tv_cancel = view12.findViewById(R.id.dialog_cancel);
-                    TextView tv_confirm = view12.findViewById(R.id.dialog_confirm);
-                    tv_title.setText("“青橙教育”想要打开“微信”");
-                    tv_cancel.setVisibility(View.VISIBLE);
-                    tv_confirm.setOnClickListener(v -> {
-                        DetailFragmentsActivity.launch(context, null, AuthorizeFragment.newInstance(AuthorizeFragment.AUTH_BY_WX));
-                        dialog.cancel();
-                    });
-                    tv_cancel.setOnClickListener(v -> {
-                        dialog.cancel();
-                    });
-                }), "");
                 break;
             default:
                 break;

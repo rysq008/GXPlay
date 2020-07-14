@@ -6,4 +6,17 @@
     <color name="coloryellow">#ffff00</color>
     <color name="color_BDD1F6">#BDD1F6</color>
     <color name="C_DDDDDD">#DDDDDD</color>
+    <color name="color_F0F9FF">#F0F9FF</color>
+    <color name="C_333333">#333333</color>
+    <color name="color_FEFFFF">#FEFFFF</color>
+    <color name="color_009BB2">#009BB2</color>
+    <color name="color_999">#999</color>
+    <color name="color_transparent">#00000000</color>
+    <color name="color_e0e0e0">#e0e0e0</color>
+    <color name="color_60d224">#60d224</color>
+    <color name="color_28b6d8">#28b6d8</color>
+    <color name="C_344a4c">#344a4c</color>
+    <color name="c_626364">#626364</color>
+    <color name="color_F9993F">#F9993F</color>
+
 </resources>

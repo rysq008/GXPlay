@@ -5,17 +5,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
-import com.andorid.greenorange.utils.RxLoadingUtils;
-import com.andorid.greenorange.utils.Utils;
-import com.andorid.greenorange.views.ToastMgr;
-import com.andorid.greenorange.views.ToastMgrView;
 import com.zhny.zhny_app.fragments.LoginFragment;
 import com.zhny.zhny_app.model.BaseModel.HttpResultModel;
 import com.zhny.zhny_app.model.LoginBean;
 import com.zhny.zhny_app.net.DataService;
 import com.zhny.zhny_app.net.api.Api;
 import com.zhny.zhny_app.net.api.ApiService;
+import com.zhny.zhny_app.utils.RxLoadingUtils;
 import com.zhny.zhny_app.utils.ShareUtils;
+import com.zhny.zhny_app.utils.Utils;
+import com.zhny.zhny_app.views.ToastMgr;
 
 import cn.droidlover.xdroidmvp.mvp.XPresent;
 import io.reactivex.Flowable;
@@ -51,10 +50,10 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
                 ShareUtils.saveLoginInfo(result.data);
                 getV().getUserData(result.data);
             } else {
-                ToastMgrView.getInstance().showLengthShort(context, 1, result.msg);
+                ToastMgr.showShortToast(result.msg);
             }
         }, netError -> {
-            ToastMgrView.getInstance().showLengthShort(context, 1, "请求失败！请检查网络是否正常");
+            ToastMgr.showShortToast("请求失败！请检查网络是否正常");
         });
     }
 
@@ -64,22 +63,22 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
         String passwordRex = "^[0-9a-zA-Z_]{6,16}$";
         if (TextUtils.isEmpty(userName)) {
 //            ToastMgr.showShortToast("用户名不能为空");
-            ToastMgrView.getInstance().showLengthShort(activity, 1, "用户名不能为空");
+            ToastMgr.showShortToast("用户名不能为空");
             return false;
         }
         if (TextUtils.isEmpty(password)) {
 //            ToastMgr.showShortToast("密码不能为空");
-            ToastMgrView.getInstance().showLengthShort(activity, 1, "密码不能为空");
+            ToastMgr.showShortToast("密码不能为空");
             return false;
         }
         if (!userName.matches(loginNameRex)) {
 //            ToastMgr.showShortToast("用户名格式错误");
-            ToastMgrView.getInstance().showLengthShort(activity, 1, "用户名格式错误");
+            ToastMgr.showLongToast("用户名格式错误");
             return false;
         }
         if (!password.matches(loginNameRex)) {
 //            ToastMgr.showShortToast("密码格式错误");
-            ToastMgrView.getInstance().showLengthShort(activity, 1, "密码格式错误");
+            ToastMgr.showShortToast("密码格式错误");
             return false;
         }
         return true;
@@ -104,9 +103,9 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
                     callback.handleMessage(msg);
                 }
             } else {
-                ToastMgrView.getInstance().showLengthShort(context, 1, result.msg);
+                ToastMgr.showLongToast(result.msg);
             }
-        }, netError -> ToastMgrView.getInstance().showLengthShort(context, 1, "请求失败！请检查网络是否正常"), true);
+        }, netError -> ToastMgr.showShortToast("请求失败！请检查网络是否正常"), true);
     }
 
     public void requestVerifCode(Activity context, String phoneNum, Handler.Callback callback) {
@@ -130,16 +129,16 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
         RxLoadingUtils.subscribeWithDialog(context, fr, getV().bindToLifecycle(), result -> {
             if (result.isSucceful()) {
 //                    ShareUtils.saveObject("userData", result.data);
-                ToastMgrView.getInstance().showLengthLong(context, 0, "密码重置成功");
+                ToastMgr.showLongToast("密码重置成功");
                 if (null != callback)
                     callback.handleMessage(Message.obtain());
             } else {
-                ToastMgrView.getInstance().showLengthShort(context, 1, result.msg);
+                ToastMgr.showShortToast(result.msg);
                 if (null != callback)
                     callback.handleMessage(null);
             }
         }, netError -> {
-            ToastMgrView.getInstance().showLengthShort(context, 1, "请求失败！请检查网络是否正常");
+            ToastMgr.showShortToast("请求失败！请检查网络是否正常");
             if (null != callback)
                 callback.handleMessage(null);
         });
