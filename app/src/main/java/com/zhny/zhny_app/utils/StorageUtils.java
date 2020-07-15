@@ -9,9 +9,6 @@ import java.io.File;
 
 import static android.os.Environment.MEDIA_MOUNTED;
 
-/**
- * @author wbs on 10/25/17.
- */
 
 public class StorageUtils {
 

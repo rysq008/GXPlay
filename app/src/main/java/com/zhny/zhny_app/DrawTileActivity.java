@@ -52,7 +52,6 @@ import com.zhny.library.utils.DisplayUtils;
 import com.zhny.library.utils.MapUtils;
 import com.zhny.zhny_app.databinding.ActivityDrawtileBinding;
 import com.zhny.zhny_app.dialog.DialogFragmentHelper;
-import com.zhny.zhny_app.utils.MyLatLng;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -871,17 +870,11 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
      * @paramlatLng
      */
     private int getNearestLatLng(LatLng latLng) {
-
         for (int i= 0; i< allLatLngs.size(); i++) {
-
             //判断两点间的直线距离
-
             float distance= AMapUtils.calculateLineDistance(latLng, allLatLngs.get(i).getLatLng());
-
             if (((int) distance) < 1000) {
-
                 return i;
-
             }
         }
         return -1;

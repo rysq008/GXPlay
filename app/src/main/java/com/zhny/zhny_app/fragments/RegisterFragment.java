@@ -21,11 +21,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import com.andorid.greenorange.present.FRegisterPresenter;
+
 import com.zhny.zhny_app.R;
 import com.zhny.zhny_app.fragments.BaseFragment.XBaseFragment;
+import com.zhny.zhny_app.model.BaseModel.HttpResultModel;
 import com.zhny.zhny_app.model.RegisterBean;
+import com.zhny.zhny_app.present.FRegisterPresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -113,6 +116,7 @@ public class RegisterFragment extends XBaseFragment<FRegisterPresenter> {
                 pwd_et.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             else
                 pwd_et.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            pwd_et.setSelection(pwd_et.getText().length());
         });
     }
 
@@ -123,6 +127,7 @@ public class RegisterFragment extends XBaseFragment<FRegisterPresenter> {
     }
 
     final CountDownTimer[] cdt = new CountDownTimer[1];
+
     @OnClick({R.id.rl_common_left, R.id.rl_common_right, R.id.register_user_clear_iv, R.id.register_pwd_eye_cb,
             R.id.register_get_code_tv, R.id.register_commit_btn})
     public void onViewClicked(View view) {

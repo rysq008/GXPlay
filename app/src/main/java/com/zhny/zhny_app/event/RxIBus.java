@@ -1,23 +1,19 @@
 package com.zhny.zhny_app.event;
 
+import io.reactivex.Flowable;
+
 /**
  * Created by wanglei on 2016/12/22.
  */
 
-public interface IBus {
+public interface RxIBus<T> {
 
     void register(Object object);
 
     void unregister(Object object);
 
-    void post(IEvent event);
-
-    void postSticky(IEvent event);
-
     void postEvent(Object obj);
 
-    interface IEvent {
-        int getTag();
-    }
+    <T>Flowable<T> receiveEvent(Class<T> clz);
 
 }

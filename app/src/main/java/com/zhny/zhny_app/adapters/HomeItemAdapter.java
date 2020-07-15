@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.andorid.greenorange.model.BaseModel.ItemType;
+import com.zhny.zhny_app.model.BaseModel.ItemType;
 
 import cn.droidlover.xdroidmvp.base.SimpleRecAdapter;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;

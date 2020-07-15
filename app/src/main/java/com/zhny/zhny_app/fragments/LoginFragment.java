@@ -83,6 +83,7 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                 pwd_et.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
             else
                 pwd_et.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            pwd_et.setSelection(pwd_et.getText().length());
         });
     }
 

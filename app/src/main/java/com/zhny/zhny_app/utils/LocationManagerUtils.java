@@ -10,12 +10,14 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.text.TextUtils;
 
+import androidx.fragment.app.FragmentActivity;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.zhny.zhny_app.utils.ShareUtils;
+import com.zhny.library.databinding.FragmentTableDataBindingImpl;
 
 public class LocationManagerUtils {
 
@@ -60,7 +62,7 @@ public class LocationManagerUtils {
         }
     }
 
-    public static void requesetLocation(Activity ct, LocationResultListener callback) {
+    public static void requesetLocation(FragmentActivity ct, LocationResultListener callback) {
         initLocationInfo(ct);
         rxPermissions = new RxPermissions(ct);
         LocationManagerUtils.callback = callback;

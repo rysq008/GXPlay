@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhny.zhny_app.R;
-import com.zhny.zhny_app.event.BusProvider;
+import com.zhny.zhny_app.event.RxBusProvider;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
@@ -92,13 +92,13 @@ public class StateView extends LinearLayout {
             }
         });
 
-        BusProvider.getBus().receiveEvent(NetError.class).subscribe(new Consumer<NetError>() {
+        RxBusProvider.getBus().receiveEvent(NetError.class).subscribe(new Consumer<NetError>() {
             @Override
             public void accept(NetError netError) throws Exception {
                 showError(netError);
             }
         });
-        BusProvider.getBus().receiveEvent(NetworkInfo.class).subscribe(new Consumer<NetworkInfo>() {
+        RxBusProvider.getBus().receiveEvent(NetworkInfo.class).subscribe(new Consumer<NetworkInfo>() {
             @Override
             public void accept(NetworkInfo activeNetwork) throws Exception {
                 if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {

@@ -32,6 +32,9 @@
         </activity>
         <activity android:name=".DrawTileActivity"/>
         <activity android:name=".SystemOverlayMenuActivity"/>
+        <activity android:name=".activitys.DetailFragmentsActivity"/>
+        <activity android:name=".activitys.SplashActivity"/>
+        <activity android:name=".activitys.WebActivity"/>
 
         <!--若为独立app需要在此处配置key， 将zhny_lib中的key注释-->
 <!--        <meta-data-->

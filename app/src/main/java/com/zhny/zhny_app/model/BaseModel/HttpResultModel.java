@@ -1,6 +1,6 @@
 package com.zhny.zhny_app.model.BaseModel;
 
-import com.andorid.greenorange.net.StateCode;
+import com.zhny.zhny_app.net.StateCode;
 
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.IModel;

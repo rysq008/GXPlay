@@ -16,8 +16,11 @@ import androidx.annotation.Nullable;
 
 import com.zhny.zhny_app.R;
 import com.zhny.zhny_app.activitys.BaseActivity.XBaseActivity;
+import com.zhny.zhny_app.fragments.GuideFragment;
 import com.zhny.zhny_app.model.LoginBean;
+import com.zhny.zhny_app.net.api.Api;
 import com.zhny.zhny_app.utils.ShareUtils;
+import com.zhny.zhny_app.views.ToastMgr;
 
 import butterknife.BindView;
 
@@ -46,7 +49,7 @@ public class SplashActivity extends XBaseActivity {
     @Override
     public void initData(Bundle savedInstanceState) {
         iv_splash.setOnClickListener(v -> {
-            DetailFragmentsActivity.launch(context, null, com.andorid.greenorange.fragments.GuideFragment.newInstance());
+            DetailFragmentsActivity.launch(context, null, GuideFragment.newInstance());
             finish();
         });
     }
@@ -69,7 +72,7 @@ public class SplashActivity extends XBaseActivity {
                     @Override
                     public void onFinish() {
                         if (!context.isFinishing())
-                            DetailFragmentsActivity.launch(context, null, com.andorid.greenorange.fragments.GuideFragment.newInstance());
+                            DetailFragmentsActivity.launch(context, null, GuideFragment.newInstance());
                         context.finish();
                     }
                 };
@@ -91,8 +94,8 @@ public class SplashActivity extends XBaseActivity {
     }
 
     private void toLogin() {
-        if (!com.andorid.greenorange.net.api.Api.isOnlineHost()) {
-            com.andorid.greenorange.views.ToastMgrView.getInstance().showLengthShort(context, 2, ShareUtils.getHost("host"));
+        if (!Api.isOnlineHost()) {
+            ToastMgr.showShortToast(ShareUtils.getHost("host"));
         }
         LoginBean bean = ShareUtils.getLoginInfo();
         tv_countdown.postDelayed(() -> finish(), 1500);

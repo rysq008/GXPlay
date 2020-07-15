@@ -1,6 +1,5 @@
 package com.zhny.zhny_app.net;
 
-import com.andorid.greenorange.utils.UploadUtils;
 import com.google.gson.Gson;
 import com.zhny.zhny_app.model.BaseModel.HttpResultModel;
 import com.zhny.zhny_app.model.LoginBean;
@@ -10,6 +9,7 @@ import com.zhny.zhny_app.net.api.Api;
 import com.zhny.zhny_app.net.api.ApiService;
 import com.zhny.zhny_app.net.model.LoginRequestBody;
 import com.zhny.zhny_app.net.model.RegistRequestBody;
+import com.zhny.zhny_app.utils.UploadUtils;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -122,7 +122,6 @@ public class DataService {
         private String url;
         private Type type;
         private Class clz;
-        private Api.HostType hostType = Api.HostType.RELEASE;
 
         public DataServiceBuilder buildReqUrl(String url) {
             this.url = url;
@@ -150,10 +149,6 @@ public class DataService {
             return this;
         }
 
-        public DataServiceBuilder buildHostType(Api.HostType hostType) {
-            this.hostType = hostType;
-            return this;
-        }
 
         public DataServiceBuilder buildReqParams(Map map) {
             this.params.putAll(map);
@@ -164,19 +159,19 @@ public class DataService {
             Flowable<ResponseBody> call = null;
             switch (method) {
                 case GET:
-                    call = DataService.getData(hostType, url, params);
+                    call = DataService.getData(url, params);
                     break;
                 case POST:
-                    call = DataService.postData(hostType, url, params);
+                    call = DataService.postData( url, params);
                     break;
                 case POST_BODY:
-                    call = DataService.postData(hostType, url, requestBody);
+                    call = DataService.postData( url, requestBody);
                     break;
                 case UPLOAD:
                     RequestBody requestBody = new MultipartBody.Builder().setType(FORM)
                             .addFormDataPart("file", file.getName(), RequestBody.create(FORM, file))
                             .build();
-                    call = DataService.postData(hostType, url, requestBody);
+                    call = DataService.postData(url, requestBody);
                     break;
                 default:
                     break;
@@ -195,37 +190,15 @@ public class DataService {
         }
     }
 
-    private static ApiService makeApiService(Api.HostType hostType) {
-        ApiService apiService = null;
-        switch (hostType) {
-            case RELEASE:
-                apiService = Api.CreateApiService();
-                break;
-            case ADMIN:
-                apiService = Api.CreateApiAdminService();
-                break;
-            case AUTH:
-                apiService = Api.CreateApiAuthService();
-                break;
-            case STUDENT:
-                apiService = Api.CreateApiStudentService();
-                break;
-            case COURSE:
-                apiService = Api.CreateApiCourseService();
-                break;
-        }
-        return apiService;
+    public static Flowable<ResponseBody> getData(String url, Map map) {
+        return Api.CreateApiService().getData(url, map);
     }
 
-    public static Flowable<ResponseBody> getData(Api.HostType hostType, String url, Map map) {
-        return makeApiService(hostType).getData(url, map);
+    public static Flowable<ResponseBody> postData(String url, Map map) {
+        return Api.CreateApiService().postData(url, map);
     }
 
-    public static Flowable<ResponseBody> postData(Api.HostType hostType, String url, Map map) {
-        return makeApiService(hostType).postData(url, map);
-    }
-
-    public static Flowable<ResponseBody> postData(Api.HostType hostType, String url, RequestBody requestBody) {
-        return makeApiService(hostType).postData(url, requestBody);
+    public static Flowable<ResponseBody> postData(String url, RequestBody requestBody) {
+        return Api.CreateApiService().postData(url, requestBody);
     }
 }

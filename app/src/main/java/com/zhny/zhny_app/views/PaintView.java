@@ -1,4 +1,4 @@
-package com.andorid.greenorange.views;
+package com.zhny.zhny_app.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -5,13 +5,13 @@ package com.zhny.zhny_app.event;
  * Created by wanglei on 2016/12/22.
  */
 
-public class BusProvider {
+public class RxBusProvider {
 
     private static RxBusImpl bus;
 
     public static RxBusImpl getBus() {
         if (bus == null) {
-            synchronized (BusProvider.class) {
+            synchronized (RxBusProvider.class) {
                 if (bus == null) {
                     bus = RxBusImpl.get();
                 }

@@ -35,13 +35,9 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
         }
         Flowable<HttpResultModel<LoginBean>> fr = DataService.builder().buildReqUrl("mobile/token")
                 .buildReqParams("password", isloginbypassword ? password : "")
-                .buildReqParams("grant_type", "password")
-                .buildReqParams("scope", "server")
                 .buildReqParams("code", isloginbypassword ? "" : password)
                 .buildReqParams("mobile", loginName)
                 .buildReqParams("type", isloginbypassword ? "user" : "mobile")
-                .buildReqParams("userKinds", "teacher")
-                .buildHostType(Api.HostType.AUTH)
                 .buildParseDataClass(LoginBean.class)
                 .request(ApiService.HttpMethod.POST);
         RxLoadingUtils.subscribeWithDialog(context, fr, getV().bindToLifecycle(), result -> {
@@ -91,7 +87,6 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
         }
         Flowable<HttpResultModel> fr = DataService.builder()
                 .buildReqUrl("smsCode")
-                .buildHostType(Api.HostType.ADMIN)
                 .buildReqParams("mobile", phoneNum)
                 .request(ApiService.HttpMethod.GET);
         RxLoadingUtils.subscribeWithDialog(context, fr, getV().bindToLifecycle(), result -> {
@@ -124,7 +119,6 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
         Flowable<HttpResultModel<LoginBean>> fr = DataService.builder().buildReqUrl("api/resetPassword")
                 .buildReqParams("username", phoneNo)
                 .buildReqParams("password", newpassword)
-                .buildHostType(Api.HostType.RELEASE)
                 .request(ApiService.HttpMethod.POST);
         RxLoadingUtils.subscribeWithDialog(context, fr, getV().bindToLifecycle(), result -> {
             if (result.isSucceful()) {

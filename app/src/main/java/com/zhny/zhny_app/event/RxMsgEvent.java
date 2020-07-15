@@ -1,6 +1,6 @@
 package com.zhny.zhny_app.event;
 
-public class MsgEvent<T> {
+public class RxMsgEvent<T> {
 
     private T data;
 
@@ -14,17 +14,17 @@ public class MsgEvent<T> {
     private int type;
     private int requestCode;
 
-    public MsgEvent(T data) {
+    public RxMsgEvent(T data) {
         this.data = data;
     }
 
-    public MsgEvent(int requestCode, int type, String msg) {
+    public RxMsgEvent(int requestCode, int type, String msg) {
         this.type = type;
         this.mMsg = msg;
         this.requestCode = requestCode;
     }
 
-    public MsgEvent(int requestCode, String tag, T data) {
+    public RxMsgEvent(int requestCode, String tag, T data) {
         this.tag = tag;
         this.data = data;
         this.requestCode = requestCode;

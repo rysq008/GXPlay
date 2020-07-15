@@ -29,9 +29,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by sung on 2017/11/20.
- */
 
 public class Utils {
     private static String TAG = Utils.class.getSimpleName();

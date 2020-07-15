@@ -145,7 +145,6 @@
                             android:layout_centerInParent="true"
                             android:background="@drawable/selector_open_close_eye"
                             android:button="@null"
-                            android:visibility="gone"
                             tools:visibility="visible" />
 
                     </RelativeLayout>

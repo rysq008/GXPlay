@@ -3,22 +3,15 @@ package com.zhny.zhny_app.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
-
-import com.andorid.greenorange.views.ReloadableFrameLayout;
-import com.andorid.greenorange.views.XReloadableRecyclerContentLayout;
-import com.andorid.greenorange.views.XReloadableStateContorller;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import com.zhny.zhny_app.event.BusProvider;
-import com.zhny.zhny_app.event.MsgEvent;
+import com.zhny.zhny_app.event.RxBusProvider;
+import com.zhny.zhny_app.event.RxMsgEvent;
+import com.zhny.zhny_app.views.XReloadableRecyclerContentLayout;
+import com.zhny.zhny_app.views.XReloadableStateContorller;
 
 import org.json.JSONException;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.net.UnknownHostException;
-
 import cn.droidlover.xdroidmvp.net.ApiSubscriber;
 import cn.droidlover.xdroidmvp.net.IModel;
 import cn.droidlover.xdroidmvp.net.NetError;
@@ -27,7 +20,6 @@ import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
@@ -95,7 +87,7 @@ public class RxLoadingUtils {
                                 }
                             }
                         }
-                        BusProvider.getBus().postEvent(error);
+                        RxBusProvider.getBus().postEvent(error);
                         saveErrorMessage(error);
                         if (onError != null) {
                             try {
@@ -120,115 +112,14 @@ public class RxLoadingUtils {
                             }
                         }
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.finishReload();
                         }
                     }
                 });
-    }
-
-    public static <T extends IModel> void subscribeWithReloadOne(final ReloadableFrameLayout reloadableFrameLayout,
-                                                                 final Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
-                                                                 final Action onComplete, final boolean finishWhenFirstOnNext) {
-        if (reloadableFrameLayout == null) return;
-
-        reloadableFrameLayout.showLoadingView();
-        reloadableFrameLayout.setOnReloadListener(reloadableFrameLayout1 -> subscribeWithReloadOne(reloadableFrameLayout1, Flowable, transformer, onNext, onError, onComplete,
-                finishWhenFirstOnNext));
-
-        final boolean[] finishReload = new boolean[]{false};
-
-        Flowable
-                .compose(XApi.<T>getApiTransformer())
-                .compose(XApi.<T>getScheduler())
-                .compose(transformer)
-                .subscribe(new ApiSubscriber<T>() {
-
-                    @Override
-                    protected void onStart() {
-                        super.onStart();
-
-                    }
-
-                    @Override
-                    public void onNext(T t) {
-                        if (onNext != null) {
-                            try {
-                                onNext.accept(t);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (finishWhenFirstOnNext && !finishReload[0]) {
-                            reloadableFrameLayout.finishReload();
-                            finishReload[0] = true;
-                        }
-                    }
-
-                    @Override
-                    protected void onFail(NetError error) {
-                        BusProvider.getBus().postEvent(error);
-                        saveErrorMessage(error);
-                        if (onError != null) {
-                            try {
-                                onError.accept(error);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (!finishReload[0]) {
-                            reloadableFrameLayout.needReload(getDisplayMessage(error, true));
-                        }
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        super.onComplete();
-                        if (onComplete != null) {
-                            try {
-                                onComplete.run();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        if (!finishReload[0]) {
-                            reloadableFrameLayout.finishReload();
-                        }
-                    }
-                });
-    }
-
-    public static <T extends IModel> void subscribeWithReloadOne(final ReloadableFrameLayout reloadableFrameLayout,
-                                                                 Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError) {
-        subscribeWithReloadOne(reloadableFrameLayout, Flowable, transformer, onNext, onError, null, false);
-    }
-
-    public static <T extends IModel> void subscribeWithReloadOne(final ReloadableFrameLayout reloadableFrameLayout,
-                                                                 Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext, final Consumer<NetError> onError,
-                                                                 boolean finishWhenFirstOnNext) {
-        subscribeWithReloadOne(reloadableFrameLayout, Flowable, transformer, onNext, onError, null,
-                finishWhenFirstOnNext);
     }
 
     public static <T extends IModel> void subscribeWithReloadTwo(final XReloadableRecyclerContentLayout reloadableFrameLayout,
                                                                  Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext) {
         subscribeWithReloadTwo(reloadableFrameLayout, Flowable, transformer, onNext, null, null, false);
-    }
-
-    public static <T extends IModel> void subscribeWithReloadOne(final ReloadableFrameLayout reloadableFrameLayout,
-                                                                 Flowable<T> Flowable, final FlowableTransformer transformer, final Consumer<T> onNext,
-                                                                 boolean finishWhenFirstOnNext) {
-        subscribeWithReloadOne(reloadableFrameLayout, Flowable, transformer, onNext, null, null,
-                finishWhenFirstOnNext);
-    }
-
-    public static <T extends IModel> void subscribeWithReloadOne(final ReloadableFrameLayout reloadableFrameLayout,
-                                                                 Flowable<T> Flowable) {
-        subscribeWithReloadOne(reloadableFrameLayout, Flowable, null, null, null, false);
-    }
-
-    public static <T extends IModel> void subscribeWithReloadOne(final ReloadableFrameLayout reloadableFrameLayout,
-                                                                 Flowable<T> Flowable, boolean finishWhenFirstOnNext) {
-        subscribeWithReloadOne(reloadableFrameLayout, Flowable, null, null, null, finishWhenFirstOnNext);
     }
 
     public static <T extends IModel> void subscribeWithDialog(final ProgressDialog progressDialog,
@@ -249,7 +140,7 @@ public class RxLoadingUtils {
                             progressDialog.setCancelable(true);
                             progressDialog.setOnCancelListener(dialog -> {
                                 dispose();
-                                BusProvider.getBus().postEvent(new MsgEvent<String>("cancel_request"));
+                                RxBusProvider.getBus().postEvent(new RxMsgEvent<String>("cancel_request"));
                             });
                         }
                     }
@@ -275,7 +166,7 @@ public class RxLoadingUtils {
 
                     @Override
                     protected void onFail(NetError error) {
-                        BusProvider.getBus().postEvent(error);
+                        RxBusProvider.getBus().postEvent(error);
                         saveErrorMessage(error);
 
                         MainThreadPostUtils.post(() -> {
@@ -401,7 +292,7 @@ public class RxLoadingUtils {
 
                     @Override
                     protected void onFail(NetError error) {
-                        BusProvider.getBus().postEvent(error);
+                        RxBusProvider.getBus().postEvent(error);
                         saveErrorMessage(error);
                         if (onError != null) {
                             try {
@@ -508,15 +399,13 @@ public class RxLoadingUtils {
                             }
                         }
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.finishReload();
-//                            reloadableFrameLayout.showContent();
                             finishReload[0] = true;
                         }
                     }
 
                     @Override
                     protected void onFail(NetError error) {
-                        BusProvider.getBus().postEvent(error);
+                        RxBusProvider.getBus().postEvent(error);
                         saveErrorMessage(error);
                         if (onError != null) {
                             try {
@@ -526,7 +415,6 @@ public class RxLoadingUtils {
                             }
                         }
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.needReload(getDisplayMessage(error, true));
                             reloadableFrameLayout.showError();
                         }
                     }
@@ -542,8 +430,6 @@ public class RxLoadingUtils {
                             }
                         }
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.finishReload();
-//                            reloadableFrameLayout.showError();
                         }
                     }
                 });
@@ -584,27 +470,17 @@ public class RxLoadingUtils {
                             }
                         }
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.finishReload();
                             finishReload[0] = true;
-//                            HttpResultModel resultModel = (HttpResultModel) t;
-//                            if (resultModel.isSucceful()) {
-//                                if (!Kits.Empty.check(resultModel.data) && resultModel.data instanceof List && ((List) resultModel.data).size() != 0) {
-//                                    reloadableLayout.showEmpty();
-//                                } else {
-//                                    reloadableLayout.showContent();
-//                                }
-//                            }
                         }
                         reloadableLayout.refreshState(false);
                     }
 
                     @Override
                     protected void onFail(NetError error) {
-                        BusProvider.getBus().postEvent(error);
+                        RxBusProvider.getBus().postEvent(error);
                         saveErrorMessage(error);
 
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.needReload(getDisplayMessage(error, true));
                             reloadableLayout.showError();
                         }
                         reloadableLayout.refreshState(false);
@@ -629,8 +505,6 @@ public class RxLoadingUtils {
                             }
                         }
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.finishReload();
-//                            reloadableLayout.showError();
                         }
                     }
                 });
@@ -693,8 +567,6 @@ public class RxLoadingUtils {
                             }
                         }
                         if (!finishReload[0]) {
-//                            reloadableFrameLayout.finishReload();
-//                            reloadableLayout.showError();
                         }
                     }
                 });

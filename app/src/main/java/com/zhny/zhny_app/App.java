@@ -1,7 +1,6 @@
 package com.zhny.zhny_app;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -15,17 +14,13 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import androidx.fragment.app.Fragment;
-import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
-import com.andorid.greenorange.crash.CrashHandler;
-import com.andorid.greenorange.fragments.LoginFragment;
-import com.andorid.greenorange.net.api.Api;
-import com.andorid.greenorange.utils.SystemUtil;
-import com.andorid.greenorange.views.ToastMgr;
+import com.blankj.utilcode.util.CrashUtils;
 import com.tencent.smtt.sdk.QbSdk;
-import com.zhny.zhny_app.R;
 import com.zhny.zhny_app.activitys.DetailFragmentsActivity;
+import com.zhny.zhny_app.fragments.LoginFragment;
+import com.zhny.zhny_app.net.api.Api;
 import com.zhny.zhny_app.utils.ShareUtils;
 
 import java.lang.ref.WeakReference;
@@ -54,7 +49,6 @@ import okhttp3.Request;
 public class App extends MultiDexApplication {
 
     //crash日志收集
-    private CrashHandler mCrashHandler;
     private static WeakReference<Activity> mActivity;
     private static App mApp;
     public static int w;
@@ -66,8 +60,7 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-        mCrashHandler = CrashHandler.getInstance();
-        mCrashHandler.init(getApplicationContext());
+        CrashUtils.init();
 
 
         QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
@@ -91,7 +84,6 @@ public class App extends MultiDexApplication {
 
 
         ShareUtils.init(this);
-        ToastMgr.getInstance().init(this);
         Api.API_BASE_URL = ShareUtils.getHost("host");
         XLog.d("", "======================app===============");
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
@@ -140,10 +132,10 @@ public class App extends MultiDexApplication {
                             .addHeader("enId", ShareUtils.getString("enId", ""))
                             .addHeader("uId", ShareUtils.getString("uId", ""))
                             .addHeader("userId", ShareUtils.getLoginInfo().userId)
-                            .addHeader("brand", SystemUtil.getDeviceBrand())
-                            .addHeader("model", SystemUtil.getSystemModel())
-                            .addHeader("systemversion", SystemUtil.getSystemVersion())
-                            .addHeader("sdkVersion", SystemUtil.getSDKVersion())
+                            .addHeader("brand", Build.BRAND)
+                            .addHeader("model", Build.MODEL)
+                            .addHeader("systemversion", Build.VERSION.CODENAME)
+                            .addHeader("sdkVersion", Build.VERSION.RELEASE)
                             .addHeader("token", ShareUtils.getString("token", ""))
                             .addHeader("lat", ShareUtils.getString("lat", ""))
                             .addHeader("lon", ShareUtils.getString("lon", ""))
@@ -289,29 +281,8 @@ public class App extends MultiDexApplication {
     }
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(base);
-    }
-
-    @Override
     public void onLowMemory() {
         super.onLowMemory();
-    }
-
-    public static String getCurProcessName(Context applicationContext) {
-        ActivityManager activityManager = (ActivityManager) applicationContext.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningApps = activityManager.getRunningAppProcesses();
-        if (runningApps == null) {
-            return null;
-        }
-        int pid = android.os.Process.myPid();
-        for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
-            if (procInfo.pid == pid) {
-                return procInfo.processName;
-            }
-        }
-        return null;
     }
 
 }

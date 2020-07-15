@@ -6,7 +6,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.FlowableProcessor;
 import io.reactivex.processors.PublishProcessor;
 
-public class RxBusImpl implements IBus {
+public class RxBusImpl<T> implements RxIBus<T> {
 
     private FlowableProcessor<Object> bus = null;
 
@@ -28,19 +28,6 @@ public class RxBusImpl implements IBus {
         bus.onComplete();
     }
 
-    @Override
-    public void post(IEvent event) {
-        bus.onNext(event);
-    }
-
-    public <T extends IEvent> Flowable<T> toFlowable(Class<T> eventType) {
-        return bus.ofType(eventType).onBackpressureBuffer();
-    }
-
-    @Override
-    public void postSticky(IEvent event) {
-
-    }
 
     @Override
     public void postEvent(@NonNull Object obj) {

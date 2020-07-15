@@ -1,6 +1,7 @@
 package com.zhny.zhny_app.model.BaseModel;
 
-import com.andorid.greenorange.net.StateCode;
+
+import com.zhny.zhny_app.net.StateCode;
 
 import java.io.Serializable;
 

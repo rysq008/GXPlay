@@ -15,9 +15,6 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-/**
- * @author wbs on 11/22/17.
- */
 
 public class ZipUtil {
     public static List<String> listFile = new ArrayList<String>();

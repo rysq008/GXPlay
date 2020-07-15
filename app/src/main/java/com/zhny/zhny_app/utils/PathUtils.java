@@ -2,13 +2,10 @@ package com.zhny.zhny_app.utils;
 
 import android.os.Environment;
 
-/**
- *
- * 时   间：2019/1/21
- * 简   述：<功能简述>
- */
+import com.zhny.zhny_app.BuildConfig;
+
 public class PathUtils {
-    public static final String app_base_dir = "/com.innovationai.verify";
+    public static final String app_base_dir = BuildConfig.APPLICATION_ID;//"/com.innovationai.verify";
     public static final String app_cache_dir = getDataPath() + app_base_dir + "/data/cache";
 
     public static final String app_data_dir = getDataPath() + app_base_dir + "/data/";

@@ -14,7 +14,6 @@ import android.webkit.JavascriptInterface;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.andorid.greenorange.views.XReloadableStateContorller;
 import com.tencent.smtt.export.external.interfaces.JsResult;
 import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
 import com.tencent.smtt.sdk.DownloadListener;
@@ -26,6 +25,7 @@ import com.zhny.zhny_app.R;
 import com.zhny.zhny_app.activitys.BaseActivity.XBaseActivity;
 import com.zhny.zhny_app.model.LoginBean;
 import com.zhny.zhny_app.utils.ShareUtils;
+import com.zhny.zhny_app.views.XReloadableStateContorller;
 
 import butterknife.BindView;
 
@@ -200,16 +200,12 @@ public class WebActivity extends XBaseActivity {
     public void onBackPressed() {
         if (wvContent.canGoBack()) {
             if (wvContent.getUrl().equals(url)) {
-                ExitAPPDialog dialog = new ExitAPPDialog(WebActivity.this);
-                dialog.show();
             } else {
                 wvContent.post(() -> {
                     wvContent.goBack();
                 });
             }
         } else {
-            ExitAPPDialog dialog = new ExitAPPDialog(WebActivity.this);
-            dialog.show();
         }
     }
 

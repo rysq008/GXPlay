@@ -21,9 +21,6 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        SwipeBackHelper.getCurrentPage(this)
-//                .setSwipeBackEnable(false)
-//                .setSwipeBackEnable(true);
     }
 
     private static Fragment currentFragment;
@@ -42,10 +39,6 @@ public class DetailFragmentsActivity extends XDetailBaseActivity {
         }
     }
 
-    /**
-     * 使用startActivityForResult的时候，requestCode一定不要大于0xffff(65535)。
-     * 如果希望在Fragment的onActivityResult接收数据，就要调用Fragment.startActivityForResult，而不是Fragment.getActivity().startActivityForResult。
-     */
     public static void launchForResult(Fragment from, Fragment to, int flag, Bundle bundle, int requestCode) {
         long NowTime = System.currentTimeMillis();
         if (NowTime - PressTime > 1000) {
