@@ -54,7 +54,7 @@ public class ShareUtils {
     }
 
     public static final String getHost(String key) {
-        return null == preferences ? Api.API_BASE_URL_RELEASE : preferences.getString(key, Api.API_BASE_URL_RELEASE);
+        return null == preferences ? Api.API_BASE_URL : preferences.getString(key, Api.API_BASE_URL);
     }
 
     public static final boolean saveHost(String key, String val) {
@@ -148,7 +148,7 @@ public class ShareUtils {
                                         EditText et = new EditText(ct);
                                         et.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_launcher, 0);
                                         List<String> slist = new ArrayList<>();
-                                        final String[] list = {Api.API_BASE_URL_RELEASE, Api.API_BASE_URL_TEST};//要填充的数据
+                                        final String[] list = {Api.API_BASE_URL, Api.API_BASE_URL_TEST};//要填充的数据
                                         slist.addAll(Arrays.asList(list));
                                         slist.addAll(ShareUtils.getIPList());
                                         AlertDialog enterDialog = new AlertDialog.Builder(ct).setTitle("提示").setMessage("请转入地址")

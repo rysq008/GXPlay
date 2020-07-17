@@ -55,13 +55,11 @@ public class App extends MultiDexApplication {
     public static int h;
     private BoxStore boxStore;
 
-
     @Override
     public void onCreate() {
         super.onCreate();
 
         CrashUtils.init();
-
 
         QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
 
@@ -81,7 +79,6 @@ public class App extends MultiDexApplication {
         QbSdk.initX5Environment(getApplicationContext(), cb);
 
         mApp = this;
-
 
         ShareUtils.init(this);
         Api.API_BASE_URL = ShareUtils.getHost("host");
@@ -129,14 +126,11 @@ public class App extends MultiDexApplication {
                     Request request = chain.request()
                             .newBuilder()
                             .addHeader("Cookie", ShareUtils.getSessionId())
-                            .addHeader("enId", ShareUtils.getString("enId", ""))
-                            .addHeader("uId", ShareUtils.getString("uId", ""))
                             .addHeader("userId", ShareUtils.getLoginInfo().userId)
                             .addHeader("brand", Build.BRAND)
                             .addHeader("model", Build.MODEL)
                             .addHeader("systemversion", Build.VERSION.CODENAME)
                             .addHeader("sdkVersion", Build.VERSION.RELEASE)
-                            .addHeader("token", ShareUtils.getString("token", ""))
                             .addHeader("lat", ShareUtils.getString("lat", ""))
                             .addHeader("lon", ShareUtils.getString("lon", ""))
                             .addHeader("plam", System.getProperty("os.name"))

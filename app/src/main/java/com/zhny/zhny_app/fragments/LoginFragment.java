@@ -78,6 +78,22 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
             public void afterTextChanged(Editable s) {
             }
         });
+        pwd_et.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                eye_cb.setVisibility(TextUtils.isEmpty(s) ? View.INVISIBLE : View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         eye_cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked)
                 pwd_et.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
@@ -264,7 +280,7 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                 pwd_or_code_ctv.setText(pwd_or_code_ctv.isChecked() ? "验证码登录" : "密码登录");
                 break;
             case R.id.login_action_btn:
-                getP().requestLogin(context, "18076569075"/*user_et.getText().toString()*/, "test1234"/*pwd_et.getText().toString()*/,/*pwd_or_code_ctv.isChecked()*/true);
+                getP().requestLogin(context, "admin"/*user_et.getText().toString()*/, "admin"/*pwd_et.getText().toString()*/,/*pwd_or_code_ctv.isChecked()*/true);
                 break;
             case R.id.register_action_tv:
                 DetailFragmentsActivity.launch(context, null, RegisterFragment.newInstance());

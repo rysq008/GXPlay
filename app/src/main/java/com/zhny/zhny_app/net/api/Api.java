@@ -4,7 +4,7 @@ import cn.droidlover.xdroidmvp.net.XApi;
 
 
 public class Api {
-    private static final String API_BASE_URL_RELEASE = "http://129.204.70.220:1003";
+    private static final String API_BASE_URL_RELEASE = "http://114.116.217.149:30088/";
     /**
      * test
      */

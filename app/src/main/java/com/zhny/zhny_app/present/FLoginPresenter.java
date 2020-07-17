@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.zhny.zhny_app.DrawTileActivity;
 import com.zhny.zhny_app.fragments.LoginFragment;
 import com.zhny.zhny_app.model.BaseModel.HttpResultModel;
 import com.zhny.zhny_app.model.LoginBean;
@@ -17,6 +18,7 @@ import com.zhny.zhny_app.utils.Utils;
 import com.zhny.zhny_app.views.ToastMgr;
 
 import cn.droidlover.xdroidmvp.mvp.XPresent;
+import cn.droidlover.xdroidmvp.router.Router;
 import io.reactivex.Flowable;
 
 
@@ -30,14 +32,14 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
      */
     public void requestLogin(Activity context, String loginName, String password, boolean isloginbypassword) {
 
-        if (!checkParams(context, loginName, password)) {
-            return;
-        }
-        Flowable<HttpResultModel<LoginBean>> fr = DataService.builder().buildReqUrl("mobile/token")
+//        if (!checkParams(context, loginName, password)) {
+//            return;
+//        }
+        Flowable<HttpResultModel<LoginBean>> fr = DataService.builder().buildReqUrl("oauth/login")
                 .buildReqParams("password", isloginbypassword ? password : "")
-                .buildReqParams("code", isloginbypassword ? "" : password)
-                .buildReqParams("mobile", loginName)
-                .buildReqParams("type", isloginbypassword ? "user" : "mobile")
+//                .buildReqParams("code", isloginbypassword ? "" : password)
+                .buildReqParams("username", loginName)
+//                .buildReqParams("type", isloginbypassword ? "user" : "mobile")
                 .buildParseDataClass(LoginBean.class)
                 .request(ApiService.HttpMethod.POST);
         RxLoadingUtils.subscribeWithDialog(context, fr, getV().bindToLifecycle(), result -> {
@@ -49,6 +51,8 @@ public class FLoginPresenter extends XPresent<LoginFragment> {
                 ToastMgr.showShortToast(result.msg);
             }
         }, netError -> {
+            Router.newIntent(context).to(DrawTileActivity.class).launch();
+            context.finish();
             ToastMgr.showShortToast("请求失败！请检查网络是否正常");
         });
     }

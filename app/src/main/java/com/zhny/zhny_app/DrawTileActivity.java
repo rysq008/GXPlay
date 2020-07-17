@@ -147,7 +147,7 @@ public class DrawTileActivity extends AppCompatActivity implements View.OnClickL
         uiSettings.setZoomControlsEnabled(false);
         amapView.getMapManager().setClampMapOnMarkerClick(true);
         amapView.getMapManager().setBringMarkerToFrontOnItClick(true);
-        amapView.getMapManager().getMapFunctions().setMapType(AMap.MAP_TYPE_SATELLITE);
+//        amapView.getMapManager().getMapFunctions().setMapType(AMap.MAP_TYPE_SATELLITE);
         amapView.getMapManager().getMapFunctions().addPolygon(polygonOptions);
 
         ImageView fabContent = new ImageView(getActivity());
