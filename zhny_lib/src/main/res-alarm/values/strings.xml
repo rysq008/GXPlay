@@ -1,9 +1,0 @@
-<resources>
-    <string name="machine_name">农机名称</string>
-    <string name="alarm_fence_name">围栏名称</string>
-
-    <string name="alarm_job_farm_plot">农场地块</string>
-    <string name="alarm_job_type">作业类型</string>
-    <string name="alarm_job_time">作业时间</string>
-    <string name="see_alarm_detail">查看详情</string>
-</resources>

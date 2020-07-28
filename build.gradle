@@ -9,7 +9,9 @@ buildscript {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/google' }
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
         maven { url "https://jitpack.io" }
-        jcenter()
+//        jcenter()
+//        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        jcenter(){ url 'http://jcenter.bintray.com/'}
 
     }
     dependencies {
@@ -30,8 +32,9 @@ allprojects {
         maven { url 'http://maven.aliyun.com/nexus/content/repositories/gradle-plugin' }
         maven { url "https://jitpack.io" }
         google()
-        jcenter()
-        maven { url 'http://47.94.249.63:8081/repository/maven-releases/' }
+//        jcenter()
+//        maven{url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        jcenter(){ url 'http://jcenter.bintray.com/'}
 
     }
 }

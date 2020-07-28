@@ -1,2 +1,2 @@
-include ':app', ':zhny_lib', ':library'
-rootProject.name='zhny'
+include ':app'
+rootProject.name='know_action_foresight'
