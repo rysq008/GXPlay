@@ -1,2 +1,3 @@
 include ':app'
-rootProject.name='know_action_foresight'
+rootProject.name='ikats'                           
+

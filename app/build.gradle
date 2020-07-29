@@ -5,7 +5,7 @@ android {
     buildToolsVersion "28.0.3"
 
     defaultConfig {
-        applicationId "com.konw_action.foresight"
+        applicationId "com.ikats.shop"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -13,7 +13,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
-            abiFilters "x86", "armeabi-v7a"
+            abiFilters "x86", "armeabi",'armeabi-v7a'
+//            abiFilters 'armeabi','armeabi-v7a','arm64-v8a', 'x86', 'armeabi-v7a', 'x86_64'
+
         }
 
         renderscriptTargetApi 18
@@ -32,8 +34,16 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file("../debug.keystore")
-            keyAlias 'AndroidDebugKey'
+            storeFile file("../xikats.jks")
+            keyAlias 'ikats'
+            storePassword 'ikats123'
+            keyPassword 'ikats123'
+        }
+        release {
+            storeFile file('../xikats.jks')
+            storePassword 'ikats123'
+            keyAlias 'ikats'
+            keyPassword 'ikats123'
         }
     }
 
@@ -56,13 +66,6 @@ android {
 
     flavorDimensions("iot")
 
-    sourceSets {
-        main {
-            jniLibs.srcDirs = ['libs']
-
-        }
-    }
-
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
@@ -72,7 +75,9 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
-
+    sourceSets.main {
+        jniLibs.srcDirs = ['libs']
+    }
 }
 
 
@@ -91,7 +96,7 @@ dependencies {
 
     implementation 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
 
-    implementation 'androidx.multidex:multidex:2.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.github.limedroid:XDroidMvp:v2.0.1'
     implementation 'com.github.limedroid:ARecyclerView:v1.2.3'
     implementation 'com.squareup.retrofit2:retrofit:2.2.0'
@@ -111,8 +116,7 @@ dependencies {
     //database framework
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
     releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
-    //webview tencent
-    implementation 'com.github.MiQt:X5WebView:v2.6'
+
     //butterknife
     implementation 'com.jakewharton:butterknife:10.2.0'
     annotationProcessor "com.jakewharton:butterknife-compiler:10.2.0"
@@ -129,8 +133,16 @@ dependencies {
     implementation 'com.github.tamsiree.RxTool:RxCamera:2.5.0'
     //功能库（Zxing扫描与生成二维码条形码）
     implementation 'com.github.tamsiree.RxTool:RxFeature:2.5.0'
+    api 'com.tencent.tbs.tbssdk:sdk:43903'
+
+    implementation ('com.alibaba.android:ultraviewpager:1.0.7.7@aar') {
+        transitive = true
+    }
+    implementation 'org.jsoup:jsoup:1.9.2'
 
 }
+apply plugin: 'io.objectbox' // after applying Android plugin
+
 configurations.all {
     resolutionStrategy {
         force 'com.github.tbruyelle:rxpermissions:0.10.2'

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/add_shop_title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_30"
+        android:text="门店信息"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/dp_20"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/common_title_bar"
+        layout="@layout/app_common_titlebar"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/add_shop_full_name_et"
+        style="@style/register_edit_style"
+        android:layout_marginTop="@dimen/dp_20"
+        android:drawableLeft="@mipmap/icon_mobile"
+        android:hint="门店名称"
+        app:layout_constraintTop_toBottomOf="@id/add_shop_title_tv"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/add_shop_short_name_et"
+        style="@style/register_edit_style"
+        android:layout_marginTop="@dimen/dp_15"
+        android:drawableLeft="@mipmap/icon_password"
+        android:hint="门店简称"
+        app:layout_constraintTop_toBottomOf="@id/add_shop_full_name_et"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/add_shop_operation_forms_et"
+        style="@style/register_edit_style"
+        android:layout_marginTop="@dimen/dp_15"
+        android:drawableLeft="@mipmap/icon_password"
+        android:hint="经营业态"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@id/add_shop_short_name_et"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/add_shop_region_et"
+        style="@style/register_edit_style"
+        android:layout_marginTop="@dimen/dp_15"
+        android:drawableLeft="@mipmap/icon_password"
+        android:hint="所在地区"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@id/add_shop_operation_forms_et"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/add_shop_address_et"
+        style="@style/register_edit_style"
+        android:layout_marginTop="@dimen/dp_15"
+        android:drawableLeft="@mipmap/icon_password"
+        android:hint="详细地址"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@id/add_shop_region_et"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/add_shop_save_btn"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="@dimen/dp_40"
+        android:layout_marginLeft="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_30"
+        android:background="@drawable/shape_red_solid_corner5555_rect"
+        android:enabled="false"
+        android:text="保存"
+        android:textColor="#FEFFFF"
+        android:textSize="@dimen/dp_16"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/register_repwd_et"
+        app:layout_constraintEnd_toStartOf="@+id/add_shop_cancel_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_shop_address_et" />
+
+    <Button
+        android:id="@+id/add_shop_cancel_btn"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="@dimen/dp_40"
+        android:background="@drawable/shape_red_solid_corner5555_rect"
+        android:enabled="false"
+        android:text="取消"
+        android:textColor="#FEFFFF"
+        android:textSize="@dimen/dp_16"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/add_shop_save_btn"
+        app:layout_constraintTop_toTopOf="@+id/add_shop_save_btn" />
+</androidx.constraintlayout.widget.ConstraintLayout>

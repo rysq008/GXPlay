@@ -1,0 +1,78 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:1379559014188256556",
+      "lastPropertyId": "1:826425256983336389",
+      "name": "BaseTableEntiry",
+      "properties": [
+        {
+          "id": "1:826425256983336389",
+          "name": "ID"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:8241590427599385631",
+      "lastPropertyId": "10:4556624197569734120",
+      "name": "OrderTableEntiry",
+      "properties": [
+        {
+          "id": "1:3802714490751843912",
+          "name": "ORDER_ID"
+        },
+        {
+          "id": "2:3183876184394725210",
+          "name": "startTime"
+        },
+        {
+          "id": "3:405449337432748994",
+          "name": "endTime"
+        },
+        {
+          "id": "4:256848751741884650",
+          "name": "ip"
+        },
+        {
+          "id": "5:390856912567082283",
+          "name": "prot"
+        },
+        {
+          "id": "6:5959854726375607187",
+          "name": "username"
+        },
+        {
+          "id": "7:5578309174482195021",
+          "name": "password"
+        },
+        {
+          "id": "8:2903651260252422636",
+          "name": "channel"
+        },
+        {
+          "id": "9:9042123733522885364",
+          "name": "outBizNo"
+        },
+        {
+          "id": "10:4556624197569734120",
+          "name": "streamType"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:8241590427599385631",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

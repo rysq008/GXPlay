@@ -13,12 +13,16 @@
     <color name="color_999">#999</color>
     <color name="color_transparent">#00000000</color>
     <color name="color_e0e0e0">#e0e0e0</color>
-    <color name="color_81C62B">#81C62B</color>
+    <color name="color_6D2CEE">#6D2CEE</color>
     <color name="c_46B67C">#46B67C</color>
-    <color name="color_0CA5CF">#0CA5CF</color>
+    <color name="color_9B63F8">#9B63F8</color>
     <color name="C_38484F">#38484F</color>
     <color name="c_646464">#646464</color>
     <color name="color_F9993F">#F9993F</color>
     <color name="c_A6A6A6">#A6A6A6</color>
     <color name="c_0D0D0D">#0D0D0D</color>
+    <color name="white">@android:color/white</color>
+    <color name="c_F4785F">#F4785F</color>
+    <color name="c_ef2d2d">#ef2d2d</color>
+    <color name="color_666666">#666666</color>
 </resources>

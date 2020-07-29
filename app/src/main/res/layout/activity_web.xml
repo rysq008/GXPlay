@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-    <data >
-        <import type="android.view.View"/>
-    </data>
-
-<LinearLayout
+<com.ikats.shop.views.XReloadableStateContorller android:id="@+id/tip_info"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.know_action.foresight.views.XReloadableStateContorller
-        android:id="@+id/tip_info"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/app_titlebar">
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout_wv"
@@ -25,7 +15,4 @@
                 android:layout_height="match_parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </com.know_action.foresight.views.XReloadableStateContorller>
-
-</LinearLayout>
-</layout>
+    </com.ikats.shop.views.XReloadableStateContorller>

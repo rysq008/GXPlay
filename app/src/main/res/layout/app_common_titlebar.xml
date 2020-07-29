@@ -14,7 +14,7 @@
         android:padding="@dimen/dp_14">
 
         <ImageView
-            android:src="@drawable/icon_left"
+            android:src="@drawable/s_left_jiantou"
             android:id="@+id/iv_common_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
