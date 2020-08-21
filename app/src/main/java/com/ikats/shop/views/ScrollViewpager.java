@@ -9,12 +9,6 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-
-/**
- *
- 26
- * 简   述：<功能简述>
- */
 public class ScrollViewpager extends ViewPager {
     private final GestureDetectorCompat detector;
 

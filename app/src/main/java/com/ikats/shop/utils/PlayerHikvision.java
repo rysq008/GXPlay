@@ -1,6 +1,5 @@
 package com.ikats.shop.utils;
 
-import android.drm.DrmStore;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
@@ -13,19 +12,21 @@ import android.view.SurfaceView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.hikvision.netsdk.HCNetSDK;
+import com.hikvision.netsdk.INT_PTR;
 import com.hikvision.netsdk.NET_DVR_DEVICEINFO_V30;
 import com.hikvision.netsdk.NET_DVR_FILECOND;
 import com.hikvision.netsdk.NET_DVR_FINDDATA_V30;
 import com.hikvision.netsdk.NET_DVR_IPPARACFG_V40;
 import com.hikvision.netsdk.NET_DVR_PLAYBACK_INFO;
 import com.hikvision.netsdk.NET_DVR_PREVIEWINFO;
+import com.hikvision.netsdk.NET_DVR_STREAM_INFO;
 import com.hikvision.netsdk.NET_DVR_TIME;
+import com.hikvision.netsdk.NET_DVR_VOD_PARA;
 import com.hikvision.netsdk.PlaybackCallBack;
 import com.hikvision.netsdk.PlaybackControlCommand;
 import com.hikvision.netsdk.RealPlayCallBack;
 import com.ikats.shop.App;
-import com.sun.jna.NativeLong;
-import com.sun.jna.ptr.IntByReference;
+import com.ikats.shop.BuildConfig;
 
 import org.MediaPlayer.PlayM4.Player;
 
@@ -34,8 +35,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 
 /**
@@ -81,6 +80,9 @@ public class PlayerHikvision {
             if (surface.isValid()) {
                 if (!Player.getInstance().setVideoWindow(mPort, 0, holder)) {
                     Log.e(TAG, "播放器设置显示区域失败!");
+                } else {
+                    if (BuildConfig.DEBUG)
+                        ToastUtils.showLong("播放器设置显示区域成功!");
                 }
             }
         }
@@ -99,6 +101,9 @@ public class PlayerHikvision {
             if (holder.getSurface().isValid()) {
                 if (!Player.getInstance().setVideoWindow(mPort, 0, null)) {
                     Log.e(TAG, "播放器销毁显示区域失败!");
+                } else {
+                    if (BuildConfig.DEBUG)
+                        ToastUtils.showLong("播放器销毁显示区域成功!");
                 }
             }
         }
@@ -185,12 +190,13 @@ public class PlayerHikvision {
                     messageFeedback("实时预览失败");
                     return;
                 }
+
                 NET_DVR_PREVIEWINFO previewInfo = new NET_DVR_PREVIEWINFO();  //实时预览设置
                 previewInfo.lChannel = chanNo;  //通道号
                 previewInfo.dwStreamType = streamType;  //码流类型0：主码，1：子码
                 previewInfo.bBlocked = 1;  //阻塞流获取
                 mPlayId = HCNetSDK.getInstance().NET_DVR_RealPlay_V40(mLogId, previewInfo, fRealDataCallBack);  //调用实时预览接口
-                mRecord = HCNetSDK.getInstance().NET_DVR_StartDVRRecord(mLogId, chanNo,0 );  //调用实时录制接口
+//                mRecord = HCNetSDK.getInstance().NET_DVR_StartDVRRecord(mLogId, chanNo,0 );  //调用实时录制接口
                 if (mPlayId == -1) {//实时预览失败
                     if (streamType == 1) {
                         previewInfo.dwStreamType = 0;  //尝试换一种码流播放
@@ -216,9 +222,6 @@ public class PlayerHikvision {
         };
         if (mLogId == -1) {//未登录设备，先登录设备
             login(ip, port, userName, password, channelNo, run);
-//                if (mLogId != -1) {
-//                    handler.post(run);
-//                }
         } else {
             handler.post(run);
         }
@@ -248,6 +251,7 @@ public class PlayerHikvision {
     public void playback(String ip, int port, String userName, String password, int channelNo,
                          int beginYear, int beginMonth, int beginDay, int beginHour, int beginMinute, int beginSecond,
                          int endYear, int endMonth, int endDay, int endHour, int endMinute, int endSecond) {
+        final Runnable[] runs = new Runnable[1];
         Runnable run = () -> {
             if (mLogId != -1) {  //已经登录设备，下一步：远程回放
                 PlaybackCallBack fPlaybackCallBack = getPlaybackPlayerCbf();  //得到远程回放回调
@@ -270,70 +274,26 @@ public class PlayerHikvision {
                 endTime.dwHour = endHour;
                 endTime.dwMinute = endMinute;
                 endTime.dwSecond = endSecond;
-                mPlaybackId = HCNetSDK.getInstance().NET_DVR_PlayBackByTime(mLogId, chanNo, beginTime, endTime);  //调用远程回放接口
-                Executors.newSingleThreadExecutor().execute(()->{
-                mGetFileId = HCNetSDK.getInstance().NET_DVR_GetFileByTime(mLogId, chanNo, beginTime, endTime, new File(App.getApp().getExternalCacheDir(),"123.mp4").getAbsolutePath());
-                    int nPos = (0);
-                    boolean playbacn = HCNetSDK.getInstance().NET_DVR_PlayBackControl_V40(mGetFileId, HCNetSDK.NET_DVR_GET_VIDEOWALLWINDOWPOSITION, null, nPos,null);
-                    NET_DVR_FILECOND struFileCond = new NET_DVR_FILECOND();
-                    struFileCond.dwFileType = 0xff;
-                    struFileCond.lChannel = chanNo;
-                    struFileCond.dwFileType = 0xFF;
-                    struFileCond.dwIsLocked = 0xFF;
-                    struFileCond.dwUseCardNo = 0;
-                    struFileCond.struStartTime.dwYear = beginYear;
-                    struFileCond.struStartTime.dwMonth = beginMonth;
-                    struFileCond.struStartTime.dwDay = beginDay;
-                    struFileCond.struStartTime.dwHour = beginHour;
-                    struFileCond.struStartTime.dwMinute = beginMinute;
-                    struFileCond.struStartTime.dwSecond =beginSecond;
-                    struFileCond.struStopTime.dwYear = endYear;
-                    struFileCond.struStopTime.dwMonth = endMonth;
-                    struFileCond.struStopTime.dwDay = endDay;
-                    struFileCond.struStopTime.dwHour = endHour;
-                    struFileCond.struStopTime.dwMinute = endMinute;
-                    struFileCond.struStopTime.dwSecond = endSecond;
-                    //查找录像文件
-                    int lFindHandle = HCNetSDK.getInstance().NET_DVR_FindFile_V30(mLogId, struFileCond);
-                    if(lFindHandle < 0)
-                    {
-                        Log.e(TAG, "playback: find file fail,last error %d");
-//                        return;
-                    }
-
-                    if(mGetFileId!=-1){
-                        handler.postDelayed(()->{
-                            if (nPos > 100) {
-                                HCNetSDK.getInstance().NET_DVR_StopGetFile(mGetFileId);
-                                mGetFileId=(-1);
-                                Log.e(TAG, "run: 由于网络原因或DVR忙,下载异常终止!");
-                            }
-                            if (nPos == 100) {
-                                HCNetSDK.getInstance().NET_DVR_StopGetFile(mGetFileId);
-                                mGetFileId=(-1);
-                                Log.e(TAG, "run: 按时间下载结束！");
-                            }else
-                            {
-                                HCNetSDK.getInstance().NET_DVR_StopGetFile(mGetFileId);
-                                mGetFileId=(-1);
-                                Log.e(TAG, "run: 异常下载结束！");
-                            }
-
-                        },5000);
-                    }
-
-
-                });
+                NET_DVR_VOD_PARA net_dvr_vod_para = new NET_DVR_VOD_PARA();
+                net_dvr_vod_para.struBeginTime = beginTime;
+                net_dvr_vod_para.struEndTime = endTime;
+                NET_DVR_STREAM_INFO info = new NET_DVR_STREAM_INFO();
+                info.dwChannel = chanNo;
+                net_dvr_vod_para.struIDInfo = info;
+                mPlaybackId = HCNetSDK.getInstance().NET_DVR_PlayBackByTime_V40(mLogId, net_dvr_vod_para);  //调用远程回放接口
+                Log.e(TAG, "playback: ---->" + beginMinute + "," + beginSecond + "," + endMinute + "," + endSecond);
                 if (mPlaybackId != -1) {
                     if (!HCNetSDK.getInstance().NET_DVR_SetPlayDataCallBack(mPlaybackId, fPlaybackCallBack)) {
                         Log.e(TAG, "设置远程回放回调失败，错误码：" + HCNetSDK.getInstance().NET_DVR_GetLastError());
                         messageFeedback("远程回放失败");
+                        handler.postDelayed(runs[0], 1000);
                         return;
                     }
                     NET_DVR_PLAYBACK_INFO net_dvr_playback_info = null;
                     if (!HCNetSDK.getInstance().NET_DVR_PlayBackControl_V40(mPlaybackId, PlaybackControlCommand.NET_DVR_PLAYSTART, null, 0, net_dvr_playback_info)) {
                         Log.e(TAG, "远程回放开始失败，错误码：" + HCNetSDK.getInstance().NET_DVR_GetLastError());
                         messageFeedback("远程回放失败");
+                        handler.postDelayed(runs[0], 1000);
                         return;
                     }
                     mStopPlayback = false;
@@ -344,6 +304,7 @@ public class PlayerHikvision {
                 }
             }
         };
+        runs[0] = run;
         if (mLogId == -1) {  //未登录设备，先登录设备
             login(ip, port, userName, password, channelNo, run);
         } else {
@@ -351,6 +312,140 @@ public class PlayerHikvision {
         }
 
     }
+
+    /**
+     * 下载回放
+     *
+     * @param ip
+     * @param port
+     * @param userName
+     * @param password
+     * @param channelNo
+     * @param beginYear
+     * @param beginMonth
+     * @param beginDay
+     * @param beginHour
+     * @param beginMinute
+     * @param beginSecond
+     * @param endYear
+     * @param endMonth
+     * @param endDay
+     * @param endHour
+     * @param endMinute
+     * @param endSecond
+     */
+    public void downloadback(String ip, int port, String userName, String password, int channelNo,
+                             int beginYear, int beginMonth, int beginDay, int beginHour, int beginMinute, int beginSecond,
+                             int endYear, int endMonth, int endDay, int endHour, int endMinute, int endSecond) {
+        final Runnable[] runs = new Runnable[1];
+        Runnable run = () -> {
+            if (mLogId != -1) {  //已经登录设备，下一步：远程回放
+                NET_DVR_TIME beginTime = new NET_DVR_TIME();
+                NET_DVR_TIME endTime = new NET_DVR_TIME();
+                beginTime.dwYear = beginYear;
+                beginTime.dwMonth = beginMonth;
+                beginTime.dwDay = beginDay;
+                beginTime.dwHour = beginHour;
+                beginTime.dwMinute = beginMinute;
+                beginTime.dwSecond = beginSecond;
+                endTime.dwYear = endYear;
+                endTime.dwMonth = endMonth;
+                endTime.dwDay = endDay;
+                endTime.dwHour = endHour;
+                endTime.dwMinute = endMinute;
+                endTime.dwSecond = endSecond;
+
+//                Executors.newSingleThreadScheduledExecutor().execute(()->{});
+//                NET_DVR_FILECOND net_dvr_filecond = new NET_DVR_FILECOND();  //被搜索录像文件信息
+//                net_dvr_filecond.lChannel = chanNo;  //通道号
+//                net_dvr_filecond.dwFileType = 0xff;  //录像文件类型 0xff代表所有
+//                net_dvr_filecond.dwIsLocked = 0xff;  //是否锁定 0xff代表所有
+//                net_dvr_filecond.dwUseCardNo = 0;  //是否使用卡号搜索
+//                net_dvr_filecond.struStartTime = beginTime;
+//                net_dvr_filecond.struStopTime = endTime;
+//                int findFileId = HCNetSDK.getInstance().NET_DVR_FindFile_V30(mLogId, net_dvr_filecond);  //调用搜索录像文件接口
+//                if (findFileId != -1) {  //查询录像文件成功
+//                    for (int i = 0; i < 4000; i++) {  //最多4000份录像段文件
+//                        NET_DVR_FINDDATA_V30 net_dvr_finddata_v30 = new NET_DVR_FINDDATA_V30();
+//                        int iRet = HCNetSDK.getInstance().NET_DVR_FindNextFile_V30(findFileId, net_dvr_finddata_v30);
+//                        if (-1 == iRet) {  //调用失败
+//                            break;
+//                        } else {
+//                            /**
+//                             NET_DVR_FILE_SUCCESS 1000 获取文件信息成功
+//                             NET_DVR_FILE_NOFIND 1001 未查找到文件
+//                             NET_DVR_ISFINDING 1002 正在查找请等待
+//                             NET_DVR_NOMOREFILE 1003 没有更多的文件，查找结束
+//                             NET_DVR_FILE_EXCEPTION 1004 查找文件时异常
+//                             */
+//                            if (iRet == 1000) {  //文件信息获取成功
+//                                recordList.add(net_dvr_finddata_v30);
+//                            } else if (iRet == 1003) {  //无更多文件
+//                                break;
+//                            }
+//                            //还有一些其他状态，这里不可任何处理，既不加上该录像段文件，也不跳出循环
+//                        }
+//                    }
+//                } else {
+//                    Log.e(TAG, "查询录像失败，错误码：" + HCNetSDK.getInstance().NET_DVR_GetLastError());
+//                }
+
+
+
+                mGetFileId = HCNetSDK.getInstance().NET_DVR_GetFileByTime(mLogId, chanNo, beginTime, endTime, new File(App.getApp().getExternalCacheDir(), "123.mp4").getAbsolutePath());
+                Log.e(TAG, "downloadback: ---->" + beginMinute + "," + beginSecond + "," + endMinute + "," + endSecond);
+                if (mGetFileId != -1) {
+                    boolean downloadback = HCNetSDK.getInstance().NET_DVR_PlayBackControl_V40(mGetFileId, HCNetSDK.NET_DVR_PLAYSTART, null, 0, null);
+                    if (downloadback) {
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                int nPos = HCNetSDK.getInstance().NET_DVR_GetDownloadPos(mGetFileId);
+                                if (nPos > 100) {
+                                    HCNetSDK.getInstance().NET_DVR_StopGetFile(mGetFileId);
+                                    mGetFileId = (-1);
+                                    Log.e(TAG, "run: 由于网络原因或DVR忙,下载异常终止!");
+                                    return;
+                                }
+                                if (nPos == 100) {
+                                    boolean stop = HCNetSDK.getInstance().NET_DVR_StopGetFile(mGetFileId);
+                                    if (stop) {
+                                        mGetFileId = (-1);
+                                        Log.e(TAG, "run: 按时间下载结束！");
+                                        messageFeedback("远程下载完成");
+                                    } else {
+                                        INT_PTR intPtr = new INT_PTR();
+                                        intPtr.iValue = HCNetSDK.getInstance().NET_DVR_GetLastError();
+                                        Log.e(TAG, "结束远程下载失败，错误码：" + intPtr.iValue);
+                                        messageFeedback(HCNetSDK.getInstance().NET_DVR_GetErrorMsg(intPtr));
+                                    }
+                                    return;
+                                } else {
+                                    handler.postDelayed(this::run, 5000);
+                                }
+                            }
+                        }, 5000);
+                    } else {
+                        cleanup();
+                        handler.postDelayed(runs[0], 1000);
+                    }
+                } else {
+                    Log.e(TAG, "远程下载失败，错误码：" + HCNetSDK.getInstance().NET_DVR_GetLastError());
+                    messageFeedback("远程下载失败！");
+                }
+            } else {
+                login(ip, port, userName, password, channelNo, runs[0]);
+            }
+        };
+        runs[0] = run;
+        if (mLogId == -1) {  //未登录设备，先登录设备
+            login(ip, port, userName, password, channelNo, run);
+        } else {
+            handler.post(run);
+        }
+
+    }
+
 
     /**
      * 获取录像段文件
@@ -461,10 +556,10 @@ public class PlayerHikvision {
                 Log.e(TAG, "调用停止实时预览接口失败，错误码：" + HCNetSDK.getInstance().NET_DVR_GetLastError());
             }
         }
-        if(mRecord){
-            HCNetSDK.getInstance().NET_DVR_StopDVRRecord(mLogId,chanNo);
-            mRecord = false;
-        }
+//        if(mRecord){
+//            HCNetSDK.getInstance().NET_DVR_StopDVRRecord(mLogId,chanNo);
+//            mRecord = false;
+//        }
         isLive = false;
     }
 
@@ -492,11 +587,11 @@ public class PlayerHikvision {
                 } else {
                     Log.e(TAG, "停止远程回放，调用stop接口失败，错误码：" + Player.getInstance().getLastError(port));
                 }
+                isplayback = false;
             } else {
                 Log.e(TAG, "调用停止远程回放接口失败，错误码：" + HCNetSDK.getInstance().NET_DVR_GetLastError());
             }
         }
-        isplayback = false;
     }
 
     /**
@@ -533,6 +628,8 @@ public class PlayerHikvision {
         return cbf;
     }
 
+    int pbc = 0;
+
     private void processRealData(int iPlayViewNo, int iDataType, byte[] pDataBuffer, int iDataSize, int iStreamMode) {
         if (HCNetSDK.NET_DVR_SYSHEAD == iDataType) {
             mPort = Player.getInstance().getPort();
@@ -559,9 +656,10 @@ public class PlayerHikvision {
                     Log.e(TAG, "播放声音失败");
                     return;
                 }
-                messageFeedback(null);
+                messageFeedback("初始化播放成功");
             }
         } else {
+            if (isplayback()) pbc++;
             if (!Player.getInstance().inputData(mPort, pDataBuffer, iDataSize)) {
                 for (int i = 0; i < 4000 && mPlaybackId >= 0 && !mStopPlayback; i++) {
                     if (Player.getInstance().inputData(mPort, pDataBuffer, iDataSize)) {
@@ -598,7 +696,7 @@ public class PlayerHikvision {
                 if (Player.getInstance().getBMP(mPort, picBuf, nSize, stSize)) {
                     bitmap = BitmapFactory.decodeByteArray(picBuf, 0, stSize.value);
                     try {
-                        bitmap.compress(Bitmap.CompressFormat.JPEG,100,new FileOutputStream("/mnt/sdcard/hikvison.jpg"));
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream("/mnt/sdcard/hikvison.jpg"));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -626,7 +724,7 @@ public class PlayerHikvision {
      */
     public void cleanup() {
         // release player resource
-        Player.getInstance().freePort(mPort);
+        refresh();
         logout(mLogId);
         // release net SDK resource
         HCNetSDK.getInstance().NET_DVR_Cleanup();
@@ -634,9 +732,16 @@ public class PlayerHikvision {
         mPlaybackId = -1;
         mPlayId = -1;
         mLogId = -1;
+        mGetFileId = -1;
+        isLive = false;
+        isplayback = false;
+        mStopPlayback = true;
+//        mSurfaceView.getHolder().removeCallback(callback);
+    }
+
+    public void refresh() {
+        Player.getInstance().freePort(mPort);
         mSurfaceView.getHolder().getSurface().release();
-        mSurfaceView.getHolder().removeCallback(callback);
-        mSurfaceView.getHolder().addCallback(callback);
     }
 
     private void messageFeedback(String msg) {

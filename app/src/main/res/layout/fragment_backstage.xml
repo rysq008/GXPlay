@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <com.ikats.shop.views.VerticalViewPager
+        android:id="@+id/backstage_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="2dp"
+        android:layout_toRightOf="@+id/backstage_rg"
+        android:background="@color/white" />
+
+    <RadioGroup
+        android:id="@+id/backstage_rg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/backstage_rb_goods"
+            style="@style/guide_bottom_rb_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:checked="true"
+            android:drawableTop="@mipmap/icon_app"
+            android:gravity="center"
+            android:text="商品"
+            android:textColor="@color/x_blue" />
+
+        <RadioButton
+            android:id="@+id/backstage_rb_store"
+            style="@style/guide_bottom_rb_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:drawableTop="@mipmap/icon_app"
+            android:gravity="center"
+            android:text="库存"
+            android:textColor="@color/x_blue" />
+
+        <RadioButton
+            android:id="@+id/backstage_rb_statis"
+            style="@style/guide_bottom_rb_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textColor="@color/x_blue" />
+
+        <RadioButton
+            android:id="@+id/guide_rb_4"
+            style="@style/guide_bottom_rb_style"
+            android:layout_weight="2"
+            android:visibility="invisible" />
+
+        <RadioButton
+            android:id="@+id/backstage_rb_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_14"
+            android:background="@android:color/transparent"
+            android:button="@null"
+            android:textColor="@color/x_blue" />
+
+        <RadioButton
+            android:id="@+id/guide_rb_6"
+            style="@style/guide_bottom_rb_style"
+            android:layout_weight="2"
+            android:visibility="invisible" />
+    </RadioGroup>
+</RelativeLayout>

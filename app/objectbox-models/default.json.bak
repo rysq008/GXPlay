@@ -10,55 +10,76 @@
       "properties": [
         {
           "id": "1:826425256983336389",
-          "name": "ID"
+          "name": "ID",
+          "type": 6,
+          "flags": 1
         }
       ],
       "relations": []
     },
     {
       "id": "2:8241590427599385631",
-      "lastPropertyId": "10:4556624197569734120",
+      "lastPropertyId": "11:8654804670940642687",
       "name": "OrderTableEntiry",
       "properties": [
         {
           "id": "1:3802714490751843912",
-          "name": "ORDER_ID"
+          "name": "ORDER_ID",
+          "type": 6,
+          "flags": 1
         },
         {
           "id": "2:3183876184394725210",
-          "name": "startTime"
+          "name": "startTime",
+          "type": 9
         },
         {
           "id": "3:405449337432748994",
-          "name": "endTime"
+          "name": "endTime",
+          "type": 9
         },
         {
           "id": "4:256848751741884650",
-          "name": "ip"
+          "name": "ip",
+          "type": 9
         },
         {
           "id": "5:390856912567082283",
-          "name": "prot"
+          "name": "prot",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "6:5959854726375607187",
-          "name": "username"
+          "name": "username",
+          "type": 9
         },
         {
           "id": "7:5578309174482195021",
-          "name": "password"
+          "name": "password",
+          "type": 9
         },
         {
           "id": "8:2903651260252422636",
-          "name": "channel"
+          "name": "channel",
+          "type": 5,
+          "flags": 4
         },
         {
           "id": "9:9042123733522885364",
-          "name": "outBizNo"
+          "name": "outBizNo",
+          "type": 9
         },
         {
           "id": "10:4556624197569734120",
-          "name": "streamType"
+          "name": "streamType",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "11:8654804670940642687",
+          "name": "payid",
+          "type": 9
         }
       ],
       "relations": []
@@ -68,8 +89,8 @@
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
-  "modelVersion": 4,
-  "modelVersionParserMinimum": 4,
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [],

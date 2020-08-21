@@ -10,10 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.internal.LinkedTreeMap;
 import com.ikats.shop.App;
+import com.ikats.shop.BuildConfig;
 import com.ikats.shop.R;
 import com.ikats.shop.database.OrderTableEntiry;
 import com.ikats.shop.database.OrderTableEntiry_;
@@ -96,8 +98,11 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import cn.droidlover.xdroidmvp.kit.Kits;
+import cn.droidlover.xdroidmvp.net.IModel;
+import cn.droidlover.xdroidmvp.net.NetError;
 import io.objectbox.Box;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -136,21 +141,17 @@ public class BillingFragment extends XBaseFragment {
     String cur_product_id = "";
     String startTime, endTime;
     private PlayerHikvision playerHikvision;
-    private String outBizNo;
+    private String outBizNo = "";
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         StatusBarUtil.setTranslucent(context, 0);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_USB_PERMISSION);
-        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
-        context.registerReceiver(mUsbReceiver, filter);
     }
 
     boolean isScan;
     private static final int PLAY_HIK_STREAM_CODE = 1001;
-    private static final String IP_ADDRESS = "192.168.1.7";
+    private static final String IP_ADDRESS = "192.168.0.104";//"192.168.0.104";
     private static final int PORT = 8000;
     private static final String USER_NAME = "admin";
     private static final String PASSWORD = "ikats903";
@@ -158,7 +159,8 @@ public class BillingFragment extends XBaseFragment {
     Handler handler = new Handler(msg -> {
         switch (msg.what) {
             case 0:
-                ToastUtils.showLong(msg.obj + "");
+                if (BuildConfig.DEBUG)
+                    ToastUtils.showLong(msg.obj + "");
                 break;
             case -1: {
                 if (playerHikvision.isplayback())
@@ -175,12 +177,33 @@ public class BillingFragment extends XBaseFragment {
                                         handler.removeCallbacksAndMessages(null);
                                         playerHikvision.stopLive(playerHikvision.mPlayId, playerHikvision.mPort);
                                         endTime = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
-                                        playerHikvision.cleanup();
+                                        String[] begins = startTime.split("_");
+                                        String[] ends = endTime.split("_");
+                                        playerHikvision.downloadback(IP_ADDRESS, PORT, USER_NAME, PASSWORD, 1,
+                                                Integer.parseInt(begins[0]), Integer.parseInt(begins[1]), Integer.parseInt(begins[2]),
+                                                Integer.parseInt(begins[3]), Integer.parseInt(begins[4]), Integer.parseInt(begins[5]),
+                                                Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]),
+                                                Integer.parseInt(ends[3]), Integer.parseInt(ends[4]), Integer.parseInt(ends[5]));
+                                        playerHikvision.refresh();
+//                                        Flowable flowable = DataService.builder().buildReqUrl("http://192.168.1.140:3000/record")
+//                                                .buildReqParams("orderNo", startTime)
+//                                                .buildReqParams("channel", "101")
+//                                                .buildReqParams("startDay", begins[0] + begins[1] + begins[2])
+//                                                .buildReqParams("startTime", begins[3] + begins[4] + begins[5])
+//                                                .buildReqParams("endDay", ends[0] + ends[1] + ends[2])
+//                                                .buildReqParams("endTime", ends[3] + ends[4] + ends[5])
+//                                                .request(ApiService.HttpMethod.GET);
+//                                        RxLoadingUtils.subscribeWithDialog(context, flowable, bindToLifecycle(), iModel -> {
+//
+//                                        }, netError -> {
+//
+//                                        });
                                         App.getBoxStore().runInTxAsync(() -> {
                                             Box<OrderTableEntiry> box = App.getBoxStore().boxFor(OrderTableEntiry.class);
                                             OrderTableEntiry orderTableEntiry = box.query().equal(OrderTableEntiry_.startTime, startTime).build().findFirst();
                                             orderTableEntiry.endTime = endTime;
                                             orderTableEntiry.outBizNo = outBizNo;
+                                            orderTableEntiry.payid = outBizNo;
                                             box.put(orderTableEntiry);
                                         }, (result, error) -> {
                                             if (error == null) {
@@ -195,6 +218,7 @@ public class BillingFragment extends XBaseFragment {
                     surfaceView.setVisibility(View.VISIBLE);
                     endTime = startTime = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
                     playerHikvision.live(IP_ADDRESS, PORT, USER_NAME, PASSWORD, PlayerHikvision.HIK_SUB_STREAM_CODE, 1);
+
                     OrderTableEntiry orderTableEntiry = new OrderTableEntiry();
                     orderTableEntiry.ip = IP_ADDRESS;
                     orderTableEntiry.prot = PORT;
@@ -205,6 +229,7 @@ public class BillingFragment extends XBaseFragment {
                     orderTableEntiry.startTime = startTime;
                     orderTableEntiry.endTime = endTime;
                     orderTableEntiry.outBizNo = "";
+                    orderTableEntiry.payid = "";
                     App.getBoxStore().boxFor(OrderTableEntiry.class).put(orderTableEntiry);
                 }
             }
@@ -217,10 +242,6 @@ public class BillingFragment extends XBaseFragment {
     public void initData(Bundle savedInstanceState) {
         mUrl = "http://www.baidu.com";
         mUrl = "https://shop45833283.m.youzan.com/wscgoods/detail/276jakb39jlnf?scan=1&activity=none&from=kdt&qr=directgoods_638272694";
-//        url = "https://h5.m.taobao.com/need/weex/container.html?_wx_tpl=https://owl.alicdn.com/mupp-dy/develop/taobao/need/weex/bpu/entry.js&itemId=597185727259&bpuId=1451437069&spm=a21to.8287046.AI.0&_wx_appbar=true";
-//        url = "https://shop45833283.m.youzan.com/wscgoods/detail/276jakb39jlnf?scan=1&activity=none&from=kdt&qr=directgoods_638272694&showsku=true";
-//青岛
-// url = "https://shop90485387.m.youzan.com/wscgoods/detail/2fudlnlx0a8n7?scan=1&activity=none&from=kdt";
         mUrl = "https://shop90485387.m.youzan.com/wscgoods/detail/2g0jo1ifn7ftv?scan=1&activity=none&from=kdt&qr=directgoods_633465213";
         initWebview(mUrl);
 
@@ -238,7 +259,6 @@ public class BillingFragment extends XBaseFragment {
             wvContent.loadUrl(mUrl);
             enter_url_et.setText("");
             isScan = false;
-            //                wvContent.loadUrl("https://cashier.gaohuitong.com/assets/crossborder/payresult?prepay_id=PT1674348616220693");
         });
 
         enter_url_et.setOnClickListener(v -> {
@@ -287,14 +307,13 @@ public class BillingFragment extends XBaseFragment {
         name_tv.setOnClickListener(v -> {
             if (null == startTime || startTime.equals(endTime) || playerHikvision.isLive())
                 return;
-//            endTime = startTime = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
-            String[] begins = startTime.split("_");
-            String[] ends = endTime.split("_");
             if (playerHikvision.isplayback()) {
                 surfaceView.setVisibility(View.GONE);
                 playerHikvision.stopPlayback(playerHikvision.mPlaybackId, playerHikvision.mPort);
-                playerHikvision.cleanup();
+                playerHikvision.refresh();
             } else {
+                String[] begins = startTime.split("_");
+                String[] ends = endTime.split("_");
                 surfaceView.setVisibility(View.VISIBLE);
                 playerHikvision.playback(IP_ADDRESS, PORT, USER_NAME, PASSWORD, 1,
                         Integer.parseInt(begins[0]), Integer.parseInt(begins[1]), Integer.parseInt(begins[2]),
@@ -304,12 +323,58 @@ public class BillingFragment extends XBaseFragment {
             }
         });
         test_tv.setOnClickListener(v -> {
+            /**
+             *
+             查询录制视频地址
+             http://192.168.1.140:3000/video/{视频名称.mp4}
+             * orderNo  //订单号，作为视频文件名
+             * channel	 //通道号，101
+             * startDay  //开始日期到天 20200822
+             * startTime  //开始时间到秒 181800
+             * endDay  //结束日期到天 20200822
+             * endTime  //结束时间到秒 181900
+             * */
+
+
+//            MediaPlayer mMediaPlayer = new MediaPlayer();
+//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            try {
+//                mMediaPlayer.setDataSource("http://192.168.1.140:3000/video/" + startTime + ".mp4");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            mMediaPlayer.setSurface(surfaceViewback.getHolder().getSurface());
+////            mMediaPlayer.setLooping(true);
+//            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mp) {
+//                    mMediaPlayer.start();
+//                }
+//            });
+//            mMediaPlayer.prepareAsync();
+//            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+//                @Override
+//                public boolean onError(MediaPlayer mp, int what, int extra) {
+//                    ToastUtils.showLong("");
+//                    return false;
+//                }
+//            });
+
+
             OnBnBegin(v);
         });
         title_tv.setOnClickListener(v -> {
 //            retrycount = 0;
 //                getPayResult("");
-            title_tv.setEnabled(false);
+//            Flowable<HttpResultModel> flowable = DataService.builder().buildReqUrl("http://oms.hbyunjie.com/videofile/uploadvideofile")
+//                    .buildReqParams(new File(context.getExternalCacheDir(), "123.mp4")).request(ApiService.HttpMethod.UPLOAD);
+//            RxLoadingUtils.subscribeWithDialog(context, flowable, bindToLifecycle(), new Consumer<HttpResultModel>() {
+//                @Override
+//                public void accept(HttpResultModel httpResultModel) throws Exception {
+//
+//                }
+//            }, false);
+//            title_tv.setEnabled(false);
             try {
                 Executors.newSingleThreadExecutor().execute(() -> {
                     mcom.Open("/dev/ttyS4", 9600, 0);
@@ -368,8 +433,18 @@ public class BillingFragment extends XBaseFragment {
     }
 
     @Override
+    public void onResume() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_USB_PERMISSION);
+        filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
+        context.registerReceiver(mUsbReceiver, filter);
+        super.onResume();
+    }
+
+    @Override
     public void onPause() {
         arrayMap.clear();
+        context.unregisterReceiver(mUsbReceiver);
         super.onPause();
     }
 
@@ -377,7 +452,7 @@ public class BillingFragment extends XBaseFragment {
     public void onDestroy() {
         wvContent.clearAllData(context, true);
         IDCardReaderFactory.destroy(idCardReader);
-        context.unregisterReceiver(mUsbReceiver);
+        playerHikvision.cleanup();
         super.onDestroy();
     }
 
@@ -523,7 +598,7 @@ public class BillingFragment extends XBaseFragment {
                             .builderRequestBody(new PayinfoRequestBody("PIB000513", outBizNo))
                             .request(ApiService.HttpMethod.POST_JSON);
                 });
-        if (retrycount == 0 && progressDialog == null){
+        if (retrycount == 0 && progressDialog == null) {
             progressDialog = ProgressDialog.show(context, "retry:" + retrycount, "数据处理中。。。");
         }
         RxLoadingUtils.subscribe(f_token, bindToLifecycle(), httpResultModel -> {

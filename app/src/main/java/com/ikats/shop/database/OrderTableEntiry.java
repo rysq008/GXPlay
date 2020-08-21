@@ -83,4 +83,10 @@ public final class OrderTableEntiry extends XBaseModel {
     public int channel;
     public String outBizNo;
     public String payid;
+    public int count;
+    public String purchaser="余与";
+    public String amount="500";
+    public String phone="13400000000";
+    public String status="放行";
+    public String action="核发";
 }

@@ -1,5 +1,6 @@
 package com.ikats.shop.net;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.LoginBean;
@@ -138,6 +139,15 @@ public class DataService {
 
         public DataServiceBuilder buildReqParams(String key, Object obj) {
             this.params.put(key, obj);
+            return this;
+        }
+
+        public DataServiceBuilder buildReqParams(File file) {
+            if(null == file||!file.exists()){
+                ToastUtils.showLong("文件不存在！");
+                return this;
+            }
+            this.file = file;
             return this;
         }
 

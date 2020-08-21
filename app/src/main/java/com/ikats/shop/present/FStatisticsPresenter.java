@@ -50,8 +50,8 @@ public class FStatisticsPresenter extends XPresent<RegisterFragment> {
         }, netError -> ToastMgr.showShortToast(netError.getMessage()));
     }
 
-    public void requestStatisListData(Activity activity,String startTime,String endTime){
-        Flowable flowable = DataService.builder().buildReqUrl("").buildReqParams(null).request(ApiService.HttpMethod.POST);
+    public void requestStatisListData(Activity activity, String startTime, String endTime) {
+        Flowable flowable = DataService.builder().buildReqUrl("").buildReqParams("", "").request(ApiService.HttpMethod.POST);
         RxLoadingUtils.subscribeWithDialog(activity, flowable, getV().bindToLifecycle(), new Consumer<IModel>() {
             @Override
             public void accept(IModel iModel) throws Exception {

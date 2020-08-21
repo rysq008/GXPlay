@@ -4,11 +4,11 @@ import cn.droidlover.xdroidmvp.net.XApi;
 
 
 public class Api {
-    private static final String API_BASE_URL_RELEASE = "http://114.116.217.149:30088/";
+    private static final String API_BASE_URL_RELEASE = "http://oms.hbyunjie.com/";//""http://114.116.217.149:30088/";
     /**
      * test
      */
-    public static final String API_BASE_URL_TEST = "https://www.android.com/debug/"; //测试地址
+    public static final String API_BASE_URL_TEST = "http://192.168.1.140:3000/"; //测试地址
 
 
     //微信接口地址

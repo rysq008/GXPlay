@@ -9,6 +9,8 @@ import androidx.viewpager.widget.ViewPager;
 
 public class VerticalViewPager extends ViewPager {
 
+    private boolean isScroll;
+
     public VerticalViewPager(Context context) {
         super(context);
         init();
@@ -69,13 +71,28 @@ public class VerticalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean intercepted = super.onInterceptTouchEvent(swapXY(ev));
-        swapXY(ev); // return touch coordinates to original reference frame for any child views
-        return intercepted;
+        if (isScroll) {
+//            return super.onInterceptTouchEvent(ev);
+            boolean intercepted = super.onInterceptTouchEvent(swapXY(ev));
+            swapXY(ev); // return touch coordinates to original reference frame for any child views
+            return intercepted;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        return super.onTouchEvent(swapXY(ev));
+        if (isScroll) {
+            return super.onTouchEvent(swapXY(ev));
+//            return super.onTouchEvent(ev);
+        } else {
+            return true;// 可行,消费,拦截事件
+        }
     }
+
+    public void setScroll(boolean scroll) {
+        isScroll = scroll;
+    }
+
 }

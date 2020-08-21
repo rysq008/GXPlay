@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.GeolocationPermissions;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.WebIconDatabase;
@@ -212,6 +213,13 @@ public class X5WebView extends WebView {
     public void clearAllData(Context context, boolean isClearCookie) {
         //清除cookie
         QbSdk.clearAllWebViewCache(context, isClearCookie);
+        {
+            stopLoading();
+            removeAllViewsInLayout();
+            removeAllViews();
+            setWebViewClient(null);
+            destroy();
+        }
     }
 
 }

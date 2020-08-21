@@ -1,87 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <com.tmall.ultraviewpager.UltraViewPager
-        android:id="@+id/home_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="2dp"
-        android:layout_toRightOf="@+id/home_rg"
-        android:background="@color/white" />
-
     <RadioGroup
-        android:id="@+id/home_rg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
-            android:id="@+id/home_rb_billing"
-            style="@style/guide_bottom_rb_style"
+            android:id="@+id/home_rb_cashier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:checked="true"
-            android:drawableTop="@mipmap/icon_app"
-            android:gravity="center"
-            android:text="开单"
-            android:textColor="@color/x_blue" />
-
-        <RadioButton
-            android:id="@+id/home_rb_search"
-            style="@style/guide_bottom_rb_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableTop="@mipmap/icon_app"
-            android:gravity="center"
-            android:text="查单"
-            android:textColor="@color/x_blue" />
-
-        <RadioButton
-            android:id="@+id/home_rb_statis"
-            style="@style/guide_bottom_rb_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableTop="@mipmap/icon_app"
-            android:gravity="center"
-            android:text="统计"
-            android:textColor="@color/x_blue" />
-
-        <RadioButton
-            android:id="@+id/guide_rb_4"
-            style="@style/guide_bottom_rb_style"
-            android:layout_weight="2"
-            android:visibility="invisible" />
-
-        <RadioButton
-            android:id="@+id/home_rb_user"
             android:button="@null"
+            android:drawableLeft="@mipmap/icon_app"
+            android:drawablePadding="@dimen/dp_3"
+            android:gravity="center"
+            android:padding="@dimen/dp_4"
+            android:text="收银"
+            android:textColor="@color/x_blue"
+            app:layout_constraintEnd_toStartOf="@+id/home_tv_server"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioButton
+            android:id="@+id/home_rb_server"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:drawableTop="@mipmap/icon_app"
-            android:layout_margin="@dimen/dp_14"
+            android:button="@null"
+            android:drawableLeft="@mipmap/icon_app"
+            android:drawablePadding="@dimen/dp_3"
             android:gravity="center"
+            android:padding="@dimen/dp_4"
+            android:text="后台"
             android:textColor="@color/x_blue"
-            android:text="李丽" />
+            app:layout_constraintEnd_toStartOf="@+id/home_tv_user"
+            app:layout_constraintStart_toEndOf="@+id/home_tv_cashier"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <RadioButton
-            android:id="@+id/guide_rb_6"
-            style="@style/guide_bottom_rb_style"
-            android:layout_weight="2"
-            android:visibility="invisible" />
+
     </RadioGroup>
-</RelativeLayout>
+
+    <TextView
+        android:id="@+id/home_tv_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp_40"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@mipmap/icon_app"
+        android:drawablePadding="@dimen/dp_3"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:text="李丽"
+        android:textColor="@color/x_blue"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.ikats.shop.views.SetScrollViewPager
+        android:id="@+id/home_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_tv_user" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
