@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_40"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/billing_item_goods_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:gravity="center"
+        android:text="枇杷腿"
+        android:textColor="@color/C_333333"
+        android:textSize="@dimen/dp_8"
+        app:layout_constraintBottom_toTopOf="@+id/billing_item_code_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/billing_item_code_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="111111111"
+        android:textColor="@color/color_999"
+        android:textSize="@dimen/dp_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/billing_item_goods_tv"
+        app:layout_constraintTop_toBottomOf="@+id/billing_item_goods_tv" />
+
+    <LinearLayout
+        android:id="@+id/billing_title_input_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="@drawable/shape_grey_stroke_6_radius_rect"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/billing_item_org_price_tv"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/billing_item_minus_tv"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="@color/c_F4785F"
+            android:textSize="@dimen/dp_15"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/billing_item_input_et"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/billing_item_goods_tv" />
+
+        <EditText
+            android:id="@+id/billing_item_input_et"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_grey_stroke_6_radius_rect"
+            android:gravity="center"
+            android:inputType="number"
+            android:padding="1dp"
+            android:singleLine="true"
+            android:text=""
+            android:textSize="@dimen/dp_10"
+            app:layout_constraintEnd_toStartOf="@+id/billing_item_minus_tv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/billing_item_add_tv"
+            tools:text="222" />
+
+        <TextView
+            android:id="@+id/billing_item_add_tv"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/c_F4785F"
+            android:textSize="@dimen/dp_15"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/billing_item_org_price_tv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/billing_item_input_et" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/billing_item_org_price_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dp_1"
+        android:text="$199.9"
+        android:textColor="@color/color_999"
+        android:textSize="@dimen/dp_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/billing_item_sell_price_tv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/billing_item_sell_price_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dp_3"
+        android:text="$7.2"
+        android:textColor="@color/C_333333"
+        android:textSize="@dimen/dp_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/billing_item_del_iv"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/billing_item_del_iv"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_10"
+        android:padding="@dimen/dp_5"
+        android:src="@mipmap/delete_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+

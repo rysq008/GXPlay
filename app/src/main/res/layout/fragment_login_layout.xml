@@ -16,11 +16,12 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:background="@drawable/home_left_banner"
         app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1"
-        android:background="@mipmap/home_left_banner"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="0dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -46,7 +47,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_35"
+            android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/shape_grey_stroke_6_radius_rect"
             android:padding="@dimen/dp_5">
@@ -60,13 +61,13 @@
                 android:background="@color/color_transparent"
                 android:drawableLeft="@mipmap/icon_mobile"
                 android:drawablePadding="@dimen/dp_5"
-                android:textSize="@dimen/dp_8"
                 android:ellipsize="end"
                 android:gravity="left|center_vertical"
                 android:hint="请输入手机号"
                 android:paddingLeft="@dimen/dp_7"
                 android:singleLine="true"
-                android:textColorHint="@color/c_A6A6A6" />
+                android:textColorHint="@color/c_A6A6A6"
+                android:textSize="@dimen/dp_8" />
 
             <ImageView
                 android:id="@+id/login_user_clear_iv"
@@ -80,7 +81,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_35"
+            android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/shape_grey_stroke_6_radius_rect"
             android:orientation="horizontal"
@@ -95,13 +96,13 @@
                 android:drawableLeft="@mipmap/icon_password"
                 android:drawablePadding="@dimen/dp_5"
                 android:ellipsize="end"
-                android:textSize="@dimen/dp_8"
                 android:gravity="left|center_vertical"
                 android:hint="请输入密码"
                 android:inputType="textPassword"
                 android:paddingLeft="@dimen/dp_7"
                 android:singleLine="true"
-                android:textColorHint="@color/c_A6A6A6" />
+                android:textColorHint="@color/c_A6A6A6"
+                android:textSize="@dimen/dp_8" />
 
             <CheckBox
                 android:id="@+id/login_password_eye_cb"
@@ -118,7 +119,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_35"
+            android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/shape_grey_stroke_6_radius_rect"
             android:orientation="horizontal"
@@ -135,31 +136,31 @@
                 android:ellipsize="end"
                 android:gravity="left|center_vertical"
                 android:hint="请输入验证码"
-                android:textSize="@dimen/dp_8"
-                android:inputType="textPassword"
                 android:paddingLeft="@dimen/dp_7"
                 android:singleLine="true"
-                android:textColorHint="@color/c_A6A6A6" />
+                android:textColorHint="@color/c_A6A6A6"
+                android:textSize="@dimen/dp_8" />
+
             <TextView
                 android:id="@+id/login_show_code_tv"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:layout_height="match_parent"/>
+                android:background="@drawable/shape_grey_stroke_6_radius_rect" />
+
             <TextView
                 android:id="@+id/login_get_code_tv"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
+                android:layout_toRightOf="@id/login_enter_code_et"
+                android:layout_weight="1"
                 android:background="@mipmap/refresh"
                 android:gravity="center"
-                android:layout_toRightOf="@id/login_enter_code_et"
                 android:textColor="@color/C_38484F"
-                android:text=""
                 android:textSize="@dimen/dp_8" />
-
         </LinearLayout>
 
         <RelativeLayout
@@ -195,7 +196,7 @@
             android:id="@+id/login_action_btn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_40"
-            android:layout_marginTop="@dimen/dp_45"
+            android:layout_marginTop="@dimen/dp_40"
             android:background="@drawable/shape_gradient_line_180_blue2blue_corner40404040_rect"
             android:text="立即登录"
             android:textColor="@color/color_FEFFFF"

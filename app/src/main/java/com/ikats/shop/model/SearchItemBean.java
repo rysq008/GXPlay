@@ -5,8 +5,9 @@ import com.ikats.shop.model.BaseModel.XBaseModel;
 
 public class SearchItemBean extends XBaseModel {
 
-    public String sort;
+    public int index;
     public String order;
+    public String sellid;
     public String count;
     public String amount;
     public String person;
@@ -14,6 +15,8 @@ public class SearchItemBean extends XBaseModel {
     public String status;
     public String createtime;
     public String action;
+    public String starttime;
+    public String endtime;
 
     @Override
     public int itemType() {

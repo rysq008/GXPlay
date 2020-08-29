@@ -1,5 +1,6 @@
 package com.ikats.shop.utils;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
@@ -260,7 +261,8 @@ public class RxLoadingUtils {
     }
 
     public static ProgressDialog getDefaultProgressDialog(Context context, String text) {
-        ProgressDialog dialog = new ProgressDialog(context);
+        ProgressDialog dialog = new ProgressDialog(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setTitle("");
         dialog.setMessage(text);
         dialog.setCancelable(false);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.text.TextUtils;
 
 import com.ikats.shop.fragments.RegisterFragment;
+import com.ikats.shop.fragments.StatisticsFragment;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.RegisterBean;
 import com.ikats.shop.net.DataService;
@@ -14,11 +15,12 @@ import com.ikats.shop.views.ToastMgr;
 
 import cn.droidlover.xdroidmvp.mvp.XPresent;
 import cn.droidlover.xdroidmvp.net.IModel;
+import cn.droidlover.xdroidmvp.net.NetError;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
 
-public class FStatisticsPresenter extends XPresent<RegisterFragment> {
+public class FStatisticsPresenter extends XPresent<StatisticsFragment> {
 
     /**
      * 销售笔数和销售金额
@@ -43,7 +45,7 @@ public class FStatisticsPresenter extends XPresent<RegisterFragment> {
         RxLoadingUtils.subscribeWithDialog(context, fr, getV().bindToLifecycle(), (Consumer<HttpResultModel<RegisterBean>>) result -> {
 
             if (result.isSucceful()) {
-                getV().getUserData(result.resultData);
+//                getV().getUserData(result.resultData);
                 ToastMgr.showShortToast(result.resultContent);
             } else
                 ToastMgr.showShortToast(result.resultContent);
@@ -57,7 +59,7 @@ public class FStatisticsPresenter extends XPresent<RegisterFragment> {
             public void accept(IModel iModel) throws Exception {
 
             }
-        });
+        }, netError -> getV().showData());
     }
 
     private boolean checkParams(Activity activity, String userName, String verifCode, String password, String repassword) {

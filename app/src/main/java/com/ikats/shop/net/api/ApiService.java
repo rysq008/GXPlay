@@ -23,6 +23,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 public interface ApiService {
@@ -75,11 +76,18 @@ public interface ApiService {
     @POST
     Flowable<ResponseBody> postData(@Url String url, @Body RequestBody body);
 
+    @Streaming
+    @GET
+    Flowable<ResponseBody> downloadData(@Url String url);
+
+
     enum HttpMethod {
         GET,
         POST,
         POST_BODY,
         POST_JSON,//retrfix自动BaseRequestBody将转化成json
-        UPLOAD
+        UPLOAD,
+        DOWNLOAD,
+        OTHER
     }
 }

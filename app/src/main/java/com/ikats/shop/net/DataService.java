@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import cn.droidlover.xdroidmvp.kit.Kits;
+import cn.droidlover.xdroidmvp.net.XApi;
+import cn.droidlover.xdroidmvp.net.progress.ProgressHelper;
+import cn.droidlover.xdroidmvp.net.progress.ProgressListener;
 import ikidou.reflect.typeimpl.ParameterizedTypeImpl;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -124,7 +127,9 @@ public class DataService {
         private File file = null;
         private String url;
         private Type type;
+        private boolean interceptconvert;
         private Class clz;
+        private ProgressListener progressListener;
 
         public DataServiceBuilder buildReqUrl(String url) {
             this.url = url;
@@ -137,13 +142,23 @@ public class DataService {
             return this;
         }
 
+        public DataServiceBuilder buildInterceptconvert(boolean interceptconvert) {
+            this.interceptconvert = interceptconvert;
+            return this;
+        }
+
         public DataServiceBuilder buildReqParams(String key, Object obj) {
             this.params.put(key, obj);
             return this;
         }
 
+        public DataServiceBuilder buildProgress(ProgressListener progressListener) {
+            this.progressListener = progressListener;
+            return this;
+        }
+
         public DataServiceBuilder buildReqParams(File file) {
-            if(null == file||!file.exists()){
+            if (null == file || !file.exists()) {
                 ToastUtils.showLong("文件不存在！");
                 return this;
             }
@@ -161,12 +176,12 @@ public class DataService {
             return this;
         }
 
-        public DataServiceBuilder builderRequestBody(RequestBody requestBody){
+        public DataServiceBuilder builderRequestBody(RequestBody requestBody) {
             this.requestBody = requestBody;
             return this;
         }
 
-        public DataServiceBuilder builderRequestBody(BaseRequestBody baseRequestBody){
+        public DataServiceBuilder builderRequestBody(BaseRequestBody baseRequestBody) {
             this.baseRequestBody = baseRequestBody;
             return this;
         }
@@ -183,13 +198,13 @@ public class DataService {
                     call = DataService.getData(url, params);
                     break;
                 case POST:
-                    call = DataService.postData( url, params);
+                    call = DataService.postData(url, params);
                     break;
                 case POST_BODY:
-                    call = DataService.postData( url, requestBody);
+                    call = DataService.postData(url, requestBody);
                     break;
                 case POST_JSON:
-                    call = DataService.postData( url, baseRequestBody);
+                    call = DataService.postData(url, baseRequestBody);
                     break;
                 case UPLOAD:
                     RequestBody requestBody = new MultipartBody.Builder().setType(FORM)
@@ -197,9 +212,16 @@ public class DataService {
                             .build();
                     call = DataService.postData(url, requestBody);
                     break;
+                case DOWNLOAD:
+                    ProgressHelper.get().addResponseListener(url, this.progressListener);
+                    call = DataService.downloadData(url);
+                    break;
                 default:
+                    call = XApi.get("http://192.168.0.101:3000/", ApiService.class).getData(url, params);
                     break;
             }
+            if (method == ApiService.HttpMethod.DOWNLOAD) return call;
+            if (interceptconvert) return call;
             return call.flatMap((Function<ResponseBody, Flowable<?>>) responseBody -> {
 //                    type = TypeBuilder.newInstance(HttpResultModel.class)
 //                            .addTypeParam(clz)
@@ -229,4 +251,9 @@ public class DataService {
     public static Flowable<ResponseBody> postData(String url, BaseRequestBody requestBody) {
         return Api.CreateApiService().postData(url, requestBody);
     }
+
+    public static Flowable<ResponseBody> downloadData(String url) {
+        return Api.CreateApiService().downloadData(url);
+    }
+
 }

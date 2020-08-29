@@ -28,7 +28,7 @@ public class StatisItemAdapter extends SimpleRecAdapter<StatisItemBean, StatisIt
 
     @Override
     public int getLayoutId() {
-        return R.layout.fragment_statistics_item_layout;
+        return R.layout.fragment_statistics_sell_rank_item_layout;
     }
 
     @Override
@@ -51,11 +51,11 @@ public class StatisItemAdapter extends SimpleRecAdapter<StatisItemBean, StatisIt
 
 
         public void setDisplay(int type, StatisItemBean itemType) {
-            getView(R.id.statis_item_sort_tv).setText(itemType.sort);
-            getView(R.id.statis_item_goods_tv).setText(itemType.goods);
-            getView(R.id.statis_item_code_tv).setText(itemType.qrcode);
-            getView(R.id.statis_item_sell_tv).setText(itemType.sellCount);
-            getView(R.id.statis_item_amount_tv).setText(itemType.sellAmount);
+            getView(R.id.statis_sell_rank_item_id_tv).setText(itemType.sort);
+            getView(R.id.statis_sell_rank_item_name_tv).setText(itemType.goods);
+            getView(R.id.statis_sell_rank_item_barcode_tv).setText(itemType.qrcode);
+            getView(R.id.statis_sell_rank_item_sales_tv).setText(itemType.sellCount);
+            getView(R.id.statis_sell_rank_item_amount_tv).setText(itemType.sellAmount);
         }
 
 

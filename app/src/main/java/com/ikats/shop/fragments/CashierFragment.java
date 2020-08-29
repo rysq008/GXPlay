@@ -2,21 +2,16 @@ package com.ikats.shop.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.ikats.shop.R;
 import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
 import com.ikats.shop.views.VerticalViewPager;
 import com.jaeger.library.StatusBarUtil;
-import com.lvrenyang.io.Pos;
-import com.lvrenyang.io.base.COMIO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,60 +40,35 @@ public class CashierFragment extends XBaseFragment {
         mFragment.add(BillingFragment.newInstance());
         mFragment.add(SearchFragment.newInstance());
         mFragment.add(StatisticsFragment.newInstance());
+        mFragment.add(SettingFragment.newInstance());
 //        viewPager.setScrollMode(UltraViewPager.ScrollMode.VERTICAL);
         viewPager.setAdapter(new XFragmentAdapter(getChildFragmentManager(), mFragment, null));
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (position < 3)
-                    radioGroup.check(radioGroup.getChildAt(position).getId());
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
         viewPager.setOffscreenPageLimit(3);
-//        viewPager.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return true;
-//            }
+//        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+//            RadioButton radioButton = group.findViewById(checkedId);
+//            int pos = group.indexOfChild(radioButton);
+//            if (pos < 3)
+//                viewPager.setCurrentItem(pos);
 //        });
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            RadioButton radioButton = group.findViewById(checkedId);
-            int pos = group.indexOfChild(radioButton);
-            if (pos < 3)
-                viewPager.setCurrentItem(pos);
-        });
-//        //initialize built-in indicator
-//        viewPager.initIndicator();
-////set style of indicators
-//        viewPager.getIndicator()
-//                .setOrientation(UltraViewPager.Orientation.HORIZONTAL)
-//                .setFocusColor(Color.GREEN)
-//                .setNormalColor(Color.WHITE)
-//                .setRadius((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()));
-////set the alignment
-//        viewPager.getIndicator().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
-////construct built-in indicator, and add it to  UltraViewPager
-//        viewPager.getIndicator().build();
-//
-////set an infinite loop
-//        viewPager.setInfiniteLoop(true);
-////enable auto-scroll mode
-//        viewPager.setAutoScroll(2000);
     }
 
-    @OnClick({R.id.cashier_rb_billing})
+    @OnClick({R.id.cashier_rb_billing, R.id.cashier_rb_search, R.id.cashier_rb_statis, R.id.cashier_rb_setting})
     public void OnViewClick(View view) {
         switch (view.getId()) {
             case R.id.cashier_rb_billing:
-                ((BillingFragment)mFragment.get(0)).handler.sendEmptyMessage(-1);
+                if (viewPager.getCurrentItem() == 0)
+                    ((BillingFragment) mFragment.get(0)).handler.sendEmptyMessage(-1);
+                else
+                    viewPager.setCurrentItem(0);
+                break;
+            case R.id.cashier_rb_search:
+                viewPager.setCurrentItem(1);
+                break;
+            case R.id.cashier_rb_statis:
+                viewPager.setCurrentItem(2);
+                break;
+            case R.id.cashier_rb_setting:
+                viewPager.setCurrentItem(3);
                 break;
         }
     }

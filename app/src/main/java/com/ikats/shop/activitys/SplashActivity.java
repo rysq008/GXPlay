@@ -46,7 +46,8 @@ public class SplashActivity extends XBaseActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,  //读取权限
             Manifest.permission.READ_PHONE_STATE,  //读取权限
             Manifest.permission.ACCESS_COARSE_LOCATION,//定位权限
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            Manifest.permission.WAKE_LOCK
     };
 
     @Override

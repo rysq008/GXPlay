@@ -19,24 +19,37 @@ import androidx.fragment.app.Fragment;
 import androidx.multidex.MultiDexApplication;
 
 import com.blankj.utilcode.util.CrashUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.ikats.shop.activitys.DetailFragmentsActivity;
-import com.ikats.shop.data.RxConstant;
-//import com.ikats.shop.database.MyObjectBoxectBox;
 import com.ikats.shop.database.MyObjectBox;
+import com.ikats.shop.database.SkuTableEntiry;
+import com.ikats.shop.database.VipTableEntiry;
 import com.ikats.shop.fragments.LoginFragment;
+import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.GoodsBean;
+import com.ikats.shop.model.LoginBean;
+import com.ikats.shop.model.ProvinceBean;
+import com.ikats.shop.model.SettingBean;
+import com.ikats.shop.net.DataService;
 import com.ikats.shop.net.api.Api;
+import com.ikats.shop.net.api.ApiService;
+import com.ikats.shop.net.model.SkuDataRequestBody;
+import com.ikats.shop.utils.RxLoadingUtils;
 import com.ikats.shop.utils.ShareUtils;
+import com.ikats.shop.utils.SocketClient;
 import com.tamsiree.rxkit.RxTool;
-import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
 
 import java.io.BufferedReader;
-import java.io.StringReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -48,14 +61,19 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xdroidmvp.net.NetProvider;
 import cn.droidlover.xdroidmvp.net.RequestHandler;
 import cn.droidlover.xdroidmvp.net.XApi;
+import ikidou.reflect.TypeToken;
+import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+
 
 public class App extends MultiDexApplication {
 
@@ -66,6 +84,8 @@ public class App extends MultiDexApplication {
     public static int h;
     private static BoxStore boxStore;
     public static ArrayMap<String, GoodsBean> products = new ArrayMap();
+    public static List<ProvinceBean> provinceBeans = new ArrayList<>();
+    private static SettingBean settingBean;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -172,7 +192,7 @@ public class App extends MultiDexApplication {
 
             @Override
             public boolean dispatchProgressEnable() {
-                return false;
+                return true;
             }
 
             @Override
@@ -226,13 +246,15 @@ public class App extends MultiDexApplication {
 
             @Override
             public boolean handleError(NetError error) {//重新登录
-                Fragment fragment = ((DetailFragmentsActivity) getActivity()).getCurrentFragment();
-                if (error.getType() == NetError.AuthError && null != fragment && !(fragment instanceof LoginFragment)) {
-                    ShareUtils.clearLoginInfo();
-                    ILFactory.getLoader().clearMemoryCache(mApp);
-                    Executors.newSingleThreadExecutor().execute(() -> ILFactory.getLoader().clearDiskCache(mApp));
-                    DetailFragmentsActivity.launch(getActivity(), null, Intent.FLAG_ACTIVITY_NEW_TASK, LoginFragment.newInstance());
-                    return true;
+                if (getActivity() instanceof DetailFragmentsActivity) {
+                    Fragment fragment = ((DetailFragmentsActivity) getActivity()).getCurrentFragment();
+                    if (error.getType() == NetError.AuthError && null != fragment && !(fragment instanceof LoginFragment)) {
+                        ShareUtils.clearLoginInfo();
+                        ILFactory.getLoader().clearMemoryCache(mApp);
+                        Executors.newSingleThreadExecutor().execute(() -> ILFactory.getLoader().clearDiskCache(mApp));
+                        DetailFragmentsActivity.launch(getActivity(), null, Intent.FLAG_ACTIVITY_NEW_TASK, LoginFragment.newInstance());
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -247,7 +269,7 @@ public class App extends MultiDexApplication {
 
         boxStore = MyObjectBox.builder().androidContext(this).build();
 //        if (BuildConfig.DEBUG) {
-            new AndroidObjectBrowser(boxStore).start(this);
+        new AndroidObjectBrowser(boxStore).start(this);
 //        }
 
         XDroidConf.IL_ERROR_RES = R.drawable.ic_launcher_background;
@@ -255,28 +277,109 @@ public class App extends MultiDexApplication {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                StringReader stringReader = new StringReader(RxConstant.PRODUCTS);
-                BufferedReader bufferedReader = new BufferedReader(stringReader);
                 String str = null;
-                while ((str = bufferedReader.readLine()) != null) {
-                    String[] strs = str.split(",");
-                    GoodsBean goodsBean = new GoodsBean();
-                    goodsBean.productId = strs[0].trim();
-                    goodsBean.barcode = strs[1].trim();
-                    goodsBean.name = strs[2].trim();
-                    goodsBean.url = strs[3].trim();
-                    goodsBean.count = 0;
-
-                Log.i("aaa", "products: --->" + goodsBean.barcode+","+goodsBean.url+","+goodsBean.name);
-                    products.put(goodsBean.barcode, goodsBean);
+//                StringReader stringReader = new StringReader(RxConstant.PRODUCTS);
+//                BufferedReader bufferedReader = new BufferedReader(stringReader);
+//                while ((str = bufferedReader.readLine()) != null) {
+//                    String[] strs = str.split(",");
+//                    GoodsBean goodsBean = new GoodsBean();
+//                    goodsBean.productId = strs[0].trim();
+//                    goodsBean.barcode = strs[1].trim();
+//                    goodsBean.name = strs[2].trim();
+//                    goodsBean.url = strs[3].trim();
+//                    goodsBean.count = 0;
+//
+//                    Log.i("aaa", "products: --->" + goodsBean.barcode + "," + goodsBean.url + "," + goodsBean.name);
+//                    products.put(goodsBean.barcode, goodsBean);
+//                }
+//                Log.i("aaa", "onCreate: --->" + products.size());
+//                bufferedReader.close();
+//                stringReader.close();
+                Gson gson = new Gson();
+                InputStream inputStream = getAssets().open("province_json.txt");
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder sb = new StringBuilder();
+                while ((str = br.readLine()) != null) {
+                    sb.append(str);
                 }
-                Log.i("aaa", "onCreate: --->"+products.size());
-                bufferedReader.close();
-                stringReader.close();
+                String province_json = sb.toString();
+                provinceBeans = gson.fromJson(province_json, new TypeToken<List<ProvinceBean>>() {
+                }.getType());
             } catch (Exception e) {
 
             }
         });
+        boxStore.runInTxAsync(() -> {
+            Box box = boxStore.boxFor(VipTableEntiry.class);
+            box.removeAll();
+            Random random = new Random();
+            String[] names = {"小星星", "小海豚", "小可爱", "小甜甜"};
+            String[] phones = {"13411112222", "13511112222", "13611112222", "13811112222"};
+            for (int i = 0; i < 4; i++) {
+                VipTableEntiry entiry = new VipTableEntiry();
+                entiry.balance = 100 * i;
+                entiry.name = names[i];
+                entiry.phone = phones[i];
+                entiry.level = "普通会员";
+                entiry.integtal = 200;
+                box.put(entiry);
+            }
+        }, (result, error) -> {
+            if (error == null) {
+                ToastUtils.showLong("vip box init data success !");
+            }
+        });
+        settingBean = ShareUtils.getSettingInfo();
+        SocketClient.initWebSocket(this, 1111);
+
+
+        Flowable<HttpResultModel> f_token =
+                DataService.builder().buildReqUrl(App.getSettingBean().manage_url+"login/getToken")
+                        .buildReqParams("appKey", "POS")
+                        .buildReqParams("security", "81014bf5f79050e6a85739320d8c6540")
+                        .request(ApiService.HttpMethod.POST).flatMap((Function<HttpResultModel, Flowable<HttpResultModel<List<SkuTableEntiry>>>>) httpResultModel -> {
+                    LoginBean loginBean = new LoginBean();
+                    loginBean.access_token = (String) ((LinkedTreeMap) httpResultModel.resultData).get("token");
+                    ShareUtils.saveLoginInfo(loginBean);
+
+                    return DataService.builder().buildReqUrl(App.getSettingBean().manage_url+"ownersku/queryshopsku")
+                            .builderRequestBody(new SkuDataRequestBody(App.getSettingBean().shop_code))
+//                            .buildParseDataClass(S)
+                            .buildParseDataType(new TypeToken<HttpResultModel<List<SkuTableEntiry>>>() {
+                            }.getType())
+                            .request(ApiService.HttpMethod.POST_JSON)
+                            .map((Function<HttpResultModel<List<SkuTableEntiry>>, HttpResultModel>) listHttpResultModel -> {
+//                                    ArrayMap<String, GoodsBean> products = new ArrayMap();
+                                Box skuTableEntiry = boxStore.boxFor(SkuTableEntiry.class);
+                                skuTableEntiry.removeAll();
+                                if (listHttpResultModel.isSucceful()) {
+                                    for (SkuTableEntiry tableEntiry : listHttpResultModel.resultData) {
+                                        GoodsBean goodsBean = new GoodsBean();
+                                        goodsBean.productId = tableEntiry.shopskucode;
+                                        goodsBean.barcode = tableEntiry.shoppncode;
+                                        goodsBean.name = tableEntiry.shopskuname;
+                                        goodsBean.url = "";
+                                        goodsBean.sell_price = Float.parseFloat(tableEntiry.shopskuprice);
+                                        goodsBean.origin_price = Float.parseFloat(tableEntiry.shopskuprice);
+                                        goodsBean.count = 0;
+
+                                        Log.i("aaa", "products: --->" + goodsBean.barcode + "," + goodsBean.url + "," + goodsBean.name);
+                                        products.put(goodsBean.barcode, goodsBean);
+                                    }
+                                    skuTableEntiry.put(listHttpResultModel.resultData);
+                                }
+                                HttpResultModel resultModel = new HttpResultModel();
+                                resultModel.resultCode = 1;
+                                resultModel.resultData = products;
+                                return resultModel;
+                            })
+                            ;
+                });
+        RxLoadingUtils.subscribe(f_token, null, httpResultModel -> {
+            if (httpResultModel.isSucceful()) {
+                ToastUtils.showLong("fetch sku data success !");
+            }
+        }, netError -> ToastUtils.showLong(netError.getMessage()));
     }
 
 
@@ -318,12 +421,20 @@ public class App extends MultiDexApplication {
         return mActivity.get();
     }
 
-    public static BoxStore getBoxStore(){
+    public static BoxStore getBoxStore() {
         return boxStore;
     }
 
     public static App getApp() {
         return mApp;
+    }
+
+    public static SettingBean getSettingBean() {
+        return settingBean;
+    }
+
+    public static void setSettingBean(SettingBean settingBean) {
+        App.settingBean = settingBean;
     }
 
     @Override
