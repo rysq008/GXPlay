@@ -2,9 +2,8 @@ package com.ikats.shop.database;
 
 import com.ikats.shop.model.BaseModel.XBaseModel;
 
-import java.lang.annotation.Annotation;
+import java.util.Date;
 
-import io.objectbox.annotation.BaseEntity;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.NameInDb;
@@ -70,11 +69,15 @@ import io.objectbox.annotation.NameInDb;
 public final class OrderTableEntiry extends XBaseModel {
 
     @Id
-    @NameInDb("ORDER_ID")
-    public long _orderId;
+    @NameInDb("_ID")
+    public long _id;
 
+    public String sell_id;
+    public String _order_id;
     public String startTime;
     public String endTime;
+    public Date startDate;
+    public Date endDate;
     public int streamType;
     public String ip;
     public int prot;
@@ -84,9 +87,15 @@ public final class OrderTableEntiry extends XBaseModel {
     public String outBizNo;
     public String payid;
     public int count;
-    public String purchaser="余与";
-    public String amount="500";
-    public String phone="13400000000";
-    public String status="放行";
-    public String action="核发";
+    public String purchaser;//购买人
+    public String amount;
+    public String phone;
+    public String status;
+    public String action;
+    public String crateTime;
+
+    public String record_ip;
+    public String record_prot;
+    public String record_channel;
+
 }

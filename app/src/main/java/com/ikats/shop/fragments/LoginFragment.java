@@ -132,15 +132,15 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 //                eye_cb.toggle();
                 break;
             case R.id.login_get_code_tv:
-                getP().requestGetCode(context, user_et.getText().toString(), msg -> {
+                getP().requestCode(context, user_et.getText().toString(), msg -> {
                     HttpResultModel resultModel = (HttpResultModel) msg.obj;
-                    Bitmap bitmap = (CodeUtils.getInstance().createBitmap(resultModel.resultContent));
+                    Bitmap bitmap = (Bitmap) resultModel.resultData;
                     show_code_tv.setBackground(new BitmapDrawable(bitmap));
-                    CountDownTimer cdt = new CountDownTimer(60000, 1000) {
+                    CountDownTimer cdt = new CountDownTimer(61000, 1000) {
                         @Override
                         public void onTick(long millisUntilFinished) {
-                            pwd_et.setText(resultModel.resultContent);
-                            get_code_tv.setText((millisUntilFinished / 1000 + 1) + "S");
+//                            pwd_et.setText(resultModel.resultContent);
+                            get_code_tv.setText((millisUntilFinished / 1000) + "S");
                         }
 
                         @Override
@@ -182,7 +182,7 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                                                                     return;
                                                                 }
                                                                 dialog1.cancel();
-                                                                getP().requestGetCode(context, et_input.getText().toString(), msg -> {
+                                                                getP().requestCode(context, et_input.getText().toString(), msg -> {
                                                                     DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
                                                                             DialogFragmentHelper.builder(R.layout.dialog_common_reset_pwd_layout, false)
                                                                                     .setOnProcessView((dialog2, view3) -> {
@@ -290,7 +290,9 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                 break;
             case R.id.login_action_btn:
 //                enter_code_et.getText()
-                getP().requestLogin(context, "admin"/*user_et.getText().toString()*/, "admin"/*pwd_et.getText().toString()*/,/*pwd_or_code_ctv.isChecked()*/true);
+//                getP().requestLogin(context, user_et.getText().toString().trim(), pwd_et.getText().toString().trim(), enter_code_et.getText().toString().trim());
+                getP().requestLogin(context, "13333333333", "1111111", "1111");
+//                showContent(null);
                 break;
             case R.id.register_action_tv:
                 DetailFragmentsActivity.launch(context, null, RegisterFragment.newInstance());

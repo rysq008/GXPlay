@@ -1,24 +1,31 @@
 package com.ikats.shop.utils;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import com.ikats.shop.App;
 import com.ikats.shop.event.RxBusProvider;
 import com.ikats.shop.event.RxMsgEvent;
 import com.ikats.shop.views.XReloadableListContentLayout;
 import com.ikats.shop.views.XReloadableStateContorller;
+import com.tamsiree.rxkit.RxDeviceTool;
 
 import org.json.JSONException;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.UnknownHostException;
 
 import cn.droidlover.xdroidmvp.net.ApiSubscriber;
 import cn.droidlover.xdroidmvp.net.IModel;
 import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xdroidmvp.net.XApi;
+import cn.leancloud.AVObject;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Maybe;
@@ -260,7 +267,8 @@ public class RxLoadingUtils {
     }
 
     public static ProgressDialog getDefaultProgressDialog(Context context, String text) {
-        ProgressDialog dialog = new ProgressDialog(context);
+        ProgressDialog dialog = new ProgressDialog(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setTitle("");
         dialog.setMessage(text);
         dialog.setCancelable(false);
@@ -583,41 +591,45 @@ public class RxLoadingUtils {
 
     public static void saveErrorMessage(NetError e) {
 //         测试 SDK 是否正常工作的代码
-//        AVObject avObject = new AVObject("Android_phone");
-////        avObject.put("Cookie", ShareUtils.getSessionId());
-//        avObject.put("uId", ShareUtils.getString("uId", ""));
-//        avObject.put("enId", ShareUtils.getString("enId", ""));
-//        avObject.put("brand", SystemUtil.getDeviceBrand());
-//        avObject.put("model", SystemUtil.getSystemModel());
-//        avObject.put("systemversion", SystemUtil.getSystemVersion());
-//        avObject.put("sdkVersion", SystemUtil.getSDKVersion());
-//        avObject.put("versionName", SystemUtil.getLocalVersionName());
-////        avObject.put("registrationid", JPushInterface.getRegistrationID(App.getInstance()));
-//        avObject.put("plam", System.getProperty("os.name"));
-//
-//        StringBuilder sb = new StringBuilder();
-//
-//        Writer writer = new StringWriter();
-//        PrintWriter pw = new PrintWriter(writer);
-//        e.printStackTrace(pw);
-////        Throwable cause = e.getCause();
-////        // 循环取出Cause
-////        while (cause != null) {
-////            cause.printStackTrace(pw);
-////            cause = e.getCause();
-////        }
-//        pw.close();
-//        String result = writer.toString();
-//        sb.append(result);
-//        avObject.put("error", e.toString() + "--＞" + sb.toString());
-//
-//        avObject.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(AVException e) {
-//                if (e == null) {
-//                    Log.d("saved", "success!");
-//                }
-//            }
-//        });
+        AVObject avObject = new AVObject("Android_phone");
+//        avObject.put("Cookie", ShareUtils.getSessionId());
+        avObject.put("uId", ShareUtils.getString("uId", ""));
+        avObject.put("enId", ShareUtils.getString("enId", ""));
+        avObject.put("brand", RxDeviceTool.getBuildBrand());
+        avObject.put("model", RxDeviceTool.getBuildBrandModel());
+        avObject.put("mac", RxDeviceTool.getMacAddress());
+        avObject.put("systemversion", RxDeviceTool.getDeviceSoftwareVersion(App.getApp()));
+        avObject.put("deviceInfo", RxDeviceTool.getDeviceInfo(App.getApp()));
+        avObject.put("versionName", RxDeviceTool.getAppPackageName());
+//        avObject.put("registrationid", JPushInterface.getRegistrationID(App.getInstance()));
+        avObject.put("plam", System.getProperty("os.name"));
+
+        StringBuilder sb = new StringBuilder();
+
+        Writer writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        e.printStackTrace(pw);
+//        Throwable cause = e.getCause();
+//        // 循环取出Cause
+//        while (cause != null) {
+//            cause.printStackTrace(pw);
+//            cause = e.getCause();
+//        }
+        pw.close();
+        String result = writer.toString();
+        sb.append(result);
+        avObject.put("error", e.toString() + "--＞" + sb.toString());
+
+        avObject.saveInBackground().subscribe(new Consumer<AVObject>() {
+            @Override
+            public void accept(AVObject avObject) throws Exception {
+
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+
+            }
+        });
     }
 }

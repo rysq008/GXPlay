@@ -4,70 +4,85 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.collection.ArrayMap;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.google.gson.internal.LinkedTreeMap;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.gson.Gson;
 import com.ikats.shop.App;
 import com.ikats.shop.BuildConfig;
 import com.ikats.shop.R;
+import com.ikats.shop.adapters.BillingItemAdapter;
+import com.ikats.shop.adapters.VipItemAdapter;
 import com.ikats.shop.database.OrderTableEntiry;
 import com.ikats.shop.database.OrderTableEntiry_;
+import com.ikats.shop.database.VipTableEntiry;
+import com.ikats.shop.database.VipTableEntiry_;
 import com.ikats.shop.dialog.CommonDialogFragment;
 import com.ikats.shop.dialog.DialogFragmentHelper;
 import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.GoodsBean;
-import com.ikats.shop.model.LoginBean;
+import com.ikats.shop.model.OrderResultBean;
+import com.ikats.shop.model.PayResultBean;
+import com.ikats.shop.model.PrintBean;
+import com.ikats.shop.model.VerifyResultBean;
+import com.ikats.shop.model.VipBean;
 import com.ikats.shop.net.DataService;
 import com.ikats.shop.net.api.ApiService;
-import com.ikats.shop.net.model.PayinfoRequestBody;
+import com.ikats.shop.net.model.CancelOrderRequestBody;
+import com.ikats.shop.net.model.OrderinfoRequestBody;
 import com.ikats.shop.utils.PlayerHikvision;
 import com.ikats.shop.utils.Prints;
 import com.ikats.shop.utils.RxLoadingUtils;
-import com.ikats.shop.utils.ShareUtils;
+import com.ikats.shop.utils.SnowFlake;
+import com.ikats.shop.utils.Utils;
 import com.ikats.shop.views.X5WebView;
+import com.ikats.shop.views.XReloadableListContentLayout;
 import com.ikats.shop.views.XReloadableStateContorller;
 import com.jaeger.library.StatusBarUtil;
-import com.lvrenyang.io.base.IOCallBack;
-import com.tencent.smtt.export.external.interfaces.ConsoleMessage;
-import com.tencent.smtt.export.external.interfaces.JsPromptResult;
-import com.tencent.smtt.export.external.interfaces.JsResult;
-import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
-import com.tencent.smtt.sdk.DownloadListener;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
-import com.zkteco.android.IDReader.IDPhotoHelper;
+import com.tamsiree.rxfeature.tool.RxQRCode;
+import com.tamsiree.rxkit.RxDeviceTool;
 import com.zkteco.android.IDReader.WLTService;
 import com.zkteco.android.biometric.core.device.ParameterHelper;
 import com.zkteco.android.biometric.core.device.TransportType;
@@ -79,93 +94,148 @@ import com.zkteco.android.biometric.module.idcard.exception.IDCardReaderExceptio
 import com.zkteco.android.biometric.module.idcard.meta.IDCardInfo;
 import com.zkteco.android.biometric.module.idcard.meta.IDPRPCardInfo;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.kit.Kits;
-import cn.droidlover.xdroidmvp.net.IModel;
-import cn.droidlover.xdroidmvp.net.NetError;
+import cn.droidlover.xrecyclerview.RecyclerItemCallback;
+import cn.droidlover.xrecyclerview.XRecyclerView;
 import io.objectbox.Box;
 import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
-import static com.ikats.shop.fragments.HomeFragment.mcom;
-import static com.ikats.shop.fragments.HomeFragment.mpos;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
+import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
+import static com.ikats.shop.activitys.DetailFragmentsActivity.TAG;
 
 public class BillingFragment extends XBaseFragment {
-    @BindView(R.id.billing_title_tv)
-    TextView title_tv;
+    @BindView(R.id.billing_verify_by_idcards_iv)
+    ImageView idcard_btn;
+    @BindView(R.id.billing_verify_by_phone_iv)
+    ImageView phone_btn;
+    @BindView(R.id.billing_verify_by_wechat_iv)
+    ImageView wechat_btn;
+    @BindView(R.id.billing_sell_order_tv)
+    TextView order_tv;
     @BindView(R.id.billing_title_name_tv)
     TextView name_tv;
+    @BindView(R.id.billing_title_loading_iv)
+    ImageView loadingIv;
     @BindView(R.id.billing_title_test_tv)
     TextView test_tv;
     @BindView(R.id.billing_enter_url_et)
     EditText enter_url_et;
+    @BindView(R.id.billing_goods_buy_rv)
+    XRecyclerView billing_rv;
     @BindView(R.id.billing_enter_submit_btn)
     Button submit_btn;
-    @BindView(R.id.billing_bottom_amount_big_tv)
-    TextView amout_bit_tv;
-    @BindView(R.id.billing_bottom_amount_small_tv)
-    TextView amout_small_tv;
+    @BindView(R.id.billing_enter_vip_btn)
+    Button vip_btn;
+    @BindView(R.id.billing_enter_billin_btn)
+    Button billing_btn;
     @BindView(R.id.billing_bottom_amount_tv)
     TextView amount_tv;
     @BindView(R.id.billing_sufaceview)
     SurfaceView surfaceView;
-    @BindView(R.id.billing_sufaceview_back)
-    SurfaceView surfaceViewback;
     @BindView(R.id.billing_xreload_layout)
     XReloadableStateContorller reloadableStateContentLayout;
     @BindView(R.id.billing_swipe_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.billing_webview)
     X5WebView wvContent;
-    String mUrl = "";
-    ArrayMap<String, GoodsBean> arrayMap = new ArrayMap();
+    @BindView(R.id.billing_pay_qrcode_iv)
+    ImageView qrcode_iv;
+    @BindView(R.id.billing_goods_statis_tv_val)
+    TextView statis_tv;
+    @BindView(R.id.billing_goods_sale_tv_val)
+    TextView sale_tv;
+    @BindView(R.id.billing_goods_receivable_tv_val)
+    TextView receivable_tv;
+    @BindView(R.id.billing_goods_pay_tv_val)
+    TextView pay_tv;
+    @BindView(R.id.billing_bottom_shopping_bag_big_tv)
+    TextView bag_big_tv;
+    @BindView(R.id.billing_bottom_shopping_bag_small_tv)
+    TextView bag_small_tv;
     String cur_product_id = "";
     String startTime, endTime;
     private PlayerHikvision playerHikvision;
-    private String outBizNo = "";
+    private boolean isMakeVideo;
+    private BillingItemAdapter billingItemAdapter;
+    private String video_pid, promo_code;
+    private VerifyResultBean verifyResultBean;
+    //    private SettingBean settingBean;
+    private GoodsBean[] beans;
+    private Dialog payDialog;
+    private PrintBean printBean;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         StatusBarUtil.setTranslucent(context, 0);
+        beans = new GoodsBean[]{new GoodsBean(), new GoodsBean()};
     }
 
     boolean isScan;
     private static final int PLAY_HIK_STREAM_CODE = 1001;
-    private static final String IP_ADDRESS = "192.168.0.104";//"192.168.0.104";
+    private static final String IP_ADDRESS = "192.168.1.7";//"192.168.0.104";
     private static final int PORT = 8000;
     private static final String USER_NAME = "admin";
     private static final String PASSWORD = "ikats903";
 
     Handler handler = new Handler(msg -> {
         switch (msg.what) {
+            case 1:
+                String idcard = (String) msg.obj;
+                ToastUtils.showLong(idcard);
+                Flowable<HttpResultModel<VerifyResultBean>> IDCard = DataService.builder().buildReqUrl(App.getSettingBean().shop_url + "api/get/user")
+                        .buildReqParams("IDCard", idcard)
+                        .buildParseDataClass(VerifyResultBean.class)
+                        .request(ApiService.HttpMethod.GET);
+                RxLoadingUtils.subscribeWithDialog(context, IDCard, bindToLifecycle(), httpResultModel -> {
+                    if (httpResultModel.isSucceful()) {
+                        verifyResultBean = httpResultModel.resultData;
+                    } else {
+                        DialogFragmentHelper.builder(context1 -> new AlertDialog.Builder(context1, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("请登录手机商城，完善收件人身份信息。").setNegativeButton("取消", null)
+                                .setPositiveButton("确定", (dialog1, which1) -> {
+                                    dialog1.cancel();
+                                }).create(), true).show(getChildFragmentManager(), "");
+                    }
+                    ToastUtils.showLong(httpResultModel.resultContent);
+                    ((DialogFragment) getChildFragmentManager().findFragmentByTag("idcard")).dismiss();
+                }, netError -> {
+                    verifyResultBean = null;
+                    ((DialogFragment) getChildFragmentManager().findFragmentByTag("idcard")).dismiss();
+                    ToastUtils.showLong("身份证验证失败！");
+                });
+                break;
             case 0:
                 if (BuildConfig.DEBUG)
                     ToastUtils.showLong(msg.obj + "");
+                if (msg.obj.equals("远程下载完成")) {
+                    isMakeVideo = false;
+                    loadingIv.clearAnimation();
+                    loadingIv.setVisibility(View.GONE);
+                }
                 break;
             case -1: {
-                if (playerHikvision.isplayback())
-                    return false;
-                if (playerHikvision.isLive()) {
+                if (!TextUtils.isEmpty(order_tv.getText())) {
                     DialogFragmentHelper.builder(new CommonDialogFragment.OnCallDialog() {
                         @Override
                         public Dialog getDialog(Context context) {
@@ -173,64 +243,95 @@ public class BillingFragment extends XBaseFragment {
                                     .setTitle("提示").setMessage("是否结束交易").setNegativeButton("取消", null)
                                     .setPositiveButton("确定", (dialog, which) -> {
                                         dialog.cancel();
-                                        surfaceView.setVisibility(View.GONE);
-                                        handler.removeCallbacksAndMessages(null);
-                                        playerHikvision.stopLive(playerHikvision.mPlayId, playerHikvision.mPort);
+                                        verifyResultBean = null;
+                                        billingItemAdapter.clearAndRestData();
+                                        promo_code = "";
+                                        String sell_id = order_tv.getText().toString();
+                                        order_tv.setText("");
+                                        OnBnStop(null);
+                                        statis_tv.setText("");
+                                        sale_tv.setText("");
+                                        receivable_tv.setText("");
+                                        pay_tv.setText("");
+                                        qrcode_iv.setImageResource(0);
+                                        qrcode_iv.setBackgroundResource(R.drawable.shape_grey_stroke_6_radius_rect);
+//                                        handler.removeCallbacksAndMessages(null);
                                         endTime = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
-                                        String[] begins = startTime.split("_");
-                                        String[] ends = endTime.split("_");
-                                        playerHikvision.downloadback(IP_ADDRESS, PORT, USER_NAME, PASSWORD, 1,
-                                                Integer.parseInt(begins[0]), Integer.parseInt(begins[1]), Integer.parseInt(begins[2]),
-                                                Integer.parseInt(begins[3]), Integer.parseInt(begins[4]), Integer.parseInt(begins[5]),
-                                                Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]),
-                                                Integer.parseInt(ends[3]), Integer.parseInt(ends[4]), Integer.parseInt(ends[5]));
-                                        playerHikvision.refresh();
-//                                        Flowable flowable = DataService.builder().buildReqUrl("http://192.168.1.140:3000/record")
-//                                                .buildReqParams("orderNo", startTime)
-//                                                .buildReqParams("channel", "101")
-//                                                .buildReqParams("startDay", begins[0] + begins[1] + begins[2])
-//                                                .buildReqParams("startTime", begins[3] + begins[4] + begins[5])
-//                                                .buildReqParams("endDay", ends[0] + ends[1] + ends[2])
-//                                                .buildReqParams("endTime", ends[3] + ends[4] + ends[5])
-//                                                .request(ApiService.HttpMethod.GET);
-//                                        RxLoadingUtils.subscribeWithDialog(context, flowable, bindToLifecycle(), iModel -> {
-//
-//                                        }, netError -> {
-//
-//                                        });
+
+                                        String record_url = App.getSettingBean().record_ip.concat(":").concat(App.getSettingBean().record_port);
                                         App.getBoxStore().runInTxAsync(() -> {
                                             Box<OrderTableEntiry> box = App.getBoxStore().boxFor(OrderTableEntiry.class);
-                                            OrderTableEntiry orderTableEntiry = box.query().equal(OrderTableEntiry_.startTime, startTime).build().findFirst();
+                                            OrderTableEntiry orderTableEntiry = box.query().equal(OrderTableEntiry_.sell_id, sell_id).build().findFirst();
                                             orderTableEntiry.endTime = endTime;
-                                            orderTableEntiry.outBizNo = outBizNo;
-                                            orderTableEntiry.payid = outBizNo;
+                                            orderTableEntiry.endDate = new Date();
                                             box.put(orderTableEntiry);
+
+                                            String url = String.format(record_url.concat("/taskkill?ffPid=%s&sellNo=%s&orderNo=%s"), video_pid, sell_id, Kits.Empty.check(orderTableEntiry._order_id) ? "" : orderTableEntiry._order_id);
+                                            Flowable<HttpResultModel> kill = DataService.builder().buildReqUrl(url)
+                                                    .buildInterceptconvert(true)
+                                                    .request(ApiService.HttpMethod.GET).map((Function<ResponseBody, HttpResultModel>) sresponseBody -> {
+                                                        HttpResultModel resultModel = new HttpResultModel();
+                                                        resultModel.resultCode = 1;
+                                                        resultModel.resultData = sresponseBody.string();
+                                                        return resultModel;
+                                                    });
+                                            RxLoadingUtils.subscribe(kill, bindToLifecycle(), null);
                                         }, (result, error) -> {
                                             if (error == null) {
-                                                Log.e("aaa", "txFinished: is ok");
+                                                Log.e("aaa", "end txFinished is ok");
                                             }
                                         });
-
                                     }).create();
                         }
                     }, true).show(getChildFragmentManager(), "");
                 } else {
-                    surfaceView.setVisibility(View.VISIBLE);
+                    if (Kits.Empty.check(verifyResultBean)) {
+                        isScan = false;
+                        enter_url_et.setText("");
+                        enter_url_et.requestFocus();
+                        ToastUtils.showLong("请先验证身份！");
+                        return false;
+                    }
+                    video_pid = null;
+                    order_tv.setText("" + SnowFlake.getSnowFlake().nextId());
                     endTime = startTime = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
-                    playerHikvision.live(IP_ADDRESS, PORT, USER_NAME, PASSWORD, PlayerHikvision.HIK_SUB_STREAM_CODE, 1);
-
+                    loadingIv.clearAnimation();
+                    loadingIv.setVisibility(View.GONE);
+                    String record_url = App.getSettingBean().record_ip.concat(":").concat(App.getSettingBean().record_port);
+                    Flowable<HttpResultModel> flowable = DataService.builder().buildReqUrl(String.format(record_url.concat("/record?sellNo=%s&channel=%s"), order_tv.getText().toString(), App.getSettingBean().record_channel))
+                            .request(ApiService.HttpMethod.DOWNLOAD).map((Function<ResponseBody, HttpResultModel>) responseBody -> {
+                                String result = responseBody.string();
+                                HttpResultModel httpResultModel = new HttpResultModel();
+                                httpResultModel.resultCode = 1;
+                                httpResultModel.resultData = result;
+                                video_pid = result;
+                                return httpResultModel;
+                            });
+                    RxLoadingUtils.subscribe(flowable, bindToLifecycle(), null);
                     OrderTableEntiry orderTableEntiry = new OrderTableEntiry();
-                    orderTableEntiry.ip = IP_ADDRESS;
-                    orderTableEntiry.prot = PORT;
-                    orderTableEntiry.channel = 1;
+                    orderTableEntiry.ip = App.getSettingBean().camera_ip;
+                    orderTableEntiry.prot = Integer.parseInt(App.getSettingBean().camera_port);
+                    orderTableEntiry.channel = App.getSettingBean().camera_channel;
                     orderTableEntiry.streamType = PlayerHikvision.HIK_SUB_STREAM_CODE;
-                    orderTableEntiry.username = USER_NAME;
-                    orderTableEntiry.password = PASSWORD;
+                    orderTableEntiry.username = App.getSettingBean().camera_user;
+                    orderTableEntiry.password = App.getSettingBean().camera_pwd;
                     orderTableEntiry.startTime = startTime;
+                    orderTableEntiry.startDate = new Date();
+                    orderTableEntiry.endDate = new Date();
                     orderTableEntiry.endTime = endTime;
                     orderTableEntiry.outBizNo = "";
                     orderTableEntiry.payid = "";
-                    App.getBoxStore().boxFor(OrderTableEntiry.class).put(orderTableEntiry);
+                    orderTableEntiry.sell_id = order_tv.getText().toString();
+                    orderTableEntiry.record_ip = App.getSettingBean().record_ip;
+                    orderTableEntiry.record_prot = App.getSettingBean().record_port;
+                    orderTableEntiry.record_channel = App.getSettingBean().record_channel;
+                    App.getBoxStore().runInTxAsync(() -> {
+                        App.getBoxStore().boxFor(OrderTableEntiry.class).put(orderTableEntiry);
+                    }, (result, error) -> {
+                        if (error == null) {
+                            Log.e("aaa", "start txFinished is ok");
+                        }
+                    });
                 }
             }
             break;
@@ -238,133 +339,348 @@ public class BillingFragment extends XBaseFragment {
         return false;
     });
 
+    private void calculateAmount() {
+        Flowable.just(0f).map((Function<Float, Float>) aFloat -> {
+            float account = aFloat;
+            for (GoodsBean bean : billingItemAdapter.getDataSource()) {
+                bean.amount = bean.count * bean.sell_price;
+                account += bean.amount;
+            }
+            return account;
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe((Consumer<Float>) aFloat -> {
+            amount_tv.setText(String.format("￥%.2f", aFloat));
+        });
+    }
+
     @Override
     public void initData(Bundle savedInstanceState) {
-        mUrl = "http://www.baidu.com";
-        mUrl = "https://shop45833283.m.youzan.com/wscgoods/detail/276jakb39jlnf?scan=1&activity=none&from=kdt&qr=directgoods_638272694";
-        mUrl = "https://shop90485387.m.youzan.com/wscgoods/detail/2g0jo1ifn7ftv?scan=1&activity=none&from=kdt&qr=directgoods_633465213";
-        initWebview(mUrl);
+        SpannableStringBuilder spannableString = new SpannableStringBuilder();
+        spannableString.append(bag_big_tv.getText());
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FFF4785F")), 4, 5, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        bag_big_tv.setText(spannableString);
+        spannableString.clear();
+        spannableString.append(bag_small_tv.getText());
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#FFF4785F")), 4, 5, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        bag_small_tv.setText(spannableString);
+        billing_rv.verticalLayoutManager(context);
+        billingItemAdapter = new BillingItemAdapter(context);
+        billing_rv.setAdapter(billingItemAdapter);
+        billing_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == SCROLL_STATE_IDLE) {
+                    enter_url_et.requestFocus();
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+        billingItemAdapter.setRecItemClick(new RecyclerItemCallback<GoodsBean, BillingItemAdapter.ViewHolder>() {
+            @Override
+            public void onItemClick(int position, GoodsBean model, int tag, BillingItemAdapter.ViewHolder holder) {
+                super.onItemClick(position, model, tag, holder);
+                enter_url_et.requestFocus();
+            }
+        });
+        billingItemAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                calculateAmount();
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                calculateAmount();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                calculateAmount();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                calculateAmount();
+            }
+        });
 
         reloadableStateContentLayout.setInterceptTouch(true);
-        swipeRefreshLayout.setOnRefreshListener(() -> wvContent.reload());
-        reloadableStateContentLayout.setOnReloadListener(reloadableFrameLayout -> wvContent.reload());
-
-        submit_btn.setOnClickListener(v -> {
-            enter_url_et.requestFocus();
-            if (Kits.Empty.check(cur_product_id) && Kits.Empty.check(enter_url_et.getText())) {
-                ToastUtils.showLong("请输入商品编号!");
-                return;
-            }
-            mUrl = !Kits.Empty.check(mUrl) ? mUrl : "https://shop90485387.m.youzan.com/wscgoods/detail/2g0jo1ifn7ftv?scan=1&activity=none&from=kdt&qr=directgoods_633465213";
-            wvContent.loadUrl(mUrl);
-            enter_url_et.setText("");
-            isScan = false;
-        });
-
-        enter_url_et.setOnClickListener(v -> {
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(enter_url_et.getWindowToken(), 0);
-            disableShowSoftInput(enter_url_et);
-        });
+        swipeRefreshLayout.setEnabled(false);
         enter_url_et.setOnEditorActionListener((v, actionId, event) -> {
-            Log.i("aaa", actionId + "," + "event.getAction()" + "---> onEditorAction: ----->" + v.getText().toString());
-            if (isScan) return false;
-            if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                switch (event.getAction()) {
-                    case KeyEvent.ACTION_DOWN:
-                        isScan = true;
-                        v.postDelayed(() -> {
-                            String cur_product_id = enter_url_et.getText().toString();
-                            if (App.products.containsKey(cur_product_id)) {
-                                if (arrayMap.containsKey(cur_product_id)) {
-                                    arrayMap.get(cur_product_id).count++;
-                                } else {
-                                    GoodsBean bean = App.products.get(cur_product_id);
-                                    bean.count++;
-                                    arrayMap.put(cur_product_id, bean);
-                                }
-                                mUrl = arrayMap.get(cur_product_id).url;
-                                Log.i("aaa", "onEditorAction: +++++++++>" + arrayMap.get(cur_product_id).count);
-                                submit_btn.performClick();
-//                                enter_url_et.setHint(cur_product_id);
-//                                enter_url_et.setHintTextColor(Color.CYAN);
-                                this.cur_product_id = cur_product_id;
-                            } else {
-                                isScan = false;
-                                enter_url_et.setText("");
-                                enter_url_et.requestFocus();
-                                ToastUtils.showLong("无此商品");
-                            }
-                        }, 1000);
-                        return false;///返回true，保留软键盘。false，隐藏软键盘
+            {
+                if (Kits.Empty.check(verifyResultBean)) {
+                    isScan = false;
+                    enter_url_et.setText("");
+                    enter_url_et.requestFocus();
+                    v.setTag(null);
+                    ToastUtils.showLong("请验证身份！");
+                    return false;
                 }
+                if (TextUtils.isEmpty(order_tv.getText())) {
+                    isScan = false;
+                    enter_url_et.setText("");
+                    enter_url_et.requestFocus();
+                    v.setTag(null);
+                    ToastUtils.showLong("请先生成销售单号！");
+                    return false;
+                }
+                if (isScan && null != v.getTag()) return false;
+                if ((event != null && actionId == EditorInfo.IME_ACTION_DONE) || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    switch (event.getAction()) {
+                        case KeyEvent.ACTION_DOWN:
+                            isScan = true;
+
+                            v.postDelayed(() -> {
+                                v.setTag(1);
+                                String cur_product_id = enter_url_et.getText().toString().trim();
+                                if (App.products.containsKey(cur_product_id)) {
+                                    GoodsBean bean = App.products.get(cur_product_id);
+                                    billingItemAdapter.addOrupdateData(bean);
+                                    billing_rv.scrollToPosition(0);
+                                    enter_url_et.requestFocus();
+                                    enter_url_et.setText("");
+                                    isScan = false;
+                                    enter_url_et.setHint(cur_product_id);
+                                    enter_url_et.setHintTextColor(Color.LTGRAY);
+                                    BillingFragment.this.cur_product_id = cur_product_id;
+                                    v.setTag(null);
+                                } else {
+                                    isScan = false;
+                                    enter_url_et.setText("");
+                                    enter_url_et.requestFocus();
+                                    v.setTag(null);
+                                    ToastUtils.showLong("无此商品备案");
+                                    MediaPlayer.create(context, R.raw.error).start();
+                                }
+                            }, 100);
+                            return false;///返回true，保留软键盘。false，隐藏软键盘
+                    }
+                }
+                return false;
             }
-            return false;
         });
 
         playerHikvision = new PlayerHikvision(surfaceView, handler);
+//        settingBean = App.getSettingBean();
+        Prints.OpenPosCallBack(order_tv);
 
-        name_tv.setOnClickListener(v -> {
-            if (null == startTime || startTime.equals(endTime) || playerHikvision.isLive())
-                return;
-            if (playerHikvision.isplayback()) {
-                surfaceView.setVisibility(View.GONE);
-                playerHikvision.stopPlayback(playerHikvision.mPlaybackId, playerHikvision.mPort);
-                playerHikvision.refresh();
-            } else {
-                String[] begins = startTime.split("_");
-                String[] ends = endTime.split("_");
-                surfaceView.setVisibility(View.VISIBLE);
-                playerHikvision.playback(IP_ADDRESS, PORT, USER_NAME, PASSWORD, 1,
-                        Integer.parseInt(begins[0]), Integer.parseInt(begins[1]), Integer.parseInt(begins[2]),
-                        Integer.parseInt(begins[3]), Integer.parseInt(begins[4]), Integer.parseInt(begins[5]),
-                        Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]),
-                        Integer.parseInt(ends[3]), Integer.parseInt(ends[4]), Integer.parseInt(ends[5]));
-            }
-        });
-        test_tv.setOnClickListener(v -> {
-            /**
-             *
-             查询录制视频地址
-             http://192.168.1.140:3000/video/{视频名称.mp4}
-             * orderNo  //订单号，作为视频文件名
-             * channel	 //通道号，101
-             * startDay  //开始日期到天 20200822
-             * startTime  //开始时间到秒 181800
-             * endDay  //结束日期到天 20200822
-             * endTime  //结束时间到秒 181900
-             * */
+    }
 
+    @OnClick({R.id.billing_enter_submit_btn, R.id.billing_enter_vip_btn, R.id.billing_sell_order_tv, R.id.billing_title_test_tv,
+            R.id.billing_title_name_tv, R.id.billing_enter_url_et, R.id.billing_verify_by_phone_iv, R.id.billing_verify_by_wechat_iv,
+            R.id.billing_verify_by_idcards_iv, R.id.billing_bottom_shopping_bag_big_tv, R.id.billing_bottom_shopping_bag_small_tv,
+            R.id.billing_enter_billin_btn})
+    public void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.billing_enter_submit_btn:
+                if (Kits.Empty.check(verifyResultBean)) {
+                    ToastUtils.showLong("请验证身份！");
+                    return;
+                }
+                if (TextUtils.isEmpty(order_tv.getText())) {
+                    ToastUtils.showLong("请先生成销售单号！");
+                    return;
+                }
+                if (Kits.Empty.check(billingItemAdapter.getDataSource())) {
+                    ToastUtils.showLong("请先选购商品！");
+                    return;
+                }
+                if (Kits.Empty.check(App.getSettingBean().zipCode)) {
+                    ToastUtils.showLong("请先设置店铺邮编!");
+                    return;
+                }
+                if (Kits.Empty.check(App.getSettingBean().shop_address)) {
+                    ToastUtils.showLong("请先设置店铺地址!");
+                    return;
+                }
+                if (Kits.Empty.check(App.getSettingBean().shop_area)) {
+                    ToastUtils.showLong("请先设置店铺地区!");
+                    return;
+                }
+                if (Kits.Empty.check(App.getSettingBean().shop_name)) {
+                    ToastUtils.showLong("请先设置店铺名称!");
+                    return;
+                }
+                if (Kits.Empty.check(App.getSettingBean().shop_code)) {
+                    ToastUtils.showLong("请先设置店铺编码!");
+                    return;
+                }
+                printBean = null;
+                Flowable<HttpResultModel<OrderResultBean>> pay = DataService.builder().buildReqUrl(App.getSettingBean().shop_url + "api/create")
+                        .builderRequestBody(OrderinfoRequestBody.newBuilder().setCurrentUser("mobile", verifyResultBean.mobile)
+                                .setSkuNos(billingItemAdapter.getDataSource())
+                                .setCode(promo_code)
+//                                .setSellCode(order_tv.getText().toString())
+                                .setPosCode(RxDeviceTool.getMacAddress())
+                                .setReceiver(verifyResultBean.name, App.getSettingBean().shop_area, App.getSettingBean().shop_address, App.getSettingBean().zipCode, verifyResultBean.mobile).builder())
+                        .buildParseDataClass(OrderResultBean.class)
+                        .request(ApiService.HttpMethod.POST_JSON);
+                RxLoadingUtils.subscribeWithDialog(context, pay, bindToLifecycle(), httpResultModel -> {
+                    if (httpResultModel.isSucceful()) {
+                        promo_code = "";
+                        statis_tv.setText(httpResultModel.resultData.amount);
+                        sale_tv.setText(httpResultModel.resultData.couponDiscount);
+                        receivable_tv.setText(httpResultModel.resultData.amountPayable);
+                        pay_tv.setText(httpResultModel.resultData.amountPayable);
+                        Bitmap bmp = RxQRCode.creatQRCode(httpResultModel.resultData.payableCode, BitmapFactory.decodeResource(getResources(), R.mipmap.app_icon));
+                        qrcode_iv.setImageBitmap(bmp);
+                        DialogFragmentHelper.builder(context -> {
+                            ImageView qr_iv = new ImageView(context);
+//                            qr_iv.setLayoutParams(new RadioGroup.LayoutParams(Utils.dip2px(context, 60), Utils.dip2px(context, 60)));
+                            qr_iv.setImageBitmap(bmp);
+                            return payDialog = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("请扫码支付").setView(qr_iv).setPositiveButton("取消订单", (dialog, which) -> {
+                                DialogFragmentHelper.builder(context12 -> new AlertDialog.Builder(context12, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("是否需要取消订单？").setNegativeButton("取消", null).setPositiveButton("确定", (dialog12, which12) -> {
+                                    Flowable<HttpResultModel> del_order = DataService.builder().buildReqUrl(App.getSettingBean().shop_url + "api/cancel")
+                                            .builderRequestBody(new CancelOrderRequestBody(httpResultModel.resultData.orderSns.get(0)))
+                                            .request(ApiService.HttpMethod.POST_JSON);
+                                    RxLoadingUtils.subscribeWithDialog(context12, del_order, bindToLifecycle(), httpResultModel1 -> {
+                                        if (httpResultModel1.isSucceful()) {
+                                            ToastUtils.showLong("订单取消成功！");
+                                        } else {
+                                            ToastUtils.showLong(httpResultModel1.resultContent);
+                                        }
+                                    }, netError -> ToastUtils.showLong("订单取消失败，请重试！"), false);
+                                }).create(), false).show(getChildFragmentManager(), "");
+                            }).create();
+                        }, false).setDialogWindow(dialogWindow -> {
+                            WindowManager.LayoutParams layoutParams = dialogWindow.getAttributes();
+                            layoutParams.height = Utils.dip2px(context, 400);
+                            layoutParams.width = Utils.dip2px(context, 400);
+                            dialogWindow.setAttributes(layoutParams);
+                            return dialogWindow;
+                        }).show(getChildFragmentManager(), "");
+                        App.getBoxStore().runInTxAsync(() -> {
+                            Box<OrderTableEntiry> box = App.getBoxStore().boxFor(OrderTableEntiry.class);
+                            OrderTableEntiry orderTableEntiry = box.query().equal(OrderTableEntiry_.sell_id, order_tv.getText().toString()).build().findFirst();
+                            orderTableEntiry._order_id = httpResultModel.resultData.orderSns.get(0);
+                            orderTableEntiry.crateTime = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date());
+                            box.put(orderTableEntiry);
+                        }, (result, error) -> {
+                            if (error == null) {
+                                context.runOnUiThread(() -> {
+                                    printBean = new PrintBean();
+                                    printBean.list = billingItemAdapter.getDataSource();
+                                    printBean.sell_code = httpResultModel.resultData.orderSns.get(0);
+                                    printBean.total = httpResultModel.resultData.amount;
+                                    printBean.discounts = httpResultModel.resultData.couponDiscount;
+                                    printBean.cope = httpResultModel.resultData.amountPayable;
+                                    printBean.paid = httpResultModel.resultData.amountPayable;
+                                });
+                                Log.e("aaa", "txFinished: is ok");
+                            }
+                        });
+                    }
+                }, netError -> {
+                    ToastUtils.showLong(netError.getMessage());
+                });
+                break;
+            case R.id.billing_enter_billin_btn:
+                handler.sendEmptyMessage(-1);
+                break;
+            case R.id.billing_enter_vip_btn:
+                if (true) {
+                    DialogFragmentHelper.builder(context -> {
+                        AlertDialog[] alertDialogs = new AlertDialog[1];
+                        EditText editText = new EditText(context);
+                        editText.setHint("请输入优惠码");
+//                        editText.setInputType(InputType.TYPE_CLASS_PHONE);
+//                        editText.setShowSoftInputOnFocus(false);
+                        editText.requestFocus();
+                        editText.setSingleLine();
+                        editText.setPadding(10, 0, 0, 0);
+                        editText.setOnKeyListener((v, keyCode, event) -> {
+                            // If the event is a key-down event on the "enter" button
+                            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                                    (keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER)) {
+                                alertDialogs[0].getButton(BUTTON_POSITIVE).performClick();
+                                return false;
+                            }
+                            return false;
+                        });
+                        return alertDialogs[0] = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setView(editText).setNegativeButton("取消", null)
+                                .setPositiveButton("确定", (dialog, which) -> {
+                                    dialog.cancel();
+                                    promo_code = editText.getText().toString();
+//                                    Flowable<HttpResultModel> phone = DataService.builder().buildReqUrl("http://shop.chigoose.com/api/get/user").buildReqParams("mobile", "13121528060"/*editText.getText().toString().trim()*/)
+//                                            .request(ApiService.HttpMethod.GET);
+//                                    RxLoadingUtils.subscribeWithDialog(context, phone, bindToLifecycle(), httpResultModel -> {
+//
+//                                    }, netError -> {
+//
+//                                    });
+                                }).create();
+                    }, true).show(getChildFragmentManager(), "");
+                    return;
+                }
+                DialogFragmentHelper.builder(R.layout.dialog_search_vip_layout, true).setDialogWindow(dialogWindow -> {
+                    WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
+                    wlp.width = App.w - 100;
+                    wlp.height = App.h - 100;
+                    dialogWindow.setAttributes(wlp);
+                    dialogWindow.setWindowAnimations(R.style.BottomInAndOutStyle);
+                    return dialogWindow;
+                }).setOnProcessView((dialog, view1) -> {
+                    view1.findViewById(R.id.dialog_vip_close_iv).setOnClickListener(v -> {
+                        dialog.cancel();
+                    });
+                    XReloadableListContentLayout xRecyclerView = view1.findViewById(R.id.dialog_vip_search_reload_list_layout);
+                    VipItemAdapter vipItemAdapter = new VipItemAdapter(context);
+                    xRecyclerView.getRecyclerView().verticalLayoutManager(context);
+                    xRecyclerView.getRecyclerView().setAdapter(vipItemAdapter);
+                    xRecyclerView.getRecyclerView().setRefreshEnabled(false);
+                    List<VipBean> list = new ArrayList<VipBean>();
 
-//            MediaPlayer mMediaPlayer = new MediaPlayer();
-//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//            try {
-//                mMediaPlayer.setDataSource("http://192.168.1.140:3000/video/" + startTime + ".mp4");
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            mMediaPlayer.setSurface(surfaceViewback.getHolder().getSurface());
-////            mMediaPlayer.setLooping(true);
-//            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mp) {
-//                    mMediaPlayer.start();
-//                }
-//            });
-//            mMediaPlayer.prepareAsync();
-//            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-//                @Override
-//                public boolean onError(MediaPlayer mp, int what, int extra) {
-//                    ToastUtils.showLong("");
-//                    return false;
-//                }
-//            });
+                    ((EditText) view1.findViewById(R.id.dialog_vip_search_enter_et)).addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
 
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            String phone = TextUtils.isEmpty(s) ? "" : s.toString();
+                            if (phone.length() == 11) {
+                                list.clear();
+                                App.getBoxStore().runInTxAsync(() -> {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        App.getBoxStore().boxFor(VipTableEntiry.class).query().contains(VipTableEntiry_.phone, phone).build().find().forEach(vipTableEntiry -> {
+                                            VipBean bean = new VipBean();
+                                            bean.name = vipTableEntiry.name;
+                                            bean.phone = vipTableEntiry.phone;
+                                            bean.level = vipTableEntiry.level;
+                                            bean.integral = vipTableEntiry.integtal;
+                                            bean.balance = vipTableEntiry.balance;
+                                            list.add(bean);
+                                        });
+                                    }
+                                }, (result, error) -> {
+                                    if (error == null) {
+                                        vipItemAdapter.addData(list);
+                                    }
+                                });
+                            }
+                        }
 
-            OnBnBegin(v);
-        });
-        title_tv.setOnClickListener(v -> {
-//            retrycount = 0;
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                        }
+                    });
+                    view1.findViewById(R.id.dialog_vip_select_btn).setOnClickListener(v -> {
+                        ToastUtils.showLong("" + list.size());
+                        dialog.dismiss();
+                    });
+
+                }).show(getChildFragmentManager(), "");
+                break;
+            case R.id.billing_enter_url_et:
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(enter_url_et.getWindowToken(), 0);
+                disableShowSoftInput(enter_url_et);
+                break;
+            case R.id.billing_sell_order_tv://
+                //            retrycount = 0;
 //                getPayResult("");
 //            Flowable<HttpResultModel> flowable = DataService.builder().buildReqUrl("http://oms.hbyunjie.com/videofile/uploadvideofile")
 //                    .buildReqParams(new File(context.getExternalCacheDir(), "123.mp4")).request(ApiService.HttpMethod.UPLOAD);
@@ -375,56 +691,206 @@ public class BillingFragment extends XBaseFragment {
 //                }
 //            }, false);
 //            title_tv.setEnabled(false);
-            try {
-                Executors.newSingleThreadExecutor().execute(() -> {
-                    mcom.Open("/dev/ttyS4", 9600, 0);
-                });
-            } catch (Exception e) {
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        mcom.SetCallBack(new IOCallBack() {
-            @Override
-            public void OnOpen() {
-                title_tv.post(() -> {
-                    ToastUtils.showLong("Connected success !");
-                    title_tv.setEnabled(false);
-                    Executors.newSingleThreadExecutor().execute(() -> {
-                        final int bPrintResult = Prints.PrintTicket(
-                                App.getApp(), mpos, 384, false, false, true, 1, 1, 0);
-                        final boolean bIsOpened = mpos.GetIO().IsOpened();
-
-                        title_tv.post(() -> {
-                            // TODO Auto-generated method stub
-                            Toast.makeText(
-                                    App.getApp(),
-                                    (bPrintResult >= 0) ? " printsuccess" + Prints.ResultCodeToString(bPrintResult) : ("printfailed")
-                                            + " "
-                                            + Prints.ResultCodeToString(bPrintResult),
-                                    Toast.LENGTH_SHORT).show();
-                            title_tv.setEnabled(bIsOpened);
-                        });
-
+//                PrintBean printBean = new PrintBean();
+//                printBean.list = billingItemAdapter.getDataSource();
+//                printBean.
+//                Prints.PostPrint(context, "");
+                break;
+            case R.id.billing_title_test_tv:
+                OnBnBegin(view);
+                //            if (null != mMediaPlayer) {
+//                if (mMediaPlayer.isPlaying())
+//                    mMediaPlayer.stop();
+//                mMediaPlayer.release();
+//                mMediaPlayer = null;
+//                surfaceView.setVisibility(View.GONE);
+//                return;
+//            }
+//
+//            surfaceView.setVisibility(View.VISIBLE);
+//            mMediaPlayer = new MediaPlayer();
+//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//            try {
+//                mMediaPlayer.setDataSource("http://192.168.0.101:3000/video/" + startTime + ".mp4");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            mMediaPlayer.setSurface(surfaceView.getHolder().getSurface());
+////            mMediaPlayer.setLooping(true);
+//            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mp) {
+//                    mMediaPlayer.start();
+//                }
+//            });
+//            mMediaPlayer.prepareAsync();
+//            mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
+//                ToastUtils.showLong("");
+//                return false;
+//            });
+                break;
+            case R.id.billing_title_name_tv:
+                if (null == startTime || startTime.equals(endTime) || playerHikvision.isLive() || isMakeVideo)
+                    return;
+                if (playerHikvision.isplayback()) {
+                    surfaceView.setVisibility(View.GONE);
+                    playerHikvision.stopPlayback(playerHikvision.mPlaybackId, playerHikvision.mPort);
+                    playerHikvision.refresh();
+                } else {
+                    String[] begins = startTime.split("_");
+                    String[] ends = endTime.split("_");
+                    surfaceView.setVisibility(View.VISIBLE);
+                    playerHikvision.playback(IP_ADDRESS, PORT, USER_NAME, PASSWORD, 1,
+                            Integer.parseInt(begins[0]), Integer.parseInt(begins[1]), Integer.parseInt(begins[2]),
+                            Integer.parseInt(begins[3]), Integer.parseInt(begins[4]), Integer.parseInt(begins[5]),
+                            Integer.parseInt(ends[0]), Integer.parseInt(ends[1]), Integer.parseInt(ends[2]),
+                            Integer.parseInt(ends[3]), Integer.parseInt(ends[4]), Integer.parseInt(ends[5]));
+                }
+                break;
+            case R.id.billing_verify_by_idcards_iv:
+                if (null != verifyResultBean) {
+                    ToastUtils.showLong("请先结束交易！");
+                    return;
+                }
+                OnBnBegin(view);
+                DialogFragmentHelper.builder(context -> {
+                    ImageView dimageView = new ImageView(context);
+                    Glide.with(context).asGif().load(R.drawable.qk_qrcode).into(new SimpleTarget<GifDrawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull GifDrawable resource, @Nullable Transition<? super GifDrawable> transition) {
+                            dimageView.setImageDrawable(resource);
+                            resource.start();
+                        }
                     });
+                    dimageView.setBackground(view.getBackground());
+                    AlertDialog alertDialog = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setView(dimageView).create();
+                    return alertDialog;
+                }, true).setDialogWindow(dialogWindow -> {
+                    WindowManager.LayoutParams layoutParams = dialogWindow.getAttributes();
+                    layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                    layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+                    dialogWindow.setAttributes(layoutParams);
+                    return dialogWindow;
+                }).show(getChildFragmentManager(), "idcard");
+                break;
+            case R.id.billing_verify_by_phone_iv:
+                if (null != verifyResultBean) {
+                    ToastUtils.showLong("请先结束交易！");
+                    return;
+                }
+                DialogFragmentHelper.builder(context -> {
+                    AlertDialog[] alertDialogs = new AlertDialog[1];
+                    EditText editText = new EditText(context);
+                    editText.setHint("请输入手机号验证");
+                    editText.setInputType(InputType.TYPE_CLASS_PHONE);
+                    editText.setShowSoftInputOnFocus(false);
+                    editText.requestFocus();
+                    editText.setSingleLine();
+                    editText.setPadding(10, 0, 0, 0);
+                    editText.setOnKeyListener((v, keyCode, event) -> {
+                        // If the event is a key-down event on the "enter" button
+                        if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                                (keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER)) {
+                            alertDialogs[0].getButton(BUTTON_POSITIVE).performClick();
+                            return false;
+                        }
+                        return false;
+                    });
+                    return alertDialogs[0] = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setView(editText).setNegativeButton("取消", null)
+                            .setPositiveButton("确定", (dialog, which) -> {
+                                dialog.cancel();
+                                Flowable<HttpResultModel<VerifyResultBean>> phone = DataService.builder().buildReqUrl(App.getSettingBean().shop_url + "api/get/user")
+                                        .buildReqParams("mobile", /*"13121528060"*/editText.getText().toString().trim())
+                                        .buildParseDataClass(VerifyResultBean.class)
+                                        .request(ApiService.HttpMethod.GET);
+                                RxLoadingUtils.subscribeWithDialog(context, phone, bindToLifecycle(), httpResultModel -> {
+                                    if (httpResultModel.isSucceful()) {
+//                                        receivers = String.valueOf(httpResultModel.resultData.receivers.get(0).id);
+                                        verifyResultBean = httpResultModel.resultData;
+                                        if (Kits.Empty.check(verifyResultBean.name) || Kits.Empty.check(verifyResultBean.idCard)) {
+                                            verifyResultBean = null;
+                                            DialogFragmentHelper.builder(context1 -> new AlertDialog.Builder(context1, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("请登录手机商城，完善收件人身份证信息。").setNegativeButton("取消", null)
+                                                    .setPositiveButton("确定", (dialog1, which1) -> {
+                                                        dialog1.cancel();
+                                                    }).create(), true).show(getChildFragmentManager(), "");
+                                        } else {
+                                            ToastUtils.showLong(httpResultModel.resultContent);
+                                        }
+                                    } else {
+                                        ToastUtils.showLong(httpResultModel.resultContent);
+                                    }
+                                }, netError -> {
+//                                    receivers = null;
+                                    verifyResultBean = null;
+                                    ToastUtils.showLong("身份证验证失败！");
+                                });
+                            }).create();
+                }, true).show(getChildFragmentManager(), "");
+                break;
+            case R.id.billing_verify_by_wechat_iv:
+                if (null != verifyResultBean) {
+                    ToastUtils.showLong("请先结束交易！");
+                    return;
+                }
+                Flowable<HttpResultModel> wechat = DataService.builder().buildReqUrl("").buildReqParams("", "")
+                        .request(ApiService.HttpMethod.POST);
+                RxLoadingUtils.subscribeWithDialog(context, wechat, bindToLifecycle(), httpResultModel -> {
+                }, netError -> {
+                    DialogFragmentHelper.builder(context -> {
+//                        ImageView imageView = new ImageView(context);
+                        Bitmap bmp = RxQRCode.creatQRCode(App.getSettingBean().shop_url + "member/login", BitmapFactory.decodeResource(getResources(), R.mipmap.app_icon));
+//                        imageView.setImageBitmap(bmp);
+                        ImageView qr_iv = new ImageView(context);
+//                        qr_iv.setLayoutParams(new RadioGroup.LayoutParams(Utils.dip2px(context, 60), Utils.dip2px(context, 60)));
+                        qr_iv.setImageBitmap(bmp);
+                        return new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("请扫码登录").setView(qr_iv)
+                                .setPositiveButton("取消", (dialog, which) -> dialog.cancel()).create();
+                    }, true).setDialogWindow(dialogWindow -> {
+                        WindowManager.LayoutParams layoutParams = dialogWindow.getAttributes();
+                        layoutParams.height = Utils.dip2px(context, 400);
+                        layoutParams.width = Utils.dip2px(context, 400);
+                        dialogWindow.setAttributes(layoutParams);
+                        return dialogWindow;
+                    }).show(getChildFragmentManager(), "");
                 });
-            }
+                break;
+            case R.id.billing_bottom_shopping_bag_big_tv:
+            case R.id.billing_bottom_shopping_bag_small_tv:
+                if (Kits.Empty.check(verifyResultBean)) {
+                    isScan = false;
+                    enter_url_et.setText("");
+                    enter_url_et.requestFocus();
+                    ToastUtils.showLong("请验证身份！");
+                    return;
+                }
+                if (TextUtils.isEmpty(order_tv.getText())) {
+                    ToastUtils.showLong("请先生成销售单号！");
+                    return;
+                }
+                boolean big = (view == bag_big_tv);
+                if (big) {
+                    BillingFragment.this.cur_product_id = "11111111111111";
+                } else {
+                    BillingFragment.this.cur_product_id = "00000000000000";
+                }
 
-            @Override
-            public void OnOpenFailed() {
-                title_tv.post(() -> {
-                    ToastUtils.showLong("Connected failed !");
-                    title_tv.setEnabled(true);
-                });
-            }
-
-            @Override
-            public void OnClose() {
-                title_tv.post(() -> {
-                    ToastUtils.showLong("Connected close !");
-                    title_tv.setEnabled(true);
-                });
-            }
-        });
+                GoodsBean bean = App.products.get(cur_product_id);
+                if (bean != null) {
+                    billingItemAdapter.addOrupdateData(bean);
+                } else {
+                    if (big) {
+                        bean = beans[0];
+                        bean.name = "大购物袋";
+                    } else {
+                        bean = beans[1];
+                        bean.name = "小购物袋";
+                    }
+                    bean.productId = bean.barcode = cur_product_id;
+                    billingItemAdapter.addOrupdateData(bean);
+                    billing_rv.scrollToPosition(0);
+                }
+                break;
+        }
     }
 
     @Override
@@ -438,19 +904,23 @@ public class BillingFragment extends XBaseFragment {
         filter.addAction(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
         context.registerReceiver(mUsbReceiver, filter);
+        registerMsgReceiver();
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        arrayMap.clear();
-        context.unregisterReceiver(mUsbReceiver);
+        (context).unregisterReceiver(mUsbReceiver);
+        (context).unregisterReceiver(payMessageReceiver);
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
-        wvContent.clearAllData(context, true);
+        OnBnStop(null);
+        Prints.close();
+        verifyResultBean = null;
+        billingItemAdapter.clearAndRestData();
         IDCardReaderFactory.destroy(idCardReader);
         playerHikvision.cleanup();
         super.onDestroy();
@@ -460,451 +930,25 @@ public class BillingFragment extends XBaseFragment {
         return new BillingFragment();
     }
 
-    private WebChromeClient webChromeClient = new WebChromeClient() {
-        //不支持js的alert弹窗，需要自己监听然后通过dialog弹窗
-        @Override
-        public boolean onJsAlert(WebView webView, String url, String message, JsResult result) {
-
-            AlertDialog.Builder dialog = new AlertDialog.Builder(webView.getContext());
-            dialog.create();
-            ToastUtils.showLong("onJsAlert");
-
-            //注意:
-            //必须要这一句代码:result.confirm()表示:
-            //处理结果为确定状态同时唤醒WebCore线程
-            //否则不能继续点击按钮
-            result.confirm();
-            return true;
-        }
-
-        //设置响应js 的Confirm()函数
-        @Override
-        public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
-            ToastUtils.showLong("onJsConfirm");
-            return super.onJsConfirm(view, url, message, result);
-        }
-
-        //设置响应js 的Prompt()函数
-        @Override
-        public boolean onJsPrompt(WebView view, String url, String message, String defaultValue, final JsPromptResult result) {
-            ToastUtils.showLong("onJsPrompt");
-            return onJsPrompt(view, url, message, defaultValue, result);
-        }
-
-        //获取网页标题
-        @Override
-        public void onReceivedTitle(WebView view, String title) {
-            super.onReceivedTitle(view, title);
-        }
-
-        @Override
-        public void onProgressChanged(WebView webView, int i) {
-            super.onProgressChanged(webView, i);
-            if (i == 100) {
-//                ToastUtils.showLong("page load 100%");
-            }
-        }
-
-        public boolean onConsoleMessage(ConsoleMessage cm) {
-            Log.i("aaa:", "js console log: " + cm.message()); // cm.message()为js日志
-            return true;
-        }
-
-    };
-
-    // 隐藏底部栏方法
-    private void showBottom() {
-        try {
-            //定义javaScript方法
-            String javascript = "javascript:function showBottom() { "
-                    + "console.log('show bottom');"  // 看方法是否执行
-                    + "console.log(document.getElementsByClassName('van-button van-button--default van-button--large van-button--square van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice').length);" // 打印出数组的长度
-                    + "console.log(document.getElementsByClassName('van-stepper__input').length);" // 打印出数组的长度
-                    + "console.log(document.getElementsByClassName('van-stepper__plus').length);" // 打印出数组的长度
-//                    + "console.log(document.getElementsByClassName('van-button van-button--primary van-button--normal van-button--disabled van-button--block').length);"
-//                    + "document.getElementsByClassName('van-stepper__input')[0].item('value').value='2'"
-//                    + "document.getElementsByClassName('van-button van-button--default van-button--large van-button--square van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice')[0].click();"
-//                    + "document.getElementsByClassName('van-stepper__plus')[0].click();"
-                    + "window.android.collectBtnComplete(document.getElementsByClassName('van-button van-button--default van-button--large van-button--square van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice').length>'0'" +
-                    "||document.getElementsByClassName('van-button van-button--default van-button--large van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice').length>'0');"
-                    + "window.android.JsToJavaInterface(document.getElementsByClassName('van-stepper__plus').length>'0');"
-                    + "}";
-//            String strJS = String.format("javascript:document.getElementsByClassName('phone').placeholder='%s';", 5);
-//            wvContent.evaluateJavascript(strJS, null); // null 这里传监听方法
-            //加载方法
-            wvContent.loadUrl(javascript);
-            //执行方法
-            wvContent.loadUrl("javascript:showBottom();");
-
-//            wvContent.postDelayed(() -> {
-//                String js1 = "javascript:function check(){window.android.JsToJavaInterface(document.getElementsByClassName('van-stepper__plus').length>'0')}";
-//                wvContent.loadUrl(js1);
-//                wvContent.loadUrl("javascript:check();");
-//            }, 1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getCashierData(String url) {
-        if (isScan) return;
-        isScan = true;
-//        ToastUtils.showLong("getCashierData");
-        String js = "javascript:function fetch(){console.log('cashier');" +
-                "console.log(document.getElementsByClassName('zan-cashier__a').length);" +
-                "window.android.getCashierData(document.getElementsByClassName('zan-cashier__a').length>'0')}";
-        wvContent.loadUrl(js);
-        wvContent.loadUrl("javascript:fetch();");
-
-        this.mUrl = url;
-    }
-
-    public void enterBankNo(String bankNo) {
-        String js = String.format("javascript:function input(){console.log('bankno');" +
-                "console.log(document.getElementsByClassName('van-field__control').length);" +
-                "window.android.enterBankNo(document.getElementsByClassName('van-field__control').length>'0','%s')}", bankNo);
-        wvContent.loadUrl(js);
-        wvContent.loadUrl("javascript:input()");
-    }
-
-    int retrycount = 0;
-    ProgressDialog progressDialog = null;
-
-    public void getPayResult(String url) {
-//        String js = "javascript:function pay(){console.log('pay');" +
-//                "console.log(document.getElementsByClassName('price__currency').length);) }";
-//        wvContent.loadUrl(js);
-
-        handler.removeCallbacksAndMessages(null);
-        wvContent.clearAllData(context, true);
-        arrayMap.clear();
-        Flowable<HttpResultModel> f_token = DataService.builder().buildReqUrl("http://oms.hbyunjie.com/login/getToken")
-                .buildReqParams("appKey", "POS")
-                .buildReqParams("security", "81014bf5f79050e6a85739320d8c6540")
-                .request(ApiService.HttpMethod.POST).flatMap((Function<HttpResultModel, Flowable<HttpResultModel>>) httpResultModel -> {
-                    LoginBean loginBean = new LoginBean();
-                    loginBean.access_token = (String) ((LinkedTreeMap) httpResultModel.resultData).get("token");
-                    ShareUtils.saveLoginInfo(loginBean);
-                    Document doc = Jsoup.connect(url).get();
-                    String payinfo = doc.head().childNode(33).childNode(0).attr("data");
-                    Log.e("aaa", "getPayResult: " + payinfo);
-                    outBizNo = "";
-                    if (payinfo != null) {
-//                        {"payStatus":"success","kdtId":"45641115","goodsName":"测试商品哈哈dog","authUserTrueName":"李**","mchName":"云海宠物","payAmount":10,"acquireNo":"200807145432000112","outBizNo":"E20200807145431003304201","payFinishTime":"2020-08-10 09:40:53"}
-                        JSONObject jsonObject = new JSONObject(payinfo.replace("window._global =", ""));
-                        outBizNo = jsonObject.optString("outBizNo");
-                    }
-                    return DataService.builder().buildReqUrl("http://oms.hbyunjie.com/yz/getOrdersV2")
-                            .builderRequestBody(new PayinfoRequestBody("PIB000513", outBizNo))
-                            .request(ApiService.HttpMethod.POST_JSON);
-                });
-        if (retrycount == 0 && progressDialog == null) {
-            progressDialog = ProgressDialog.show(context, "retry:" + retrycount, "数据处理中。。。");
-        }
-        RxLoadingUtils.subscribe(f_token, bindToLifecycle(), httpResultModel -> {
-                    arrayMap.clear();
-                    Log.e("aaa", url + " , getPayResult: ---> " + httpResultModel.resultContent + ", " + httpResultModel.resultCode);
-                    if (httpResultModel.isSucceful()) {
-                        progressDialog.dismiss();
-                        progressDialog = null;
-                        ToastUtils.showLong("数据处理成功！");
-                    } else {
-                        if (retrycount < 10) {
-                            wvContent.postDelayed(() -> {
-                                getPayResult(url);
-                            }, 3000);
-                            retrycount++;
-                        } else {
-                            progressDialog.dismiss();
-                            progressDialog = null;
-                            ToastUtils.showLong("数据处理失败！");
-                        }
-
-                    }
-                    Log.i("aaa", "getPayResult: " + httpResultModel.resultContent);
-                }, netError -> {
-                    if (retrycount < 10) {
-                        wvContent.postDelayed(() -> {
-                            getPayResult(url);
-                        }, 3000);
-                        retrycount++;
-                    } else {
-                        progressDialog.dismiss();
-                        progressDialog = null;
-                        ToastUtils.showLong("数据处理失败！");
-                    }
-                    Log.i("aaa", "getPayResult: " + netError.getMessage());
-                }, true
-        );
-    }
-
-    private void initWebview(String url) {
-
-//        WebSettings settings = wvContent.getSettings();
-//        settings.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.134 Safari/537.36");
-//        //支持获取手势焦点
-//        wvContent.requestFocusFromTouch();
-        wvContent.setWebChromeClient(webChromeClient);
-        wvContent.setWebViewClient(webViewClient);
-        wvContent.setDownloadListener(new MyWebViewDownLoadListener());
-        wvContent.addJavascriptInterface(new Android2Js(), "android");
-//        wvContent.setDrawListener(surl -> {
-//            if (surl.startsWith("https://cashier.youzan.com/pay/wsctrade_buy")) {
-//                getCashierData();
-//            } else if (surl.startsWith("")) {
-//                showBottom();
-//            }
-//        });
-//        //开启无痕enable：false，关闭无痕开启enable：true
-//        wvContent.getSettingsExtension().setShouldTrackVisitedLinks(false);
-        wvContent.loadUrl(url);
-
-    }
-
-
-    private WebViewClient webViewClient = new WebViewClient() {
-
-        /**
-         * 防止加载网页时调起系统浏览器
-         */
-//        @Override
-//        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest webResourceRequest) {
-//            String url = webResourceRequest.getUrl().toString();
-//            if (url.startsWith("http:") || url.startsWith("https:")) {
-//                view.loadUrl(url);
-//
-//                Map<String, String> extraHeaders = new HashMap<String, String>();
-//                extraHeaders.put("Referer", "");//这里可换成自己域名 不写也没事
-//                view.loadUrl(url, extraHeaders);
-//                return false;
-//            } else {
-//                if (url.startsWith("weixin://wap/pay?")) {//这里拦截了支付 不跳转支付页面直接打开支付功能
-//                    Intent intent = new Intent();
-//                    intent.setAction(Intent.ACTION_VIEW);
-//                    intent.setData(Uri.parse(url));
-//                    context.startActivity(intent);
-//                }
-//                return true;
-//            }
-//        }
-        @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            reloadableStateContentLayout.showLoading();
-        }
-
-        /**
-         * 断网状态下回调，回调2次，onPageFinished前后
-         * @param view
-         * @param errorCode
-         * @param description
-         * @param failingUrl
-         */
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            reloadableStateContentLayout.showError();
-        }
-
-        @Override
-        public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, com.tencent.smtt.export.external.interfaces.SslError sslError) {
-            sslErrorHandler.proceed();// 接受所有网站的证书
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-//            ToastUtils.showLong(url + "<======================>onPageFinished");
-            reloadableStateContentLayout.showContent();
-            swipeRefreshLayout.setRefreshing(false);
-            Log.i("aaa", "onPageFinished: --->" + url);
-            isScan = false;
-
-            if (url.startsWith("https://cashier.youzan.com/pay/wsctrade_") || url.contains("/wsctrade/cart?kdt_id")) {
-                getCashierData(url);
-            } else if (url.startsWith("https://shop")) {
-                showBottom();
-            } else if (url.startsWith("https://cashier.gaohuitong.com/assets/crossborder/payresult")) {
-                retrycount = 0;
-                getPayResult(url);
-            } else if (url.startsWith("https://cashier.youzan.com/assets/bankcard")) {//login page
-                final EditText editText = new EditText(context);
-                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        Log.i("aaa", actionId + "," + "event.getAction()" + "---> onEditorAction: ----->" + v.getText().toString());
-                        if (isScan) return false;
-                        if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                            switch (event.getAction()) {
-                                case KeyEvent.ACTION_DOWN:
-                                    isScan = true;
-                                    v.postDelayed(() -> {
-                                        String bankNo = v.getText().toString();
-                                        enterBankNo(bankNo);
-                                    }, 1500);
-                                    return false;///返回true，保留软键盘。false，隐藏软键盘
-                            }
-                        }
-                        return false;
-                    }
-                });
-//                DialogFragmentHelper.builder(new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
-//                        .setView(editText).create(), false).show(getChildFragmentManager(), "");
-            }
-//            view.loadUrl("javascript:document.getElementsByClassName(\"van-stepper__input\").send_keys(\"Selenium\")\n");
-//            view.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (wvContent.getContentHeight() > 0) {
-//                        view.postDelayed(() -> {
-//                            hideBottom();
-//                        }, 2000);
-//
-//                    } else {
-//                        view.postDelayed(this, 1000);
-//                    }
-//                }
-//            }, 1000);
-
-        }
-    };
-
-    private class MyWebViewDownLoadListener implements DownloadListener {
-
-        @Override
-
-        public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-
-            Uri uri = Uri.parse(url);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
-        }
-    }
-
-
     @Override
     public boolean onBackPress(Activity activity) {
-        if (wvContent.canGoBack()) {
-/*            if (wvContent.getUrl().equals(mUrl)) {
+        /*        if (wvContent.canGoBack()) {
+         *//*            if (wvContent.getUrl().equals(mUrl)) {
 
-            } else */
+            } else *//*
             {
                 wvContent.post(() -> {
                     wvContent.goBack();
                 });
             }
-        } else {
+        } else */
+        {
             DialogFragmentHelper.builder(context -> new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("确定退出应用程序吗?")
                     .setNegativeButton("取消", null).setPositiveButton("确定", (dialog, which) -> {
                         getActivity().finish();
                     }).create(), true).show(getChildFragmentManager(), "");
         }
         return true;
-    }
-
-    public class Android2Js extends Object {
-        @JavascriptInterface
-        public void enterBankNo(boolean caninput, String bankNo) {
-            if (caninput) {
-                handler.postDelayed(() -> {
-                    String js = String.format("javascript:document.getElementsByClassName('van-field__control').value='%s'", bankNo);
-                    wvContent.evaluateJavascript(js, null);
-                }, 1);
-            } else {
-                handler.postDelayed(() -> {
-                    Log.e("aaa", "enterBankNo: false");
-                    String js = String.format("javascript:function input(){" +
-                            "window.android.enterBankNo(document.getElementsByClassName('van-field__control').length>'0','%s')}", bankNo);
-                    wvContent.loadUrl(js);
-                    wvContent.loadUrl("javascript:input()");
-                }, 1);
-            }
-        }
-
-        @JavascriptInterface
-        public void JsToJavaInterface(final boolean param) {
-//            ToastUtils.showLong(String.valueOf(param));
-//            if (!wvContent.getUrl().startsWith("https://shop")) {
-//                return;
-//            }
-            if (param) {
-                handler.postDelayed(() -> {
-                    int count = arrayMap.get(cur_product_id) == null ? 0 : arrayMap.get(cur_product_id).count;
-                    Log.i("aaa", "JsToJavaInterface: count===" + count);
-                    String js = String.format("javascript:function add(){console.log('add');" +
-                            "console.log(document.getElementsByClassName('van-stepper__plus').length);" +
-                            "for(var i=0;i<'%d';++i){document.getElementsByClassName('van-stepper__plus')[0].click();}}", count - 1);
-                    wvContent.loadUrl(js);
-                    wvContent.loadUrl("javascript:add();");
-                }, 1);
-            } else {
-                handler.postDelayed(() -> {
-                    Log.i("aaa", "JsToJavaInterface: check()");
-                    String js1 = "javascript:function check(){window.android.JsToJavaInterface(document.getElementsByClassName('van-stepper__plus').length>'0')}";
-                    wvContent.loadUrl(js1);
-                    wvContent.loadUrl("javascript:check();");
-                }, 1);
-            }
-        }
-
-        @JavascriptInterface
-        public void collectBtnComplete(boolean canpopup) {
-//            if (!wvContent.getUrl().startsWith("https://shop")) {
-//                return;
-//            }
-            if (canpopup) {
-                handler.postDelayed(() -> {
-                    Log.i("aaa", "collectBtnComplete: is true");
-                    wvContent.evaluateJavascript("document.getElementsByClassName('van-button van-button--default van-button--large van-button--square van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice')[0].click();", null);
-                    wvContent.evaluateJavascript("document.getElementsByClassName('van-button van-button--default van-button--large van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice')[0].click();", null);
-                }, 1);
-            } else {
-                handler.postDelayed(() -> {
-                    Log.i("aaa", "collectBtnComplete: is false");
-                    String js = "javascript:function check(){window.android.collectBtnComplete(document.getElementsByClassName('van-button van-button--default van-button--large van-button--square van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice').length>'0'" +
-                            "||document.getElementsByClassName('van-button van-button--default van-button--large van-goods-action-button van-goods-action-button--first goods-buttons__big theme__button--vice').length>'0');};";
-                    wvContent.loadUrl(js);
-                    wvContent.loadUrl("javascript:check();");
-                }, 1);
-            }
-        }
-
-        @JavascriptInterface
-        public void getCashierData(boolean ispay) {
-            if (ispay) {
-                handler.postDelayed(() -> {
-                    String url = wvContent.getUrl();
-                    Log.i("aaa", "getpayinfo: is true--->" + url.equals(mUrl));
-                    Executors.newSingleThreadExecutor().execute(() -> {
-                        try {
-
-                            Document doc = Jsoup.connect(BillingFragment.this.mUrl).get();
-                            Log.e("aaa", "::getpayinfo: " + doc.toString());
-//                            String payinfo = doc.head().childNode(33).toString();
-//                            Log.e("aaa", "getPayResult: " + payinfo);
-//                            String outBizNo = "";
-//                            if (!Kits.Empty.check(payinfo)) {
-                            JSONObject jsonObject = new JSONObject("");
-//                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } finally {
-                            isScan = false;
-                        }
-                    });
-                }, 1);
-            } else {
-                handler.postDelayed(() -> {
-                    Log.i("aaa", "getpayinfo: is false");
-                    String js = "javascript:function fetch(){console.log('payinfo is false');" +
-                            "console.log(document.getElementsByClassName('zan-cashier__a').length);" +
-///                            "console.log(document.getElementsByClassName('zan-cashier__a')[0].style.display=='display');" +
-                            "window.android.getCashierData(document.getElementsByClassName('zan-cashier__a').length>'0')}";
-                    wvContent.loadUrl(js);
-                    wvContent.loadUrl("javascript:fetch();");
-                }, 2000);
-            }
-        }
     }
 
     /**
@@ -1012,7 +1056,8 @@ public class BillingFragment extends XBaseFragment {
 
     public void OpenDevice() {
         if (bopen) {
-            test_tv.setText("设备已连接");
+//            test_tv.setText("设备已连接");
+            ToastUtils.showLong("设备已连接");
             return;
         }
         try {
@@ -1023,7 +1068,8 @@ public class BillingFragment extends XBaseFragment {
                 //当前线程为工作线程，若需操作界面，请在UI线程处理
                 context.runOnUiThread(new Runnable() {
                     public void run() {
-                        test_tv.setText("设备发生异常，断开连接！");
+//                        test_tv.setText("设备发生异常，断开连接！");
+                        ToastUtils.showLong("设备发生异常，断开连接！");
                     }
                 });
             };
@@ -1032,141 +1078,145 @@ public class BillingFragment extends XBaseFragment {
             bStoped = false;
             mReadCount = 0;
             writeLogToFile("连接设备成功");
-            test_tv.setText("连接成功");
+//            test_tv.setText("连接成功");
+            ToastUtils.showLong("连接成功");
             bopen = true;
             countdownLatch = new CountDownLatch(1);
-            new Thread(new Runnable() {
-                public void run() {
-                    while (!bStoped) {
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+            new Thread(() -> {
+                while (!bStoped) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                        boolean ret = false;
-                        final long nTickstart = System.currentTimeMillis();
-                        try {
-                            idCardReader.findCard(0);
-                            idCardReader.selectCard(0);
-                        } catch (IDCardReaderException e) {
-                            //continue;
-                        }
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        int retType = 0;
-                        try {
-                            retType = idCardReader.readCardEx(0, 0);
-                        } catch (IDCardReaderException e) {
-                            writeLogToFile("读卡失败，错误信息：" + e.getMessage());
-                        }
-                        if (retType == 1 || retType == 2 || retType == 3) {
-                            final long nTickUsed = (System.currentTimeMillis() - nTickstart);
-                            final int final_retType = retType;
-                            writeLogToFile("读卡成功：" + (++mReadCount) + "次" + "，耗时：" + nTickUsed + "毫秒");
-                            context.runOnUiThread(new Runnable() {
-                                public void run() {
-                                    if (final_retType == 1) {
-                                        final IDCardInfo idCardInfo = idCardReader.getLastIDCardInfo();
-                                        //姓名adb
-                                        String strName = idCardInfo.getName();
-                                        //民族
-                                        String strNation = idCardInfo.getNation();
-                                        //出生日期
-                                        String strBorn = idCardInfo.getBirth();
-                                        //住址
-                                        String strAddr = idCardInfo.getAddress();
-                                        //身份证号
-                                        String strID = idCardInfo.getId();
-                                        //有效期限
-                                        String strEffext = idCardInfo.getValidityTime();
-                                        //签发机关
-                                        String strIssueAt = idCardInfo.getDepart();
-                                        test_tv.setText("读取次数：" + mReadCount + ",耗时：" + nTickUsed + "毫秒, 卡类型：居民身份证,姓名：" + strName +
-                                                "，民族：" + strNation + "，住址：" + strAddr + ",身份证号：" + strID);
-                                        if (idCardInfo.getPhotolength() > 0) {
-                                            byte[] buf = new byte[WLTService.imgLength];
-                                            if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
-                                                test_tv.setBackground(new BitmapDrawable(IDPhotoHelper.Bgr2Bitmap(buf)));
-                                            }
+                    boolean ret = false;
+                    final long nTickstart = System.currentTimeMillis();
+                    try {
+                        idCardReader.findCard(0);
+                        idCardReader.selectCard(0);
+                    } catch (Exception e) {
+                        //continue;
+                    }
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    int retType = 0;
+                    try {
+                        retType = idCardReader.readCardEx(0, 0);
+                    } catch (IDCardReaderException e) {
+                        writeLogToFile("读卡失败，错误信息：" + e.getMessage());
+                    }
+                    if (retType == 1 || retType == 2 || retType == 3) {
+                        final long nTickUsed = (System.currentTimeMillis() - nTickstart);
+                        final int final_retType = retType;
+                        writeLogToFile("读卡成功：" + (++mReadCount) + "次" + "，耗时：" + nTickUsed + "毫秒");
+                        context.runOnUiThread(new Runnable() {
+                            public void run() {
+                                if (final_retType == 1) {
+                                    final IDCardInfo idCardInfo = idCardReader.getLastIDCardInfo();
+                                    //姓名adb
+                                    String strName = idCardInfo.getName();
+                                    //民族
+                                    String strNation = idCardInfo.getNation();
+                                    //出生日期
+                                    String strBorn = idCardInfo.getBirth();
+                                    //住址
+                                    String strAddr = idCardInfo.getAddress();
+                                    //身份证号
+                                    String strID = idCardInfo.getId();
+                                    handler.sendMessage(handler.obtainMessage(1, strID));
+                                    //有效期限
+                                    String strEffext = idCardInfo.getValidityTime();
+                                    //签发机关
+                                    String strIssueAt = idCardInfo.getDepart();
+                                    test_tv.setText("读取次数：" + mReadCount + ",耗时：" + nTickUsed + "毫秒, 卡类型：居民身份证,姓名：" + strName +
+                                            "，民族：" + strNation + "，住址：" + strAddr + ",身份证号：" + strID);
+                                    if (idCardInfo.getPhotolength() > 0) {
+                                        byte[] buf = new byte[WLTService.imgLength];
+                                        if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
+//                                                test_tv.setBackground(new BitmapDrawable(IDPhotoHelper.Bgr2Bitmap(buf)));
                                         }
-                                    } else if (final_retType == 2) {
-                                        final IDPRPCardInfo idprpCardInfo = idCardReader.getLastPRPIDCardInfo();
-                                        //中文名
-                                        String strCnName = idprpCardInfo.getCnName();
-                                        //英文名
-                                        String strEnName = idprpCardInfo.getEnName();
-                                        //国家/国家地区代码
-                                        String strCountry = idprpCardInfo.getCountry() + "/" + idprpCardInfo.getCountryCode();//国家/国家地区代码
-                                        //出生日期
-                                        String strBorn = idprpCardInfo.getBirth();
-                                        //身份证号
-                                        String strID = idprpCardInfo.getId();
-                                        //有效期限
-                                        String strEffext = idprpCardInfo.getValidityTime();
-                                        //签发机关
-                                        String strIssueAt = "公安部";
-                                        test_tv.setText("读取次数：" + mReadCount + ",耗时：" + nTickUsed + "毫秒, 卡类型：外国人永居证,中文名：" + strCnName + ",英文名：" +
-                                                strEnName + "，国家：" + strCountry + ",证件号：" + strID);
-                                        if (idprpCardInfo.getPhotolength() > 0) {
-                                            byte[] buf = new byte[WLTService.imgLength];
-                                            if (1 == WLTService.wlt2Bmp(idprpCardInfo.getPhoto(), buf)) {
+                                    }
+                                } else if (final_retType == 2) {
+                                    final IDPRPCardInfo idprpCardInfo = idCardReader.getLastPRPIDCardInfo();
+                                    //中文名
+                                    String strCnName = idprpCardInfo.getCnName();
+                                    //英文名
+                                    String strEnName = idprpCardInfo.getEnName();
+                                    //国家/国家地区代码
+                                    String strCountry = idprpCardInfo.getCountry() + "/" + idprpCardInfo.getCountryCode();//国家/国家地区代码
+                                    //出生日期
+                                    String strBorn = idprpCardInfo.getBirth();
+                                    //身份证号
+                                    String strID = idprpCardInfo.getId();
+                                    handler.sendMessage(handler.obtainMessage(1, strID));
+                                    //有效期限
+                                    String strEffext = idprpCardInfo.getValidityTime();
+                                    //签发机关
+                                    String strIssueAt = "公安部";
+                                    test_tv.setText("读取次数：" + mReadCount + ",耗时：" + nTickUsed + "毫秒, 卡类型：外国人永居证,中文名：" + strCnName + ",英文名：" +
+                                            strEnName + "，国家：" + strCountry + ",证件号：" + strID);
+                                    if (idprpCardInfo.getPhotolength() > 0) {
+                                        byte[] buf = new byte[WLTService.imgLength];
+                                        if (1 == WLTService.wlt2Bmp(idprpCardInfo.getPhoto(), buf)) {
 //                                                imageView.setImageBitmap(IDPhotoHelper.Bgr2Bitmap(buf));
-                                                test_tv.setBackground(new BitmapDrawable(IDPhotoHelper.Bgr2Bitmap(buf)));
-                                            }
+//                                                test_tv.setBackground(new BitmapDrawable(IDPhotoHelper.Bgr2Bitmap(buf)));
                                         }
-                                    } else {
-                                        final IDCardInfo idCardInfo = idCardReader.getLastIDCardInfo();
-                                        //姓名
-                                        String strName = idCardInfo.getName();
-                                        //民族,港澳台不支持该项
-                                        String strNation = "";
-                                        //出生日期
-                                        String strBorn = idCardInfo.getBirth();
-                                        //住址
-                                        String strAddr = idCardInfo.getAddress();
-                                        //身份证号
-                                        String strID = idCardInfo.getId();
-                                        //有效期限
-                                        String strEffext = idCardInfo.getValidityTime();
-                                        //签发机关
-                                        String strIssueAt = idCardInfo.getDepart();
-                                        //通行证号
-                                        String strPassNum = idCardInfo.getPassNum();
-                                        //签证次数
-                                        int visaTimes = idCardInfo.getVisaTimes();
-                                        test_tv.setText("读取次数：" + mReadCount + ",耗时：" + nTickUsed + "毫秒, 卡类型：港澳台居住证,姓名：" + strName +
-                                                "，住址：" + strAddr + ",身份证号：" + strID + "，通行证号码：" + strPassNum +
-                                                ",签证次数：" + visaTimes);
-                                        if (idCardInfo.getPhotolength() > 0) {
-                                            byte[] buf = new byte[WLTService.imgLength];
-                                            if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
+                                    }
+                                } else {
+                                    final IDCardInfo idCardInfo = idCardReader.getLastIDCardInfo();
+                                    //姓名
+                                    String strName = idCardInfo.getName();
+                                    //民族,港澳台不支持该项
+                                    String strNation = "";
+                                    //出生日期
+                                    String strBorn = idCardInfo.getBirth();
+                                    //住址
+                                    String strAddr = idCardInfo.getAddress();
+                                    //身份证号
+                                    String strID = idCardInfo.getId();
+                                    handler.sendMessage(handler.obtainMessage(1, strID));
+                                    //有效期限
+                                    String strEffext = idCardInfo.getValidityTime();
+                                    //签发机关
+                                    String strIssueAt = idCardInfo.getDepart();
+                                    //通行证号
+                                    String strPassNum = idCardInfo.getPassNum();
+                                    //签证次数
+                                    int visaTimes = idCardInfo.getVisaTimes();
+                                    test_tv.setText("读取次数：" + mReadCount + ",耗时：" + nTickUsed + "毫秒, 卡类型：港澳台居住证,姓名：" + strName +
+                                            "，住址：" + strAddr + ",身份证号：" + strID + "，通行证号码：" + strPassNum +
+                                            ",签证次数：" + visaTimes);
+                                    if (idCardInfo.getPhotolength() > 0) {
+                                        byte[] buf = new byte[WLTService.imgLength];
+                                        if (1 == WLTService.wlt2Bmp(idCardInfo.getPhoto(), buf)) {
 //                                                imageView.setImageBitmap(IDPhotoHelper.Bgr2Bitmap(buf));
-                                                test_tv.setBackground(new BitmapDrawable(IDPhotoHelper.Bgr2Bitmap(buf)));
-                                            }
+//                                                test_tv.setBackground(new BitmapDrawable(IDPhotoHelper.Bgr2Bitmap(buf)));
                                         }
                                     }
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
-                    countdownLatch.countDown();
                 }
+                countdownLatch.countDown();
             }).start();
         } catch (IDCardReaderException e) {
             writeLogToFile("连接设备失败");
-            test_tv.setText("连接失败");
-            test_tv.setText("开始读卡失败，错误码：" + e.getErrorCode() + "\n错误信息：" + e.getMessage() + "\n内部代码=" + e.getInternalErrorCode());
+//            test_tv.setText("连接失败");
+//            test_tv.setText("开始读卡失败，错误码：" + e.getErrorCode() + "\n错误信息：" + e.getMessage() + "\n内部代码=" + e.getInternalErrorCode());
+            ToastUtils.showLong("连接失败" + "开始读卡失败，错误码：" + e.getErrorCode() + "\n错误信息：" + e.getMessage() + "\n内部代码=" + e.getInternalErrorCode());
         }
 
     }
 
     public void OnBnBegin(View view) {
         if (bopen) {
-            test_tv.setText("设备已连接");
+//            test_tv.setText("设备已连接");
+            ToastUtils.showLong("设备已连接");
             return;
         }
         RequestDevicePermission();
@@ -1200,8 +1250,43 @@ public class BillingFragment extends XBaseFragment {
             return;
         }
         CloseDevice();
-        test_tv.setText("设备断开连接");
-
+//        test_tv.setText("设备断开连接");
+        ToastUtils.showLong("设备断开连接");
     }
 
+    /**
+     * 动态广播接收消息
+     */
+    private BroadcastReceiver payMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("message");
+            Log.e(TAG, "-----接收服务端数据" + message);
+            try {
+                Gson gson = new Gson();
+                PayResultBean payResultBean = gson.fromJson((message), PayResultBean.class);
+                if (payResultBean.isPaySuccess == (1)) {
+                    if (null != payDialog) {
+                        payDialog.cancel();
+                    }
+                    payDialog = null;
+                    Prints.PostPrint(context, printBean, order_tv);
+                    billing_btn.performClick();
+                    ToastUtils.showLong("支付成功！");
+                }
+            } catch (Exception e) {
+
+            } finally {
+                printBean = null;
+            }
+        }
+    };
+
+    /**
+     * 动态注册广播
+     */
+    private void registerMsgReceiver() {
+        IntentFilter filter = new IntentFilter("com.xxx.servicecallback.content");
+        (context).registerReceiver(payMessageReceiver, filter);
+    }
 }

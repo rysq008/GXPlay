@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,9 +9,9 @@
     <TextView
         android:id="@+id/statis_start_time_tv"
         android:layout_width="@dimen/dp_100"
-        android:layout_height="@dimen/dp_30"
+        android:layout_height="@dimen/dp_25"
         android:layout_marginLeft="@dimen/dp_30"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
         android:background="@drawable/shape_grey_stroke_6_radius_rect"
         android:drawableRight="@mipmap/search"
         android:gravity="center"
@@ -21,9 +22,9 @@
     <TextView
         android:id="@+id/statis_end_time_tv"
         android:layout_width="@dimen/dp_100"
-        android:layout_height="@dimen/dp_30"
+        android:layout_height="@dimen/dp_25"
         android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
         android:background="@drawable/shape_grey_stroke_6_radius_rect"
         android:drawableRight="@mipmap/search"
         android:gravity="center"
@@ -37,7 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_30"
         android:layout_marginStart="@dimen/dp_30"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
         android:gravity="center"
         android:hint="今天"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -49,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_30"
         android:layout_marginLeft="@dimen/dp_30"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
         android:gravity="center"
         android:hint="最近"
         app:layout_constraintStart_toEndOf="@+id/statis_today_time_tv"
@@ -60,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_30"
         android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
         android:gravity="center"
         android:hint="7天"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -72,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_30"
         android:layout_marginStart="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
         android:gravity="center"
         android:hint="1个月"
         app:layout_constraintStart_toEndOf="@+id/statis_week_time_tv"
@@ -83,20 +84,32 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_30"
         android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_40"
+        android:layout_marginTop="@dimen/dp_30"
         android:gravity="center"
         android:hint="3个月"
         app:layout_constraintStart_toEndOf="@+id/statis_month_time_tv"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/statis_search_commit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_orange_solid_6_radius_rect"
+        android:text="查询"
+        android:textColor="@color/white"
+        android:layout_marginRight="@dimen/dp_20"
+        app:layout_constraintBottom_toBottomOf="@+id/statis_seasons_time_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/statis_seasons_time_tv" />
+
     <TextView
         android:id="@+id/statis_sell_count_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_10"
         android:text="销售笔数"
         android:textColor="@color/C_333333"
-        android:textSize="@dimen/dp_20"
+        android:textSize="@dimen/dp_10"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/statis_start_time_tv"
         app:layout_constraintTop_toBottomOf="@+id/statis_start_time_tv" />
@@ -108,7 +121,7 @@
         android:layout_marginStart="@dimen/dp_30"
         android:text="销售金额"
         android:textColor="@color/C_333333"
-        android:textSize="@dimen/dp_20"
+        android:textSize="@dimen/dp_10"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/statis_sell_count_tv"
         app:layout_constraintTop_toTopOf="@+id/statis_sell_count_tv" />
@@ -117,10 +130,10 @@
         android:id="@+id/statis_sell_count_val_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_5"
         android:text="12"
         android:textColor="@color/c_F4785F"
-        android:textSize="@dimen/dp_20"
+        android:textSize="@dimen/dp_12"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/statis_sell_count_tv"
         app:layout_constraintStart_toStartOf="@+id/statis_sell_count_tv"
@@ -130,78 +143,60 @@
         android:id="@+id/statis_sell_amount_val_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_5"
         android:text="3000"
         android:textColor="@color/c_F4785F"
-        android:textSize="@dimen/dp_20"
+        android:textSize="@dimen/dp_12"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/statis_sell_amount_tv"
         app:layout_constraintStart_toStartOf="@+id/statis_sell_amount_tv"
         app:layout_constraintTop_toBottomOf="@+id/statis_sell_amount_tv" />
 
-    <TextView
-        android:id="@+id/statis_sell_sort_tv"
+    <RadioGroup
+        android:layout_marginTop="@dimen/dp_5"
+        android:id="@+id/statis_sell_rakn_rg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_20"
-        android:text="商品销售排行"
-        android:textColor="@color/C_333333"
-        android:textSize="@dimen/dp_15"
-        app:layout_constraintStart_toStartOf="@+id/statis_sell_count_tv"
-        app:layout_constraintTop_toBottomOf="@+id/statis_sell_count_val_tv" />
-
-    <LinearLayout
-        android:id="@+id/statis_sell_col_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_50"
-        android:layout_marginTop="@dimen/dp_20"
-        android:layout_marginRight="@dimen/dp_50"
-        android:layout_marginBottom="@dimen/dp_10"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/statis_sell_sort_tv">
+        app:layout_constraintStart_toStartOf="@+id/statis_sell_count_tv"
+        app:layout_constraintTop_toBottomOf="@+id/statis_sell_count_val_tv">
 
-        <TextView
-            android:layout_width="0dp"
+        <RadioButton
+            android:id="@+id/statis_sell_amount_rb"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="排名" />
+            android:button="@null"
+            android:checked="true"
+            android:text="销售额"
+            android:textColor="@color/select_color_blue_gray"
+            android:textSize="@dimen/dp_9" />
 
-        <TextView
-            android:layout_width="0dp"
+        <View
+            android:layout_width="2px"
+            android:layout_height="@dimen/dp_10"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:background="@color/color_999" />
+
+        <RadioButton
+            android:id="@+id/statis_sell_sort_rb"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:text="品名" />
+            android:button="@null"
+            android:text="商品销售额度"
+            android:textColor="@color/select_color_blue_gray"
+            android:textSize="@dimen/dp_9" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:gravity="center"
-            android:text="条码" />
+    </RadioGroup>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="销售量" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="销售额" />
-    </LinearLayout>
-
-    <com.ikats.shop.views.XReloadableListContentLayout
-        android:id="@+id/statis_reload_list_layout"
+    <com.ikats.shop.views.SetScrollViewPager
+        android:id="@+id/statis_rank_list_vp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_50"
-        android:layout_marginRight="@dimen/dp_50"
-        app:layout_constraintTop_toBottomOf="@+id/statis_sell_col_layout" />
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statis_sell_rakn_rg"
+        tools:layout_editor_absoluteX="114dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

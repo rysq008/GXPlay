@@ -1,89 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/search_enter_et"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_40"
+        android:layout_width="@dimen/dp_240"
+        android:layout_height="@dimen/dp_25"
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_10"
         android:background="@drawable/shape_grey_stroke_6_radius_rect"
         android:drawableRight="@mipmap/search"
         android:hint="通过购买人手机号，姓名，身份证号，序号查询订单"
-        android:paddingLeft="@dimen/dp_10" />
+        android:paddingLeft="@dimen/dp_10"
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/search_enter_start_time_tv"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_40"
+        android:background="@drawable/shape_grey_stroke_6_radius_rect"
+        android:drawableRight="@mipmap/search"
+        android:gravity="center"
+        android:hint="开始时间"
+        app:layout_constraintBottom_toBottomOf="@+id/search_enter_et"
+        app:layout_constraintStart_toEndOf="@+id/search_enter_et"
+        app:layout_constraintTop_toTopOf="@+id/search_enter_et" />
+
+    <View
+        android:layout_width="@dimen/dp_10"
+        android:layout_height="1px"
+        android:background="@color/color_999"
+        app:layout_constraintBottom_toBottomOf="@+id/search_enter_end_time_tv"
+        app:layout_constraintEnd_toStartOf="@+id/search_enter_end_time_tv"
+        app:layout_constraintStart_toEndOf="@+id/search_enter_start_time_tv"
+        app:layout_constraintTop_toTopOf="@+id/search_enter_end_time_tv" />
+
+    <TextView
+        android:id="@+id/search_enter_end_time_tv"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:background="@drawable/shape_grey_stroke_6_radius_rect"
+        android:drawableRight="@mipmap/search"
+        android:gravity="center"
+        android:hint="结束时间"
+        app:layout_constraintBottom_toBottomOf="@+id/search_enter_start_time_tv"
+        app:layout_constraintStart_toEndOf="@+id/search_enter_start_time_tv"
+        app:layout_constraintTop_toTopOf="@+id/search_enter_start_time_tv" />
+
+    <Button
+        android:id="@+id/search_commit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="@drawable/shape_orange_solid_6_radius_rect"
+        android:text="查询"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/search_enter_end_time_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_enter_end_time_tv" />
+
+    <TextView
+        android:id="@+id/search_order_count_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:text="订单数：100"
+        android:textSize="@dimen/dp_9"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_enter_et" />
+
+    <TextView
+        android:id="@+id/search_order_amount_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:text="总销售额：100"
+        android:textSize="@dimen/dp_9"
+        app:layout_constraintBottom_toBottomOf="@+id/search_order_count_tv"
+        app:layout_constraintStart_toEndOf="@+id/search_order_count_tv"
+        app:layout_constraintTop_toTopOf="@+id/search_order_count_tv" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_50"
-        android:layout_marginTop="@dimen/dp_60"
-        android:layout_marginRight="@dimen/dp_50"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:orientation="horizontal">
+        android:layout_marginTop="@dimen/dp_30"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/search_enter_end_time_tv"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toStartOf="@+id/search_enter_et"
+        app:layout_constraintTop_toBottomOf="@+id/search_enter_et">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="序号" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="center"
             android:text="订单号" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="件数" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="金额" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="购买人" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="center"
             android:text="手机号" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="状态" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="center"
             android:text="创建时间" />
 
         <TextView
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="操作" />
     </LinearLayout>
 
     <com.ikats.shop.views.XReloadableListContentLayout
         android:id="@+id/search_reload_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_50"
-        android:layout_marginRight="@dimen/dp_50" />
-</LinearLayout>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+</androidx.constraintlayout.widget.ConstraintLayout>
