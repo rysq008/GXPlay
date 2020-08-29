@@ -31,9 +31,10 @@ import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.LoginBean;
 import com.ikats.shop.present.FLoginPresenter;
-import com.ikats.shop.utils.CodeUtils;
 import com.ikats.shop.utils.Utils;
 import com.ikats.shop.views.ToastMgr;
+import com.tamsiree.rxkit.RxKeyboardTool;
+import com.tamsiree.rxkit.RxNetTool;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -108,6 +109,11 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                 pwd_et.setTransformationMethod(PasswordTransformationMethod.getInstance());
             pwd_et.setSelection(pwd_et.getText().length());
         });
+
+        checkNetStatus();
+        user_et.postDelayed(() -> {
+            RxKeyboardTool.hideSoftInput(user_et);
+        }, 100);
     }
 
 
@@ -132,153 +138,155 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 //                eye_cb.toggle();
                 break;
             case R.id.login_get_code_tv:
-                getP().requestGetCode(context, user_et.getText().toString(), msg -> {
-                    HttpResultModel resultModel = (HttpResultModel) msg.obj;
-                    Bitmap bitmap = (CodeUtils.getInstance().createBitmap(resultModel.resultContent));
-                    show_code_tv.setBackground(new BitmapDrawable(bitmap));
-                    CountDownTimer cdt = new CountDownTimer(60000, 1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            pwd_et.setText(resultModel.resultContent);
-                            get_code_tv.setText((millisUntilFinished / 1000 + 1) + "S");
-                        }
+                if (checkNetStatus())
+                    getP().requestCode(context, user_et.getText().toString(), msg -> {
+                        HttpResultModel resultModel = (HttpResultModel) msg.obj;
+                        Bitmap bitmap = (Bitmap) resultModel.resultData;
+                        show_code_tv.setBackground(new BitmapDrawable(bitmap));
+                        CountDownTimer cdt = new CountDownTimer(61000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+//                            pwd_et.setText(resultModel.resultContent);
+                                get_code_tv.setText((millisUntilFinished / 1000) + "S");
+                            }
 
-                        @Override
-                        public void onFinish() {
-                            get_code_tv.setEnabled(true);
-                            get_code_tv.setText("");
-                        }
-                    };
-                    cdt.start();
-                    get_code_tv.setEnabled(false);
-                    return false;
-                });
+                            @Override
+                            public void onFinish() {
+                                get_code_tv.setEnabled(true);
+                                get_code_tv.setText("");
+                            }
+                        };
+                        cdt.start();
+                        get_code_tv.setEnabled(false);
+                        return false;
+                    });
                 break;
             case R.id.login_forget_pwd_tv:
-                DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
-                        DialogFragmentHelper.builder(R.layout.dialog_common_notitle_layout, true)
-                                .setDialogWindow(dialogWindow -> {
-                                    WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
-                                    wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                                    dialogWindow.setAttributes(wlp);
-                                    dialogWindow.setGravity(Gravity.BOTTOM);
-                                    dialogWindow.setWindowAnimations(R.style.BottomInAndOutStyle);
-                                    return null;
-                                })
-                                .setOnProcessView((dialog, view1) -> {
-                                    final Button[] btn = {view1.findViewById(R.id.dialog_ok_btn)};
-                                    btn[0].setOnClickListener(v -> {
-                                        dialog.cancel();
-                                        DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
-                                                DialogFragmentHelper.builder(R.layout.dialog_common_reset_pwd_layout, true)
-                                                        .setOnProcessView((dialog1, view2) -> {
-                                                            TextView tv_title = view2.findViewById(R.id.dialog_title_tv);
-                                                            EditText et_input = view2.findViewById(R.id.dialog_input_et);
-                                                            btn[0] = view2.findViewById(R.id.dialog_ok_btn);
-                                                            tv_title.setText("输入手机号");
-                                                            btn[0].setOnClickListener(v1 -> {
-                                                                if (!Utils.isMobileNO(et_input.getText().toString())) {
-                                                                    ToastMgr.showLongToast("请输入正确的手机号码");
-                                                                    return;
-                                                                }
-                                                                dialog1.cancel();
-                                                                getP().requestGetCode(context, et_input.getText().toString(), msg -> {
-                                                                    DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
-                                                                            DialogFragmentHelper.builder(R.layout.dialog_common_reset_pwd_layout, false)
-                                                                                    .setOnProcessView((dialog2, view3) -> {
-                                                                                        TextView tv_title1 = view3.findViewById(R.id.dialog_title_tv);
-                                                                                        TextView et_input1 = view3.findViewById(R.id.dialog_input_et);
-                                                                                        TextView tv_resend = view3.findViewById(R.id.dialog_resend_tv);
-                                                                                        TextView tv_tips = view3.findViewById(R.id.dialog_tips_tv);
-                                                                                        Button btn1 = view3.findViewById(R.id.dialog_ok_btn);
-                                                                                        tv_title1.setText(String.format("已将验证码发到尾号%s手机", et_input.getText().toString().substring(8)));
-                                                                                        tv_resend.setVisibility(View.VISIBLE);
-                                                                                        tv_tips.setVisibility(View.VISIBLE);
-                                                                                        tv_resend.setEnabled(false);
-                                                                                        CountDownTimer scdt = new CountDownTimer(30000, 1000) {
-                                                                                            @Override
-                                                                                            public void onTick(long millisUntilFinished) {
-                                                                                                tv_resend.setText(String.format("%dS重发", millisUntilFinished / 1000));
-                                                                                            }
+                if (checkNetStatus())
+                    DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
+                            DialogFragmentHelper.builder(R.layout.dialog_common_notitle_layout, true)
+                                    .setDialogWindow(dialogWindow -> {
+                                        WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
+                                        wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                                        dialogWindow.setAttributes(wlp);
+                                        dialogWindow.setGravity(Gravity.BOTTOM);
+                                        dialogWindow.setWindowAnimations(R.style.BottomInAndOutStyle);
+                                        return null;
+                                    })
+                                    .setOnProcessView((dialog, view1) -> {
+                                        final Button[] btn = {view1.findViewById(R.id.dialog_ok_btn)};
+                                        btn[0].setOnClickListener(v -> {
+                                            dialog.dismiss();
+                                            DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
+                                                    DialogFragmentHelper.builder(R.layout.dialog_common_reset_pwd_layout, true)
+                                                            .setOnProcessView((dialog1, view2) -> {
+                                                                TextView tv_title = view2.findViewById(R.id.dialog_title_tv);
+                                                                EditText et_input = view2.findViewById(R.id.dialog_input_et);
+                                                                btn[0] = view2.findViewById(R.id.dialog_ok_btn);
+                                                                tv_title.setText("输入手机号");
+                                                                btn[0].setOnClickListener(v1 -> {
+                                                                    if (!Utils.isMobileNO(et_input.getText().toString())) {
+                                                                        ToastMgr.showLongToast("请输入正确的手机号码");
+                                                                        return;
+                                                                    }
+                                                                    dialog1.dismiss();
+                                                                    getP().requestCode(context, et_input.getText().toString(), msg -> {
+                                                                        DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
+                                                                                DialogFragmentHelper.builder(R.layout.dialog_common_reset_pwd_layout, false)
+                                                                                        .setOnProcessView((dialog2, view3) -> {
+                                                                                            TextView tv_title1 = view3.findViewById(R.id.dialog_title_tv);
+                                                                                            TextView et_input1 = view3.findViewById(R.id.dialog_input_et);
+                                                                                            TextView tv_resend = view3.findViewById(R.id.dialog_resend_tv);
+                                                                                            TextView tv_tips = view3.findViewById(R.id.dialog_tips_tv);
+                                                                                            Button btn1 = view3.findViewById(R.id.dialog_ok_btn);
+                                                                                            tv_title1.setText(String.format("已将验证码发到尾号%s手机", et_input.getText().toString().substring(8)));
+                                                                                            tv_resend.setVisibility(View.VISIBLE);
+                                                                                            tv_tips.setVisibility(View.VISIBLE);
+                                                                                            tv_resend.setEnabled(false);
+                                                                                            CountDownTimer scdt = new CountDownTimer(30000, 1000) {
+                                                                                                @Override
+                                                                                                public void onTick(long millisUntilFinished) {
+                                                                                                    tv_resend.setText(String.format("%dS重发", millisUntilFinished / 1000));
+                                                                                                }
 
-                                                                                            @Override
-                                                                                            public void onFinish() {
-                                                                                                tv_resend.setEnabled(true);
-                                                                                                tv_resend.setText("重发");
-                                                                                                tv_resend.setOnClickListener(v -> {
-                                                                                                    btn[0].performClick();
-                                                                                                    dialog2.cancel();
-                                                                                                });
-                                                                                            }
-                                                                                        };
-                                                                                        scdt.start();
-                                                                                        tv_tips.setOnClickListener(tv -> {
-                                                                                            ToastMgr.showShortToast("wait develop !");
-                                                                                        });
-                                                                                        btn1.setOnClickListener(v2 -> {
-                                                                                            if (Kits.Empty.check(et_input1.getText().toString())) {
-                                                                                                ToastMgr.showShortToast("请输入验证码");
-                                                                                                return;
-                                                                                            }
-                                                                                            dialog2.cancel();
-                                                                                            getP().requestVerifCode(context, et_input1.getText().toString(), msg12 -> {
-                                                                                                dialog1.cancel();
-                                                                                                DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
-                                                                                                        DialogFragmentHelper.builder(R.layout.dialog_common_reset_pwd_layout, false)
-                                                                                                                .setOnProcessView((dialog3, view4) -> {
-                                                                                                                    TextView tv_title2 = view4.findViewById(R.id.dialog_title_tv);
-                                                                                                                    EditText et_input2 = view4.findViewById(R.id.dialog_input_et);
-                                                                                                                    CheckBox cb = view4.findViewById(R.id.dialog_eye_cb);
-                                                                                                                    view4.findViewById(R.id.dialog_resend_tv).setVisibility(View.GONE);
-                                                                                                                    view4.findViewById(R.id.dialog_tips_tv).setVisibility(View.GONE);
-                                                                                                                    Button btn2 = view4.findViewById(R.id.dialog_ok_btn);
-                                                                                                                    tv_title2.setText("设置新密码");
-                                                                                                                    cb.setVisibility(View.VISIBLE);
-                                                                                                                    cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                                                                                                                        if (isChecked)
-                                                                                                                            et_input2.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                                                                                                                        else
-                                                                                                                            et_input2.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                                                                                                                    });
-                                                                                                                    cb.performClick();
-                                                                                                                    btn2.setOnClickListener(v3 -> {
+                                                                                                @Override
+                                                                                                public void onFinish() {
+                                                                                                    tv_resend.setEnabled(true);
+                                                                                                    tv_resend.setText("重发");
+                                                                                                    tv_resend.setOnClickListener(v -> {
+                                                                                                        btn[0].performClick();
+                                                                                                        dialog2.dismiss();
+                                                                                                    });
+                                                                                                }
+                                                                                            };
+                                                                                            scdt.start();
+                                                                                            tv_tips.setOnClickListener(tv -> {
+                                                                                                ToastMgr.showShortToast("wait develop !");
+                                                                                            });
+                                                                                            btn1.setOnClickListener(v2 -> {
+                                                                                                if (Kits.Empty.check(et_input1.getText().toString())) {
+                                                                                                    ToastMgr.showShortToast("请输入验证码");
+                                                                                                    return;
+                                                                                                }
+                                                                                                dialog2.dismiss();
+                                                                                                getP().requestVerifCode(context, et_input1.getText().toString(), msg12 -> {
+                                                                                                    dialog1.dismiss();
+                                                                                                    DialogFragmentHelper.showBuilderDialog(getFragmentManager(),
+                                                                                                            DialogFragmentHelper.builder(R.layout.dialog_common_reset_pwd_layout, false)
+                                                                                                                    .setOnProcessView((dialog3, view4) -> {
+                                                                                                                        TextView tv_title2 = view4.findViewById(R.id.dialog_title_tv);
+                                                                                                                        EditText et_input2 = view4.findViewById(R.id.dialog_input_et);
+                                                                                                                        CheckBox cb = view4.findViewById(R.id.dialog_eye_cb);
+                                                                                                                        view4.findViewById(R.id.dialog_resend_tv).setVisibility(View.GONE);
+                                                                                                                        view4.findViewById(R.id.dialog_tips_tv).setVisibility(View.GONE);
+                                                                                                                        Button btn2 = view4.findViewById(R.id.dialog_ok_btn);
+                                                                                                                        tv_title2.setText("设置新密码");
+                                                                                                                        cb.setVisibility(View.VISIBLE);
+                                                                                                                        cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                                                                                                                            if (isChecked)
+                                                                                                                                et_input2.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                                                                                                                            else
+                                                                                                                                et_input2.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                                                                                                                        });
+                                                                                                                        cb.performClick();
+                                                                                                                        btn2.setOnClickListener(v3 -> {
 //                                                                                                                        if (Kits.Empty.check(et_input2.getText().toString())) {
 //                                                                                                                            ToastMgr.showShortToast("请输入密码");
 //                                                                                                                            return;
 //                                                                                                                        }
-                                                                                                                        getP().requestResetPwd(context, et_input.getText().toString(), et_input2.getText().toString(), msg1 -> {
-                                                                                                                            dialog3.cancel();
-                                                                                                                            if (null != msg1)
-                                                                                                                                DialogFragmentHelper.showBuilderDialog(getFragmentManager(), DialogFragmentHelper.builder(new CommonDialogFragment.OnCallDialog() {
-                                                                                                                                    @Override
-                                                                                                                                    public AlertDialog getDialog(Context context) {
-                                                                                                                                        AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle("提示")
-                                                                                                                                                .setMessage("重置成功")
-                                                                                                                                                .setPositiveButton("好", new DialogInterface.OnClickListener() {
-                                                                                                                                                    @Override
-                                                                                                                                                    public void onClick(DialogInterface dialog, int which) {
-                                                                                                                                                        dialog.dismiss();
-                                                                                                                                                    }
-                                                                                                                                                });
-                                                                                                                                        return builder.show();
-                                                                                                                                    }
-                                                                                                                                }, true), "");
-                                                                                                                            return false;
+                                                                                                                            getP().requestResetPwd(context, et_input.getText().toString(), et_input2.getText().toString(), msg1 -> {
+                                                                                                                                dialog3.dismiss();
+                                                                                                                                if (null != msg1)
+                                                                                                                                    DialogFragmentHelper.showBuilderDialog(getFragmentManager(), DialogFragmentHelper.builder(new CommonDialogFragment.OnCallDialog() {
+                                                                                                                                        @Override
+                                                                                                                                        public AlertDialog getDialog(Context context) {
+                                                                                                                                            AlertDialog.Builder builder = new AlertDialog.Builder(context).setTitle("提示")
+                                                                                                                                                    .setMessage("重置成功")
+                                                                                                                                                    .setPositiveButton("好", new DialogInterface.OnClickListener() {
+                                                                                                                                                        @Override
+                                                                                                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                                                                                                            dialog.dismiss();
+                                                                                                                                                        }
+                                                                                                                                                    });
+                                                                                                                                            return builder.show();
+                                                                                                                                        }
+                                                                                                                                    }, true), "");
+                                                                                                                                return false;
+                                                                                                                            });
                                                                                                                         });
-                                                                                                                    });
 
-                                                                                                                }), "");
-                                                                                                return false;
+                                                                                                                    }), "");
+                                                                                                    return false;
+                                                                                                });
+
                                                                                             });
-
-                                                                                        });
-                                                                                    }), "");
-                                                                    return false;
+                                                                                        }), "");
+                                                                        return false;
+                                                                    });
                                                                 });
-                                                            });
-                                                        }), "");
-                                    });
-                                }), "");
+                                                            }), "");
+                                        });
+                                    }), "");
                 break;
             case R.id.login_change_pwd_or_code_ctv://记住我
 //                if (!get_code_tv.isEnabled()) return;
@@ -289,8 +297,11 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 //                pwd_or_code_ctv.setText(pwd_or_code_ctv.isChecked() ? "验证码登录" : "密码登录");
                 break;
             case R.id.login_action_btn:
+                if (checkNetStatus())
 //                enter_code_et.getText()
-                getP().requestLogin(context, "admin"/*user_et.getText().toString()*/, "admin"/*pwd_et.getText().toString()*/,/*pwd_or_code_ctv.isChecked()*/true);
+//                getP().requestLogin(context, user_et.getText().toString().trim(), pwd_et.getText().toString().trim(), enter_code_et.getText().toString().trim());
+                    getP().requestLogin(context, "13333333333", "1111111", "1111");
+//                showContent(null);
                 break;
             case R.id.register_action_tv:
                 DetailFragmentsActivity.launch(context, null, RegisterFragment.newInstance());
@@ -320,4 +331,12 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
         return new LoginFragment();
     }
 
+    public boolean checkNetStatus() {
+        if (!RxNetTool.isConnected(context)) {
+            DialogFragmentHelper.builder(context1 -> new AlertDialog.Builder(context1, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("请检测网络设置！")
+                    .setNegativeButton("取消", null).setPositiveButton("确定", (dialog, which) -> RxNetTool.openWirelessSettings(context1)).create(), true).show(getChildFragmentManager(), "");
+            return false;
+        }
+        return true;
+    }
 }

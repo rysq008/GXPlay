@@ -2,6 +2,7 @@ package com.ikats.shop.activitys;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,20 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.ikats.shop.R;
 import com.ikats.shop.activitys.BaseActivity.XBaseActivity;
-import com.ikats.shop.fragments.GuideFragment;
+import com.ikats.shop.dialog.DialogFragmentHelper;
 import com.ikats.shop.fragments.LoginFragment;
 import com.ikats.shop.model.LoginBean;
 import com.ikats.shop.net.api.Api;
 import com.ikats.shop.utils.ShareUtils;
 import com.ikats.shop.views.ToastMgr;
+import com.tamsiree.rxkit.RxNetTool;
 
 import butterknife.BindView;
-import cn.droidlover.xdroidmvp.mvp.IPresent;
-import cn.droidlover.xdroidmvp.router.Router;
 
 
 /**
@@ -46,12 +45,24 @@ public class SplashActivity extends XBaseActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE,  //读取权限
             Manifest.permission.READ_PHONE_STATE,  //读取权限
             Manifest.permission.ACCESS_COARSE_LOCATION,//定位权限
-            Manifest.permission.INTERNET
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_LOGS,
+            Manifest.permission.WAKE_LOCK
     };
 
     @Override
     public void initData(Bundle savedInstanceState) {
         iv_splash.setOnClickListener(v -> {
+            if (!RxNetTool.isConnected(context)) {
+                DialogFragmentHelper.builder(context1 -> new AlertDialog.Builder(context1, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("请检测网络设置！")
+                        .setNegativeButton("取消", null).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                RxNetTool.openWirelessSettings(context1);
+                            }
+                        }).create(), true).show(getSupportFragmentManager(), "");
+                return;
+            }
             DetailFragmentsActivity.launch(context, null, LoginFragment.newInstance());
             finish();
         });

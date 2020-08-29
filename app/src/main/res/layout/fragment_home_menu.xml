@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_150"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/home_menu_billing_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@mipmap/billing_icon"
+        android:drawablePadding="@dimen/dp_3"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:text="开单"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_12" />
+
+    <TextView
+        android:id="@+id/home_menu_search_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@mipmap/search_icon"
+        android:drawablePadding="@dimen/dp_3"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:text="查单"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_12" />
+
+    <TextView
+        android:id="@+id/home_menu_statistics_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@mipmap/statis_icon"
+        android:drawablePadding="@dimen/dp_3"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:text="统计"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_12" />
+
+    <TextView
+        android:id="@+id/home_menu_setting_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@mipmap/setting_icon"
+        android:drawablePadding="@dimen/dp_3"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:text="设置"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_12" />
+
+    <TextView
+        android:id="@+id/home_menu_exit_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:drawableLeft="@mipmap/app_exit"
+        android:drawablePadding="@dimen/dp_3"
+        android:gravity="center"
+        android:padding="@dimen/dp_4"
+        android:text="退出登录"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_12" />
+
+</LinearLayout>

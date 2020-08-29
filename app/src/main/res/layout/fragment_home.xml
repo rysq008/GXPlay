@@ -7,70 +7,114 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
+    <ImageView
+        android:id="@+id/home_gs_tv"
+        android:layout_width="@dimen/dp_170"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:src="@mipmap/humon_yunjie"
+        android:text="恒邦云捷"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/radioGroup"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/radioGroup" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/home_rl_user"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toEndOf="@+id/home_gs_tv"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RadioButton
-            android:id="@+id/home_rb_cashier"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:button="@null"
-            android:drawableLeft="@mipmap/icon_app"
-            android:drawablePadding="@dimen/dp_3"
-            android:gravity="center"
-            android:padding="@dimen/dp_4"
-            android:text="收银"
-            android:textColor="@color/x_blue"
-            app:layout_constraintEnd_toStartOf="@+id/home_tv_server"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_weight="1"
+            android:gravity="center">
 
-        <RadioButton
-            android:id="@+id/home_rb_server"
-            android:layout_width="wrap_content"
+            <RadioButton
+                android:id="@+id/home_rb_cashier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableLeft="@mipmap/cashier_icon"
+                android:drawablePadding="@dimen/dp_3"
+                android:gravity="center"
+                android:padding="@dimen/dp_4"
+                android:text="收银"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:button="@null"
-            android:drawableLeft="@mipmap/icon_app"
-            android:drawablePadding="@dimen/dp_3"
-            android:gravity="center"
-            android:padding="@dimen/dp_4"
-            android:text="后台"
-            android:textColor="@color/x_blue"
-            app:layout_constraintEnd_toStartOf="@+id/home_tv_user"
-            app:layout_constraintStart_toEndOf="@+id/home_tv_cashier"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_weight="1"
+            android:gravity="center">
 
-
+            <RadioButton
+                android:id="@+id/home_rb_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableLeft="@mipmap/back_server_icon"
+                android:drawablePadding="@dimen/dp_3"
+                android:gravity="center"
+                android:padding="@dimen/dp_4"
+                android:text="后台"
+                android:textColor="@color/white" />
+        </RelativeLayout>
     </RadioGroup>
 
-    <TextView
-        android:id="@+id/home_tv_user"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/home_rl_user"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/dp_40"
-        android:background="@android:color/transparent"
-        android:drawableLeft="@mipmap/icon_app"
-        android:drawablePadding="@dimen/dp_3"
-        android:gravity="center"
-        android:padding="@dimen/dp_4"
-        android:text="李丽"
-        android:textColor="@color/x_blue"
-        android:visibility="gone"
+        android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_weight="1.5"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/home_tv_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_40"
+            android:drawableLeft="@mipmap/head_icon"
+            android:drawableRight="@android:drawable/arrow_down_float"
+            android:drawablePadding="@dimen/dp_3"
+            android:gravity="center"
+            android:padding="@dimen/dp_4"
+            android:text="李丽"
+            android:textColor="@color/white" />
+    </RelativeLayout>
 
     <com.ikats.shop.views.SetScrollViewPager
         android:id="@+id/home_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_tv_user" />
+        app:layout_constraintTop_toBottomOf="@id/radioGroup" />
 
+    <ImageView
+        android:id="@+id/home_netstatus_iv"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
+        android:src="@drawable/net"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/home_rl_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

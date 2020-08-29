@@ -11,6 +11,7 @@ import com.ikats.shop.net.api.ApiService;
 import com.ikats.shop.net.model.BaseRequestBody;
 import com.ikats.shop.net.model.LoginRequestBody;
 import com.ikats.shop.net.model.RegistRequestBody;
+import com.ikats.shop.utils.ParameterizedTypeImpl;
 import com.ikats.shop.utils.UploadUtils;
 
 import java.io.File;
@@ -21,7 +22,9 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import cn.droidlover.xdroidmvp.kit.Kits;
-import ikidou.reflect.typeimpl.ParameterizedTypeImpl;
+import cn.droidlover.xdroidmvp.net.XApi;
+import cn.droidlover.xdroidmvp.net.progress.ProgressHelper;
+import cn.droidlover.xdroidmvp.net.progress.ProgressListener;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
@@ -124,7 +127,10 @@ public class DataService {
         private File file = null;
         private String url;
         private Type type;
+        private boolean interceptconvert;
         private Class clz;
+        private boolean isListModel;
+        private ProgressListener progressListener;
 
         public DataServiceBuilder buildReqUrl(String url) {
             this.url = url;
@@ -137,13 +143,23 @@ public class DataService {
             return this;
         }
 
+        public DataServiceBuilder buildInterceptconvert(boolean interceptconvert) {
+            this.interceptconvert = interceptconvert;
+            return this;
+        }
+
         public DataServiceBuilder buildReqParams(String key, Object obj) {
             this.params.put(key, obj);
             return this;
         }
 
+        public DataServiceBuilder buildProgress(ProgressListener progressListener) {
+            this.progressListener = progressListener;
+            return this;
+        }
+
         public DataServiceBuilder buildReqParams(File file) {
-            if(null == file||!file.exists()){
+            if (null == file || !file.exists()) {
                 ToastUtils.showLong("文件不存在！");
                 return this;
             }
@@ -161,13 +177,18 @@ public class DataService {
             return this;
         }
 
-        public DataServiceBuilder builderRequestBody(RequestBody requestBody){
+        public DataServiceBuilder builderRequestBody(RequestBody requestBody) {
             this.requestBody = requestBody;
             return this;
         }
 
-        public DataServiceBuilder builderRequestBody(BaseRequestBody baseRequestBody){
+        public DataServiceBuilder builderRequestBody(BaseRequestBody baseRequestBody) {
             this.baseRequestBody = baseRequestBody;
+            return this;
+        }
+
+        public DataServiceBuilder buildParseDataList(boolean list) {
+            this.isListModel = list;
             return this;
         }
 
@@ -183,13 +204,13 @@ public class DataService {
                     call = DataService.getData(url, params);
                     break;
                 case POST:
-                    call = DataService.postData( url, params);
+                    call = DataService.postData(url, params);
                     break;
                 case POST_BODY:
-                    call = DataService.postData( url, requestBody);
+                    call = DataService.postData(url, requestBody);
                     break;
                 case POST_JSON:
-                    call = DataService.postData( url, baseRequestBody);
+                    call = DataService.postData(url, baseRequestBody);
                     break;
                 case UPLOAD:
                     RequestBody requestBody = new MultipartBody.Builder().setType(FORM)
@@ -197,18 +218,45 @@ public class DataService {
                             .build();
                     call = DataService.postData(url, requestBody);
                     break;
+                case DOWNLOAD:
+                    ProgressHelper.get().addResponseListener(url, this.progressListener);
+                    call = DataService.downloadData(url);
+                    break;
                 default:
+                    call = XApi.get("http://192.168.0.101:3000/", ApiService.class).getData(url, params);
                     break;
             }
+            if (method == ApiService.HttpMethod.DOWNLOAD) return call;
+            if (interceptconvert) return call;
             return call.flatMap((Function<ResponseBody, Flowable<?>>) responseBody -> {
 //                    type = TypeBuilder.newInstance(HttpResultModel.class)
 //                            .addTypeParam(clz)
 //                            .build();
-                if (clz == null) clz = Object.class;
-                if (type == null)
-                    type = new ParameterizedTypeImpl(HttpResultModel.class, new Class[]{clz}, null);
                 String str = responseBody.string();
-                HttpResultModel<?> st = new Gson().fromJson(str, type);
+                Gson gson = new Gson();
+                if (type == null && clz != null && clz != String.class) {
+                    HttpResultModel st = gson.fromJson(str, HttpResultModel.class);
+                    if (!st.isSucceful() /*&& !(st.resultData instanceof String) && !(st.resultData instanceof List)*/) {
+                        if (isListModel) {
+                            List objects = new ArrayList<>();
+                            st.resultData = objects;
+                        } else {
+                            st.resultData = clz.newInstance();
+                        }
+                        return Flowable.just(st);
+                    }
+                }
+                if (clz == null) clz = Object.class;
+                if (type == null) {
+                    if (isListModel)
+                        type = ParameterizedTypeImpl.get(HttpResultModel.class, List.class, clz);
+                    else
+                        type = new ParameterizedTypeImpl(HttpResultModel.class, clz);
+                }
+//                    type = new ParameterizedTypeImpl(HttpResultModel.class, new Class[]{clz}, null);
+//                if (null != list)
+//                    type = new com.ikats.shop.utils.ParameterizedTypeImpl.(HttpResultModel.class, new Class[]{clz}, null);
+                HttpResultModel<?> st = gson.fromJson(str, type);
                 return Flowable.just(st);
             });
         }
@@ -229,4 +277,9 @@ public class DataService {
     public static Flowable<ResponseBody> postData(String url, BaseRequestBody requestBody) {
         return Api.CreateApiService().postData(url, requestBody);
     }
+
+    public static Flowable<ResponseBody> downloadData(String url) {
+        return Api.CreateApiService().downloadData(url);
+    }
+
 }

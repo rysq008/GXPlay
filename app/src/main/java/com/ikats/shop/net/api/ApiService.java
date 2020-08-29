@@ -4,7 +4,6 @@ import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.LoginBean;
 import com.ikats.shop.model.LogoutBean;
 import com.ikats.shop.model.RegisterBean;
-import com.ikats.shop.net.model.BaseRequestBody;
 import com.ikats.shop.net.model.LoginRequestBody;
 import com.ikats.shop.net.model.RegistRequestBody;
 
@@ -23,6 +22,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 public interface ApiService {
@@ -70,16 +70,23 @@ public interface ApiService {
     Flowable<ResponseBody> postData(@Url String url, @FieldMap Map<String, Object> params);
 
     @POST
-    Flowable<ResponseBody> postData(@Url String url, @Body Object body);
+    Flowable<ResponseBody> postData(@Url String url, @Body Object body);//序列化处理json，必须是对象
 
     @POST
     Flowable<ResponseBody> postData(@Url String url, @Body RequestBody body);
+
+    @Streaming
+    @GET
+    Flowable<ResponseBody> downloadData(@Url String url);
+
 
     enum HttpMethod {
         GET,
         POST,
         POST_BODY,
         POST_JSON,//retrfix自动BaseRequestBody将转化成json
-        UPLOAD
+        UPLOAD,
+        DOWNLOAD,
+        OTHER
     }
 }

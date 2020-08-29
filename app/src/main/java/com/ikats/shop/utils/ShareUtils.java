@@ -21,6 +21,7 @@ import android.widget.ListPopupWindow;
 import com.google.gson.Gson;
 import com.ikats.shop.R;
 import com.ikats.shop.model.LoginBean;
+import com.ikats.shop.model.SettingBean;
 import com.ikats.shop.net.api.Api;
 
 import java.io.ByteArrayInputStream;
@@ -42,6 +43,7 @@ public class ShareUtils {
     private static final String USER_INFO = "user_info";
     private static final String MEMBER_INFO = "member_info";
     private static final String SEARCH_HISTORY_LIST = "search_history_word";
+    private static final String SYSTEM_SETTING = "system_setting";
 
     private static final String KEY_FIRST_ENTER_RECHARGE = "first_open_recharge";
 
@@ -249,6 +251,10 @@ public class ShareUtils {
         saveObject(USER_INFO, bean);
     }
 
+    public static void saveSettingInfo(SettingBean bean) {
+        saveObject(SYSTEM_SETTING, bean);
+    }
+
     public static void clearLoginInfo() {
         remove(USER_INFO);
     }
@@ -256,6 +262,11 @@ public class ShareUtils {
     public static LoginBean getLoginInfo() {
         LoginBean loginBean = getObject(USER_INFO);
         return loginBean == null ? new LoginBean() : loginBean;
+    }
+
+    public static SettingBean getSettingInfo() {
+        SettingBean settingBean = getObject(SYSTEM_SETTING);
+        return settingBean == null ? new SettingBean() : settingBean;
     }
 
     public static <T> T getObject(String key) {

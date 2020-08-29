@@ -2,8 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/shape_grey_stroke_6_radius_rect"
     android:gravity="center"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/dp_5"
+    android:paddingBottom="@dimen/dp_5">
 
     <TextView
         android:id="@+id/search_item_sort_tv"
@@ -79,7 +82,7 @@
         android:id="@+id/search_item_create_time_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="2.5"
         android:gravity="center"
         android:text="创建时间"
         android:textColor="@color/C_333333"
@@ -89,13 +92,14 @@
         android:id="@+id/search_item_action_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_8"
         android:layout_weight="1"
+        android:background="@drawable/shape_red_solid_corner5555_rect"
         android:gravity="center"
         android:text="操作"
-        android:textStyle="normal"
-        android:layout_margin="@dimen/dp_8"
-        android:background="@drawable/shape_red_solid_corner5555_rect"
         android:textColor="@color/white"
-        android:textSize="@dimen/dp_8" />
+        android:textSize="@dimen/dp_8"
+        android:textStyle="normal"
+        android:visibility="gone" />
 </LinearLayout>
 

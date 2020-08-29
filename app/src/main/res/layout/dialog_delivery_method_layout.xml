@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_round_gray_15dp"
+    android:orientation="horizontal"
+    android:padding="@dimen/dp_20">
+    <TextView
+        android:id="@+id/dialog_delivery_method_tips_tv"
+        android:text="请选择取货方式"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:layout_marginTop="@dimen/dp_10"
+        android:id="@+id/dialog_delivery_method_shop_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_orange_solid_6_radius_rect"
+        android:text="门店自提"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_delivery_method_express_btn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_delivery_method_tips_tv" />
+
+    <Button
+        android:id="@+id/dialog_delivery_method_express_btn"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:background="@drawable/shape_orange_solid_6_radius_rect"
+        android:text="快递发货"
+        android:textColor="@color/white"
+        android:textSize="@dimen/dp_15"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialog_delivery_method_shop_btn"
+        app:layout_constraintTop_toTopOf="@+id/dialog_delivery_method_shop_btn"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

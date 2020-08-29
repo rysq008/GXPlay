@@ -24,7 +24,7 @@
         layout="@layout/app_common_titlebar"
         android:visibility="gone" />
 
-    <EditText
+    <EditText             android:textCursorDrawable="@drawable/shape_black_solid_width_1_rect"
         android:id="@+id/add_shop_full_name_et"
         style="@style/register_edit_style"
         android:layout_marginTop="@dimen/dp_20"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@id/add_shop_title_tv"
         tools:ignore="MissingConstraints" />
 
-    <EditText
+    <EditText             android:textCursorDrawable="@drawable/shape_black_solid_width_1_rect"
         android:id="@+id/add_shop_short_name_et"
         style="@style/register_edit_style"
         android:layout_marginTop="@dimen/dp_15"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@id/add_shop_full_name_et"
         tools:ignore="MissingConstraints" />
 
-    <EditText
+    <EditText             android:textCursorDrawable="@drawable/shape_black_solid_width_1_rect"
         android:id="@+id/add_shop_operation_forms_et"
         style="@style/register_edit_style"
         android:layout_marginTop="@dimen/dp_15"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@id/add_shop_short_name_et"
         tools:ignore="MissingConstraints" />
 
-    <EditText
+    <EditText             android:textCursorDrawable="@drawable/shape_black_solid_width_1_rect"
         android:id="@+id/add_shop_region_et"
         style="@style/register_edit_style"
         android:layout_marginTop="@dimen/dp_15"
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@id/add_shop_operation_forms_et"
         tools:ignore="MissingConstraints" />
 
-    <EditText
+    <EditText             android:textCursorDrawable="@drawable/shape_black_solid_width_1_rect"
         android:id="@+id/add_shop_address_et"
         style="@style/register_edit_style"
         android:layout_marginTop="@dimen/dp_15"

@@ -9,7 +9,7 @@
         android:id="@+id/splash_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/welcom" />
+        android:background="@drawable/welcom" />
 
     <TextView
         android:id="@+id/splash_countdown_tv"

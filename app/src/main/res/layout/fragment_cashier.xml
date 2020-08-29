@@ -24,64 +24,79 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical">
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <RadioButton
-            android:id="@+id/cashier_rb_billing"
-            style="@style/guide_bottom_rb_style"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:checked="true"
-            android:drawableTop="@mipmap/icon_app"
-            android:gravity="center"
-            android:text="开单"
-            android:textColor="@color/x_blue" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/cashier_rb_search"
-            style="@style/guide_bottom_rb_style"
+            <RadioButton
+                android:id="@+id/cashier_rb_billing"
+                style="@style/guide_bottom_rb_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:checked="true"
+                android:drawableTop="@mipmap/billing_icon"
+                android:gravity="center"
+                android:text="开单"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableTop="@mipmap/icon_app"
-            android:gravity="center"
-            android:text="查单"
-            android:textColor="@color/x_blue" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/cashier_rb_statis"
-            style="@style/guide_bottom_rb_style"
+            <RadioButton
+                android:id="@+id/cashier_rb_search"
+                style="@style/guide_bottom_rb_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableTop="@mipmap/search_icon"
+                android:gravity="center"
+                android:text="查单"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:drawableTop="@mipmap/icon_app"
-            android:gravity="center"
-            android:text="统计"
-            android:textColor="@color/x_blue" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/guide_rb_4"
-            style="@style/guide_bottom_rb_style"
-            android:layout_weight="2"
-            android:visibility="invisible" />
+            <RadioButton
+                android:id="@+id/cashier_rb_statis"
+                style="@style/guide_bottom_rb_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableTop="@mipmap/statis_icon"
+                android:gravity="center"
+                android:text="统计"
+                android:textColor="@color/white" />
+        </RelativeLayout>
 
-        <RadioButton
-            android:id="@+id/cashier_rb_user"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_14"
-            android:background="@android:color/transparent"
-            android:button="@null"
-            android:drawableTop="@mipmap/icon_app"
-            android:gravity="center"
-            android:text="李丽"
-            android:textColor="@color/x_blue" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <RadioButton
-            android:id="@+id/guide_rb_6"
-            style="@style/guide_bottom_rb_style"
-            android:layout_weight="2"
-            android:visibility="invisible" />
+            <RadioButton
+                android:id="@+id/cashier_rb_setting"
+                style="@style/guide_bottom_rb_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableTop="@mipmap/setting_icon"
+                android:gravity="center"
+                android:text="设置"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
     </RadioGroup>
 </RelativeLayout>

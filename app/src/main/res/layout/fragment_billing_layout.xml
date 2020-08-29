@@ -4,24 +4,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="afterDescendants"
     android:orientation="horizontal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="7">
+
+        <ImageView
+            android:id="@+id/billing_verify_by_idcards_iv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/by_idcard"
+            app:layout_constraintBottom_toBottomOf="@+id/billing_verify_by_phone_iv"
+            app:layout_constraintEnd_toStartOf="@+id/billing_verify_by_wechat_iv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/billing_verify_by_phone_iv"
+            app:layout_constraintTop_toTopOf="@+id/billing_verify_by_phone_iv"
+            tools:text="身份证验证" />
+
+        <ImageView
+            android:id="@+id/billing_verify_by_phone_iv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/by_phone"
+            app:layout_constraintBottom_toBottomOf="@+id/billing_sell_vip_tips_tv"
+            app:layout_constraintEnd_toStartOf="@+id/billing_verify_by_idcards_iv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/billing_enter_url_et"
+            app:layout_constraintTop_toTopOf="@+id/billing_sell_vip_tips_tv"
+            tools:text="手机号验证" />
+
+        <ImageView
+            android:id="@+id/billing_verify_by_wechat_iv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/by_wechat"
+            app:layout_constraintBottom_toBottomOf="@+id/billing_verify_by_idcards_iv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/billing_verify_by_idcards_iv"
+            app:layout_constraintTop_toTopOf="@+id/billing_verify_by_idcards_iv"
+            tools:text="微信验证" />
 
         <TextView
-            android:id="@+id/billing_title_tv"
+            android:id="@+id/billing_sell_vip_tips_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_15"
+            android:text="会员:"
+            android:textColor="@color/C_333333"
+            android:textSize="@dimen/dp_9"
+            app:layout_constraintEnd_toEndOf="@+id/billing_enter_url_et"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/billing_sell_order_tip_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_30"
-            android:text="导购员"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="销售单   "
             android:textColor="@color/C_333333"
-            android:textSize="@dimen/dp_12"
+            android:textSize="@dimen/dp_9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/billing_sell_order_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/C_333333"
+            android:textSize="@dimen/dp_9"
+            app:layout_constraintStart_toEndOf="@+id/billing_sell_order_tip_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="20200728-003" />
 
         <TextView
             android:id="@+id/billing_title_name_tv"
@@ -31,10 +91,21 @@
             android:text="李**"
             android:textColor="@color/C_333333"
             android:textSize="@dimen/dp_12"
-            app:layout_constraintBottom_toBottomOf="@+id/billing_title_tv"
-            app:layout_constraintRight_toRightOf="@+id/billing_title_tv"
-            app:layout_constraintStart_toEndOf="@+id/billing_title_tv"
-            app:layout_constraintTop_toTopOf="@+id/billing_title_tv" />
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/billing_sell_order_tv"
+            app:layout_constraintRight_toRightOf="@+id/billing_sell_order_tv"
+            app:layout_constraintStart_toEndOf="@+id/billing_sell_order_tv"
+            app:layout_constraintTop_toTopOf="@+id/billing_sell_order_tv" />
+
+        <ImageView
+            android:id="@+id/billing_title_loading_iv"
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="@dimen/dp_8"
+            android:background="@mipmap/app_icon"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/billing_title_name_tv"
+            app:layout_constraintTop_toTopOf="@+id/billing_title_name_tv" />
+
         <TextView
             android:id="@+id/billing_title_test_tv"
             android:layout_width="wrap_content"
@@ -43,138 +114,307 @@
             android:text="***"
             android:textColor="@color/C_333333"
             android:textSize="@dimen/dp_12"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/billing_title_name_tv"
             app:layout_constraintRight_toRightOf="@+id/billing_title_name_tv"
             app:layout_constraintStart_toEndOf="@+id/billing_title_name_tv"
             app:layout_constraintTop_toTopOf="@+id/billing_title_name_tv" />
+
         <EditText
             android:id="@+id/billing_enter_url_et"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dp_30"
+            android:layout_height="@dimen/dp_25"
             android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_23"
+            android:layout_marginRight="@dimen/dp_20"
             android:background="@drawable/shape_grey_stroke_6_radius_rect"
-            android:drawableRight="@mipmap/search"
+            android:drawableRight="@mipmap/search_icon"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:focusedByDefault="true"
             android:imeOptions="actionDone"
             android:inputType="text"
+            android:paddingLeft="@dimen/dp_3"
             android:singleLine="true"
-            app:layout_constraintEnd_toStartOf="@+id/billing_enter_submit_btn"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_weight="4"
+            android:textCursorDrawable="@drawable/shape_black_solid_width_1_rect"
+            app:layout_constraintEnd_toStartOf="@+id/billing_enter_vip_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/billing_title_tv" />
+            app:layout_constraintTop_toBottomOf="@+id/billing_sell_order_tv" />
+
+        <cn.droidlover.xrecyclerview.XRecyclerView
+            android:id="@+id/billing_goods_buy_rv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_10"
+            android:descendantFocusability="afterDescendants"
+            app:layout_constraintBottom_toTopOf="@+id/view3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/billing_enter_url_et" />
 
         <Button
-            android:id="@+id/billing_enter_submit_btn"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp_30"
-            android:layout_marginLeft="@dimen/dp_20"
+            android:id="@+id/billing_enter_vip_btn"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_23"
             android:layout_marginRight="@dimen/dp_20"
             android:background="@drawable/shape_red_solid_corner5555_rect"
-            android:text="结账"
+            android:text="优惠+"
             android:textColor="@color/white"
-            android:textSize="@dimen/dp_13"
+            android:textSize="@dimen/dp_11"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/billing_enter_url_et"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/billing_enter_url_et"
             app:layout_constraintTop_toTopOf="@+id/billing_enter_url_et" />
+
 
         <SurfaceView
             android:id="@+id/billing_sufaceview"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_margin="@dimen/dp_20"
             android:layout_weight="1"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/view3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="@dimen/dp_20"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/billing_enter_url_et"
-            tools:ignore="MissingConstraints" />
-        <SurfaceView
-            android:id="@+id/billing_sufaceview_back"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/view3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="@dimen/dp_20"
-            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/billing_enter_url_et"
             tools:ignore="MissingConstraints" />
 
         <View
             android:id="@+id/view3"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/dp_50"
-            android:layout_marginLeft="@dimen/dp_5"
-            android:layout_marginRight="@dimen/dp_10"
             android:background="@drawable/shape_white_solid_corner10101010_rect"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/billing_enter_url_et"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/billing_bottom_amount_big_tv"
+            android:id="@+id/billing_bottom_shopping_bag_big_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_8"
             android:text="购物袋大+"
             android:textColor="@color/C_333333"
-            android:textSize="@dimen/dp_10"
+            android:textSize="@dimen/dp_8"
             app:layout_constraintBottom_toBottomOf="@+id/view3"
             app:layout_constraintStart_toStartOf="@+id/view3"
             app:layout_constraintTop_toTopOf="@+id/view3" />
 
         <TextView
-            android:id="@+id/billing_bottom_amount_small_tv"
+            android:id="@+id/billing_bottom_shopping_bag_small_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_8"
             android:text="购物袋小+"
             android:textColor="@color/C_333333"
-            android:textSize="@dimen/dp_10"
+            android:textSize="@dimen/dp_8"
             app:layout_constraintBottom_toBottomOf="@+id/view3"
-            app:layout_constraintStart_toEndOf="@+id/billing_bottom_amount_big_tv"
+            app:layout_constraintStart_toEndOf="@+id/billing_bottom_shopping_bag_big_tv"
+            app:layout_constraintTop_toTopOf="@+id/view3" />
+
+        <TextView
+            android:id="@+id/billing_bottom_amount_tip_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_5"
+            android:gravity="center"
+            android:text="合计:"
+            android:textColor="@color/C_333333"
+            android:textSize="@dimen/dp_10"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/view3"
+            app:layout_constraintEnd_toStartOf="@+id/billing_bottom_amount_tv"
             app:layout_constraintTop_toTopOf="@+id/view3" />
 
         <TextView
             android:id="@+id/billing_bottom_amount_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dp_8"
-            android:text="合计:  ￥0.0"
+            android:layout_marginRight="@dimen/dp_5"
+            android:gravity="center"
+            android:text="￥0.0"
             android:textColor="@color/C_333333"
-            android:textSize="@dimen/dp_12"
+            android:textSize="@dimen/dp_10"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/view3"
-            app:layout_constraintEnd_toEndOf="@+id/view3"
+            app:layout_constraintEnd_toEndOf="@+id/billing_enter_url_et"
             app:layout_constraintTop_toTopOf="@+id/view3" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/color_999" />
 
     <com.ikats.shop.views.XReloadableStateContorller
         android:id="@+id/billing_xreload_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_weight="3">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/billing_swipe_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/dp_10">
+
+                <TextView
+                    android:id="@+id/billing_goods_statis_tv_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:text="商品合计:"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/billing_goods_sale_tv_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:text="优惠:"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintStart_toStartOf="@+id/billing_goods_statis_tv_key"
+                    app:layout_constraintTop_toBottomOf="@+id/billing_goods_statis_tv_key" />
+
+                <TextView
+                    android:id="@+id/billing_goods_amount_tv_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:text="应收:"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintStart_toStartOf="@+id/billing_goods_sale_tv_key"
+                    app:layout_constraintTop_toBottomOf="@+id/billing_goods_sale_tv_key" />
+
+                <TextView
+                    android:id="@+id/billing_goods_pay_tv_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:text="实收:"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintStart_toStartOf="@+id/billing_goods_amount_tv_key"
+                    app:layout_constraintTop_toBottomOf="@id/billing_goods_amount_tv_key" />
+
+                <TextView
+                    android:id="@+id/billing_goods_statis_tv_val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintBottom_toBottomOf="@+id/billing_goods_statis_tv_key"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/billing_goods_statis_tv_key"
+                    app:layout_constraintTop_toTopOf="@+id/billing_goods_statis_tv_key" />
+
+                <TextView
+                    android:id="@+id/billing_goods_sale_tv_val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintBottom_toBottomOf="@+id/billing_goods_sale_tv_key"
+                    app:layout_constraintStart_toStartOf="@+id/billing_goods_statis_tv_val"
+                    app:layout_constraintTop_toTopOf="@+id/billing_goods_sale_tv_key" />
+
+                <TextView
+                    android:id="@+id/billing_goods_receivable_tv_val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintBottom_toBottomOf="@+id/billing_goods_amount_tv_key"
+                    app:layout_constraintStart_toStartOf="@+id/billing_goods_sale_tv_val"
+                    app:layout_constraintTop_toTopOf="@+id/billing_goods_amount_tv_key" />
+
+                <TextView
+                    android:id="@+id/billing_goods_pay_tv_val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="@dimen/dp_9"
+                    app:layout_constraintBottom_toBottomOf="@+id/billing_goods_pay_tv_key"
+                    app:layout_constraintStart_toStartOf="@+id/billing_goods_receivable_tv_val"
+                    app:layout_constraintTop_toTopOf="@+id/billing_goods_pay_tv_key" />
+
+                <ImageView
+                    android:id="@+id/billing_pay_qrcode_iv"
+                    android:layout_width="@dimen/dp_100"
+                    android:layout_height="@dimen/dp_100"
+                    android:layout_marginTop="@dimen/dp_20"
+                    android:background="@drawable/shape_grey_stroke_6_radius_rect"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/billing_pay_tip_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/dp_12"
+                    app:layout_constraintBottom_toTopOf="@+id/billing_enter_billin_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Button
+                    android:id="@+id/billing_enter_submit_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_23"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:background="@drawable/shape_red_solid_corner5555_rect"
+                    android:text="结账"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dp_11"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/billing_enter_billin_btn"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/billing_enter_billin_btn"
+                    app:layout_constraintTop_toTopOf="@+id/billing_enter_billin_btn" />
+
+                <Button
+                    android:id="@+id/billing_enter_billin_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_23"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:background="@drawable/shape_red_solid_corner5555_rect"
+                    android:text="开单"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/dp_11"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/billing_enter_submit_btn"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <com.ikats.shop.views.X5WebView
                 android:id="@+id/billing_webview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/constraintLayout3"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/constraintLayout2" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </com.ikats.shop.views.XReloadableStateContorller>
 </LinearLayout>

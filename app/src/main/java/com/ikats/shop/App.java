@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,24 +20,42 @@ import androidx.fragment.app.Fragment;
 import androidx.multidex.MultiDexApplication;
 
 import com.blankj.utilcode.util.CrashUtils;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
+import com.google.gson.reflect.TypeToken;
 import com.ikats.shop.activitys.DetailFragmentsActivity;
-import com.ikats.shop.data.RxConstant;
-//import com.ikats.shop.database.MyObjectBoxectBox;
+import com.ikats.shop.broadcastreceiver.AppBroadcastReceiver;
 import com.ikats.shop.database.MyObjectBox;
+import com.ikats.shop.database.SkuTableEntiry;
+import com.ikats.shop.database.VipTableEntiry;
 import com.ikats.shop.fragments.LoginFragment;
+import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.GoodsBean;
+import com.ikats.shop.model.LoginBean;
+import com.ikats.shop.model.ProvinceBean;
+import com.ikats.shop.model.SettingBean;
+import com.ikats.shop.net.DataService;
 import com.ikats.shop.net.api.Api;
+import com.ikats.shop.net.api.ApiService;
+import com.ikats.shop.net.model.SkuDataRequestBody;
+import com.ikats.shop.utils.RxLoadingUtils;
 import com.ikats.shop.utils.ShareUtils;
 import com.tamsiree.rxkit.RxTool;
-import com.tencent.smtt.export.external.TbsCoreSettings;
+import com.tamsiree.rxkit.crash.RxCrashTool;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
 
 import java.io.BufferedReader;
-import java.io.StringReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -48,14 +67,20 @@ import cn.droidlover.xdroidmvp.net.NetError;
 import cn.droidlover.xdroidmvp.net.NetProvider;
 import cn.droidlover.xdroidmvp.net.RequestHandler;
 import cn.droidlover.xdroidmvp.net.XApi;
+import cn.leancloud.AVOSCloud;
+import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+
 
 public class App extends MultiDexApplication {
 
@@ -66,15 +91,32 @@ public class App extends MultiDexApplication {
     public static int h;
     private static BoxStore boxStore;
     public static ArrayMap<String, GoodsBean> products = new ArrayMap();
+    public static List<ProvinceBean> provinceBeans = new ArrayList<>();
+    private static SettingBean settingBean;
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "RestrictedApi"})
     @Override
     public void onCreate() {
         super.onCreate();
 
         RxTool.init(this);
-
+        RxCrashTool.getConfig().setEnabled(false);
         CrashUtils.init("");
+
+        // 获取当前包名
+        String packageName = getPackageName();
+        // 获取当前进程名
+        String processName = getProcessName(android.os.Process.myPid());
+        // 设置是否为上报进程
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
+        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+        CrashReport.initCrashReport(getApplicationContext(), "1993844417", false);
+
+        // 提供 this、App ID、App Key、Server Host 作为参数
+        // 注意这里千万不要调用 cn.leancloud.core.AVOSCloud 的 initialize 方法，否则会出现 NetworkOnMainThread 等错误。
+//        AVOSCloud.initialize(this, "jveVXD2rsbpA5ODQso7qNQv1-gzGzoHsz", "qRdQyntyFEP6mzSvEJ1UVbBV", "https://please-replace-with-your-customized.domain.com");//放自己的域名
+        AVOSCloud.initialize(this, "jveVXD2rsbpA5ODQso7qNQv1-gzGzoHsz", "qRdQyntyFEP6mzSvEJ1UVbBV", "https://avoscloud.com");
+
 
         QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
 
@@ -172,7 +214,7 @@ public class App extends MultiDexApplication {
 
             @Override
             public boolean dispatchProgressEnable() {
-                return false;
+                return true;
             }
 
             @Override
@@ -226,13 +268,15 @@ public class App extends MultiDexApplication {
 
             @Override
             public boolean handleError(NetError error) {//重新登录
-                Fragment fragment = ((DetailFragmentsActivity) getActivity()).getCurrentFragment();
-                if (error.getType() == NetError.AuthError && null != fragment && !(fragment instanceof LoginFragment)) {
-                    ShareUtils.clearLoginInfo();
-                    ILFactory.getLoader().clearMemoryCache(mApp);
-                    Executors.newSingleThreadExecutor().execute(() -> ILFactory.getLoader().clearDiskCache(mApp));
-                    DetailFragmentsActivity.launch(getActivity(), null, Intent.FLAG_ACTIVITY_NEW_TASK, LoginFragment.newInstance());
-                    return true;
+                if (getActivity() instanceof DetailFragmentsActivity) {
+                    Fragment fragment = ((DetailFragmentsActivity) getActivity()).getCurrentFragment();
+                    if (error.getType() == NetError.AuthError && null != fragment && !(fragment instanceof LoginFragment)) {
+                        ShareUtils.clearLoginInfo();
+                        ILFactory.getLoader().clearMemoryCache(mApp);
+                        Executors.newSingleThreadExecutor().execute(() -> ILFactory.getLoader().clearDiskCache(mApp));
+                        DetailFragmentsActivity.launch(getActivity(), null, Intent.FLAG_ACTIVITY_NEW_TASK, LoginFragment.newInstance());
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -247,7 +291,7 @@ public class App extends MultiDexApplication {
 
         boxStore = MyObjectBox.builder().androidContext(this).build();
 //        if (BuildConfig.DEBUG) {
-            new AndroidObjectBrowser(boxStore).start(this);
+        new AndroidObjectBrowser(boxStore).start(this);
 //        }
 
         XDroidConf.IL_ERROR_RES = R.drawable.ic_launcher_background;
@@ -255,28 +299,115 @@ public class App extends MultiDexApplication {
 
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
-                StringReader stringReader = new StringReader(RxConstant.PRODUCTS);
-                BufferedReader bufferedReader = new BufferedReader(stringReader);
                 String str = null;
-                while ((str = bufferedReader.readLine()) != null) {
-                    String[] strs = str.split(",");
-                    GoodsBean goodsBean = new GoodsBean();
-                    goodsBean.productId = strs[0].trim();
-                    goodsBean.barcode = strs[1].trim();
-                    goodsBean.name = strs[2].trim();
-                    goodsBean.url = strs[3].trim();
-                    goodsBean.count = 0;
-
-                Log.i("aaa", "products: --->" + goodsBean.barcode+","+goodsBean.url+","+goodsBean.name);
-                    products.put(goodsBean.barcode, goodsBean);
+//                StringReader stringReader = new StringReader(RxConstant.PRODUCTS);
+//                BufferedReader bufferedReader = new BufferedReader(stringReader);
+//                while ((str = bufferedReader.readLine()) != null) {
+//                    String[] strs = str.split(",");
+//                    GoodsBean goodsBean = new GoodsBean();
+//                    goodsBean.productId = strs[0].trim();
+//                    goodsBean.barcode = strs[1].trim();
+//                    goodsBean.name = strs[2].trim();
+//                    goodsBean.url = strs[3].trim();
+//                    goodsBean.count = 0;
+//
+//                    Log.i("aaa", "products: --->" + goodsBean.barcode + "," + goodsBean.url + "," + goodsBean.name);
+//                    products.put(goodsBean.barcode, goodsBean);
+//                }
+//                Log.i("aaa", "onCreate: --->" + products.size());
+//                bufferedReader.close();
+//                stringReader.close();
+                Gson gson = new Gson();
+                InputStream inputStream = getAssets().open("province_json.txt");
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder sb = new StringBuilder();
+                while ((str = br.readLine()) != null) {
+                    sb.append(str);
                 }
-                Log.i("aaa", "onCreate: --->"+products.size());
-                bufferedReader.close();
-                stringReader.close();
+                String province_json = sb.toString();
+                provinceBeans = gson.fromJson(province_json, new TypeToken<List<ProvinceBean>>() {
+                }.getType());
             } catch (Exception e) {
 
             }
         });
+        boxStore.runInTxAsync(() -> {
+            Box box = boxStore.boxFor(VipTableEntiry.class);
+            box.removeAll();
+            Random random = new Random();
+            String[] names = {"小星星", "小海豚", "小可爱", "小甜甜"};
+            String[] phones = {"13411112222", "13511112222", "13611112222", "13811112222"};
+            for (int i = 0; i < 4; i++) {
+                VipTableEntiry entiry = new VipTableEntiry();
+                entiry.balance = 100 * i;
+                entiry.name = names[i];
+                entiry.phone = phones[i];
+                entiry.level = "普通会员";
+                entiry.integtal = 200;
+                box.put(entiry);
+            }
+        }, (result, error) -> {
+            if (error == null) {
+                ToastUtils.showLong("vip box init data success !");
+            }
+        });
+        settingBean = ShareUtils.getSettingInfo();
+//        SocketClient.initWebSocket(this, 1111);
+
+        Flowable<HttpResultModel> f_token =
+                DataService.builder().buildReqUrl(App.getSettingBean().manage_url + "login/getToken")
+                        .buildReqParams("appKey", "POS")
+                        .buildReqParams("security", "81014bf5f79050e6a85739320d8c6540")
+                        .request(ApiService.HttpMethod.POST).flatMap((Function<HttpResultModel, Flowable<HttpResultModel<List<SkuTableEntiry>>>>) httpResultModel -> {
+                    LoginBean loginBean = new LoginBean();
+                    loginBean.access_token = (String) ((LinkedTreeMap) httpResultModel.resultData).get("token");
+                    ShareUtils.saveLoginInfo(loginBean);
+
+                    return DataService.builder().buildReqUrl(App.getSettingBean().manage_url + "ownersku/queryshopsku")
+                            .builderRequestBody(new SkuDataRequestBody(App.getSettingBean().shop_code))
+                            .buildParseDataClass(SkuTableEntiry.class)
+                            .buildParseDataList(true)
+                            .request(ApiService.HttpMethod.POST_JSON)
+                            .doOnNext((Consumer<HttpResultModel<List<SkuTableEntiry>>>) listHttpResultModel -> {
+                                Box skuTableEntiry = boxStore.boxFor(SkuTableEntiry.class);
+                                skuTableEntiry.removeAll();
+                                Thread.currentThread().getName();
+                                if (listHttpResultModel.isSucceful()) {
+                                    for (SkuTableEntiry tableEntiry : listHttpResultModel.resultData) {
+                                        GoodsBean goodsBean = new GoodsBean();
+                                        goodsBean.productId = tableEntiry.shopskucode;
+                                        goodsBean.barcode = tableEntiry.shoppncode;
+                                        goodsBean.shopcode = tableEntiry.shopcode;
+                                        goodsBean.shopchannelcode = tableEntiry.shopchannelcode;
+                                        goodsBean.name = tableEntiry.shopskuname;
+                                        goodsBean.url = "";
+                                        goodsBean.sell_price = Float.parseFloat(tableEntiry.shopskuprice);
+                                        goodsBean.origin_price = Float.parseFloat(tableEntiry.shopskuprice);
+                                        goodsBean.count = 0;
+
+                                        Log.i("aaa", "products: --->" + goodsBean.barcode + "," + goodsBean.url + "," + goodsBean.name);
+//                                        if (products.size() == 0) goodsBean.shopchannelcode = "aaa";
+                                        products.put(goodsBean.barcode, goodsBean);
+                                    }
+                                    skuTableEntiry.put(listHttpResultModel.resultData);
+                                }
+                            })
+                            ;
+                });
+        RxLoadingUtils.subscribe(f_token, null, httpResultModel -> {
+            if (httpResultModel.isSucceful()) {
+                ToastUtils.showLong("fetch sku data success !");
+            } else {
+                ToastUtils.showLong(httpResultModel.resultContent);
+            }
+        }, netError -> ToastUtils.showLong(netError.getMessage()));
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        AppBroadcastReceiver networkChangeReceiver = new AppBroadcastReceiver();
+        registerReceiver(networkChangeReceiver, intentFilter);//注册广播接收器，接收CONNECTIVITY_CHANGE这个广播
+
+
     }
 
 
@@ -318,7 +449,7 @@ public class App extends MultiDexApplication {
         return mActivity.get();
     }
 
-    public static BoxStore getBoxStore(){
+    public static BoxStore getBoxStore() {
         return boxStore;
     }
 
@@ -326,9 +457,45 @@ public class App extends MultiDexApplication {
         return mApp;
     }
 
+    public static SettingBean getSettingBean() {
+        return settingBean;
+    }
+
+    public static void setSettingBean(SettingBean settingBean) {
+        App.settingBean = settingBean;
+    }
+
     @Override
     public void onLowMemory() {
         super.onLowMemory();
     }
 
+    /**
+     * 获取进程号对应的进程名
+     *
+     * @param pid 进程号
+     * @return 进程名
+     */
+    private static String getProcessName(int pid) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
+            String processName = reader.readLine();
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim();
+            }
+            return processName;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return null;
+    }
 }

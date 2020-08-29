@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/backstage_goods_search_enter_et"
+        android:layout_width="@dimen/dp_240"
+        android:layout_height="@dimen/dp_25"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/shape_grey_stroke_6_radius_rect"
+        android:drawableRight="@mipmap/search"
+        android:hint="名称/条码/商品编码"
+        android:paddingLeft="@dimen/dp_10"
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/backstage_goods_search_commit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="@drawable/shape_orange_solid_6_radius_rect"
+        android:text="查询"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/backstage_goods_search_enter_et"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backstage_goods_search_enter_et" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toStartOf="@+id/backstage_goods_search_commit_btn"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintStart_toStartOf="@+id/backstage_goods_search_enter_et"
+        app:layout_constraintTop_toBottomOf="@+id/backstage_goods_search_enter_et">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="序号" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="商品名称" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="商品条码" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="商品编码" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="单位" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="售价" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="原产国" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="品牌" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="规格" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="毛重" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="净重" />
+    </LinearLayout>
+
+    <com.ikats.shop.views.XReloadableListContentLayout
+        android:id="@+id/backstage_goods_search_reload_list_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/dp_10"
+        app:layout_constraintBottom_toTopOf="@+id/backstage_goods_search_page_tips_tv"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <TextView
+        android:id="@+id/backstage_goods_search_page_tips_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dp_20"
+        android:text="1页/2页"
+        android:textColor="@color/color_666666"
+        android:textSize="@dimen/dp_10"
+        app:layout_constraintBottom_toBottomOf="@+id/backstage_goods_search_prepage_tv"
+        app:layout_constraintEnd_toStartOf="@+id/backstage_goods_search_prepage_tv"
+        app:layout_constraintTop_toTopOf="@+id/backstage_goods_search_prepage_tv" />
+
+    <TextView
+        android:id="@+id/backstage_goods_search_prepage_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:padding="@dimen/dp_2"
+        android:text="《pre"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/backstage_goods_search_reload_list_layout" />
+
+    <TextView
+        android:id="@+id/backstage_goods_search_nextpage_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:padding="@dimen/dp_2"
+        android:text="next》"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dp_10"
+        app:layout_constraintBottom_toBottomOf="@+id/backstage_goods_search_prepage_tv"
+        app:layout_constraintStart_toEndOf="@+id/backstage_goods_search_prepage_tv"
+        app:layout_constraintTop_toTopOf="@+id/backstage_goods_search_prepage_tv"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

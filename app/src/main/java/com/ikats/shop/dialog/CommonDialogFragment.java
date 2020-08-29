@@ -177,12 +177,20 @@ CommonDialogFragment extends DialogFragment {
         return this;
     }
 
+//    @Override
+//    public void onDismiss(@NonNull DialogInterface dialog) {
+//        if (mCancelListener != null) {
+//            mCancelListener.onCancel();
+//        }
+//        super.onDismiss(dialog);
+//    }
+
     @Override
     public void onCancel(DialogInterface dialog) {
-        super.onCancel(dialog);
         if (mCancelListener != null) {
             mCancelListener.onCancel();
         }
+        super.onCancel(dialog);
     }
 
     public CommonDialogFragment setDailogStyle(int style, int theme) {

@@ -38,8 +38,8 @@ public class BackstageFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        mFragment.add(SearchFragment.newInstance());
-        mFragment.add(StatisticsFragment.newInstance());
+        mFragment.add(BackstageGoodsFragment.newInstance());
+        mFragment.add(BackstageGoodsFragment.newInstance());
         viewPager.setAdapter(new XFragmentAdapter(getChildFragmentManager(), mFragment, null));
         viewPager.setOffscreenPageLimit(2);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
