@@ -46,7 +46,7 @@ public class SplashActivity extends XBaseActivity {
             Manifest.permission.READ_PHONE_STATE,  //读取权限
             Manifest.permission.ACCESS_COARSE_LOCATION,//定位权限
             Manifest.permission.INTERNET,
-            Manifest.permission.READ_LOGS,
+//            Manifest.permission.READ_LOGS,
             Manifest.permission.WAKE_LOCK
     };
 
@@ -113,9 +113,9 @@ public class SplashActivity extends XBaseActivity {
 
     //显示对话框提示用户缺少权限
     private void showMissingPermissionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(SplashActivity.this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
         builder.setTitle("帮助");//提示帮助
-        builder.setMessage("当前应用缺少必要权限,\\n\\n会造成应用无法运行!\\n\\n请点击\\\"设置\\\"-\\\"权限\\\"-打开所需权限。\\n\\n最后点击两次后退按钮，即可返回。");
+        builder.setMessage("当前应用缺少必要权限,\n会造成应用无法运行!\n请点击\"设置\"-\"权限\"-打开所需权限。\n最后点击两次后退按钮，即可返回。");
 
         //如果是拒绝授权，则退出应用
         //退出

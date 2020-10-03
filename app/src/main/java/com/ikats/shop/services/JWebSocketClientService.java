@@ -78,7 +78,7 @@ public class JWebSocketClientService extends Service {
      * 初始化websocket连接
      */
     private void initSocketClient() {
-        String mAddress = App.getSettingBean().shop_url.replace("https","wss").concat("websocket/order/").concat(RxDeviceTool.getMacAddress());
+        String mAddress = App.getSettingBean().shop_url.replace("https","wss").concat("websocket/order/").concat(RxDeviceTool.getMacAddress()).replace(" ","").trim();
         URI uri = URI.create(mAddress);//测试使用
 //        URI uri = URI.create(String.format(mAddress, App.getSettingBean().shop_url.split("\\.")[1], RxDeviceTool.getMacAddress()));//测试使用
         client = new JWebSocketClient(uri) {
@@ -155,6 +155,7 @@ public class JWebSocketClientService extends Service {
                 try {
                     Log.e("JWebSocketClientService", "开启重连");
                     client.reconnectBlocking();
+                    mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
