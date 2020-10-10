@@ -10,20 +10,28 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.ikats.shop.App;
+import com.ikats.shop.event.RxBusProvider;
+import com.ikats.shop.event.RxMsgEvent;
+import com.ikats.shop.model.HeartBeatBean;
 import com.ikats.shop.utils.JWebSocketClient;
+import com.ikats.shop.views.GlobalStateView;
 import com.tamsiree.rxkit.RxDeviceTool;
 
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+
+import cn.droidlover.xdroidmvp.kit.Kits;
+
+import static com.ikats.shop.views.GlobalStateView.SOCKET_CODE;
 
 /**
- * Time:2020/5/11
- * <p>
- * Author:lichao
- * <p><center>[wp_ad_camp_3]</center></p><p>
- * Description:
+ *
  */
 public class JWebSocketClientService extends Service {
     private URI uri;
@@ -51,6 +59,7 @@ public class JWebSocketClientService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        reference.set(heartBeatRunnable);
         //初始化websocket
         initSocketClient();
         mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);//开启心跳检测
@@ -78,22 +87,30 @@ public class JWebSocketClientService extends Service {
      * 初始化websocket连接
      */
     private void initSocketClient() {
-        String mAddress = App.getSettingBean().shop_url.replace("https","wss").concat("websocket/order/").concat(RxDeviceTool.getMacAddress()).replace(" ","").trim();
+        String mAddress = App.getSettingBean().shop_url.replace("https", "wss").concat("websocket/order/").concat(RxDeviceTool.getMacAddress()).replace(" ", "");
         URI uri = URI.create(mAddress);//测试使用
-//        URI uri = URI.create(String.format(mAddress, App.getSettingBean().shop_url.split("\\.")[1], RxDeviceTool.getMacAddress()));//测试使用
         client = new JWebSocketClient(uri) {
             @Override
             public void onMessage(String message) {
+                receiveTime = System.currentTimeMillis();
+                isConnect = true;
+                RxMsgEvent msgEvent = new RxMsgEvent(SOCKET_CODE, GlobalStateView.TAG, isConnect);
+                RxBusProvider.getBus().postEvent(msgEvent);
                 Log.e("JWebSocketClientService", uri.toString() + "收到的消息：" + message);
-
-                Intent intent = new Intent();//广播接收到的消息,在Activity   接收
-                intent.setAction("com.xxx.servicecallback.content");
-                intent.putExtra("message", message);
-                sendBroadcast(intent);
+                if (message.contains("heartbreak") && message.contains("serialNo")) {
+                    HeartBeatBean beatBean = new Gson().fromJson(message, HeartBeatBean.class);
+                    Log.e(TAG, "onMessage: --->" + message);
+                } else if (message.contains("websocket") && message.contains("心跳")) {/*{"websocket":"心跳"}*/} else {
+                    Intent intent = new Intent();//广播接收到的消息,在Activity   接收
+                    intent.setAction("com.xxx.servicecallback.content");
+                    intent.putExtra("message", message);
+                    sendBroadcast(intent);
+                }
             }
 
             @Override
             public void onOpen(ServerHandshake handshakedata) {
+                super.onOpen(handshakedata);
                 super.onOpen(handshakedata);
                 Log.e("JWebSocketClientService", "websocket连接成功");
             }
@@ -120,27 +137,69 @@ public class JWebSocketClientService extends Service {
     }
 
     //    -------------------------------------websocket心跳检测------------------------------------------------
-    private static final long HEART_BEAT_RATE = 10 * 1000;//每隔10秒进行一次对长连接的心跳检测
+    private static long HEART_BEAT_RATE = 10 * 1000;//每隔10秒进行一次对长连接的心跳检测
     private static Handler mHandler = new Handler();
+    private static AtomicReference<Runnable> reference = new AtomicReference<>();
+    private static long sendTime, receiveTime;
+    private boolean isConnect;
     private Runnable heartBeatRunnable = new Runnable() {
         @Override
         public void run() {
             Log.e("JWebSocketClientService", "心跳包检测websocket连接状态");
             if (client != null) {
                 if (client.isClosed()) {
+                    isConnect = false;
+                    sendTime = receiveTime = 0;
                     reconnectWs();
                 } else {
                     //业务逻辑 这里如果服务端需要心跳包为了防止断开 需要不断发送消息给服务端
-                    // client.send("");
+                    if (Kits.Empty.check(orderSn)) {
+//                        JsonObject jso = new JsonObject();
+//                        jso.addProperty("messageType", "heartbreak");
+//                        JsonObject sjso = new JsonObject();
+//                        sjso.addProperty("serialNo", UUID.randomUUID().toString());
+//                        sjso.addProperty("posCode", RxDeviceTool.getMacAddress());
+//                        jso.add("data", sjso);
+                        HeartBeatBean beatBean = HeartBeatBean.build(UUID.randomUUID().toString());
+                        String json = new Gson().toJson(beatBean);
+                        client.send(json);
+                        Log.e(TAG, "send heartbeat to keep live: -->" + json);
+                    } else {
+                        JsonObject jso = new JsonObject();
+                        jso.addProperty("messageType", "order.paymentStatus");
+                        JsonObject sjso = new JsonObject();
+                        sjso.addProperty("orderSn", orderSn);
+                        sjso.addProperty("posCode", RxDeviceTool.getMacAddress());
+                        jso.add("data", sjso);
+                        client.send(jso.toString());
+                    }
+
+                    if (sendTime == 0 && receiveTime == 0) {
+                        sendTime = receiveTime = System.currentTimeMillis();
+                        isConnect = false;
+                    } else {
+/*                        if (receiveTime == 0)
+                            sendTime = receiveTime;
+                        else */
+                        if ((receiveTime > sendTime)) {
+                            isConnect = true;
+                        } else {
+                            isConnect = false;
+                        }
+                        sendTime = System.currentTimeMillis();
+                    }
                 }
             } else {
                 //如果client已为空，重新初始化连接
-                client = null;
+                isConnect = false;
+                sendTime = receiveTime = 0;
                 initSocketClient();
             }
 
             //每隔一定的时间，对长连接进行一次心跳检测
             mHandler.postDelayed(this, HEART_BEAT_RATE);
+            RxMsgEvent msgEvent = new RxMsgEvent(SOCKET_CODE, GlobalStateView.TAG, isConnect);
+            RxBusProvider.getBus().postEvent(msgEvent);
         }
     };
 
@@ -201,5 +260,16 @@ public class JWebSocketClientService extends Service {
         mHandler.removeCallbacksAndMessages(null);
     }
 
+    public static void setOrderSn(String orderSn) {
+        JWebSocketClientService.orderSn = orderSn;
+        mHandler.removeCallbacksAndMessages(null);
+        if (Kits.Empty.check(orderSn)) {
+            HEART_BEAT_RATE = 10 * 1000;
+        } else {
+            HEART_BEAT_RATE = 1 * 1000;
+        }
+        mHandler.postDelayed(reference.get(), HEART_BEAT_RATE);
+    }
 
+    private static String orderSn;
 }

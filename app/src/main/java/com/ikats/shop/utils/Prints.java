@@ -15,8 +15,13 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.ikats.shop.App;
+import com.ikats.shop.database.PrintTableEntiry;
+import com.ikats.shop.database.PrintTableEntiry_;
+import com.ikats.shop.event.RxBusProvider;
+import com.ikats.shop.event.RxMsgEvent;
 import com.ikats.shop.model.GoodsBean;
 import com.ikats.shop.model.PrintBean;
+import com.ikats.shop.views.GlobalStateView;
 import com.lvrenyang.io.Pos;
 import com.lvrenyang.io.base.IOCallBack;
 
@@ -25,13 +30,15 @@ import java.io.InputStream;
 import java.util.concurrent.Executors;
 
 import cn.droidlover.xdroidmvp.kit.Kits;
+import io.objectbox.Box;
 
 import static com.ikats.shop.fragments.HomeFragment.mcom;
 import static com.ikats.shop.fragments.HomeFragment.mpos;
+import static com.ikats.shop.views.GlobalStateView.PRINT_CODE;
 
 public class Prints {
 
-    public static void PostPrint(Context context, PrintBean pstr, TextView order_tv) {
+    public static void PostPrint(Context context, PrintTableEntiry pstr, TextView order_tv) {
         try {
             pbody = pstr;
             Executors.newSingleThreadExecutor().execute(() -> {
@@ -39,17 +46,24 @@ public class Prints {
                 final int bPrintResult = Prints.PrintTicket(App.getApp(), mpos, 576, true,
                         false, true, 1, 1, 0);
                 final boolean bIsOpened = mpos.GetIO().IsOpened();
-                if (bPrintResult == 0) pbody = null;
-                order_tv.post(() -> {
-                    // TODO Auto-generated method stub
-                    Toast.makeText(
-                            App.getApp(),
-                            (bPrintResult >= 0) ? " printsuccess" + Prints.ResultCodeToString(bPrintResult) : ("printfailed")
-                                    + " "
-                                    + Prints.ResultCodeToString(bPrintResult),
-                            Toast.LENGTH_SHORT).show();
-                    order_tv.setEnabled(bIsOpened);
-                });
+                if (bPrintResult >= 0) {
+                    Box<PrintTableEntiry> box = App.getBoxStore().boxFor(PrintTableEntiry.class);
+                    box.query().equal(PrintTableEntiry_.sell_code, pbody.sell_code).build().remove();
+                    ToastUtils.showLong((bPrintResult >= 0) ? " printsuccess" + Prints.ResultCodeToString(bPrintResult) : ("printfailed")
+                            + " "
+                            + Prints.ResultCodeToString(bPrintResult));
+                }
+                pbody = null;
+//                order_tv.post(() -> {
+//                    // TODO Auto-generated method stub
+//                    Toast.makeText(
+//                            App.getApp(),
+//                            (bPrintResult >= 0) ? " printsuccess" + Prints.ResultCodeToString(bPrintResult) : ("printfailed")
+//                                    + " "
+//                                    + Prints.ResultCodeToString(bPrintResult)                            ,
+//                            Toast.LENGTH_SHORT).show();
+//                    order_tv.setEnabled(bIsOpened);
+//                });
 
             });
         } catch (Exception e) {
@@ -57,7 +71,7 @@ public class Prints {
         }
     }
 
-    static PrintBean pbody;
+    static PrintTableEntiry pbody;
 
     public static void OpenPosCallBack(View order_tv) {
         mcom.SetCallBack(new IOCallBack() {
@@ -67,6 +81,8 @@ public class Prints {
                     ToastUtils.showLong("Connected success !");
                     order_tv.setEnabled(false);
                 });
+                RxMsgEvent msgEvent = new RxMsgEvent(PRINT_CODE, GlobalStateView.TAG, true);
+                RxBusProvider.getBus().postEvent(msgEvent);
             }
 
             @Override
@@ -75,6 +91,8 @@ public class Prints {
                     ToastUtils.showLong("Connected failed !");
                     order_tv.setEnabled(true);
                 });
+                RxMsgEvent msgEvent = new RxMsgEvent(PRINT_CODE, GlobalStateView.TAG, false);
+                RxBusProvider.getBus().postEvent(msgEvent);
             }
 
             @Override
@@ -83,6 +101,8 @@ public class Prints {
                     ToastUtils.showLong("Connected close !");
                     order_tv.setEnabled(true);
                 });
+                RxMsgEvent msgEvent = new RxMsgEvent(PRINT_CODE, GlobalStateView.TAG, false);
+                RxBusProvider.getBus().postEvent(msgEvent);
             }
         });
         Executors.newSingleThreadExecutor().execute(() -> {

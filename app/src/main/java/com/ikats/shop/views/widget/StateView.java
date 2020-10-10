@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ikats.shop.R;
+import com.ikats.shop.event.RxBus;
 import com.ikats.shop.event.RxBusProvider;
 
 import butterknife.BindView;

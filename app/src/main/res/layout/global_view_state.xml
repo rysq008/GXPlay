@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/global_net_status_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:clickable="false"
+        android:drawableLeft="@drawable/custom_checkbox_selector"
+        android:text="网络连接状态" />
+
+    <CheckBox
+        android:id="@+id/global_socket_status_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:clickable="false"
+        android:drawableLeft="@drawable/custom_checkbox_selector"
+        android:text="消息服务状态" />
+
+    <CheckBox
+        android:id="@+id/global_print_status_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:clickable="false"
+        android:drawableLeft="@drawable/custom_checkbox_selector"
+        android:text="打印机状态" />
+
+    <CheckBox
+        android:id="@+id/global_hikvision_status_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:clickable="false"
+        android:drawableLeft="@drawable/custom_checkbox_selector"
+        android:text="视频监听状态" />
+</LinearLayout>

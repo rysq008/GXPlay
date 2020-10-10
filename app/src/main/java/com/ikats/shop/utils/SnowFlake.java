@@ -1,5 +1,11 @@
 package com.ikats.shop.utils;
 
+import com.google.gson.Gson;
+import com.ikats.shop.model.HeartBeatBean;
+import com.tamsiree.rxkit.RxDeviceTool;
+
+import java.util.UUID;
+
 /**
  * 描述: snowflake
  * @author shnejian26@hotmail.com
@@ -114,7 +120,9 @@ public class SnowFlake {
 
         System.out.println(System.currentTimeMillis() - start);
 
-
+//        HeartBeatBean beatBean = HeartBeatBean.build(UUID.randomUUID().toString(), "RxDeviceTool.getMacAddress()");
+//
+//        System.out.println("aa::"+new Gson().toJson(beatBean));
     }
 
 }

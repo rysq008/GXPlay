@@ -45,6 +45,8 @@ import com.ikats.shop.adapters.AddressAdapter;
 import com.ikats.shop.database.SkuTableEntiry;
 import com.ikats.shop.dialog.CommonDialogFragment;
 import com.ikats.shop.dialog.DialogFragmentHelper;
+import com.ikats.shop.event.RxBusProvider;
+import com.ikats.shop.event.RxMsgEvent;
 import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.GoodsBean;
@@ -58,6 +60,7 @@ import com.ikats.shop.services.JWebSocketClientService;
 import com.ikats.shop.utils.PlayerHikvision;
 import com.ikats.shop.utils.RxLoadingUtils;
 import com.ikats.shop.utils.ShareUtils;
+import com.ikats.shop.views.GlobalStateView;
 
 import java.util.List;
 
@@ -69,6 +72,8 @@ import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import okhttp3.ResponseBody;
+
+import static com.ikats.shop.views.GlobalStateView.HIKVIS_CODE;
 
 public class SettingFragment extends XBaseFragment {
 
@@ -130,9 +135,9 @@ public class SettingFragment extends XBaseFragment {
     Button update;
     SettingBean settingBean;
     //    boolean isCreate;
-    static SurfaceView surfaceView;
+    static SurfaceView surfaceView_live;
     AddressAdapter province_adp, city_adp, area_adp;
-    private PlayerHikvision playerHikvision, dplayerHikvision;
+    private PlayerHikvision playerHikvision, playerHikvision_live;
     Handler handler = new Handler(msg -> {
         switch (msg.what) {
             case -1: {
@@ -219,7 +224,7 @@ public class SettingFragment extends XBaseFragment {
         //         new DefaultLoadControl());
         // 生成数据媒体实例，通过该实例加载媒体数据
         settingBean = ShareUtils.getSettingInfo();
-        surfaceView = new SurfaceView(context);
+        surfaceView_live = new SurfaceView(context);
         mall_url_et.setText(settingBean.shop_url);
         manage_url_et.setText(settingBean.manage_url);
         self_cb.setChecked(!settingBean.send_by_express);
@@ -235,7 +240,7 @@ public class SettingFragment extends XBaseFragment {
         record_port_et.setText(settingBean.record_port);
         record_channel_et.setText(settingBean.record_channel);
         playerHikvision = new PlayerHikvision(_surfaceView, handler);
-        dplayerHikvision = new PlayerHikvision(surfaceView, handler);
+        playerHikvision_live = new PlayerHikvision(surfaceView_live, handler);
 
         province_adp = new AddressAdapter(context);
         province_adp.setData(App.provinceBeans);
@@ -359,10 +364,10 @@ public class SettingFragment extends XBaseFragment {
             case R.id.setting_connect_preview_test_tv:
 //                handler.sendEmptyMessage(-1);
                 DialogFragmentHelper.builder(context -> {
-                    surfaceView.setZOrderOnTop(true);
-                    surfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-                    dplayerHikvision.live(settingBean.camera_ip, Integer.parseInt(settingBean.camera_port), settingBean.camera_user, settingBean.camera_pwd, PlayerHikvision.HIK_SUB_STREAM_CODE, 1);
-                    AlertDialog alertDialog = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("预览").setMessage("以下为摄像头预览界面").setView(surfaceView).create();
+                    surfaceView_live.setZOrderOnTop(true);
+                    surfaceView_live.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+                    playerHikvision_live.live(settingBean.camera_ip, Integer.parseInt(settingBean.camera_port), settingBean.camera_user, settingBean.camera_pwd, PlayerHikvision.HIK_SUB_STREAM_CODE, 1);
+                    AlertDialog alertDialog = new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("预览").setMessage("以下为摄像头预览界面").setView(surfaceView_live).create();
                     return alertDialog;
                 }, true).setDialogWindow(dialogWindow -> {
                     WindowManager.LayoutParams layoutParams = dialogWindow.getAttributes();
@@ -371,14 +376,18 @@ public class SettingFragment extends XBaseFragment {
                     dialogWindow.setAttributes(layoutParams);
                     return dialogWindow;
                 }).setCancelListener(() -> {
-                    dplayerHikvision.stopLive(dplayerHikvision.mPlayId, dplayerHikvision.mPort);
-                    dplayerHikvision.refresh();
-                    if (surfaceView.getParent() != null)
-                        ((ViewGroup) surfaceView.getParent()).removeView(surfaceView);
-                    surfaceView = new SurfaceView(context);
-                    surfaceView.setZOrderOnTop(true);
-                    surfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
-                    dplayerHikvision = new PlayerHikvision(surfaceView, handler);
+                    settingBean.isLiveSuccess = playerHikvision_live.isLive();
+                    RxMsgEvent msgEvent = new RxMsgEvent(HIKVIS_CODE, GlobalStateView.TAG, settingBean.isLiveSuccess);
+                    RxBusProvider.getBus().postEvent(msgEvent);
+                    ShareUtils.saveSettingInfo(settingBean);
+                    playerHikvision_live.stopLive(playerHikvision_live.mPlayId, playerHikvision_live.mPort);
+                    playerHikvision_live.refresh();
+                    if (surfaceView_live.getParent() != null)
+                        ((ViewGroup) surfaceView_live.getParent()).removeView(surfaceView_live);
+                    surfaceView_live = new SurfaceView(context);
+                    surfaceView_live.setZOrderOnTop(true);
+                    surfaceView_live.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+                    playerHikvision_live = new PlayerHikvision(surfaceView_live, handler);
 //                    ToastUtils.showLong("CommonDialogFragment cancel !");
                 }).show(getChildFragmentManager(), "show_preview");
                 break;
@@ -422,7 +431,7 @@ public class SettingFragment extends XBaseFragment {
 //                }, throwable -> {
 //
 //                });
-                String video_name = "test";
+                String video_name = "19700101";
                 Flowable<HttpResultModel> flowable =
                         DataService.builder().buildReqUrl(String.format(record_url.concat("/record?sellNo=%s&channel=%s"), video_name, settingBean.record_channel))
                                 .buildInterceptconvert(true)
@@ -481,31 +490,31 @@ public class SettingFragment extends XBaseFragment {
                 break;
             case R.id.setting_submit_btn:
                 DialogFragmentHelper.builder(context -> new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("是否保存本页面配置").setNegativeButton("取消", null).setPositiveButton("确定", (dialog, which) -> {
-                    (settingBean.shop_url) = mall_url_et.getText().toString().replace(" ","");
-                    (settingBean.manage_url) = manage_url_et.getText().toString().replace(" ","");
+                    (settingBean.shop_url) = mall_url_et.getText().toString().replace(" ", "");
+                    (settingBean.manage_url) = manage_url_et.getText().toString().replace(" ", "");
                     (settingBean.isAfterPayPrint) = self_cb.isChecked();
                     (settingBean.isPayPrintCheck) = express_cb.isChecked();
                     (settingBean.isPreviewOpen) = preview_cb.isChecked();
-                    (settingBean.camera_ip) = preview_ip_et.getText().toString().replace(" ","");
-                    (settingBean.camera_port) = preview_port_et.getText().toString().replace(" ","");
-                    (settingBean.camera_channel) = Integer.parseInt(preview_channel_et.getText().toString().replace(" ",""));
-                    (settingBean.camera_user) = preview_user_et.getText().toString().replace(" ","");
-                    (settingBean.camera_pwd) = preview_pwd_et.getText().toString().replace(" ","");
+                    (settingBean.camera_ip) = preview_ip_et.getText().toString().replace(" ", "");
+                    (settingBean.camera_port) = preview_port_et.getText().toString().replace(" ", "");
+                    (settingBean.camera_channel) = Integer.parseInt(preview_channel_et.getText().toString().replace(" ", ""));
+                    (settingBean.camera_user) = preview_user_et.getText().toString().replace(" ", "");
+                    (settingBean.camera_pwd) = preview_pwd_et.getText().toString().replace(" ", "");
                     (settingBean.isRecordOpen) = record_cb.isChecked();
-                    (settingBean.record_ip) = record_ip_et.getText().toString().replace(" ","");
-                    (settingBean.record_port) = record_port_et.getText().toString().replace(" ","");
-                    (settingBean.record_channel) = record_channel_et.getText().toString().replace(" ","");
+                    (settingBean.record_ip) = record_ip_et.getText().toString().replace(" ", "");
+                    (settingBean.record_port) = record_port_et.getText().toString().replace(" ", "");
+                    (settingBean.record_channel) = record_channel_et.getText().toString().replace(" ", "");
                     settingBean.send_by_self = self_cb.isChecked();
                     settingBean.send_by_express = express_cb.isChecked();
                     settingBean.shop_area = province + "" + city + "" + area;
                     settingBean.province_index = province_sp.getSelectedItemPosition();
                     settingBean.city_index = city_sp.getSelectedItemPosition();
                     settingBean.area_index = area_sp.getSelectedItemPosition();
-                    settingBean.zipCode = zipcode_et.getText().toString().replace(" ","");
-                    settingBean.shop_address = shop_address_et.getText().toString().replace(" ","");
-                    settingBean.shop_name = shop_name_et.getText().toString().replace(" ","");
-                    settingBean.shop_code = shop_code_et.getText().toString().replace(" ","");
-                    settingBean.shop_cashier = shop_cashier_et.getText().toString().replace(" ","");
+                    settingBean.zipCode = zipcode_et.getText().toString().replace(" ", "");
+                    settingBean.shop_address = shop_address_et.getText().toString().replace(" ", "");
+                    settingBean.shop_name = shop_name_et.getText().toString().replace(" ", "");
+                    settingBean.shop_code = shop_code_et.getText().toString().replace(" ", "");
+                    settingBean.shop_cashier = shop_cashier_et.getText().toString().replace(" ", "");
                     ShareUtils.saveSettingInfo(settingBean);
                     App.setSettingBean(settingBean);
                     JWebSocketClientService.bindService(context);

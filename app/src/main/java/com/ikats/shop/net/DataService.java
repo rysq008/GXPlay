@@ -1,5 +1,7 @@
 package com.ikats.shop.net;
 
+import android.util.Log;
+
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
@@ -23,7 +25,6 @@ import java.util.WeakHashMap;
 
 import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.net.XApi;
-import cn.droidlover.xdroidmvp.net.progress.ProgressHelper;
 import cn.droidlover.xdroidmvp.net.progress.ProgressListener;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
@@ -131,6 +132,8 @@ public class DataService {
         private Class clz;
         private boolean isListModel;
         private ProgressListener progressListener;
+        private UploadUtils.FileDownloadProgress fileDownloadProgress;
+        private UploadUtils.FileUploadProgress fileUploadProgress;
 
         public DataServiceBuilder buildReqUrl(String url) {
             this.url = url;
@@ -157,6 +160,17 @@ public class DataService {
             this.progressListener = progressListener;
             return this;
         }
+
+        public DataServiceBuilder buildFileDownloadProgress(UploadUtils.FileDownloadProgress fileDownloadProgress) {
+            this.fileDownloadProgress = fileDownloadProgress;
+            return this;
+        }
+
+        public DataServiceBuilder buildFileUploadProgress(UploadUtils.FileUploadProgress fileUploadProgress) {
+            this.fileUploadProgress = fileUploadProgress;
+            return this;
+        }
+
 
         public DataServiceBuilder buildReqParams(File file) {
             if (null == file || !file.exists()) {
@@ -219,14 +233,15 @@ public class DataService {
                     call = DataService.postData(url, requestBody);
                     break;
                 case DOWNLOAD:
-                    ProgressHelper.get().addResponseListener(url, this.progressListener);
+//                    ProgressHelper.get().addResponseListener(url, this.progressListener);
                     call = DataService.downloadData(url);
                     break;
                 default:
                     call = XApi.get("http://192.168.0.101:3000/", ApiService.class).getData(url, params);
                     break;
             }
-            if (method == ApiService.HttpMethod.DOWNLOAD) return call;
+            if (method == ApiService.HttpMethod.DOWNLOAD)
+                return call.flatMap((Function<ResponseBody, Flowable<?>>) responseBody -> Flowable.just(new UploadUtils.DownloadFileRequestBody(responseBody,fileDownloadProgress)));
             if (interceptconvert) return call;
             return call.flatMap((Function<ResponseBody, Flowable<?>>) responseBody -> {
 //                    type = TypeBuilder.newInstance(HttpResultModel.class)

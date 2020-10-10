@@ -56,6 +56,7 @@ import com.ikats.shop.adapters.BillingItemAdapter;
 import com.ikats.shop.adapters.VipItemAdapter;
 import com.ikats.shop.database.OrderTableEntiry;
 import com.ikats.shop.database.OrderTableEntiry_;
+import com.ikats.shop.database.PrintTableEntiry;
 import com.ikats.shop.database.VipTableEntiry;
 import com.ikats.shop.database.VipTableEntiry_;
 import com.ikats.shop.dialog.DialogFragmentHelper;
@@ -71,6 +72,7 @@ import com.ikats.shop.net.DataService;
 import com.ikats.shop.net.api.ApiService;
 import com.ikats.shop.net.model.CancelOrderRequestBody;
 import com.ikats.shop.net.model.OrderinfoRequestBody;
+import com.ikats.shop.services.JWebSocketClientService;
 import com.ikats.shop.utils.PlayerHikvision;
 import com.ikats.shop.utils.Prints;
 import com.ikats.shop.utils.RxLoadingUtils;
@@ -317,6 +319,7 @@ public class BillingFragment extends XBaseFragment {
 //                        action = "开单";
 //                    }
                     billing_btn.setText(action);
+                    enter_url_et.requestFocus();
 
                     video_pid = null;
                     order_tv.setText("" + SnowFlake.getSnowFlake().nextId());
@@ -438,65 +441,64 @@ public class BillingFragment extends XBaseFragment {
         reloadableStateContentLayout.setInterceptTouch(true);
         swipeRefreshLayout.setEnabled(false);
 
-        enter_url_et.setOnEditorActionListener((v, actionId, event) -> {
-            {
-                if (Kits.Empty.check(verifyResultBean)) {
-                    isScan = false;
-                    enter_url_et.setText("");
-                    enter_url_et.requestFocus();
-                    v.setTag(null);
-                    ToastUtils.showLong("请验证身份！");
-                    return false;
-                }
-                if (TextUtils.isEmpty(order_tv.getText())) {
-                    isScan = false;
-                    enter_url_et.setText("");
-                    enter_url_et.requestFocus();
-                    v.setTag(null);
-                    ToastUtils.showLong("请先生成销售单号！");
-                    return false;
-                }
-                if (isScan && null != v.getTag()) return false;
-                if ((event != null && actionId == EditorInfo.IME_ACTION_DONE) || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    switch (event.getAction()) {
-                        case KeyEvent.ACTION_DOWN:
-                            isScan = true;
+        enter_url_et.setOnEditorActionListener((v, actionId, event) ->
+                {
+                    if (Kits.Empty.check(verifyResultBean)) {
+                        isScan = false;
+                        enter_url_et.setText("");
+                        enter_url_et.requestFocus();
+                        v.setTag(null);
+                        ToastUtils.showLong("请验证身份！");
+                        return false;
+                    }
+                    if (TextUtils.isEmpty(order_tv.getText())) {
+                        isScan = false;
+                        enter_url_et.setText("");
+                        enter_url_et.requestFocus();
+                        v.setTag(null);
+                        ToastUtils.showLong("请先生成销售单号！");
+                        return false;
+                    }
+                    if (isScan && null != v.getTag()) return false;
+                    if ((event != null && actionId == EditorInfo.IME_ACTION_DONE) || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                        switch (event.getAction()) {
+                            case KeyEvent.ACTION_DOWN:
+                                isScan = true;
 
-                            v.postDelayed(() -> {
-                                v.setTag(1);
-                                String cur_product_id = enter_url_et.getText().toString().trim();
-                                if (App.products.containsKey(cur_product_id)) {
-                                    GoodsBean bean = App.products.get(cur_product_id);
-                                    if (!billingItemAdapter.addOrupdateData(bean)) {
-                                        ToastUtils.showLong("不是同一店铺商品！");
+                                v.postDelayed(() -> {
+                                    v.setTag(1);
+                                    String cur_product_id = enter_url_et.getText().toString().trim();
+                                    if (App.products.containsKey(cur_product_id)) {
+                                        GoodsBean bean = App.products.get(cur_product_id);
+                                        if (!billingItemAdapter.addOrupdateData(bean)) {
+                                            ToastUtils.showLong("不是同一店铺商品！");
+                                            MediaPlayer.create(context, R.raw.error).start();
+                                        }
+                                        billing_rv.scrollToPosition(0);
+                                        enter_url_et.requestFocus();
+                                        enter_url_et.setText("");
+                                        isScan = false;
+                                        enter_url_et.setHint(cur_product_id);
+                                        enter_url_et.setHintTextColor(Color.LTGRAY);
+                                        BillingFragment.this.cur_product_id = cur_product_id;
+                                        v.setTag(null);
+                                    } else {
+                                        isScan = false;
+                                        enter_url_et.setText("");
+                                        enter_url_et.requestFocus();
+                                        v.setTag(null);
+                                        ToastUtils.showLong("无此商品备案");
                                         MediaPlayer.create(context, R.raw.error).start();
                                     }
-                                    billing_rv.scrollToPosition(0);
-                                    enter_url_et.requestFocus();
-                                    enter_url_et.setText("");
-                                    isScan = false;
-                                    enter_url_et.setHint(cur_product_id);
-                                    enter_url_et.setHintTextColor(Color.LTGRAY);
-                                    BillingFragment.this.cur_product_id = cur_product_id;
-                                    v.setTag(null);
-                                } else {
-                                    isScan = false;
-                                    enter_url_et.setText("");
-                                    enter_url_et.requestFocus();
-                                    v.setTag(null);
-                                    ToastUtils.showLong("无此商品备案");
-                                    MediaPlayer.create(context, R.raw.error).start();
-                                }
-                            }, 100);
-                            return false;///返回true，保留软键盘。false，隐藏软键盘
+                                }, 100);
+                                return false;///返回true，保留软键盘。false，隐藏软键盘
+                        }
                     }
+                    return false;
                 }
-                return false;
-            }
-        });
+        );
 
         playerHikvision = new PlayerHikvision(surfaceView, handler);
-//        settingBean = App.getSettingBean();
         Prints.OpenPosCallBack(order_tv);
     }
 
@@ -582,12 +584,14 @@ public class BillingFragment extends XBaseFragment {
                         Bitmap bmp = RxQRCode.creatQRCode(httpResultModel.resultData.payableCode, BitmapFactory.decodeResource(getResources(), R.mipmap.app_icon));
                         qrcode_iv.setImageBitmap(bmp);
                         printBean = new PrintBean();
-                        printBean.list = billingItemAdapter.getDataSource();
+                        printBean.list.addAll(billingItemAdapter.getDataSource());
                         printBean.sell_code = httpResultModel.resultData.orderSns.get(0);
                         printBean.total = httpResultModel.resultData.amount;
                         printBean.discounts = httpResultModel.resultData.couponDiscount;
                         printBean.cope = httpResultModel.resultData.amountPayable;
                         printBean.paid = httpResultModel.resultData.amountPayable;
+
+                        JWebSocketClientService.setOrderSn(printBean.sell_code);
                         DialogFragmentHelper.builder(context1 -> {
                             ImageView qr_iv = new ImageView(context1);
                             qr_iv.setImageBitmap(bmp);
@@ -973,9 +977,10 @@ public class BillingFragment extends XBaseFragment {
         filter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
         context.registerReceiver(mUsbReceiver, filter);
         registerMsgReceiver();
+        disableShowSoftInput(enter_url_et);
+        enter_url_et.requestFocus();
         enter_url_et.postDelayed(() -> {
             RxKeyboardTool.hideSoftInput(context);
-//            ToastUtils.showLong("onresume");
         }, 1000);
         super.onResume();
     }
@@ -1323,13 +1328,22 @@ public class BillingFragment extends XBaseFragment {
                 PayResultBean payResultBean = gson.fromJson((message), PayResultBean.class);
                 if (payResultBean.isPaySuccess == (1)) {
                     if (null != payDialog && null != printBean && payResultBean.orderSn.equals(printBean.sell_code)) {
+                        ToastUtils.showLong("支付成功！");
                         payDialog.cancel();
                         payDialog = null;
-                        Prints.PostPrint(context, printBean, order_tv);
-//                        billing_btn.performClick();
+                        App.getBoxStore().runInTxAsync(() -> {
+                            PrintTableEntiry printTableEntiry = PrintTableEntiry.builder(printBean);
+                            printTableEntiry.is_pay = true;
+                            App.getBoxStore().boxFor(PrintTableEntiry.class).put(printTableEntiry);
+                            Prints.PostPrint(context, printTableEntiry, order_tv);
+                        }, (result, error) -> {
+                            if (Kits.Empty.check(error)) {
+
+                            }
+                            printBean = null;
+                        });
                         handler.sendMessage(handler.obtainMessage(-1, 0));
-                        ToastUtils.showLong("支付成功！");
-                        printBean = null;
+                        JWebSocketClientService.setOrderSn(null);
                     }
                 }
             } catch (Exception e) {

@@ -246,9 +246,74 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:4020932970993284502",
+      "lastPropertyId": "12:6585891722756306711",
+      "name": "PrintTableEntiry",
+      "properties": [
+        {
+          "id": "1:7092196310869731905",
+          "name": "_id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6457458161300828756",
+          "name": "shop_name",
+          "type": 9
+        },
+        {
+          "id": "3:8028242559253458321",
+          "name": "shop_code",
+          "type": 9
+        },
+        {
+          "id": "4:8413489181217201903",
+          "name": "sell_code",
+          "type": 9
+        },
+        {
+          "id": "5:5131038493294403543",
+          "name": "cashier",
+          "type": 9
+        },
+        {
+          "id": "6:7922144688137411359",
+          "name": "list",
+          "type": 9
+        },
+        {
+          "id": "7:7624851669525838821",
+          "name": "total",
+          "type": 9
+        },
+        {
+          "id": "8:6095753140390803253",
+          "name": "discounts",
+          "type": 9
+        },
+        {
+          "id": "9:5796992716588937690",
+          "name": "cope",
+          "type": 9
+        },
+        {
+          "id": "10:2005354374565342687",
+          "name": "paid",
+          "type": 9
+        },
+        {
+          "id": "12:6585891722756306711",
+          "name": "is_pay",
+          "type": 1,
+          "flags": 4
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:5720419423093649173",
+  "lastEntityId": "5:4020932970993284502",
   "lastIndexId": "1:2987427657906360920",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
@@ -257,7 +322,8 @@
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    3802714490751843912
+    3802714490751843912,
+    6051411235598489387
   ],
   "retiredRelationUids": [],
   "version": 1

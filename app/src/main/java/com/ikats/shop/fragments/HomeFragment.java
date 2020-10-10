@@ -1,46 +1,67 @@
 package com.ikats.shop.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkRequest;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
 import com.ikats.shop.App;
 import com.ikats.shop.R;
+import com.ikats.shop.adapters.TicketItemAdapter;
+import com.ikats.shop.database.PrintTableEntiry;
+import com.ikats.shop.dialog.CommonDialogFragment;
 import com.ikats.shop.dialog.DialogFragmentHelper;
 import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
+import com.ikats.shop.model.BaseModel.HttpResultModel;
+import com.ikats.shop.net.DataService;
+import com.ikats.shop.net.api.ApiService;
 import com.ikats.shop.services.JWebSocketClientService;
 import com.ikats.shop.utils.JWebSocketClient;
+import com.ikats.shop.utils.Prints;
+import com.ikats.shop.utils.RxLoadingUtils;
+import com.ikats.shop.utils.UploadUtils;
+import com.ikats.shop.views.GlobalStateView;
+import com.ikats.shop.views.XReloadableListContentLayout;
 import com.jaeger.library.StatusBarUtil;
 import com.lvrenyang.io.Pos;
 import com.lvrenyang.io.base.COMIO;
+import com.tamsiree.rxkit.RxAppTool;
 import com.tamsiree.rxkit.RxKeyboardTool;
+import com.yhao.floatwindow.FloatWindow;
+import com.yhao.floatwindow.enums.EMoveType;
+import com.yhao.floatwindow.enums.EScreen;
+import com.yhao.floatwindow.interfaces.BaseFloatWindow;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.base.XFragmentAdapter;
+import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
+import okhttp3.ResponseBody;
+
+import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT;
 
 public class HomeFragment extends XBaseFragment {
     @BindView(R.id.home_viewpager)
@@ -61,6 +82,7 @@ public class HomeFragment extends XBaseFragment {
     private JWebSocketClientService.JWebSocketClientBinder binder;
     private JWebSocketClientService jWebSClientService;
     private JWebSocketClient client;
+    private BaseFloatWindow mStatusWindow;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -68,51 +90,50 @@ public class HomeFragment extends XBaseFragment {
         StatusBarUtil.setTranslucent(context, 0);
         user_tv.setText(App.getSettingBean().shop_cashier);
 
-//        Flowable<HttpResultModel> update = DataService.builder().buildReqUrl("").request(ApiService.HttpMethod.GET);
-//        RxLoadingUtils.subscribeWithDialog(null, update, bindToLifecycle(), new Consumer<HttpResultModel>() {
+//        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        cm.requestNetwork(new NetworkRequest.Builder().build(), new ConnectivityManager.NetworkCallback() {
 //            @Override
-//            public void accept(HttpResultModel httpResultModel) throws Exception {
-//
+//            public void onLost(Network network) {
+//                super.onLost(network);
+//                ///网络不可用的情况下的方法
+//                net_iv.post(() -> {
+//                    net_iv.setVisibility(View.VISIBLE);
+//                    Glide.with(context).asGif().load(R.drawable.net).into(new SimpleTarget<GifDrawable>() {
+//                        @Override
+//                        public void onResourceReady(@NonNull GifDrawable resource, @Nullable Transition<? super GifDrawable> transition) {
+//                            net_iv.setImageDrawable(resource);
+//                            resource.start();
+//                        }
+//                    });
+//                });
+//                RxMsgEvent msgEvent = new RxMsgEvent(0,"",false);
+//                RxBusProvider.getBus().postEvent(msgEvent);
 //            }
-//        }, new Consumer<NetError>() {
+//
 //            @Override
-//            public void accept(NetError netError) throws Exception {
-//
+//            public void onAvailable(Network network) {
+//                super.onAvailable(network);
+//                ///网络可用的情况下的方法
+//                net_iv.post(() -> {
+//                    net_iv.setVisibility(View.GONE);
+//                });
+//                RxMsgEvent msgEvent = new RxMsgEvent(0,"",true);
+//                RxBusProvider.getBus().postEvent(msgEvent);
 //            }
-//        }, new Action() {
-//            @Override
-//            public void run() throws Exception {
-//
-//            }
-//        }, true);
-        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        cm.requestNetwork(new NetworkRequest.Builder().build(), new ConnectivityManager.NetworkCallback() {
-            @Override
-            public void onLost(Network network) {
-                super.onLost(network);
-                ///网络不可用的情况下的方法
-                net_iv.post(() -> {
-                    net_iv.setVisibility(View.VISIBLE);
-                    Glide.with(context).asGif().load(R.drawable.net).into(new SimpleTarget<GifDrawable>() {
-                        @Override
-                        public void onResourceReady(@NonNull GifDrawable resource, @Nullable Transition<? super GifDrawable> transition) {
-                            net_iv.setImageDrawable(resource);
-                            resource.start();
-                        }
-                    });
-                });
-            }
+//        });
 
-            @Override
-            public void onAvailable(Network network) {
-                super.onAvailable(network);
-                ///网络可用的情况下的方法
-                net_iv.post(() -> {
-                    net_iv.setVisibility(View.GONE);
-                });
-            }
-        });
-
+        GlobalStateView globalStateView = new GlobalStateView(context);
+        mStatusWindow = FloatWindow.get("StatusWindow");
+        // 初始化展示
+        // 效果图1
+        if (mStatusWindow != null) {
+        } else {
+            FloatWindow.with(App.getApp()).setView(globalStateView).setWidth(EScreen.WIDTH, 0.07f)
+                    .setHeight(EScreen.WIDTH, 0.2f).setX(EScreen.WIDTH, 0.95f).setY(EScreen.HEIGHT, 0.5f)
+                    .setMoveType(EMoveType.SLIDE).setMoveStyle(500, new BounceInterpolator()).setDesktopShow(true)
+                    .setTag("StatusWindow").build();
+        }
+        FloatWindow.get("StatusWindow").show();
     }
 
     @Override
@@ -125,6 +146,70 @@ public class HomeFragment extends XBaseFragment {
 
         viewPager.setOffscreenPageLimit(2);
         mpos.Set(mcom);
+
+        viewPager.postDelayed(()->{
+
+        checkVersion();
+        },1000);
+    }
+
+    private void checkVersion() {
+        Flowable<HttpResultModel> check = DataService.builder().buildReqUrl("http://www.ikats.com/download/pos/version.json")
+                .buildInterceptconvert(true)
+                .request(ApiService.HttpMethod.GET)
+                .map((Function<ResponseBody, HttpResultModel>) responseBody -> {
+                    String res = responseBody.string();
+                    Map<String, String> map = new Gson().fromJson(res, Map.class);
+                    HttpResultModel httpResultModel = new HttpResultModel();
+                    int rcode = Integer.valueOf(map.get("version")) > RxAppTool.getAppVersionCode(context) ? 1 : 0;
+                    httpResultModel.resultCode = rcode;
+                    httpResultModel.resultData = map.get("url");
+                    return httpResultModel;
+                });
+        RxLoadingUtils.subscribeWithDialog(context, check, bindToLifecycle(), httpResultModel -> {
+            if (httpResultModel.isSucceful()) {
+                DialogFragmentHelper.builder(context -> new AlertDialog.Builder(context, THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
+                        .setMessage("发现新版本，是否立即更新？").setNegativeButton("忽略", null)
+                        .setPositiveButton("更新", (dialog, which) -> {
+                            ProgressDialog progressDialog = new ProgressDialog(context, THEME_DEVICE_DEFAULT_LIGHT);
+                            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                            Flowable<HttpResultModel> download = DataService.builder().buildReqUrl(httpResultModel.resultData.toString())
+                                    .buildFileDownloadProgress(new UploadUtils.FileDownloadProgress() {
+                                        @Override
+                                        public void onProgress(int progress) {
+                                            progressDialog.setProgress(progress);
+                                        }
+                                    }).request(ApiService.HttpMethod.DOWNLOAD).map((Function<UploadUtils.DownloadFileRequestBody, HttpResultModel>) responseBody -> {
+
+                                        InputStream inputStream = responseBody.byteStream();
+                                        File app = new File(context.getExternalCacheDir(), "ikats.apk");
+                                        app.createNewFile();
+                                        FileOutputStream fos = new FileOutputStream(app);
+                                        byte[] bytes = new byte[1024 * 10];
+                                        int count;
+                                        while ((count = inputStream.read(bytes)) != -1) {
+                                            fos.write(bytes, 0, count);
+                                        }
+                                        fos.close();
+                                        inputStream.close();
+                                        HttpResultModel httpResultModel1 = new HttpResultModel();
+                                        httpResultModel1.resultCode = 1;
+                                        httpResultModel1.resultContent = app.getAbsolutePath();
+                                        return httpResultModel1;
+                                    });
+                            RxLoadingUtils.subscribeWithDialog(progressDialog, download, bindToLifecycle(), httpResultModel1 -> {
+                                if (httpResultModel1.isSucceful())
+                                    RxAppTool.installApp(context, httpResultModel1.resultContent);
+                            }, netError -> {
+                                ToastUtils.showLong(netError.getMessage());
+                            }, () -> {
+
+                            }, false);
+
+                        }).create(), true).show(getChildFragmentManager(), "");
+            }
+        });
+
     }
 
     @OnClick({R.id.home_rb_cashier, R.id.home_rb_server, R.id.home_tv_user})
@@ -132,76 +217,6 @@ public class HomeFragment extends XBaseFragment {
         RxKeyboardTool.hideSoftInput(context);
         switch (view.getId()) {
             case R.id.home_rb_cashier:
-//                Bitmap bmp = RxQRCode.creatQRCode("httpResultModel.resultData.payableCode", BitmapFactory.decodeResource(getResources(), R.mipmap.app_icon));
-////                qrcode_iv.setImageBitmap(bmp);
-//                DialogFragmentHelper.builder(context -> {
-//                    ImageView qr_iv = new ImageView(context);
-//                    qr_iv.setLayoutParams(new RadioGroup.LayoutParams(Utils.dip2px(context, 60), Utils.dip2px(context, 60)));
-//                    qr_iv.setImageBitmap(bmp);
-//                    return new android.app.AlertDialog.Builder(context, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("请扫码支付").setView(qr_iv).setPositiveButton("取消", (dialog, which) -> {
-//                        DialogFragmentHelper.builder(new CommonDialogFragment.OnCallDialog() {
-//                            @Override
-//                            public Dialog getDialog(Context context) {
-//                                return new android.app.AlertDialog.Builder(context, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("是否需要取消订单？").setNegativeButton("取消", null).setPositiveButton("确定", (dialog12, which12) -> {
-//                                    dialog12.cancel();
-//                                    Flowable<HttpResultModel> del_order = DataService.builder().buildReqUrl(App.getSettingBean().shop_url + "api/cancel")
-//                                            .buildReqParams("orderSn", "202009161018888")
-//                                            .request(ApiService.HttpMethod.POST);
-//                                    RxLoadingUtils.subscribeWithDialog(context, del_order, bindToLifecycle(), httpResultModel1 -> {
-//                                        dialog.cancel();
-//                                        if (httpResultModel1.isSucceful()) {
-//                                            ToastUtils.showLong("订单取消成功！");
-//                                        } else {
-//                                            ToastUtils.showLong(httpResultModel1.resultContent);
-//                                        }
-//                                    }, netError -> ToastUtils.showLong("订单取消失败，请重试！"), true);
-//                                }).create();
-//                            }
-//                        }, false).show(getChildFragmentManager(), "");
-//                    }).create();
-//                }, false).show(getChildFragmentManager(), "");
-
-//                ProgressDialog progressDialog = new ProgressDialog(context, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-//                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//                Flowable<HttpResultModel> download = DataService.builder().buildReqUrl("http://sjws.ssl.qihucdn.com/mobile/shouji360/360safesis/20200527-1626/360MobileSafe_8.6.2.1002.apk").buildProgress(new ProgressListener() {
-//                    @Override
-//                    public void onProgress(long soFarBytes, long totalBytes) {
-//                        progressDialog.setMax((int) totalBytes);
-//                        progressDialog.setProgress((int) soFarBytes);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable throwable) {
-//                        progressDialog.cancel();
-//                        ToastUtils.showLong(throwable.getMessage());
-//                    }
-//                }).request(ApiService.HttpMethod.DOWNLOAD).map((Function<ResponseBody, HttpResultModel>) responseBody -> {
-//
-//                    InputStream inputStream = responseBody.byteStream();
-//                    File app = new File(context.getExternalCacheDir(), "ikats.apk");
-//                    app.createNewFile();
-//                    FileOutputStream fos = new FileOutputStream(app);
-//                    byte[] bytes = new byte[1024 * 10];
-//                    int count;
-//                    while ((count = inputStream.read(bytes)) != -1) {
-//                        fos.write(bytes, 0, count);
-//                    }
-//                    fos.close();
-//                    inputStream.close();
-//                    HttpResultModel httpResultModel = new HttpResultModel();
-//                    httpResultModel.resultCode = 1;
-//                    httpResultModel.resultContent = app.getAbsolutePath();
-//                    return httpResultModel;
-//                });
-//                RxLoadingUtils.subscribeWithDialog(progressDialog, download, bindToLifecycle(), httpResultModel -> {
-//                    if (httpResultModel.isSucceful())
-//                        RxAppTool.installApp(context, httpResultModel.resultContent);
-//                }, netError -> {
-//                    ToastUtils.showLong(netError.getMessage());
-//                }, () -> {
-//
-//                }, false);
-
                 viewPager.setCurrentItem(0);
                 break;
             case R.id.home_rb_server:
@@ -245,6 +260,40 @@ public class HomeFragment extends XBaseFragment {
                                 }
                                 dialog[0].cancel();
                                 break;
+                            case R.id.home_menu_print_tv:
+                                DialogFragmentHelper.builder(R.layout.dialog_unprint_ticket_layout, true).setDialogWindow(dialogWindow -> {
+                                    WindowManager.LayoutParams wlp = dialogWindow.getAttributes();
+                                    wlp.width = App.w - 100;
+                                    wlp.height = App.h - 100;
+                                    dialogWindow.setAttributes(wlp);
+                                    dialogWindow.setWindowAnimations(R.style.BottomInAndOutStyle);
+                                    return dialogWindow;
+                                }).setOnProcessView((sdialog, view1) -> {
+                                    view1.findViewById(R.id.dialog_ticket_close_iv).setOnClickListener(sv -> {
+                                        sdialog.cancel();
+                                    });
+                                    XReloadableListContentLayout xRecyclerView = view1.findViewById(R.id.dialog_ticket_unprint_list_layout);
+                                    TicketItemAdapter ticketItemAdapter = new TicketItemAdapter(context);
+                                    xRecyclerView.getRecyclerView().verticalLayoutManager(context);
+                                    xRecyclerView.getRecyclerView().setAdapter(ticketItemAdapter);
+                                    xRecyclerView.getRecyclerView().setRefreshEnabled(false);
+                                    App.getBoxStore().runInTxAsync(() -> {
+                                        ticketItemAdapter.addData(App.getBoxStore().boxFor(PrintTableEntiry.class).getAll());
+                                    }, (result, error) -> {
+                                        xRecyclerView.postDelayed(() -> {
+                                            xRecyclerView.getRecyclerView().setPage(0, 0);
+                                        }, 100);
+                                    });
+
+                                    view1.findViewById(R.id.dialog_ticket_print_select_btn).setOnClickListener(sv -> {
+                                        ToastUtils.showLong("" + ticketItemAdapter.getSelect_list().size());
+                                        sdialog.cancel();
+                                        for (PrintTableEntiry printTableEntiry : ticketItemAdapter.getSelect_list())
+                                            Prints.PostPrint(context, printTableEntiry, null);
+                                    });
+                                }).show(getChildFragmentManager(), "");
+                                dialog[0].cancel();
+                                break;
                             case R.id.home_menu_exit_tv:
                                 dialog[0].cancel();
                                 getActivity().finish();
@@ -256,6 +305,7 @@ public class HomeFragment extends XBaseFragment {
                     vv.findViewById(R.id.home_menu_search_tv).setOnClickListener(onClickListener);
                     vv.findViewById(R.id.home_menu_statistics_tv).setOnClickListener(onClickListener);
                     vv.findViewById(R.id.home_menu_setting_tv).setOnClickListener(onClickListener);
+                    vv.findViewById(R.id.home_menu_print_tv).setOnClickListener(onClickListener);
                     vv.findViewById(R.id.home_menu_exit_tv).setOnClickListener(onClickListener);
                     dialog[0] = new AlertDialog.Builder(context).setView(vv).create();
                     return dialog[0];
@@ -302,6 +352,8 @@ public class HomeFragment extends XBaseFragment {
     public void onDestroy() {
         super.onDestroy();
         mcom.Close();
+        if (null != mStatusWindow)
+            mStatusWindow.destory();
     }
 
     public static HomeFragment newInstance() {

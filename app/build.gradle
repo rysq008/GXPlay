@@ -8,8 +8,8 @@ android {
         applicationId "com.ikats.shop"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 7
+        versionName "1.0.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
@@ -97,8 +97,8 @@ dependencies {
     implementation 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
 
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.github.limedroid:XDroidMvp:v2.0.1'
-    implementation 'com.github.limedroid:ARecyclerView:v1.2.3'
+    api 'com.github.limedroid:XDroidMvp:v2.0.1'
+    api 'com.github.limedroid:ARecyclerView:v1.2.3'
     implementation 'com.squareup.retrofit2:retrofit:2.2.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
@@ -149,8 +149,16 @@ dependencies {
 
     implementation 'cn.leancloud:storage-android:latest.release'
 
-    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+
+//    implementation 'com.github.liuguangli:FloatUtil:latest.release'
+    implementation 'org.sdker.floatwindow:floatwindow:latest.release'
+    implementation "com.blankj:rxbus:latest.release"
+
+
 }
 apply plugin: 'io.objectbox' // after applying Android plugin
 

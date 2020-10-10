@@ -13,7 +13,8 @@ public class SettingBean implements Serializable {
     public int camera_channel = 1;
     public String camera_user = "admin";
     public String camera_pwd = "ikats903";
-    public boolean isRecordOpen;
+    public boolean isLiveSuccess;//预览是否成功
+    public boolean isRecordOpen;//
     public String record_ip = "http://192.168.1.140";
     public String record_port = "3000";
     public String record_channel = "101";
@@ -30,5 +31,5 @@ public class SettingBean implements Serializable {
     public int area_index;//区索引
     public String appKey;
     public String security;
-
+    public boolean isPrintSuccess;//打印是否成功
 }

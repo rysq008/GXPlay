@@ -6,31 +6,37 @@ import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSink;
+import okio.BufferedSource;
 import okio.ForwardingSink;
+import okio.ForwardingSource;
 import okio.Okio;
 import okio.Sink;
+import okio.Source;
 
 public class UploadUtils {
 
     public abstract static class FileUploadProgress {
-
         //监听进度的改变
         public void onProgressChange(final long bytesWritten, final long contentLength) {
-            MainThreadPostUtils.post(new Runnable() {
-                @Override
-                public void run() {
-                    onProgress((int) (bytesWritten * 100 / contentLength));
-                }
-            });
+            MainThreadPostUtils.post(() -> onProgress((int) (bytesWritten * 100 / contentLength)));
         }
 
         //上传进度回调
         public abstract void onProgress(int progress);
-
     }
 
+    public abstract static class FileDownloadProgress {
+        //监听进度的改变
+        public void onProgressChange(final long bytesWritten, final long contentLength) {
+            MainThreadPostUtils.post(() -> onProgress((int) (bytesWritten * 100 / contentLength)));
+        }
+
+        //上传进度回调
+        public abstract void onProgress(int progress);
+    }
 
     public static class UploadFileRequestBody extends RequestBody {
 
@@ -83,4 +89,63 @@ public class UploadUtils {
             }
         }
     }
+
+    public static class DownloadFileRequestBody extends ResponseBody {
+        private ResponseBody delegate;
+        private BufferedSource bufferedSource;
+        private FileDownloadProgress fileDownloadProgress;
+
+        public DownloadFileRequestBody(ResponseBody delegate, FileDownloadProgress listeners) {
+            this.delegate = delegate;
+            this.fileDownloadProgress = listeners;
+        }
+
+        @Override
+        public MediaType contentType() {
+            return delegate.contentType();
+        }
+
+        @Override
+        public long contentLength() {
+            return delegate.contentLength();
+        }
+
+        @Override
+        public BufferedSource source() {
+            if (bufferedSource == null) {
+                bufferedSource = Okio.buffer(new ProgressSource(delegate.source()));
+            }
+            return bufferedSource;
+        }
+
+
+        final class ProgressSource extends ForwardingSource {
+            private long soFarBytes = 0;
+            private long totalBytes = -1;
+
+            public ProgressSource(Source delegate) {
+                super(delegate);
+            }
+
+            @Override
+            public long read(Buffer sink, long byteCount) throws IOException {
+                long bytesRead = 0L;
+                try {
+                    bytesRead = super.read(sink, byteCount);
+
+                    if (totalBytes < 0) {
+                        totalBytes = contentLength();
+                    }
+                    soFarBytes += (bytesRead != -1 ? bytesRead : 0);
+                    if (fileDownloadProgress != null)
+                        fileDownloadProgress.onProgressChange(soFarBytes, totalBytes);
+                } catch (IOException e) {
+                    throw e;
+                }
+
+                return bytesRead;
+            }
+        }
+    }
+
 }
