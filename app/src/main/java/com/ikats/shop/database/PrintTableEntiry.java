@@ -56,7 +56,7 @@ public final class PrintTableEntiry extends XBaseModel {
         printTableEntiry.shop_code = printBean.shop_code;
         printTableEntiry.sell_code = printBean.sell_code;
         printTableEntiry.cashier = printBean.cashier;
-        printTableEntiry.list = printBean.list;
+        printTableEntiry.list = printBean.deepCopyList();
         printTableEntiry.total = printBean.total;
         printTableEntiry.discounts = printBean.discounts;
         printTableEntiry.cope = printBean.cope;

@@ -12,7 +12,6 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 public class
@@ -177,21 +176,21 @@ CommonDialogFragment extends DialogFragment {
         return this;
     }
 
-//    @Override
-//    public void onDismiss(@NonNull DialogInterface dialog) {
-//        if (mCancelListener != null) {
-//            mCancelListener.onCancel();
-//        }
-//        super.onDismiss(dialog);
-//    }
-
     @Override
-    public void onCancel(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         if (mCancelListener != null) {
             mCancelListener.onCancel();
         }
-        super.onCancel(dialog);
+        super.onDismiss(dialog);
     }
+
+//    @Override
+//    public void onCancel(DialogInterface dialog) {
+//        if (mCancelListener != null) {
+//            mCancelListener.onCancel();
+//        }
+//        super.onCancel(dialog);
+//    }
 
     public CommonDialogFragment setDailogStyle(int style, int theme) {
         super.setStyle(style, theme);

@@ -162,7 +162,8 @@ public class JWebSocketClientService extends Service {
 //                        jso.add("data", sjso);
                         HeartBeatBean beatBean = HeartBeatBean.build(UUID.randomUUID().toString());
                         String json = new Gson().toJson(beatBean);
-                        client.send(json);
+                        if (client.isOpen())
+                            client.send(json);
                         Log.e(TAG, "send heartbeat to keep live: -->" + json);
                     } else {
                         JsonObject jso = new JsonObject();
@@ -171,7 +172,8 @@ public class JWebSocketClientService extends Service {
                         sjso.addProperty("orderSn", orderSn);
                         sjso.addProperty("posCode", RxDeviceTool.getMacAddress());
                         jso.add("data", sjso);
-                        client.send(jso.toString());
+                        if (client.isOpen())
+                            client.send(jso.toString());
                     }
 
                     if (sendTime == 0 && receiveTime == 0) {

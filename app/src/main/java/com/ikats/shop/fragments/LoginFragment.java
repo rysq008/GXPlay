@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,12 +18,17 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ToastUtils;
+import com.google.gson.Gson;
+import com.ikats.shop.App;
 import com.ikats.shop.R;
 import com.ikats.shop.activitys.DetailFragmentsActivity;
 import com.ikats.shop.dialog.CommonDialogFragment;
@@ -30,7 +36,11 @@ import com.ikats.shop.dialog.DialogFragmentHelper;
 import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
 import com.ikats.shop.model.LoginBean;
+import com.ikats.shop.model.SettingBean;
+import com.ikats.shop.net.DataService;
+import com.ikats.shop.net.api.ApiService;
 import com.ikats.shop.present.FLoginPresenter;
+import com.ikats.shop.utils.EditTextUtil;
 import com.ikats.shop.utils.Utils;
 import com.ikats.shop.views.ToastMgr;
 import com.tamsiree.rxkit.RxKeyboardTool;
@@ -39,6 +49,7 @@ import com.tamsiree.rxkit.RxNetTool;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.kit.Kits;
+import io.reactivex.Flowable;
 
 public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 
@@ -62,6 +73,8 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
     CheckBox pwd_or_code_ctv;
     @BindView(R.id.login_action_btn)
     Button login_action_btn;
+    @BindView(R.id.login_by_out_tv)
+    TextView change_code_tv;
     @BindView(R.id.register_action_tv)
     TextView register_action_tv;
 
@@ -111,11 +124,45 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
         });
 
         checkNetStatus();
-        user_et.postDelayed(() -> {
-            RxKeyboardTool.hideSoftInput(user_et);
-        }, 100);
-    }
+//        user_et.postDelayed(() -> {
+//            RxKeyboardTool.hideSoftInput(user_et);
+//        }, 100);
 
+//        if (ShareUtils.isFirstEnter()) {
+//            DialogFragmentHelper.builder(new CommonDialogFragment.OnCallDialog() {
+//                @Override
+//                public Dialog getDialog(Context context) {
+//                    LinearLayout linearLayout = new LinearLayout(context);
+//                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+//                    EditText customer_et = new EditText(context);
+//                    customer_et.setHint("输入客户编码");
+//                    EditText channel_et = new EditText(context);
+//                    channel_et.setHint("输入渠道编码");
+//                    linearLayout.addView(customer_et);
+//                    linearLayout.addView(channel_et);
+//                    return new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
+//                            .setView(linearLayout).setNegativeButton("取消", null)
+//                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    Flowable config = DataService.builder().buildReqUrl("")
+//                                            .buildReqParams("CUSTOMER_CODE", customer_et.getText().toString().replace(" ", ""))
+//                                            .buildReqParams("CHANNEL_CODE", channel_et.getText().toString().replace(" ", ""))
+//                                            .request(ApiService.HttpMethod.GET);
+//                                    ToastUtils.showLong(String.format("--->%s--->%s", customer_et.getText(), channel_et.getText()));
+//                                    new Gson().fromJson("{}", SettingBean.class);
+//
+////                                    RxLoadingUtils.subscribeWithDialog(context, config, bindToLifecycle(), iModel -> {
+////
+////                                    }, netError -> {
+////
+////                                    });
+//                                }
+//                            }).create();
+//                }
+//            }, false).show(getChildFragmentManager(), "");
+//        }
+    }
 
     @Override
     public FLoginPresenter newP() {
@@ -124,7 +171,7 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 
     @OnClick({R.id.rl_common_left, R.id.login_user_clear_iv, R.id.login_password_eye_cb, R.id.login_get_code_tv,
             R.id.login_forget_pwd_tv, R.id.login_change_pwd_or_code_ctv, R.id.login_action_btn,
-            R.id.register_action_tv})
+            R.id.register_action_tv, R.id.login_by_out_tv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.rl_common_left:
@@ -302,6 +349,60 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 //                getP().requestLogin(context, user_et.getText().toString().trim(), pwd_et.getText().toString().trim(), enter_code_et.getText().toString().trim());
                     getP().requestLogin(context, "13333333333", "1111111", "1111");
 //                showContent(null);
+                break;
+            case R.id.login_by_out_tv:
+                DialogFragmentHelper.builder(context -> {
+                    LinearLayout linearLayout = new LinearLayout(context);
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    linearLayout.setPadding(10, 10, 10, 10);
+                    EditText customer_et = new EditText(context);
+                    customer_et.setHint("输入客户编码");
+                    customer_et.setSingleLine();
+                    EditTextUtil.setCursorDrawableColor(customer_et, Color.parseColor("#000000"));
+                    customer_et.setBackgroundResource(R.drawable.shape_grey_stroke_6_radius_rect);
+                    customer_et.onEditorAction(EditorInfo.IME_ACTION_NEXT);
+                    EditText channel_et = new EditText(context);
+                    channel_et.setHint("输入渠道编码");
+                    channel_et.setSingleLine();
+                    channel_et.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                    channel_et.setBackgroundResource(R.drawable.shape_grey_stroke_6_radius_rect);
+                    EditTextUtil.setCursorDrawableColor(channel_et, Color.parseColor("#000000"));
+                    linearLayout.addView(customer_et);
+                    linearLayout.addView(channel_et);
+                    return new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
+                            .setView(linearLayout).setNegativeButton("取消", (dialog, which) -> dialog.cancel())
+                            .setPositiveButton("确定", (dialog, which) -> {
+                                dialog.dismiss();
+                                Flowable config = DataService.builder().buildReqUrl("")
+                                        .buildReqParams("CUSTOMER_CODE", customer_et.getText().toString().replace(" ", ""))
+                                        .buildReqParams("CHANNEL_CODE", channel_et.getText().toString().replace(" ", ""))
+                                        .request(ApiService.HttpMethod.GET);
+                                ToastUtils.showLong(String.format("--->%s--->%s", customer_et.getText(), channel_et.getText()));
+                                new Gson().fromJson("{}", SettingBean.class);
+                                SettingBean settingBean = App.getSettingBean();
+//                                        settingBean.shop_url = "";
+//                                        settingBean.manage_url="";
+                                settingBean.colorPrimary = Color.parseColor("#94A5FB");
+                                settingBean.custom_icon_res = "file:///android_asset/xfsd.png";
+//                                        settingBean.send_by_express=;
+//                                        settingBean.send_by_self=;
+//                                        settingBean.shop_area = "";
+//                                        settingBean.zipCode = "";
+//                                        settingBean.shop_address="";
+//                                        settingBean.shop_name="";
+//                                        settingBean.shop_code="";
+//                                        settingBean.shop_cashier="";
+                                App.setSettingBean(settingBean);
+//                                    RxLoadingUtils.subscribeWithDialog(context, config, bindToLifecycle(), iModel -> {
+//
+//                                    }, netError -> {
+//
+//                                    });
+                            }).create();
+                }, false).setCancelListener(() -> {
+                    RxKeyboardTool.hideSoftInput(context);
+                    ToastUtils.showLong("can------------------------------");
+                }).show(getChildFragmentManager(), "");
                 break;
             case R.id.register_action_tv:
                 DetailFragmentsActivity.launch(context, null, RegisterFragment.newInstance());

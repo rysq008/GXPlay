@@ -70,17 +70,13 @@ public class GlobalStateView extends LinearLayout {
     }
 
     @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        RxMsgEvent msgEvent = new RxMsgEvent(NET_CODE, GlobalStateView.TAG, RxNetTool.isConnected(getContext()));
-        RxBusProvider.getBus().postEvent(msgEvent);
-    }
-
-    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        Log.e("add", "onAttachedToWindow: " );
         RxMsgEvent msgEvent = new RxMsgEvent(HIKVIS_CODE, GlobalStateView.TAG, App.getSettingBean().isLiveSuccess);
         RxBusProvider.getBus().postEvent(msgEvent);
+        RxMsgEvent smsgEvent = new RxMsgEvent(NET_CODE, GlobalStateView.TAG, RxNetTool.isConnected(getContext()));
+        RxBusProvider.getBus().postEvent(smsgEvent);
     }
 
     private void updateStatus(RxMsgEvent msgEvent) {

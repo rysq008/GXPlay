@@ -515,7 +515,6 @@ public class SettingFragment extends XBaseFragment {
                     settingBean.shop_name = shop_name_et.getText().toString().replace(" ", "");
                     settingBean.shop_code = shop_code_et.getText().toString().replace(" ", "");
                     settingBean.shop_cashier = shop_cashier_et.getText().toString().replace(" ", "");
-                    ShareUtils.saveSettingInfo(settingBean);
                     App.setSettingBean(settingBean);
                     JWebSocketClientService.bindService(context);
                     ToastUtils.showLong("配置保存成功！");

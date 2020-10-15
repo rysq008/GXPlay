@@ -48,7 +48,7 @@
         <activity
             android:name=".activitys.DetailFragmentsActivity"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateVisible|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activitys.WebActivity"
             android:screenOrientation="landscape" />

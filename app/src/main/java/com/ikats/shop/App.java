@@ -407,7 +407,6 @@ public class App extends MultiDexApplication {
         AppBroadcastReceiver networkChangeReceiver = new AppBroadcastReceiver();
         registerReceiver(networkChangeReceiver, intentFilter);//注册广播接收器，接收CONNECTIVITY_CHANGE这个广播
 
-
     }
 
 
@@ -449,6 +448,7 @@ public class App extends MultiDexApplication {
         return mActivity.get();
     }
 
+
     public static BoxStore getBoxStore() {
         return boxStore;
     }
@@ -463,6 +463,7 @@ public class App extends MultiDexApplication {
 
     public static void setSettingBean(SettingBean settingBean) {
         App.settingBean = settingBean;
+        ShareUtils.saveSettingInfo(settingBean);
     }
 
     @Override

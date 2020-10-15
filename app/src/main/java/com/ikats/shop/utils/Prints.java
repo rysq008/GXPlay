@@ -20,7 +20,6 @@ import com.ikats.shop.database.PrintTableEntiry_;
 import com.ikats.shop.event.RxBusProvider;
 import com.ikats.shop.event.RxMsgEvent;
 import com.ikats.shop.model.GoodsBean;
-import com.ikats.shop.model.PrintBean;
 import com.ikats.shop.views.GlobalStateView;
 import com.lvrenyang.io.Pos;
 import com.lvrenyang.io.base.IOCallBack;

@@ -292,10 +292,12 @@ public class ShareUtils {
         return t;
     }
 
-    public static void putString(String key, String value) {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(key, value);
-        editor.apply();
+    public static boolean isFirstEnter() {
+        boolean firstEnter = preferences.getBoolean(KEY_FIRST_OPEN_APP, true);
+        if (firstEnter) {
+            preferences.edit().putBoolean(KEY_FIRST_OPEN_APP, false).apply();
+        }
+        return firstEnter;
     }
 
     public static String getString(String key, String defValue) {

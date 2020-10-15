@@ -591,6 +591,18 @@ public class BillingFragment extends XBaseFragment {
                         printBean.cope = httpResultModel.resultData.amountPayable;
                         printBean.paid = httpResultModel.resultData.amountPayable;
 
+//                        App.getBoxStore().runInTxAsync(() -> {
+//                            PrintTableEntiry printTableEntiry = PrintTableEntiry.builder(printBean);
+//                            printTableEntiry.is_pay = true;
+//                            App.getBoxStore().boxFor(PrintTableEntiry.class).put(printTableEntiry);
+//                            Prints.PostPrint(context, printTableEntiry, order_tv);
+//                        }, (result, error) -> {
+//                            if (Kits.Empty.check(error)) {
+//                                ToastUtils.showLong("insert db success !");
+//                            }
+//                            printBean = null;
+//                        });
+
                         JWebSocketClientService.setOrderSn(printBean.sell_code);
                         DialogFragmentHelper.builder(context1 -> {
                             ImageView qr_iv = new ImageView(context1);
@@ -979,9 +991,9 @@ public class BillingFragment extends XBaseFragment {
         registerMsgReceiver();
         disableShowSoftInput(enter_url_et);
         enter_url_et.requestFocus();
-        enter_url_et.postDelayed(() -> {
-            RxKeyboardTool.hideSoftInput(context);
-        }, 1000);
+//        enter_url_et.postDelayed(() -> {
+//            RxKeyboardTool.hideSoftInput(context);
+//        }, 1000);
         super.onResume();
     }
 
@@ -1338,11 +1350,11 @@ public class BillingFragment extends XBaseFragment {
                             Prints.PostPrint(context, printTableEntiry, order_tv);
                         }, (result, error) -> {
                             if (Kits.Empty.check(error)) {
-
+                                ToastUtils.showLong("insert db success !");
                             }
                             printBean = null;
+                            handler.sendMessage(handler.obtainMessage(-1, 0));
                         });
-                        handler.sendMessage(handler.obtainMessage(-1, 0));
                         JWebSocketClientService.setOrderSn(null);
                     }
                 }

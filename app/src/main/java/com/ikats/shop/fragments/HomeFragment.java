@@ -4,27 +4,33 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
 import com.ikats.shop.App;
 import com.ikats.shop.R;
 import com.ikats.shop.adapters.TicketItemAdapter;
 import com.ikats.shop.database.PrintTableEntiry;
-import com.ikats.shop.dialog.CommonDialogFragment;
 import com.ikats.shop.dialog.DialogFragmentHelper;
 import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
 import com.ikats.shop.model.BaseModel.HttpResultModel;
@@ -64,6 +70,12 @@ import okhttp3.ResponseBody;
 import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT;
 
 public class HomeFragment extends XBaseFragment {
+    @BindView(R.id.home_gs_tv)
+    ImageView customer_icon_iv;
+    @BindView(R.id.home_radioGroup)
+    RadioGroup rg;
+    @BindView(R.id.home_rl_user)
+    RelativeLayout rl_user;
     @BindView(R.id.home_viewpager)
     ViewPager viewPager;
     @BindView(R.id.home_rb_cashier)
@@ -130,7 +142,7 @@ public class HomeFragment extends XBaseFragment {
         } else {
             FloatWindow.with(App.getApp()).setView(globalStateView).setWidth(EScreen.WIDTH, 0.07f)
                     .setHeight(EScreen.WIDTH, 0.2f).setX(EScreen.WIDTH, 0.95f).setY(EScreen.HEIGHT, 0.5f)
-                    .setMoveType(EMoveType.SLIDE).setMoveStyle(500, new BounceInterpolator()).setDesktopShow(true)
+                    .setMoveType(EMoveType.SLIDE).setMoveStyle(500, new BounceInterpolator())
                     .setTag("StatusWindow").build();
         }
         FloatWindow.get("StatusWindow").show();
@@ -138,6 +150,23 @@ public class HomeFragment extends XBaseFragment {
 
     @Override
     public void initData(Bundle savedInstanceState) {
+        Glide.with(this).asBitmap().load(App.getSettingBean().custom_icon_res)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        customer_icon_iv.setImageBitmap(resource);
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        customer_icon_iv.setImageResource(R.drawable.chigoose);
+                    }
+                });
+        customer_icon_iv.setBackgroundColor(App.getSettingBean().colorPrimary);
+        rg.setBackgroundColor(App.getSettingBean().colorPrimary);
+        rl_user.setBackgroundColor(App.getSettingBean().colorPrimary);
+
         mFragment.add(CashierFragment.newInstance());
         mFragment.add(BackstageFragment.newInstance());
 //        mFragment.add(CashierFragment.newInstance());
@@ -147,10 +176,9 @@ public class HomeFragment extends XBaseFragment {
         viewPager.setOffscreenPageLimit(2);
         mpos.Set(mcom);
 
-        viewPager.postDelayed(()->{
-
+//        viewPager.postDelayed(() -> {
         checkVersion();
-        },1000);
+//        }, 1100);
     }
 
     private void checkVersion() {
@@ -226,6 +254,7 @@ public class HomeFragment extends XBaseFragment {
                 DialogFragmentHelper.builder(context -> {
                     Dialog[] dialog = new Dialog[1];
                     View vv = View.inflate(context, R.layout.fragment_home_menu, null);
+                    vv.setBackgroundColor(App.getSettingBean().colorPrimary);
                     View.OnClickListener onClickListener = v -> {
                         switch (v.getId()) {
                             case R.id.home_menu_billing_tv:
@@ -286,7 +315,7 @@ public class HomeFragment extends XBaseFragment {
                                     });
 
                                     view1.findViewById(R.id.dialog_ticket_print_select_btn).setOnClickListener(sv -> {
-                                        ToastUtils.showLong("" + ticketItemAdapter.getSelect_list().size());
+//                                        ToastUtils.showLong("" + ticketItemAdapter.getSelect_list().size());
                                         sdialog.cancel();
                                         for (PrintTableEntiry printTableEntiry : ticketItemAdapter.getSelect_list())
                                             Prints.PostPrint(context, printTableEntiry, null);
