@@ -134,7 +134,7 @@ public class HomeFragment extends XBaseFragment {
 //            }
 //        });
 
-        GlobalStateView globalStateView = new GlobalStateView(context);
+        GlobalStateView globalStateView = new GlobalStateView(App.getApp());
         mStatusWindow = FloatWindow.get("StatusWindow");
         // 初始化展示
         // 效果图1
@@ -144,8 +144,9 @@ public class HomeFragment extends XBaseFragment {
                     .setHeight(EScreen.WIDTH, 0.2f).setX(EScreen.WIDTH, 0.95f).setY(EScreen.HEIGHT, 0.5f)
                     .setMoveType(EMoveType.SLIDE).setMoveStyle(500, new BounceInterpolator())
                     .setTag("StatusWindow").build();
+            mStatusWindow = FloatWindow.get("StatusWindow");
         }
-        FloatWindow.get("StatusWindow").show();
+        mStatusWindow.show();
     }
 
     @Override
@@ -369,12 +370,18 @@ public class HomeFragment extends XBaseFragment {
     public void onResume() {
         super.onResume();
         JWebSocketClientService.bindService(context);
+        if (mStatusWindow != null) {
+            mStatusWindow.show();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         JWebSocketClientService.unbindService(context);
+        if (mStatusWindow != null) {
+            mStatusWindow.hide();
+        }
     }
 
     @Override
@@ -383,6 +390,7 @@ public class HomeFragment extends XBaseFragment {
         mcom.Close();
         if (null != mStatusWindow)
             mStatusWindow.destory();
+        mStatusWindow = null;
     }
 
     public static HomeFragment newInstance() {

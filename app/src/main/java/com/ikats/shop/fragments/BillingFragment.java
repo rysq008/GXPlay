@@ -2,7 +2,6 @@ package com.ikats.shop.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -187,7 +186,7 @@ public class BillingFragment extends XBaseFragment {
     private VerifyResultBean verifyResultBean;
     //    private SettingBean settingBean;
     private GoodsBean[] beans;
-    private Dialog payDialog;
+    private DialogFragment payDialog;
     private PrintBean printBean;
 
     @Override
@@ -604,12 +603,12 @@ public class BillingFragment extends XBaseFragment {
 //                        });
 
                         JWebSocketClientService.setOrderSn(printBean.sell_code);
-                        DialogFragmentHelper.builder(context1 -> {
+                        payDialog = DialogFragmentHelper.builder(context1 -> {
                             ImageView qr_iv = new ImageView(context1);
                             qr_iv.setImageBitmap(bmp);
-                            return payDialog = new AlertDialog.Builder(context1, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("请扫码支付").setView(qr_iv).setPositiveButton("取消订单", (dialog1, which1) -> {
-                                payDialog = null;
-                                DialogFragmentHelper.builder(context12 -> new AlertDialog.Builder(context12, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("是否需要取消订单？").setNegativeButton("取消", null).setPositiveButton("确定", (dialog12, which12) -> {
+                            return new AlertDialog.Builder(context1, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("请扫码支付").setView(qr_iv).setPositiveButton("取消订单", (dialog1, which1) -> {
+                                DialogFragmentHelper.builder(context12 -> new AlertDialog.Builder(context12, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示").setMessage("是否需要取消订单？").setNegativeButton("取消", (dialog, which) -> payDialog.show(getChildFragmentManager(), "")).setPositiveButton("确定", (dialog12, which12) -> {
+                                    payDialog = null;
                                     Flowable<HttpResultModel> del_order = DataService.builder().buildReqUrl(App.getSettingBean().shop_url + "api/cancel")
                                             .builderRequestBody(new CancelOrderRequestBody(httpResultModel.resultData.orderSns.get(0)))
                                             .request(ApiService.HttpMethod.POST_JSON);
@@ -621,6 +620,14 @@ public class BillingFragment extends XBaseFragment {
                                         }
                                     }, netError -> ToastUtils.showLong("订单取消失败，请重试！"), false);
                                 }).create(), false).show(getChildFragmentManager(), "");
+                            }).setOnKeyListener((dialog, keyCode, event) -> {
+                                if (keyCode == KeyEvent.KEYCODE_ENTER && event != null && (event.getAction() == KeyEvent.ACTION_DOWN || event.getAction() == KeyEvent.ACTION_UP)) {
+                                    ToastUtils.showLong("pay enter");
+                                    ((AlertDialog) dialog).getButton(BUTTON_POSITIVE).clearFocus();
+                                    return true;
+                                }
+                                Log.e("key", "onKey: " + keyCode + "##" + event.toString());
+                                return false;
                             }).create();
                         }, false).setDialogWindow(dialogWindow -> {
                             WindowManager.LayoutParams layoutParams = dialogWindow.getAttributes();
@@ -628,7 +635,8 @@ public class BillingFragment extends XBaseFragment {
                             layoutParams.width = Utils.dip2px(context, 400);
                             dialogWindow.setAttributes(layoutParams);
                             return dialogWindow;
-                        }).show(getChildFragmentManager(), "");
+                        });
+                        payDialog.show(getChildFragmentManager(), "");
                         App.getBoxStore().runInTxAsync(() -> {
                             Box<OrderTableEntiry> box = App.getBoxStore().boxFor(OrderTableEntiry.class);
                             OrderTableEntiry orderTableEntiry = box.query().equal(OrderTableEntiry_.sell_id, order_tv.getText().toString()).build().findFirst();
@@ -637,7 +645,6 @@ public class BillingFragment extends XBaseFragment {
                             box.put(orderTableEntiry);
                         }, (result, error) -> {
                             if (error == null) {
-
                                 Log.e("aaa", "txFinished: is ok");
                             }
                         });
@@ -1341,7 +1348,7 @@ public class BillingFragment extends XBaseFragment {
                 if (payResultBean.isPaySuccess == (1)) {
                     if (null != payDialog && null != printBean && payResultBean.orderSn.equals(printBean.sell_code)) {
                         ToastUtils.showLong("支付成功！");
-                        payDialog.cancel();
+                        payDialog.dismissAllowingStateLoss();
                         payDialog = null;
                         App.getBoxStore().runInTxAsync(() -> {
                             PrintTableEntiry printTableEntiry = PrintTableEntiry.builder(printBean);

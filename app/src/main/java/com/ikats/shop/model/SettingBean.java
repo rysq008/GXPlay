@@ -34,7 +34,7 @@ public class SettingBean implements Serializable {
     public String appKey;
     public String security;
     public boolean isPrintSuccess;//打印是否成功
-    public int colorPrimary = Color.parseColor("#94A5FB");//主题颜色(qd,#160223 gd,#94A5FB bj,#B50005)
+    public int colorPrimary = Color.parseColor("#160223");//主题颜色(qd,#160223 gd,#94A5FB bj,#B50005)
     //file:///android_asset/humon_yunjie.png,file:///android_asset/xfsd.png,""
-    public String custom_icon_res = "file:///android_asset/xfsd.png";//商户自定义开单页面左上角的icon资源
+    public String custom_icon_res = "file:///android_asset/humon_yunjie.png";//商户自定义开单页面左上角的icon资源
 }

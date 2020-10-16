@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -16,6 +17,7 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -45,6 +47,8 @@ import com.ikats.shop.utils.Utils;
 import com.ikats.shop.views.ToastMgr;
 import com.tamsiree.rxkit.RxKeyboardTool;
 import com.tamsiree.rxkit.RxNetTool;
+
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -367,6 +371,7 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                     channel_et.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     channel_et.setBackgroundResource(R.drawable.shape_grey_stroke_6_radius_rect);
                     EditTextUtil.setCursorDrawableColor(channel_et, Color.parseColor("#000000"));
+
                     linearLayout.addView(customer_et);
                     linearLayout.addView(channel_et);
                     return new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
@@ -382,8 +387,12 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                                 SettingBean settingBean = App.getSettingBean();
 //                                        settingBean.shop_url = "";
 //                                        settingBean.manage_url="";
-                                settingBean.colorPrimary = Color.parseColor("#94A5FB");
-                                settingBean.custom_icon_res = "file:///android_asset/xfsd.png";
+
+                                int c1 = Color.parseColor("#160223");
+                                int c2 = Color.parseColor("#94A5FB");
+                                boolean b = new Random().nextBoolean();
+                                settingBean.colorPrimary = b ? c1 : c2;
+                                settingBean.custom_icon_res = b ? "file:///android_asset/humon_yunjie.png" : "file:///android_asset/xfsd.png";
 //                                        settingBean.send_by_express=;
 //                                        settingBean.send_by_self=;
 //                                        settingBean.shop_area = "";
@@ -392,6 +401,24 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 //                                        settingBean.shop_name="";
 //                                        settingBean.shop_code="";
 //                                        settingBean.shop_cashier="";
+                                String province = "河北省", city = "唐山", area = "迁西县";
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    App.provinceBeans.forEach(provinceBean -> {
+                                        if (provinceBean.name.contains(province)) {
+                                            settingBean.province_index = App.provinceBeans.indexOf(provinceBean);
+                                            provinceBean.cityList.forEach(cityListBean -> {
+                                                if (cityListBean.name.contains(city)) {
+                                                    settingBean.city_index = provinceBean.cityList.indexOf(cityListBean);
+                                                    cityListBean.areaList.forEach(areaListBean -> {
+                                                        if (areaListBean.name.contains(area)) {
+                                                            settingBean.area_index = cityListBean.areaList.indexOf(areaListBean);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
                                 App.setSettingBean(settingBean);
 //                                    RxLoadingUtils.subscribeWithDialog(context, config, bindToLifecycle(), iModel -> {
 //
@@ -400,8 +427,10 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 //                                    });
                             }).create();
                 }, false).setCancelListener(() -> {
-                    RxKeyboardTool.hideSoftInput(context);
-                    ToastUtils.showLong("can------------------------------");
+                    view.postDelayed(() -> {
+                        RxKeyboardTool.hideSoftInput(context);
+                    }, 100);
+//                    ToastUtils.showLong("can------------------------------");
                 }).show(getChildFragmentManager(), "");
                 break;
             case R.id.register_action_tv:
