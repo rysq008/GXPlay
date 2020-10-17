@@ -520,7 +520,7 @@ public class BillingFragment extends XBaseFragment {
                     ToastUtils.showLong("请先选购商品！");
                     return;
                 }
-                if (Kits.Empty.check(App.getSettingBean().zipCode)) {
+                if (Kits.Empty.check(App.getSettingBean().shop_zipcode)) {
                     ToastUtils.showLong("请先设置店铺邮编!");
                     return;
                 }
@@ -569,7 +569,7 @@ public class BillingFragment extends XBaseFragment {
                                 .setChannelCode(App.getSettingBean().shop_code)
                                 .setChannelName(App.getSettingBean().shop_name)
                                 .setPosCode(RxDeviceTool.getMacAddress())
-                                .setReceiver(false, verifyResultBean.name, App.getSettingBean().shop_area, App.getSettingBean().shop_address, App.getSettingBean().zipCode, verifyResultBean.mobile)
+                                .setReceiver(false, verifyResultBean.name, App.getSettingBean().shop_area, App.getSettingBean().shop_address, App.getSettingBean().shop_zipcode, verifyResultBean.mobile)
                                 .builder())
                         .buildParseDataClass(OrderResultBean.class)
                         .request(ApiService.HttpMethod.POST_JSON);

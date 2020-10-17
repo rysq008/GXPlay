@@ -16,6 +16,7 @@ import com.ikats.shop.event.RxMsgEvent;
 import com.tamsiree.rxkit.RxNetTool;
 
 import butterknife.BindView;
+import cn.droidlover.xdroidmvp.kit.Kits;
 import cn.droidlover.xdroidmvp.kit.KnifeKit;
 
 public class GlobalStateView extends LinearLayout {
@@ -72,7 +73,7 @@ public class GlobalStateView extends LinearLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        Log.e("add", "onAttachedToWindow: " );
+        Log.e("add", "onAttachedToWindow: ");
         RxMsgEvent msgEvent = new RxMsgEvent(HIKVIS_CODE, GlobalStateView.TAG, App.getSettingBean().isLiveSuccess);
         RxBusProvider.getBus().postEvent(msgEvent);
         RxMsgEvent smsgEvent = new RxMsgEvent(NET_CODE, GlobalStateView.TAG, RxNetTool.isConnected(getContext()));
@@ -81,7 +82,7 @@ public class GlobalStateView extends LinearLayout {
 
     private void updateStatus(RxMsgEvent msgEvent) {
         Log.e("sss", "updateStatus: " + msgEvent.getRequestCode() + "," + msgEvent.getData());
-        if (TAG.contains(msgEvent.getTag()) && msgEvent.getData() instanceof Boolean) {
+        if (!Kits.Empty.check(msgEvent.getTag()) && TAG.equals(msgEvent.getTag()) && msgEvent.getData() instanceof Boolean) {
             boolean is_status_ok = (boolean) msgEvent.getData();
             switch (msgEvent.getRequestCode()) {
                 case NET_CODE:

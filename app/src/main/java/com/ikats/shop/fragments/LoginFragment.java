@@ -17,7 +17,6 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -43,6 +42,7 @@ import com.ikats.shop.net.DataService;
 import com.ikats.shop.net.api.ApiService;
 import com.ikats.shop.present.FLoginPresenter;
 import com.ikats.shop.utils.EditTextUtil;
+import com.ikats.shop.utils.RxLoadingUtils;
 import com.ikats.shop.utils.Utils;
 import com.ikats.shop.views.ToastMgr;
 import com.tamsiree.rxkit.RxKeyboardTool;
@@ -54,6 +54,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.droidlover.xdroidmvp.kit.Kits;
 import io.reactivex.Flowable;
+import io.reactivex.functions.Function;
+import okhttp3.ResponseBody;
 
 public class LoginFragment extends XBaseFragment<FLoginPresenter> {
 
@@ -130,42 +132,100 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
         checkNetStatus();
 //        user_et.postDelayed(() -> {
 //            RxKeyboardTool.hideSoftInput(user_et);
-//        }, 100);
+//        }, 100);http://www.ikats.com/download/pos/version.json
 
-//        if (ShareUtils.isFirstEnter()) {
-//            DialogFragmentHelper.builder(new CommonDialogFragment.OnCallDialog() {
-//                @Override
-//                public Dialog getDialog(Context context) {
-//                    LinearLayout linearLayout = new LinearLayout(context);
-//                    linearLayout.setOrientation(LinearLayout.VERTICAL);
-//                    EditText customer_et = new EditText(context);
-//                    customer_et.setHint("输入客户编码");
-//                    EditText channel_et = new EditText(context);
-//                    channel_et.setHint("输入渠道编码");
-//                    linearLayout.addView(customer_et);
-//                    linearLayout.addView(channel_et);
-//                    return new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
-//                            .setView(linearLayout).setNegativeButton("取消", null)
-//                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    Flowable config = DataService.builder().buildReqUrl("")
-//                                            .buildReqParams("CUSTOMER_CODE", customer_et.getText().toString().replace(" ", ""))
-//                                            .buildReqParams("CHANNEL_CODE", channel_et.getText().toString().replace(" ", ""))
-//                                            .request(ApiService.HttpMethod.GET);
-//                                    ToastUtils.showLong(String.format("--->%s--->%s", customer_et.getText(), channel_et.getText()));
-//                                    new Gson().fromJson("{}", SettingBean.class);
-//
-////                                    RxLoadingUtils.subscribeWithDialog(context, config, bindToLifecycle(), iModel -> {
-////
-////                                    }, netError -> {
-////
-////                                    });
-//                                }
-//                            }).create();
-//                }
-//            }, false).show(getChildFragmentManager(), "");
-//        }
+//        if (ShareUtils.isFirstEnter())
+        {
+            DialogFragmentHelper.builder(context -> {
+                LinearLayout linearLayout = new LinearLayout(context);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+                linearLayout.setPadding(10, 10, 10, 10);
+                EditText customer_et = new EditText(context);
+                customer_et.setHint("输入客户编码");
+                customer_et.setSingleLine();
+//                customer_et.setPadding(0,0,0,0);
+                EditTextUtil.setCursorDrawableColor(customer_et, Color.parseColor("#000000"));
+                customer_et.setBackgroundResource(R.drawable.shape_grey_stroke_6_radius_rect);
+                customer_et.onEditorAction(EditorInfo.IME_ACTION_NEXT);
+                EditText channel_et = new EditText(context);
+                channel_et.setHint("输入渠道编码");
+                channel_et.setSingleLine();
+//                channel_et.setPadding(0,0,0,0);
+                channel_et.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                channel_et.setBackgroundResource(R.drawable.shape_grey_stroke_6_radius_rect);
+                EditTextUtil.setCursorDrawableColor(channel_et, Color.parseColor("#000000"));
+                linearLayout.addView(customer_et);
+                ((LinearLayout.LayoutParams) customer_et.getLayoutParams()).setMargins(0, 0, 0, 10);
+                linearLayout.addView(channel_et);
+                return new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
+                        .setView(linearLayout).setNegativeButton("取消", (dialog, which) -> dialog.cancel())
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            dialog.dismiss();
+                            Flowable<HttpResultModel> config = DataService.builder().buildReqUrl("http://www.ikats.com/download/pos/config.json")
+                                    .buildReqParams("CUSTOMER_CODE", customer_et.getText().toString().replace(" ", ""))
+                                    .buildReqParams("CHANNEL_CODE", channel_et.getText().toString().replace(" ", ""))
+                                    .buildInterceptconvert(true)
+                                    .request(ApiService.HttpMethod.GET).map((Function<ResponseBody, HttpResultModel>) responseBody -> {
+                                        String result = responseBody.string();
+
+                                        HttpResultModel httpResultModel = new HttpResultModel();
+                                        httpResultModel.resultCode = 1;
+                                        httpResultModel.resultData = result;
+                                        return httpResultModel;
+                                    });
+//                            ToastUtils.showLong(String.format("--->%s--->%s", customer_et.getText(), channel_et.getText()));
+                            RxLoadingUtils.subscribeWithDialog(context, config, bindToLifecycle(), httpResultModel -> {
+                                if ((httpResultModel.isSucceful())) {
+                                    SettingBean tsettingBean = new Gson().fromJson(httpResultModel.resultData.toString(), SettingBean.class);
+                                    SettingBean settingBean = App.getSettingBean();
+                                    settingBean.shop_url = tsettingBean.shop_url;
+                                    settingBean.manage_url = tsettingBean.manage_url;
+                                    settingBean.parseColor = Color.parseColor(tsettingBean.colorPrimary);//b ? c1 : c2;
+                                    settingBean.custom_icon_res = tsettingBean.custom_icon_res;//b ? "file:///android_asset/humon_yunjie.png" : "file:///android_asset/xfsd.png";
+                                    settingBean.send_by_express = tsettingBean.send_by_express;
+                                    settingBean.send_by_self = tsettingBean.send_by_self;
+                                    settingBean.shop_area = tsettingBean.shop_area;
+                                    settingBean.shop_zipcode = tsettingBean.shop_zipcode;
+                                    settingBean.shop_address = tsettingBean.shop_address;
+                                    settingBean.shop_name = tsettingBean.shop_name;
+                                    settingBean.shop_code = tsettingBean.shop_code;
+                                    settingBean.shop_cashier = tsettingBean.shop_cashier;
+                                    String[] place = settingBean.shop_area.split("-");
+                                    String province = place[0], city = place[1], area = place[2];
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                        App.provinceBeans.forEach(provinceBean -> {
+                                            if (provinceBean.name.contains(province)) {
+                                                settingBean.province_index = App.provinceBeans.indexOf(provinceBean);
+                                                provinceBean.cityList.forEach(cityListBean -> {
+                                                    if (cityListBean.name.contains(city)) {
+                                                        settingBean.city_index = provinceBean.cityList.indexOf(cityListBean);
+                                                        cityListBean.areaList.forEach(areaListBean -> {
+                                                            if (areaListBean.name.contains(area)) {
+                                                                settingBean.area_index = cityListBean.areaList.indexOf(areaListBean);
+                                                                return;
+                                                            }
+                                                        });
+                                                        return;
+                                                    }
+                                                });
+                                                return;
+                                            }
+                                        });
+                                    }
+                                    App.setSettingBean(settingBean);
+                                    ToastUtils.showLong("更新配置成功！");
+                                }
+                            }, netError -> {
+                                ToastUtils.showLong("更新配置失败！");
+                            });
+                        }).create();
+            }, false).setCancelListener(() -> {
+                getView().postDelayed(() -> {
+                    RxKeyboardTool.hideSoftInput(context);
+                }, 100);
+//                    ToastUtils.showLong("can------------------------------");
+            }).show(getChildFragmentManager(), "");
+        }
     }
 
     @Override
@@ -373,6 +433,7 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                     EditTextUtil.setCursorDrawableColor(channel_et, Color.parseColor("#000000"));
 
                     linearLayout.addView(customer_et);
+                    ((LinearLayout.LayoutParams) customer_et.getLayoutParams()).setMargins(0, 0, 0, 10);
                     linearLayout.addView(channel_et);
                     return new AlertDialog.Builder(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT).setTitle("提示")
                             .setView(linearLayout).setNegativeButton("取消", (dialog, which) -> dialog.cancel())
@@ -391,16 +452,16 @@ public class LoginFragment extends XBaseFragment<FLoginPresenter> {
                                 int c1 = Color.parseColor("#160223");
                                 int c2 = Color.parseColor("#94A5FB");
                                 boolean b = new Random().nextBoolean();
-                                settingBean.colorPrimary = b ? c1 : c2;
+                                settingBean.parseColor = b ? c1 : c2;
                                 settingBean.custom_icon_res = b ? "file:///android_asset/humon_yunjie.png" : "file:///android_asset/xfsd.png";
-//                                        settingBean.send_by_express=;
-//                                        settingBean.send_by_self=;
-//                                        settingBean.shop_area = "";
-//                                        settingBean.zipCode = "";
-//                                        settingBean.shop_address="";
-//                                        settingBean.shop_name="";
-//                                        settingBean.shop_code="";
-//                                        settingBean.shop_cashier="";
+//                                settingBean.send_by_express=;
+//                                settingBean.send_by_self =;
+//                                settingBean.shop_area = "";
+//                                settingBean.zipCode = "";
+//                                settingBean.shop_address = "";
+//                                settingBean.shop_name = "";
+//                                settingBean.shop_code = "";
+//                                settingBean.shop_cashier = "";
                                 String province = "河北省", city = "唐山", area = "迁西县";
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     App.provinceBeans.forEach(provinceBean -> {

@@ -9,11 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.ikats.shop.App;
-import com.ikats.shop.R;
 import com.ikats.shop.fragments.BaseFragment.XBaseFragment;
 import com.ikats.shop.utils.ScanKeyManager;
 import com.jaeger.library.StatusBarUtil;
-import com.tamsiree.rxkit.RxKeyboardTool;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import cn.droidlover.xdroidmvp.XDroidConf;
@@ -26,7 +24,7 @@ public abstract class XBaseActivity<P extends IPresent> extends XActivity<P> {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        StatusBarUtil.setColor(this, App.getSettingBean().colorPrimary);
+        StatusBarUtil.setColor(this, App.getSettingBean().parseColor);
         //拦截扫码器回调,获取扫码内容
         scanKeyManager = new ScanKeyManager(value -> Log.e("bbb", "ScanValue:" + value));
         Log.e("bbb", "onCreate: ");

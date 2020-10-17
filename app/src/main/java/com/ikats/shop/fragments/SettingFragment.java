@@ -257,7 +257,7 @@ public class SettingFragment extends XBaseFragment {
         area_sp.setAdapter(area_adp);
         area_sp.setSelection(settingBean.area_index);
 
-        zipcode_et.setText(settingBean.zipCode);
+        zipcode_et.setText(settingBean.shop_zipcode);
         shop_address_et.setText(settingBean.shop_address);
         shop_name_et.setText(settingBean.shop_name);
         shop_code_et.setText(settingBean.shop_code);
@@ -510,7 +510,7 @@ public class SettingFragment extends XBaseFragment {
                     settingBean.province_index = province_sp.getSelectedItemPosition();
                     settingBean.city_index = city_sp.getSelectedItemPosition();
                     settingBean.area_index = area_sp.getSelectedItemPosition();
-                    settingBean.zipCode = zipcode_et.getText().toString().replace(" ", "");
+                    settingBean.shop_zipcode = zipcode_et.getText().toString().replace(" ", "");
                     settingBean.shop_address = shop_address_et.getText().toString().replace(" ", "");
                     settingBean.shop_name = shop_name_et.getText().toString().replace(" ", "");
                     settingBean.shop_code = shop_code_et.getText().toString().replace(" ", "");

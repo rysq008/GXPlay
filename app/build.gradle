@@ -156,7 +156,7 @@ dependencies {
 
 //    implementation 'com.github.liuguangli:FloatUtil:latest.release'
     implementation 'org.sdker.floatwindow:floatwindow:latest.release'
-    implementation "com.blankj:rxbus:latest.release"
+//    implementation "com.blankj:rxbus:latest.release"
 
 
 }

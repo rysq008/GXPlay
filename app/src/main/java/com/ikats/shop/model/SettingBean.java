@@ -22,7 +22,7 @@ public class SettingBean implements Serializable {
     public String record_channel = "101";
     public boolean send_by_express;//true：快递，false：自提
     public boolean send_by_self;//true：自提，false：快递
-    public String zipCode = "100000";//邮编
+    public String shop_zipcode = "100000";//邮编
     public String shop_area = "";//地区
     public String shop_address = "";//发货地址：门店或者预留地址
     public String shop_name = "";//门店名
@@ -34,7 +34,8 @@ public class SettingBean implements Serializable {
     public String appKey;
     public String security;
     public boolean isPrintSuccess;//打印是否成功
-    public int colorPrimary = Color.parseColor("#160223");//主题颜色(qd,#160223 gd,#94A5FB bj,#B50005)
+    public String colorPrimary;
+    public int parseColor = Color.parseColor("#160223");//主题颜色(qd,#160223 gd,#94A5FB bj,#B50005)
     //file:///android_asset/humon_yunjie.png,file:///android_asset/xfsd.png,""
     public String custom_icon_res = "file:///android_asset/humon_yunjie.png";//商户自定义开单页面左上角的icon资源
 }

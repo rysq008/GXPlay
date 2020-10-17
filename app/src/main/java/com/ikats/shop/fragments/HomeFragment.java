@@ -164,9 +164,9 @@ public class HomeFragment extends XBaseFragment {
                         customer_icon_iv.setImageResource(R.drawable.chigoose);
                     }
                 });
-        customer_icon_iv.setBackgroundColor(App.getSettingBean().colorPrimary);
-        rg.setBackgroundColor(App.getSettingBean().colorPrimary);
-        rl_user.setBackgroundColor(App.getSettingBean().colorPrimary);
+        customer_icon_iv.setBackgroundColor(App.getSettingBean().parseColor);
+        rg.setBackgroundColor(App.getSettingBean().parseColor);
+        rl_user.setBackgroundColor(App.getSettingBean().parseColor);
 
         mFragment.add(CashierFragment.newInstance());
         mFragment.add(BackstageFragment.newInstance());
@@ -255,7 +255,7 @@ public class HomeFragment extends XBaseFragment {
                 DialogFragmentHelper.builder(context -> {
                     Dialog[] dialog = new Dialog[1];
                     View vv = View.inflate(context, R.layout.fragment_home_menu, null);
-                    vv.setBackgroundColor(App.getSettingBean().colorPrimary);
+                    vv.setBackgroundColor(App.getSettingBean().parseColor);
                     View.OnClickListener onClickListener = v -> {
                         switch (v.getId()) {
                             case R.id.home_menu_billing_tv:
